@@ -1,0 +1,161 @@
+// Builds the request summary (what the owner receives) and submits it.
+import {
+  AIRPORTS, ARRIVAL_METHODS, BOAT_STYLES, BOAT_TYPES, BUDGETS, CELEBRATIONS, DURATIONS, HEARD_FROM,
+  INTERESTS, LOCATIONS, NEEDS, PORTS, QUICK_TOPICS, REPLY_VIA, SWIMMING, TRANSFER_ITEMS, TRANSFER_TRIPS, YES_NO, YES_NO_UNSURE,
+  asksPickup, labelOf, labelsOf, wantsBoat, wantsTransfer,
+} from "./contactData";
+import type { ContactData, StepId } from "./contactData";
+
+export type ReviewSection = { step: StepId; title: string; rows: [string, string][] };
+
+const fmtDate = (iso: string) => {
+  if (!iso) return "";
+  const [y, m, d] = iso.split("-").map(Number);
+  if (!y || !m || !d) return iso;
+  return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+};
+
+/** Every answer, grouped by step. Used by the review screen and the plain-text summary. */
+export function buildReviewSections(d: ContactData): ReviewSection[] {
+  const out: ReviewSection[] = [];
+  const rows = (pairs: [string, string][]) => pairs.filter(([, v]) => v && v.trim() !== "");
+
+  out.push({ step: "interests", title: "Interested in", rows: rows([
+    ["Interests", labelsOf(INTERESTS, d.interests)],
+    ["Details", d.interests.includes("other") ? d.interestOther : ""],
+  ]) });
+
+  if (wantsBoat(d)) {
+    out.push({ step: "boatWhere", title: "Boat tour", rows: rows([
+      ["Location", labelOf(LOCATIONS, d.boatLocation)],
+      ["Boat type", labelOf(BOAT_TYPES, d.boatType)],
+      ["Duration", labelOf(DURATIONS, d.boatDuration)],
+      ["Shared or private", labelOf(BOAT_STYLES, d.boatStyle)],
+    ]) });
+  }
+
+  if (wantsTransfer(d)) {
+    out.push({ step: "transfer", title: "Private transfer", rows: rows([
+      ["From", d.transferFrom],
+      ["To", d.transferTo],
+      ["Trip", labelOf(TRANSFER_TRIPS, d.transferTrip)],
+      ["Large bags", String(d.transferBags)],
+      ["Special items", labelsOf(TRANSFER_ITEMS, d.transferItems)],
+    ]) });
+  }
+
+  out.push({ step: "dates", title: "Dates", rows: rows([
+    ["Arrive in Sardinia", fmtDate(d.tripArrival)],
+    ["Leave Sardinia", fmtDate(d.tripDeparture)],
+    ["Preferred activity date", fmtDate(d.activityDate1)],
+    ["Alternative date", fmtDate(d.activityDate2)],
+    ["Flexible dates", d.datesFlexible ? "Yes" : "No"],
+    ["Timing notes", d.datesNote],
+  ]) });
+
+  out.push({ step: "guests", title: "Who's coming", rows: rows([
+    ["Adults", String(d.adults)],
+    ["Children (2 to 12)", d.children ? `${d.children} (ages ${d.childAges.join(", ")})` : "0"],
+    ["Infants (under 2)", String(d.infants)],
+    ["Everyone swims", wantsBoat(d) ? labelOf(SWIMMING, d.swimming) : ""],
+  ]) });
+
+  out.push({ step: "arrival", title: "Getting to Sardinia", rows: rows([
+    ["Arriving by", labelOf(ARRIVAL_METHODS, d.arrivalMethod)],
+    ["Airport", d.arrivalMethod === "plane" ? labelOf(AIRPORTS, d.airport) : ""],
+    ["Flight number", d.arrivalMethod === "plane" ? d.flightNumber.toUpperCase() : ""],
+    ["Ferry port", d.arrivalMethod === "ferry" ? labelOf(PORTS, d.port) : ""],
+    ["Arrival", d.arrivalMethod === "plane" || d.arrivalMethod === "ferry" ? [fmtDate(d.arrivalDate || d.tripArrival), d.arrivalTime].filter(Boolean).join(" at ") : ""],
+    ["Rental car", labelOf(YES_NO_UNSURE, d.rentalCar)],
+    ["Needs pickup to boat/tour", asksPickup(d) ? labelOf(YES_NO, d.pickup) : ""],
+  ]) });
+
+  out.push({ step: "stay", title: "Where they're staying", rows: rows([
+    ["Area / town", d.stayNotBooked ? "Not booked yet" : d.stayArea],
+    ["Hotel / address", d.stayNotBooked ? "" : d.stayAddress],
+  ]) });
+
+  const needs = d.needs.map((n) => n === "celebration" && d.celebration ? `Celebration (${labelOf(CELEBRATIONS, d.celebration)})` : labelOf(NEEDS, n));
+  out.push({ step: "extras", title: "Good to know", rows: rows([
+    ["Special notes", needs.join(", ")],
+    ["Details", d.needs.length ? d.needsDetail : ""],
+    ["Budget per person", labelOf(BUDGETS, d.budget)],
+    ["Message", d.message],
+  ]) });
+
+  out.push({ step: "about", title: "Contact", rows: rows([
+    ["Name", `${d.firstName} ${d.lastName}`.trim()],
+    ["Email", d.email],
+    ["Phone / WhatsApp", d.phone],
+    ["Country", d.country],
+    ["Time zone", d.timeZone],
+    ["Preferred reply", labelOf(REPLY_VIA, d.replyVia)],
+    ["Heard about us", labelOf(HEARD_FROM, d.heardFrom)],
+  ]) });
+
+  return out;
+}
+
+/** The complete plain-text email the owner would receive. */
+export function buildSummaryText(d: ContactData, sentAt = new Date()): string {
+  const name = `${d.firstName} ${d.lastName}`.trim();
+  let clientLocal = "";
+  try {
+    clientLocal = sentAt.toLocaleString("en-GB", { timeZone: d.timeZone || undefined, dateStyle: "medium", timeStyle: "short" });
+  } catch {
+    clientLocal = sentAt.toLocaleString("en-GB");
+  }
+  const romeTime = sentAt.toLocaleString("en-GB", { timeZone: "Europe/Rome", dateStyle: "medium", timeStyle: "short" });
+
+  if (d.mode === "quick") {
+    const rows: [string, string][] = ([
+      ["Name", name],
+      ["Email", d.email.trim()],
+      ["Phone / WhatsApp", d.phone.trim()],
+      ["Preferred reply", labelOf(REPLY_VIA, d.replyVia)],
+      ["Time zone", d.timeZone],
+      ["About", labelsOf(QUICK_TOPICS, d.quickTopics)],
+      ["Rough dates", d.quickDates.trim()],
+      ["People", d.quickPeople > 0 ? String(d.quickPeople) : ""],
+    ] as [string, string][]).filter(([, v]) => v && v.trim() !== "");
+    return [
+      `QUICK REQUEST: ${name}`,
+      "Sardinia Discovery Travels · website contact form (quick request)",
+      "",
+      `Sent: ${romeTime} (Sardinia time) · ${clientLocal} for the client (${d.timeZone || "time zone unknown"})`,
+      `Reply by: ${labelOf(REPLY_VIA, d.replyVia)} · ${d.replyVia === "whatsapp" ? d.phone : d.email}`,
+      "",
+      "QUICK REQUEST",
+      "-------------",
+      ...rows.map(([k, v]) => `${k}: ${v}`),
+      "",
+      "MESSAGE",
+      "-------",
+      d.message.trim(),
+    ].join("\n");
+  }
+
+  const lines: string[] = [
+    `NEW TRIP REQUEST: ${name}`,
+    "Sardinia Discovery Travels · website contact form",
+    "",
+    `Sent: ${romeTime} (Sardinia time) · ${clientLocal} for the client (${d.timeZone || "time zone unknown"})`,
+    `Reply by: ${labelOf(REPLY_VIA, d.replyVia)} · ${d.replyVia === "whatsapp" ? d.phone : d.email}`,
+  ];
+  for (const s of buildReviewSections(d)) {
+    lines.push("", s.title.toUpperCase(), "-".repeat(s.title.length));
+    for (const [k, v] of s.rows) lines.push(`${k}: ${v}`);
+  }
+  return lines.join("\n");
+}
+
+/**
+ * Submit a contact request.
+ * TODO: connect this to email delivery (e.g. a server route or form service) so the
+ * summary is emailed to the owner. Right now it only builds the summary and logs it.
+ */
+export async function submitContactRequest(data: ContactData): Promise<{ ok: true; summary: string }> {
+  const summary = buildSummaryText(data);
+  console.log("[contact] Request summary (email delivery not connected yet):\n\n" + summary);
+  return { ok: true, summary };
+}

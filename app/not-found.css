@@ -1,0 +1,53 @@
+/* Branded 404: same dark surface and type as the other pages. */
+.nf-page {
+  display: grid;
+  place-items: center;
+  min-height: calc(100 * var(--svh, 1svh));
+  padding: 150px 24px 96px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(47, 127, 136, 0.18) 0%, rgba(20, 18, 17, 0) 60%),
+    #141211;
+  color: #f6f1ea;
+}
+.nf-hero {
+  width: min(640px, 100%);
+  text-align: center;
+}
+.nf-code {
+  margin: 0 0 18px;
+  color: rgba(246, 241, 234, 0.62);
+  font-size: 15px;
+  font-weight: 500;
+}
+.nf-title {
+  margin: 0;
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 300;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.nf-text {
+  margin: 22px auto 0;
+  max-width: 34em;
+  color: rgba(246, 241, 234, 0.78);
+  font-size: 17px;
+  line-height: 1.6;
+}
+.nf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 36px;
+}
+.nf-btn .inner { padding-inline: 44px; }
+@media (max-width: 640px) {
+  .nf-page { padding: 130px 20px 72px; }
+  .nf-text { font-size: 16px; }
+  .nf-actions { flex-direction: column; align-items: stretch; }
+  .nf-btn { display: flex; width: 100%; }
+}
+.nf-btn.button-02--teal .inner,
+.nf-btn.button-02--teal .circle { color: #f8f4ee; }
+.nf-btn .circle span { color: inherit; }

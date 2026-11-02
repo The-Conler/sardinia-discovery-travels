@@ -1,0 +1,11 @@
+/* Page-level theme variables only. Visual rules stay inside the web component. */
+:root {
+  --faq-background: #252428;
+  --faq-marker: #302f33;
+  --faq-connector: #ffffff24;
+  --faq-item: #1a1a1a;
+  --faq-text: #fff;
+  --faq-muted: #9a9a9a;
+  --faq-radius: 12px;
+  --faq-timing: .35s;
+}

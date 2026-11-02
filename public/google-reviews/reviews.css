@@ -1,0 +1,78 @@
+/* Component-only stylesheet: loaded exclusively inside its shadow root. */
+:host { display: block; position: relative; z-index: 5; }
+* { box-sizing: border-box; }
+/* Heading and equal portrait-card layout. */
+section { background: var(--reviews-background, #252428); color: #f7f4ee; padding: clamp(72px, calc(8 * var(--vw)), 120px) 24px; font-family: 'Helvetica Neue', Arial, sans-serif; }
+/* Same inherited site font and type scale as the experiences heading. */
+.reviews-eyebrow { margin: 0 0 16px; text-align: center; color: rgba(247,244,238,.72); font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif; font-size: .72rem; font-weight: 800; letter-spacing: .34em; text-transform: uppercase; }
+h2 { margin: 0 auto clamp(44px, calc(5.5 * var(--vw)), 74px); max-width: 1500px; text-align: center; font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif; font-size: clamp(3.1rem, 2rem + calc(4.3 * var(--vw)), 6.8rem); font-weight: 500; line-height: .94; letter-spacing: -.07em; }
+h2 span { text-decoration: none; }
+.cards { max-width: 1160px; margin-inline: auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.card { display: block; position: relative; color: inherit; text-decoration: none; border-radius: var(--reviews-card-radius, 18px); }
+figure { position: relative; isolation: isolate; margin: 0; aspect-ratio: 3 / 4; min-height: 440px; border-radius: inherit; overflow: hidden; background: #5b665c; }
+.photo { position: absolute; width: 100%; height: 100%; object-fit: cover; }
+/* Default quote overlay and corner badge. */
+figure::after { content: ''; position: absolute; inset: 30% 0 0; background: linear-gradient(transparent, rgba(0,0,0,.72)); pointer-events: none; }
+.badge { position: absolute; z-index: 4; right: 16px; top: 16px; width: 36px; height: 36px; padding: 9px; border-radius: 50%; background: white; box-shadow: 0 2px 12px #0002; }
+svg { display: block; width: 100%; height: 100%; }
+.quote { position: absolute; z-index: 1; inset: auto 26px 28px; color: white; transition: opacity var(--reviews-timing, .4s) ease; }
+.stars { display: inline-block; color: var(--reviews-stars, #d49a27); font-size: 18px; letter-spacing: 2px; line-height: 1.2; }
+.quote .stars { color: #f6d583; }
+.quote p { margin: 12px 0 0; font-size: clamp(1.25rem, calc(2 * var(--vw)), 1.65rem); font-weight: 500; line-height: 1.25; letter-spacing: -.025em; }
+/* Hover/focus panel: slides independently over the lower part of the portrait. */
+.panel { position: absolute; z-index: 2; inset: auto 0 0; padding: 26px; border-radius: 18px 18px 0 0; background: white; color: #46423c; box-shadow: 0 -8px 24px #0002; transform: translateY(100%); transition: transform var(--reviews-timing, .4s) cubic-bezier(.4,.3,0,1); }
+.reviewer { display: flex; align-items: center; gap: 11px; margin-bottom: 18px; }
+.avatar { flex: 0 0 40px; width: 40px; height: 40px; object-fit: cover; border-radius: 50%; }
+.reviewer strong { display: block; font-size: 14px; line-height: 1.3; }
+.source { display: flex; align-items: center; gap: 5px; margin-top: 5px; color: #77736b; font-size: 11px; }
+.source svg { width: 12px; height: 12px; flex-shrink: 0; }
+.full-text { margin: 12px 0 0; font-size: 14px; line-height: 1.55; }
+.card:hover .panel, .card:focus-within .panel { transform: translateY(0); }
+.card:hover .quote, .card:focus-within .quote { opacity: 0; }
+.card:focus-visible { outline: 3px solid #746443; outline-offset: 6px; }
+/* Touch: persistent full reviews and ordinary one-tap anchor navigation. */
+@media (hover: none), (pointer: coarse), (max-width: 767px) {
+  .panel { position: relative; inset: auto; margin-top: 70%; transform: none; transition: none; }
+  figure { aspect-ratio: auto; min-height: 100%; }
+  .photo { top: 0; height: 100%; }
+  .quote { display: none; }
+}
+@media (max-width: 767px) {
+  .cards { grid-template-columns: 1fr; max-width: 460px; }
+  section { padding-inline: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel, .quote { transition: none; }
+}
+
+/* Keep long, original reviews readable without growing the desktop photo cards. */
+.panel { max-height: 72%; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.panel:focus-visible { outline: 2px solid #746443; outline-offset: -4px; }
+.initials { display: grid; place-items: center; background: #e9e5dd; color: #514b40; font-size: 13px; font-weight: 600; }
+.full-text { white-space: pre-line; }
+@media (hover: none), (pointer: coarse), (max-width: 767px) {
+  .panel { max-height: none; overflow-y: visible; }
+}
+
+/* Keep all five reviews visible together across the available desktop width. */
+@media (min-width: 768px) {
+  .cards {
+    max-width: none;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(12px, calc(1.2 * var(--vw)), 24px);
+    padding: 8px;
+  }
+  .card { min-width: 0; }
+  figure { min-height: 520px; }
+}
+
+/* zoom-scaled (SITE ZOOM 0.5): was @media (min-width: 768px) and (max-width: 1199px). At 50% this range ends at 600px of screen, so on 1024px+ screens it never applies. */
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .panel { padding: 16px; }
+  .reviewer { flex-wrap: wrap; }
+  .source { flex-wrap: wrap; }
+  .quote { left: 16px; right: 16px; }
+}
+
+/* Modest spacing into the matching-gray FAQ section below. */
+section { padding-bottom: 2rem; }

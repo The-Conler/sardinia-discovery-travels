@@ -1,0 +1,44 @@
+/* Component-only stylesheet: loaded exclusively inside its shadow root. */
+:host { display: block; position: relative; }
+* { box-sizing: border-box; }
+section { background: var(--faq-background, #252428); color: var(--faq-text, #fff); min-height: 0; display: flex; align-items: center; padding: 2.5rem max(24px, calc(4 * var(--vw))) clamp(64px, calc(7 * var(--vw)), 100px); font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif; }
+.container { width: 100%; max-width: 1500px; margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr); grid-template-areas: "timeline accordion"; gap: 6rem; align-items: center; }
+/* Right timeline with a continuous thin connector and numbered markers. */
+.process { grid-area: timeline; min-width: 0; }
+.eyebrow { margin: 0 0 28px; font-size: .75rem; font-weight: 500; letter-spacing: .25em; text-transform: uppercase; color: var(--faq-muted, #9a9a9a); }
+.timeline { list-style: none; padding: 0; margin: 0; }
+.timeline li { position: relative; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 18px; padding-bottom: 30px; }
+.timeline li:last-child { padding-bottom: 0; }
+.timeline li:not(:last-child)::before { content: ''; position: absolute; left: 17.5px; top: 36px; bottom: 0; width: 1px; background: var(--faq-connector, #ffffff24); }
+.marker { position: relative; display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--faq-connector, #ffffff24); border-radius: 50%; background: var(--faq-marker, #302f33); color: var(--faq-text, #fff); font-size: .85rem; }
+.timeline h3 { margin: 4px 0 6px; font-size: 1.05rem; font-weight: 600; line-height: 1.35; }
+.timeline p { margin: 0; color: var(--faq-muted, #9a9a9a); font-size: .93rem; line-height: 1.6; }
+/* Accordion list and rounded items. */
+.accordion-column { grid-area: accordion; min-width: 0; }
+.list { display: grid; gap: 16px; }
+.item { background: var(--faq-item, #1a1a1a); border-radius: var(--faq-radius, 12px); }
+/* Full-width question button. */
+button { display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; border: 0; border-radius: inherit; background: transparent; color: inherit; padding: 1.65rem 1.8rem; font: inherit; font-size: clamp(1.2rem, calc(1.5 * var(--vw)), 1.35rem); font-weight: 500; line-height: 1.4; text-align: left; cursor: pointer; }
+button:hover { background: rgba(255,255,255,.035); }
+button:focus-visible { outline: 2px solid #e4d6b7; outline-offset: 3px; }
+/* Thin-line plus rotates into a cross in the open state. */
+.icon { position: relative; flex: 0 0 18px; width: 18px; height: 18px; transition: transform var(--faq-timing, .35s) cubic-bezier(.4,.3,0,1); }
+.icon::before, .icon::after { content: ''; position: absolute; background: currentColor; top: 8px; left: 1px; width: 16px; height: 1px; }
+.icon::after { transform: rotate(90deg); }
+/* Answer region: intrinsic-height grid animation works for any paragraph length. */
+.answer { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows var(--faq-timing, .35s) cubic-bezier(.4,.3,0,1), opacity var(--faq-timing, .35s) cubic-bezier(.4,.3,0,1); }
+.answer-inner { min-height: 0; overflow: hidden; }
+.answer p { margin: 0; padding: 0 1.8rem 1.65rem; color: var(--faq-muted, #9a9a9a); font-size: 1rem; line-height: 1.65; }
+/* Each item's open state is independent. */
+.is-open .answer { grid-template-rows: 1fr; opacity: 1; }
+.is-open .icon { transform: rotate(45deg); }
+@media (prefers-reduced-motion: reduce) {
+  .answer, .icon { transition: none; }
+}
+
+/* Stack without a viewport-height gap on smaller screens. */
+@media (max-width: 899px) {
+  section { min-height: 0; padding-top: 2rem; padding-bottom: 64px; }
+  .container { grid-template-columns: 1fr; grid-template-areas: "accordion" "timeline"; gap: 40px; }
+
+}

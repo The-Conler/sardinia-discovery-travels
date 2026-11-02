@@ -1,0 +1,140 @@
+/* Mosaic Reveal Scroll — scoped to [data-mosaic-reveal] */
+[data-mosaic-reveal] {
+  /* customization points */
+  --mosaic-height: calc(200 * var(--svh));
+  --mosaic-gap: 12px;
+  --mosaic-radius: 14px;
+  --mosaic-bg: #1f1d1c;
+  --mosaic-tile-bg: #2a2725;
+  --mosaic-text: #fbf4ec;            /* resting warm white */
+  --mosaic-sweep-1: #f6c89f;         /* apricot */
+  --mosaic-sweep-2: #e8a87c;
+  --mosaic-sweep-3: #c96f4a;         /* clay */
+  --mosaic-sweep-4: #d9826f;
+  --mosaic-sweep-5: #e49a8c;         /* dusty coral */
+  --mosaic-sweep-blur: blur(6px);
+  /* geometry system: final featured size (half), outer rows, side widths */
+  --mosaic-end-w: calc(50 * var(--cqw));
+  --mosaic-end-h: calc(50 * var(--svh));
+
+  position: relative;
+  display: block;
+  width: 100%;
+  height: var(--mosaic-height);
+  margin: 0;
+  padding: 0;
+  background: var(--mosaic-bg);
+}
+@media (max-width: 767px) {
+  [data-mosaic-reveal] {
+    --mosaic-gap: 4px;
+    --mosaic-end-w: calc(72 * var(--cqw));
+    --mosaic-end-h: calc(58 * var(--svh));
+  }
+}
+[data-mosaic-reveal] .camera {
+  /* held by a ScrollTrigger pin (ScrollSmoother breaks native sticky) */
+  position: relative;
+  height: calc(100 * var(--svh));
+  width: 100%;
+  overflow: clip;
+  container-type: inline-size;
+  background: var(--mosaic-bg);
+}
+[data-mosaic-reveal] .collage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mosaic-gap);
+  transform-origin: 50% 50%;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+[data-mosaic-reveal] .row {
+  display: flex;
+  justify-content: center;
+  gap: var(--mosaic-gap);
+  flex: none;
+  width: calc(100 * var(--cqw));
+}
+[data-mosaic-reveal] .row.outer {
+  height: calc((calc(100 * var(--svh)) - var(--mosaic-end-h)) / 2 - var(--mosaic-gap));
+}
+[data-mosaic-reveal] .row.outer .tile {
+  width: calc((calc(100 * var(--cqw)) - 3 * var(--mosaic-gap)) / 2);
+}
+[data-mosaic-reveal] .row:not(.outer) .tile:not(.featured) {
+  width: calc((calc(100 * var(--cqw)) - var(--mosaic-end-w)) / 2 - 2 * var(--mosaic-gap));
+}
+[data-mosaic-reveal] .tile {
+  position: relative;
+  flex: none;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--mosaic-radius);
+  background: var(--mosaic-tile-bg);
+}
+[data-mosaic-reveal] .tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+[data-mosaic-reveal] .tile.featured {
+  --mosaic-shade: 0;
+  width: var(--mosaic-end-w);
+  height: var(--mosaic-end-h);
+}
+[data-mosaic-reveal] .tile.featured::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: var(--mosaic-shade);
+  pointer-events: none;
+}
+[data-mosaic-reveal] .row:not(.outer) {
+  height: var(--mosaic-end-h);
+}
+[data-mosaic-reveal] .headline {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  pointer-events: none;
+  font-family: var(--font-display-serif), Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(48px, calc(6.5 * var(--cqw)), 104px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+@media (max-width: 767px) {
+  [data-mosaic-reveal] .headline { font-size: 40px; }
+}
+[data-mosaic-reveal] .headline .line {
+  display: block;
+  width: fit-content;
+  margin-inline: auto;
+  padding-bottom: 0.08em;
+  background-image: linear-gradient(90deg,
+    var(--mosaic-text) 0%, var(--mosaic-text) 34%,
+    var(--mosaic-sweep-1) 40%, var(--mosaic-sweep-2) 44%, var(--mosaic-sweep-3) 48%,
+    var(--mosaic-sweep-4) 52%, var(--mosaic-sweep-5) 56%,
+    transparent 64%, transparent 100%);
+  background-size: 300% 100%;
+  background-position: 100% 0%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: var(--mosaic-sweep-blur);
+}

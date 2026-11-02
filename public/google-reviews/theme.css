@@ -1,0 +1,7 @@
+/* Page-level theme variables only. Visual rules stay inside the web component. */
+:root {
+  --reviews-background: #252428;
+  --reviews-card-radius: 18px;
+  --reviews-timing: .4s;
+  --reviews-stars: #d49a27;
+}
