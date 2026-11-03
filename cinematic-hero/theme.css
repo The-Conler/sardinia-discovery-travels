@@ -1,0 +1,11 @@
+/* Page-level theme variables only. Visual rules stay inside the web component. */
+:root {
+  --hero-font-sans: Arial, Helvetica, sans-serif;
+  --hero-font-display: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --hero-overlay-dark: rgba(3, 12, 16, .83);
+  --hero-overlay-light: rgba(3, 12, 16, .08);
+  --hero-slide-ms: 720;
+  --hero-fade-ms: 140;
+  --hero-padding: clamp(2.5rem, calc(4 * var(--vw)), 4rem);
+  --hero-bottom-padding: clamp(3rem, calc(4 * var(--vw)), 4rem);
+}

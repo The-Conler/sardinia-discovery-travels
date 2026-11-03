@@ -1,0 +1,272 @@
+{
+  "_MosaicReveal-wBr7YpSZ.js": {
+    "file": "_next/static/chunks/MosaicReveal-wBr7YpSZ.js",
+    "name": "MosaicReveal",
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_siteZoom-DBTy2P6x.js",
+      "_framework-BgSIrAUN.js"
+    ],
+    "css": [
+      "_next/static/css/MosaicReveal.BsB7YxNW.css"
+    ]
+  },
+  "_MosaicReveal.BsB7YxNW.css": {
+    "file": "_next/static/css/MosaicReveal.BsB7YxNW.css",
+    "src": "_MosaicReveal.BsB7YxNW.css"
+  },
+  "_TourCard-CqxHhfdG.js": {
+    "file": "_next/static/chunks/TourCard-CqxHhfdG.js",
+    "name": "TourCard",
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_ui-aQFvzWPz.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "_framework-BgSIrAUN.js": {
+    "file": "_next/static/chunks/framework-BgSIrAUN.js",
+    "name": "framework",
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js"
+    ]
+  },
+  "_rolldown-runtime-C60lm6uB.js": {
+    "file": "_next/static/chunks/rolldown-runtime-C60lm6uB.js",
+    "name": "rolldown-runtime"
+  },
+  "_siteZoom-DBTy2P6x.js": {
+    "file": "_next/static/chunks/siteZoom-DBTy2P6x.js",
+    "name": "siteZoom"
+  },
+  "_ui-aQFvzWPz.js": {
+    "file": "_next/static/chunks/ui-aQFvzWPz.js",
+    "name": "ui",
+    "imports": [
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "_useLanguageMenu-CMG2uwpI.js": {
+    "file": "_next/static/chunks/useLanguageMenu-CMG2uwpI.js",
+    "name": "useLanguageMenu",
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/FloatingActions.tsx": {
+    "file": "_next/static/chunks/FloatingActions-uchAdieU.js",
+    "name": "FloatingActions",
+    "src": "app/FloatingActions.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/HomeView.tsx": {
+    "file": "_next/static/chunks/HomeView-BJh8cYWW.js",
+    "name": "HomeView",
+    "src": "app/HomeView.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "app/FloatingActions.tsx",
+      "_MosaicReveal-wBr7YpSZ.js",
+      "_useLanguageMenu-CMG2uwpI.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/SiteHeader.tsx": {
+    "file": "_next/static/chunks/SiteHeader-CfnMRbvI.js",
+    "name": "SiteHeader",
+    "src": "app/SiteHeader.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_useLanguageMenu-CMG2uwpI.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/about/AboutView.tsx": {
+    "file": "_next/static/chunks/AboutView-CN1i199F.js",
+    "name": "AboutView",
+    "src": "app/about/AboutView.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/boat-tours/page.tsx": {
+    "file": "_next/static/chunks/page-BSmyZqqb.js",
+    "name": "page",
+    "src": "app/boat-tours/page.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "app/FloatingActions.tsx",
+      "_MosaicReveal-wBr7YpSZ.js",
+      "app/SiteHeader.tsx",
+      "_siteZoom-DBTy2P6x.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/contact/ContactWizard.tsx": {
+    "file": "_next/static/chunks/ContactWizard-BOajduny.js",
+    "name": "ContactWizard",
+    "src": "app/contact/ContactWizard.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/destinations/north-sardinia/BookingSteps.tsx": {
+    "file": "_next/static/chunks/BookingSteps-C6WzKZ09.js",
+    "name": "BookingSteps",
+    "src": "app/destinations/north-sardinia/BookingSteps.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/destinations/north-sardinia/ExperienceBrowser.tsx": {
+    "file": "_next/static/chunks/ExperienceBrowser-Dks0ImAW.js",
+    "name": "ExperienceBrowser",
+    "src": "app/destinations/north-sardinia/ExperienceBrowser.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_siteZoom-DBTy2P6x.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/destinations/north-sardinia/NorthDestinations.tsx": {
+    "file": "_next/static/chunks/NorthDestinations-DJolCBwz.js",
+    "name": "NorthDestinations",
+    "src": "app/destinations/north-sardinia/NorthDestinations.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/hotels/HotelsView.tsx": {
+    "file": "_next/static/chunks/HotelsView-Bc_EDaPj.js",
+    "name": "HotelsView",
+    "src": "app/hotels/HotelsView.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_ui-aQFvzWPz.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/off-road/OffRoadView.tsx": {
+    "file": "_next/static/chunks/OffRoadView-D5L-2Xk9.js",
+    "name": "OffRoadView",
+    "src": "app/off-road/OffRoadView.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_ui-aQFvzWPz.js",
+      "_TourCard-CqxHhfdG.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/off-road/TourDetail.tsx": {
+    "file": "_next/static/chunks/TourDetail-D9vo3oGf.js",
+    "name": "TourDetail",
+    "src": "app/off-road/TourDetail.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_ui-aQFvzWPz.js",
+      "_TourCard-CqxHhfdG.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/private-transfers/TransferBooking.tsx": {
+    "file": "_next/static/chunks/TransferBooking-5wR9CpAw.js",
+    "name": "TransferBooking",
+    "src": "app/private-transfers/TransferBooking.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/private-transfers/TransferFaq.tsx": {
+    "file": "_next/static/chunks/TransferFaq-BXHZ5Oil.js",
+    "name": "TransferFaq",
+    "src": "app/private-transfers/TransferFaq.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "app/private-transfers/TransferHowItWorks.tsx": {
+    "file": "_next/static/chunks/TransferHowItWorks-BA1BjgQ3.js",
+    "name": "TransferHowItWorks",
+    "src": "app/private-transfers/TransferHowItWorks.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "node_modules/vinext/dist/shims/layout-segment-context.js": {
+    "file": "_next/static/chunks/layout-segment-context-DDilwplF.js",
+    "name": "layout-segment-context",
+    "src": "node_modules/vinext/dist/shims/layout-segment-context.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "virtual:vinext-app-browser-entry",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "node_modules/vinext/dist/shims/script.js": {
+    "file": "_next/static/chunks/script-n8TGvMJ3.js",
+    "name": "script",
+    "src": "node_modules/vinext/dist/shims/script.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "virtual:vinext-app-browser-entry",
+      "_framework-BgSIrAUN.js"
+    ]
+  },
+  "virtual:vinext-app-browser-entry": {
+    "file": "_next/static/chunks/index-CAzItQ-H.js",
+    "name": "index",
+    "src": "virtual:vinext-app-browser-entry",
+    "isEntry": true,
+    "imports": [
+      "_rolldown-runtime-C60lm6uB.js",
+      "_framework-BgSIrAUN.js"
+    ],
+    "dynamicImports": [
+      "app/contact/ContactWizard.tsx",
+      "virtual:vinext-app-browser-entry",
+      "node_modules/vinext/dist/shims/layout-segment-context.js",
+      "app/FloatingActions.tsx",
+      "node_modules/vinext/dist/shims/script.js",
+      "app/destinations/north-sardinia/NorthDestinations.tsx",
+      "app/private-transfers/TransferBooking.tsx",
+      "app/private-transfers/TransferHowItWorks.tsx",
+      "app/hotels/HotelsView.tsx",
+      "app/boat-tours/page.tsx",
+      "app/HomeView.tsx",
+      "app/private-transfers/TransferFaq.tsx",
+      "app/off-road/OffRoadView.tsx",
+      "app/about/AboutView.tsx",
+      "app/off-road/TourDetail.tsx",
+      "app/destinations/north-sardinia/BookingSteps.tsx",
+      "app/SiteHeader.tsx",
+      "app/destinations/north-sardinia/ExperienceBrowser.tsx"
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+/* Component-only stylesheet: loaded exclusively inside its shadow root. */
+:host { display: block; width: 100%; }
+* { box-sizing: border-box; }
+/* Section and full-bleed photo layer. */
+section { position: relative; isolation: isolate; width: 100%; min-height: calc(100 * var(--vh)); background: #17272b; color: white; font-family: var(--hero-font-sans); }
+.images, .panel, .overlay { position: absolute; inset: 0; }
+.images { z-index: 0; overflow: hidden; }
+.panel { background-size: cover; background-position: center var(--hero-background-position, 50%); }
+.panel { overflow: hidden; }
+.media { position: absolute; inset: 0; background-size: cover; background-position: center var(--hero-background-position, 50%); will-change: transform; }
+/* This overlay never moves with the panels. */
+.overlay { z-index: 2; background: linear-gradient(35deg, var(--hero-overlay-dark), var(--hero-overlay-light)), linear-gradient(180deg, rgba(0,0,0,.28), transparent 55%); pointer-events: none; }
+/* Stationary typography, always above the moving edges. */
+/* Keep the headline in flow: short viewports can grow instead of cropping text.
+   Clip only the moving photos, never the stationary content container. */
+.content { position: relative; z-index: 3; min-height: calc(100 * var(--vh)); display: flex; flex-direction: column; justify-content: flex-end; padding: calc(calc(32 * var(--vh)) + 132px) var(--hero-padding) calc(var(--hero-bottom-padding) + var(--hero-covered-bottom, 0px)); pointer-events: none; }
+h1 { margin: 0; font-family: var(--hero-font-display); font-size: clamp(3.5rem, calc(9 * var(--vw)), 8rem); font-weight: 300; letter-spacing: -.055em; line-height: .95; overflow-wrap: anywhere; }
+h1 span { display: block; }
+.tagline { position: absolute; top: 12%; right: var(--hero-padding); width: min(31%, 25rem); margin: 0; font-size: 15px; line-height: 1.6; }
+.tagline strong { font-weight: 700; }
+.tagline span { color: rgba(255,255,255,.85); }
+/* Edge-to-edge divider and independent slide selectors. */
+.divider { position: absolute; z-index: 4; top: calc(32 * var(--vh)); left: 0; right: 0; height: 1px; background: rgba(255,255,255,.2); }
+.thumbnails { position: absolute; z-index: 5; pointer-events: auto; top: calc(calc(32 * var(--vh)) + 22px); right: var(--hero-padding); display: flex; gap: 16px; }
+button { width: 120px; height: 80px; flex-shrink: 0; padding: 2px; border: 2px solid transparent; border-radius: 10px; background: transparent; cursor: pointer; opacity: .6; }
+button img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+button[aria-current='true'] { border-color: white; box-shadow: 0 0 0 3px rgba(255,255,255,.14), 0 0 18px rgba(255,255,255,.18); opacity: 1; }
+button:hover { opacity: 1; }
+button:focus-visible { outline: 2px solid white; outline-offset: 5px; opacity: 1; }
+@media (max-width: 767px) {
+  section { min-height: calc(100 * var(--dvh)); }
+  .content { min-height: calc(100 * var(--dvh)); padding: calc(calc(32 * var(--dvh)) + 132px) 1.5rem calc(max(3rem, env(safe-area-inset-bottom)) + var(--hero-covered-bottom, 0px)); }
+  h1 { font-size: clamp(3.5rem, calc(9 * var(--vw)), 8rem); letter-spacing: -.045em; }
+  .divider { top: calc(32 * var(--dvh)); }
+  .tagline { display: none; }
+  .thumbnails { top: calc(calc(32 * var(--dvh)) + 22px); right: 1.5rem; gap: 12px; }
+  button { width: min(120px, calc((calc(100 * var(--vw)) - 72px) / 3)); height: auto; aspect-ratio: 3 / 2; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+
+/* Opening (Hero 01): dark stage behind the clipped photo, text hidden until split. */
+section { background: #1f1d1c; }
+:host([data-intro='pending']) h1, :host([data-intro='pending']) .tagline { visibility: hidden; }
+.line-mask { display: block; overflow: clip; padding-bottom: .14em; margin-bottom: -.14em; }
+.line { display: block; }

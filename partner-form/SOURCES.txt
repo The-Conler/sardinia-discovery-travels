@@ -1,0 +1,40 @@
+Partner wizard image sources (img/). No AI-generated images.
+All files were resized or cropped only.
+
+intro-castelsardo.jpg  Intro background. Pexels, Daniel Dorfer, "Photo of a City" (Castelsardo, Sardinia),
+                       https://www.pexels.com/photo/photo-of-a-city-5720656/ . Pexels License, no credit required.
+                       (Same photo the contact wizard uses for card-trip.webp.)
+bg-mariolu.jpg         Category step background. The site's own public/experiences/mosaic/tr-mariolu-cliffs.webp
+                       (same background as the contact wizard interests step). No new credit.
+cat-boat.jpg           Boat tour card. Crop of the site's own public/destinations/islands.png
+                       (contact wizard card-boat.webp). No new credit.
+cat-hiking.jpg         Hiking and nature card. The site's own destinations image (east-sardinia), from contact/cand/. No new credit.
+cat-cooking.jpg        Cooking class card. The site's own experiences image (cooking-class), from contact/cand/. No new credit.
+cat-wine.jpg           Wine and food tasting card. Pexels, Dogu Tuncer, "Plates of Food and Wine Glasses on a Table",
+                       https://www.pexels.com/photo/plates-of-food-and-wine-glasses-on-a-table-15880512/ . Pexels License, no credit required.
+cat-artisan.jpg        Artisan and crafts card. Wikimedia Commons, "Artigianato Sardo Santa Caterina di Pittinuri 2.jpg" by Air fans,
+                       https://commons.wikimedia.org/wiki/File:Artigianato_Sardo_Santa_Caterina_di_Pittinuri_2.jpg . CC0 1.0, no credit required.
+cat-stay.jpg           Accommodation card. The site's own transfers image (situations hotel), from contact/cand/. No new credit.
+cat-culture.jpg        Cultural experience card. The site's own destinations image (interlands, nuraghe), from contact/cand/. No new credit.
+cat-other.jpg          Other card. The site's own opening picture (Tavolara), from contact/cand/. No new credit.
+thumb-offer.jpg        Intro thumbnail. Crop of the contact wizard thumb-boat.webp (site's own la-maddalena.webp). No new credit.
+thumb-photos.jpg       Intro thumbnail. Square crop of cat-cooking.jpg (site's own). No new credit.
+thumb-live.jpg         Intro thumbnail. Crop of the contact wizard thumb-coast.webp (site's own tavolara.webp). No new credit.
+
+Added for prototype v3 (partner application brief)
+cat-transport.jpg      Sector G card (Trasporti e mobilita). From contact/cand/transfers_minibus.jpg (site's own). No new credit.
+cat-guide.jpg          Sector F card (Guide e accompagnatori). From contact/cand/destinations_north-sardinia.jpg (site's own). No new credit.
+path-b.jpg             Collaboration card B (Convenzione commerciale). From contact/cand/experiences_hotel.jpg (site's own). No new credit.
+cat-artisan.jpg is reused for collaboration card A. Same caveat as above: contact/cand/ images are 500 px wide.
+
+Demo "sample photos" on the photos step reuse cat-boat, cat-hiking, cat-cooking and cat-culture.
+
+Notes
+- The contact/cand/ folder has no SOURCES file. Those images are taken to be the site's own photos based on their
+  file names (destinations_*, experiences_*, transfers_*, opening-picture). Please confirm before launch.
+- cand/ images are only 500 px wide, so cat-hiking, cat-cooking, cat-stay, cat-culture and cat-other look slightly soft
+  on large or retina screens. Swap in the full-size site originals when this becomes a site page.
+- NEEDS ON-SITE CREDIT: none of the images above.
+
+sardinia-logo.png
+  Source: site-ref (the Sardinia Discovery Travels site logo). The studio's own asset, no credit needed.
