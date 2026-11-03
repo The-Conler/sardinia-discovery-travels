@@ -31,3 +31,12 @@ for (const f of walk(out)) {
   if (s !== o) { fs.writeFileSync(f, s); n++; }
 }
 console.log("rewrote", n, "files; prefixes:", names.length);
+
+// Trailing-slash URLs (/off-road/) -> X/index.html copies.
+for (const f of walk(out)) {
+  if (!f.endsWith(".html") || path.basename(f) === "index.html" || path.basename(f) === "404.html") continue;
+  const dir = f.slice(0, -5);
+  if (fs.existsSync(path.join(dir, "index.html"))) continue;
+  fs.mkdirSync(dir, { recursive: true });
+  fs.copyFileSync(f, path.join(dir, "index.html"));
+}
