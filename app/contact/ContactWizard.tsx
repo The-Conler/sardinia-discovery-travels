@@ -5,10 +5,11 @@ import type { KeyboardEvent, ReactNode } from "react";
 import { createPortal, flushSync } from "react-dom";
 import { Icon } from "./icons";
 import {
-  AIRPORTS, ALL_STEPS, ARRIVAL_METHODS, BOAT_STYLES, BOAT_TYPES, BUDGETS, CELEBRATIONS, COUNTRY_SUGGESTIONS,
-  DURATIONS, HEARD_FROM, INTERESTS, LOCATIONS, NEEDS, PLACE_SUGGESTIONS, PORTS, QUICK_TOPICS, REPLY_VIA, SWIMMING,
-  TRANSFER_ITEMS, TRANSFER_TRIPS, YES_NO, YES_NO_UNSURE,
-  activeSteps, asksPickup, emptyData, isEmail, stepValid, wantsBoat, wantsTransfer,
+  AIRPORTS, ALL_STEPS, ARRIVAL_METHODS, BOAT_STYLES, BOAT_TYPES, CAR_SEATS, CAR_SIZES, CAR_TYPES,
+  CELEBRATIONS, COUNTRY_SUGGESTIONS, DURATIONS, DURATIONS_OTHER, HEARD_FROM, INTERESTS, LOCATIONS, NEEDS,
+  PLACE_SUGGESTIONS, PORTS, QUICK_TOPICS, RENTAL_CAR, REPLY_VIA, STAY_AMENITIES, STAY_BOARD, STAY_ROOMS,
+  STAY_ROOMS_COUNT, STAY_TYPES, SWIMMING, TRANSFER_ITEMS, TRANSFER_TRIPS, YES_NO,
+  activeSteps, asksPickup, emptyData, isEmail, isLargeGroup, stepValid, wantsBoat, wantsTransfer,
 } from "./contactData";
 import type { ContactData, Opt, StepId } from "./contactData";
 import { labelOf } from "./contactData";
@@ -195,7 +196,7 @@ export function ContactWizard() {
   const navigated = useRef(false);
 
   const set = <K extends keyof ContactData>(k: K, v: ContactData[K]) => setData((d) => ({ ...d, [k]: v }));
-  type ListKey = "interests" | "transferItems" | "needs" | "quickTopics";
+  type ListKey = "interests" | "transferItems" | "needs" | "quickTopics" | "stayAmenities";
   const toggleIn = (k: ListKey) => (v: string) =>
     setData((d) => ({ ...d, [k]: d[k].includes(v) ? d[k].filter((x) => x !== v) : [...d[k], v] }));
 
@@ -229,6 +230,7 @@ export function ContactWizard() {
         restoredStep = target;
       }
     }
+    if (restored.rentalCar === "yes") restored.rentalCar = "myself";
     setData(restored);
     setStep(restoredStep);
     setReady(true);
@@ -449,16 +451,24 @@ export function ContactWizard() {
       );
       break;
 
-    case "boatHow":
+    case "boatHow": {
+      const durationOpts = data.boatType === "rib" ? DURATIONS : DURATIONS_OTHER;
       body = (
         <>
           {head("What kind of boat day?")}
-          <Choice legend="Boat type" options={BOAT_TYPES} value={data.boatType} onChange={(v) => set("boatType", v)} />
-          <Choice legend="How long?" options={DURATIONS} value={data.boatDuration} onChange={(v) => set("boatDuration", v)} />
+          <Choice legend="Boat type" options={BOAT_TYPES} value={data.boatType} onChange={(v) => {
+            setData((d) => ({
+              ...d,
+              boatType: v,
+              boatDuration: v !== "rib" && d.boatDuration === "half" ? "" : d.boatDuration,
+            }));
+          }} />
+          <Choice legend="How long?" options={durationOpts} value={data.boatDuration} onChange={(v) => set("boatDuration", v)} />
           <Choice legend="Shared or private?" options={BOAT_STYLES} value={data.boatStyle} onChange={(v) => set("boatStyle", v)} layout="wide" />
         </>
       );
       break;
+    }
 
     case "transfer":
       body = (
@@ -533,6 +543,11 @@ export function ContactWizard() {
             </fieldset>
           )}
           {wantsBoat(data) && <Choice legend="Is everyone comfortable swimming?" options={SWIMMING} value={data.swimming} onChange={(v) => set("swimming", v)} />}
+          {isLargeGroup(data) && (
+            <p className="ct-note" role="note">
+              Groups of 13 or more are planned as a tailor-made trip. Our standard experiences are for up to 12 guests.
+            </p>
+          )}
         </>
       );
       break;
@@ -550,6 +565,7 @@ export function ContactWizard() {
                 <Field label="Arrival date" optional><input type="date" min={todayISO()} value={data.arrivalDate || data.tripArrival} onChange={(e) => set("arrivalDate", e.target.value)} /></Field>
                 <Field label="Arrival time" optional><input type="time" value={data.arrivalTime} onChange={(e) => set("arrivalTime", e.target.value)} /></Field>
               </div>
+              <p className="ct-note" role="note">We do not book flight tickets. Share your flight details so we can plan pickups and the days around your arrival.</p>
             </>
           )}
           {data.arrivalMethod === "ferry" && (
@@ -561,7 +577,23 @@ export function ContactWizard() {
               </div>
             </>
           )}
-          <Choice legend="Will you have a rental car?" options={YES_NO_UNSURE} value={data.rentalCar} onChange={(v) => set("rentalCar", v)} layout="pills" />
+          <Choice legend="Rental car" sub="We can arrange one through our partners. The request is sent by email." options={RENTAL_CAR} value={data.rentalCar} onChange={(v) => setData((d) => ({
+            ...d,
+            rentalCar: v,
+            rentalCarType: v === "for_me" ? d.rentalCarType : "",
+            rentalCarSeats: v === "for_me" ? d.rentalCarSeats : "",
+            rentalCarSize: v === "for_me" ? d.rentalCarSize : "",
+          }))} layout="pills" />
+          {data.rentalCar === "for_me" && (
+            <>
+              <Choice legend="What kind of car? (required)" options={CAR_TYPES} value={data.rentalCarType} onChange={(v) => set("rentalCarType", v)} layout="pills" />
+              <Choice legend="How many seats? (required)" options={CAR_SEATS} value={data.rentalCarSeats} onChange={(v) => set("rentalCarSeats", v)} layout="pills" />
+              <Choice legend="Size (required)" options={CAR_SIZES} value={data.rentalCarSize} onChange={(v) => set("rentalCarSize", v)} layout="pills" />
+              {(!data.rentalCarType || !data.rentalCarSeats || !data.rentalCarSize) && (
+                <p className="ct-error" role="status">Choose a car type, number of seats and size to continue.</p>
+              )}
+            </>
+          )}
           {asksPickup(data) && <Choice legend="Do you need a pickup to the boat or tour?" options={YES_NO} value={data.pickup} onChange={(v) => set("pickup", v)} layout="pills" />}
         </>
       );
@@ -578,6 +610,19 @@ export function ContactWizard() {
                 <Field label="Area or town"><input value={data.stayArea} onChange={(e) => set("stayArea", e.target.value)} placeholder="e.g. Porto Cervo, Alghero, Cagliari" /></Field>
                 <Field label="Hotel or address" optional><input value={data.stayAddress} onChange={(e) => set("stayAddress", e.target.value)} placeholder="Hotel name or street address" /></Field>
               </div>
+            </>
+          )}
+          {data.stayNotBooked && (
+            <>
+              <Choice legend="Type of stay" options={STAY_TYPES} value={data.stayType} onChange={(v) => set("stayType", v)} layout="pills" />
+              <Choice legend="Room type" options={STAY_ROOMS} value={data.stayRoom} onChange={(v) => set("stayRoom", v)} layout="pills" />
+              <Choice legend="Number of rooms" options={STAY_ROOMS_COUNT} value={data.stayRoomsCount} onChange={(v) => set("stayRoomsCount", v)} layout="pills" />
+              <Choice legend="Board" options={STAY_BOARD} value={data.stayBoard} onChange={(v) => set("stayBoard", v)} layout="pills" />
+              <MultiChoice legend="Nice to have" sub="Optional" options={STAY_AMENITIES} values={data.stayAmenities} onToggle={toggleIn("stayAmenities")} layout="pills" />
+              <Field label="Other request" optional hint="Anything else about the stay">
+                <input value={data.stayRequest} onChange={(e) => set("stayRequest", e.target.value)} />
+              </Field>
+              <p className="ct-note" role="note">Budget for activities is on the next step. Tell us your stay preferences here and we will suggest options.</p>
             </>
           )}
         </>

@@ -1,8 +1,9 @@
 // Friendly, sentence-style summary tiles for the review step.
 // Every answer from the form appears in one of these tiles.
 import {
-  AIRPORTS, BOAT_TYPES, BUDGETS, CELEBRATIONS, HEARD_FROM, INTERESTS, LOCATIONS, NEEDS, PORTS, TRANSFER_ITEMS,
-  asksPickup, labelOf, wantsBoat, wantsTransfer,
+  AIRPORTS, BOAT_TYPES, BUDGETS, CAR_SEATS, CAR_SIZES, CAR_TYPES, CELEBRATIONS, HEARD_FROM, INTERESTS, LOCATIONS,
+  NEEDS, PORTS, STAY_AMENITIES, STAY_BOARD, STAY_ROOMS, STAY_ROOMS_COUNT, STAY_TYPES, TRANSFER_ITEMS,
+  asksPickup, isLargeGroup, labelOf, labelsOf, wantsBoat, wantsTransfer,
 } from "./contactData";
 import type { ContactData, StepId } from "./contactData";
 
@@ -90,6 +91,7 @@ export function buildReviewTiles(d: ContactData): ReviewTile[] {
     if (!d.children && !d.infants) details.push("No children or infants.");
     else if (!d.infants) details.push("No infants.");
     if (wantsBoat(d)) details.push(d.swimming === "yes" ? "Everyone can swim." : d.swimming === "some" ? "Some of the group can swim." : "Not everyone can swim.");
+    if (isLargeGroup(d)) details.push("Group of 13 or more: tailor-made trip.");
     tiles.push({ step: "guests", icon: "users", title: "Who's coming", headline: who.join(", "), details });
   }
 
@@ -109,18 +111,37 @@ export function buildReviewTiles(d: ContactData): ReviewTile[] {
       headline = `Ferry into ${labelOf(PORTS, d.port)}`;
       if (when) details.push(`Arriving ${when}.`);
     }
-    const car = d.rentalCar === "yes" ? "Rental car" : d.rentalCar === "no" ? "No rental car" : "Rental car not decided";
+    const carVal = d.rentalCar === "yes" ? "myself" : d.rentalCar;
+    let car = "Rental car not decided";
+    if (carVal === "myself") car = "Will book a rental car independently";
+    else if (carVal === "for_me") {
+      const bits = [labelOf(CAR_TYPES, d.rentalCarType), labelOf(CAR_SEATS, d.rentalCarSeats), labelOf(CAR_SIZES, d.rentalCarSize)].filter(Boolean);
+      car = bits.length ? `Rental car for us to arrange (${bits.join(", ")})` : "Rental car for us to arrange";
+    } else if (carVal === "no") car = "No rental car";
+    else if (carVal === "notsure") car = "Rental car not decided";
     const pick = asksPickup(d) ? (d.pickup === "yes" ? ", needs a pickup to the boat or tour." : ", no pickup needed.") : ".";
     details.push(car + pick);
     tiles.push({ step: "arrival", icon, title: "Getting here", headline, details, wide: true });
   }
 
   // Staying
-  tiles.push({
-    step: "stay", icon: "home", title: "Staying",
-    headline: d.stayNotBooked ? "Not booked yet" : d.stayAddress.trim() ? `${d.stayAddress.trim()}, ${d.stayArea.trim()}` : d.stayArea.trim(),
-    details: d.stayNotBooked || d.stayAddress.trim() ? [] : ["No hotel or address given."],
-  });
+  {
+    const details: string[] = [];
+    if (d.stayNotBooked) {
+      if (d.stayType) details.push(labelOf(STAY_TYPES, d.stayType) + ".");
+      const roomBits = [d.stayRoom && labelOf(STAY_ROOMS, d.stayRoom), d.stayRoomsCount && labelOf(STAY_ROOMS_COUNT, d.stayRoomsCount), d.stayBoard && labelOf(STAY_BOARD, d.stayBoard)].filter(Boolean);
+      if (roomBits.length) details.push(roomBits.join(", ") + ".");
+      if (d.stayAmenities.length) details.push(`Looking for ${labelsOf(STAY_AMENITIES, d.stayAmenities).toLowerCase()}.`);
+      if (d.stayRequest.trim()) details.push(end(d.stayRequest));
+    } else if (!d.stayAddress.trim()) {
+      details.push("No hotel or address given.");
+    }
+    tiles.push({
+      step: "stay", icon: "home", title: "Staying",
+      headline: d.stayNotBooked ? (d.stayType ? `Looking for a ${labelOf(STAY_TYPES, d.stayType).toLowerCase()}` : "Not booked yet") : d.stayAddress.trim() ? `${d.stayAddress.trim()}, ${d.stayArea.trim()}` : d.stayArea.trim(),
+      details,
+    });
+  }
 
   // Good to know
   {
@@ -128,7 +149,9 @@ export function buildReviewTiles(d: ContactData): ReviewTile[] {
       if (n === "celebration") return d.celebration && d.celebration !== "other" ? `${labelOf(CELEBRATIONS, d.celebration).toLowerCase()} celebration` : "a celebration";
       return labelOf(NEEDS, n).toLowerCase();
     });
-    const budget = d.budget === "na" ? "Prefers not to share a budget." : `Budget ${labelOf(BUDGETS, d.budget)} per person.`;
+    const budgetLabel = labelOf(BUDGETS, d.budget);
+    const budgetShown = budgetLabel && budgetLabel !== d.budget ? budgetLabel : d.budget;
+    const budget = d.budget === "na" ? "Prefers not to share a budget." : `Budget ${budgetShown} per person.`;
     const details: string[] = [];
     if (d.needsDetail.trim() && d.needs.length) details.push(end(d.needsDetail));
     details.push(budget);

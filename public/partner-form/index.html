@@ -1101,7 +1101,7 @@ const CONFIG = {
   /* Percorso A, section 7.2 of the brief. q = sector questions (section 9; Cultura and Natura use a subset). */
   sectors: [
     { code:'artigianato', letter:'A', img:'/partner-form/img/cat-artisan.jpg', icon:'amphora',
-      spec:['tessitura','ceramica','coltelleria','legno','metalli','maschere','campanacci','tessile','altre_artigianali'],
+      spec:['ceramica','coltelleria','legno','metalli','maschere','pelletteria','gioielli','tessile','altre_artigianali'],
       types:['laboratorio_pratico','dimostrazione','visita_bottega','incontro_artigiano','esperienza_privata','percorso_piu'],
       q:[ {k:'materials', t:'toggle'}, {k:'takehome', t:'toggle'},
           {k:'workshop_loc', t:'pills', o:['loc_bottega','loc_cliente','loc_entrambi'], req:true},
@@ -1120,12 +1120,12 @@ const CONFIG = {
       q:[ {k:'tickets', t:'pills', o:['tk_inc','tk_extra','tk_na'], req:true},
           {k:'site_booking', t:'toggle'}, {k:'licensed_guide', t:'toggle'} ] },
     { code:'natura', letter:'D', img:'/partner-form/img/cat-hiking.jpg', icon:'mountain',
-      spec:['trekking','escursionismo','naturalistiche','turismo_rurale','sport_outdoor','montagna'],
+      spec:['trekking','escursionismo','naturalistiche','jeep','quad','buggy','4x4_altro','cavalli','asinelli','kayak','sup','snorkeling','scuba'],
       types:['escursione_guidata','attivita_sportiva','esperienza_naturalistica','tour_privato','esperienza_gruppo'],
       q:[ {k:'distance_km', t:'num', min:0, max:100, step:.5}, {k:'elevation_m', t:'num', min:0, max:3000, step:10},
           {k:'licensed_guide', t:'toggle'}, {k:'insurance', t:'toggle'} ] },
     { code:'mare', letter:'E', img:'/partner-form/img/cat-boat.jpg', icon:'sailboat',
-      spec:['barca_motore','barca_vela','catamarano','snorkeling','attivita_acquatiche','escursioni_costiere'],
+      spec:['barca_motore','barca_vela','catamarano','attivita_acquatiche','escursioni_costiere'],
       types:['escursione_privata','escursione_condivisa','mezza_giornata','giornata_intera','esperienza_personalizzata'],
       q:[ {k:'boat_type', t:'pills', o:['bt_motore','bt_vela','bt_catamarano','bt_gommone','bt_altro'], req:true},
           {k:'boat_length', t:'num', min:2, max:60, step:.5, req:true, unit:'m'},
@@ -1223,18 +1223,19 @@ en:{
   same_op:'The operational office is the same', same_opD:'Turn off if you operate from a different address.', op_addr:'Operational office address', op_comune:'Operational office municipality',
   oc_title:'Organisation contacts', oc_sub:'Where travellers and our team can reach the organisation.', use_contact:'Use the same contacts as the contact person', use_contactD:'Fills in email and phone. You can still edit them.', org_email:'Organisation email', org_phone:'Organisation phone', website:'Website', websitePh:'www.',
   cb_title:'How would you like to collaborate?', cb_sub:'Choose one or both. You will not be asked for your details again.',
-  path_A:'A. Experiences and services', path_AD:'Workshops, tours, tastings, guides, boat trips, transfers.',
-  path_B:'B. Commercial agreement', path_BD:'Hotels, accommodation and restaurants with dedicated terms for our travellers.',
+  path_A:'A. Experiences', path_AD:'Workshops, tours, tastings, nature, sea and cultural activities.',
+  path_B:'B. Commercial agreements', path_BD:'Hotels, accommodation and restaurants with dedicated terms for our travellers.',
+  path_C:'C. Services and professionals', path_CD:'Guides, escorts, transfers, NCC and mobility.',
   es_title:'Which sector does this experience belong to?', es_sub:'Pick the closest one.',
-  esp_title:'What is your speciality?', esp_sub:'Choose one.', spec_other:'Describe it briefly',
-  et_title:'What type of service is it?', et_sub:'Choose the format that fits best.',
-  g1_title:'Name and describe the experience', g1_sub:'Keep it simple and concrete.', exp_name:'Experience name', exp_namePh:'For example Weaving workshop in Aggius', exp_desc:'Description', exp_descPh:'What guests do, see and learn, and who they meet.', desc_min:'At least {n} characters', desc_ok:'Long enough',
+  esp_title:'What is your speciality?', esp_sub:'Select more than one button if needed.', spec_other:'Describe it briefly',
+  et_title:'What type of service is it?', et_sub:'Select more than one button if needed.',
+  g1_title:'Give it a short title', g1_sub:'Keep it simple and concrete.', exp_name:'Short title', exp_namePh:'For example Weaving workshop in Aggius', exp_desc:'Description', exp_descPh:'What guests do, see and learn, and who they meet.', desc_min:'At least {n} characters', desc_ok:'Long enough',
   g2_title:'Where does it take place?', g2_sub:'So we can plan the logistics.', exp_comune:'Municipality', exp_loc:'Place or area', exp_meet:'Meeting point', exp_end:'End point', exp_endHint:'Leave empty if it is the same as the meeting point.',
-  g3_title:'Duration and group size', g3_sub:'Approximate values are fine.', dur:'Duration', parts:'Participants and age', durD:'Hours and minutes', hours:'Hours', minutes:'Minutes', minP:'Minimum participants', minPD:'Smallest group you accept', maxP:'Maximum participants', maxPD:'Largest group you can host', minAge:'Minimum age', minAgeD:'0 means no limit',
+  g3_title:'Duration and group size', g3_sub:'Approximate values are fine.', dur:'Duration', parts:'Participants and age', durD:'Hours', hours:'Hours', minutes:'Minutes', minP:'Minimum participants', minPD:'Smallest group you accept (always at least 2)', maxP:'Maximum participants', maxPD:'Largest group you can host', minAge:'Minimum age', minAgeD:'0 means no limit',
   g4_title:'Languages and accessibility', g4_sub:'Who can enjoy it.', exp_langs:'Languages you run it in', access:'Accessibility', accessD:'Select what applies.',
   md_title:'Private, shared or both?', md_sub:'Private means one group only. Shared means guests from different bookings together.', md_privataD:'Only one group at a time.', md_condivisaD:'Guests from different bookings join together.', md_entrambeD:'You can run it both ways.',
   in_title:'What does it include?', in_sub:'Tick what you offer and say whether it is included or charged as a supplement.', inc:'Included', sup:'Supplement',
-  eq_title:'Equipment', eq_sub:'What you provide and what guests should bring.', eq_provided:'You provide the technical equipment', eq_providedD:'For example tools, helmets, snorkelling masks.', eq_bring:'Guests should bring',
+  eq_title:'Equipment', eq_sub:'Either you provide the gear, or tell us what guests must bring.', eq_provided:'You provide the technical equipment', eq_providedD:'For example tools, helmets, snorkelling masks.', eq_bring:'Guests should bring', eq_bring_note:'What guests must bring', eq_bring_notePh:'List the gear guests need to bring with them.',
   rq_title:'Requirements and safety', rq_sub:'So we can suggest the experience to the right travellers.', difficulty:'Difficulty', prev_exp:'Previous experience required', prev_expD:'For example sailing or climbing experience.', limits:'Limitations', limitsPh:'For example not suitable during pregnancy.', safety:'Safety measures', safetyPh:'For example life jackets, first aid kit, insurance.',
   sq_title:'A few questions on {s}', sq_sub:'Specific to your sector.',
   av_title:'When is it available?', av_sub:'Indicative availability, no booking calendar.', period:'Period', months:'Months', weekdays:'Days of the week',
@@ -1277,13 +1278,13 @@ en:{
   o_coop_lavoro:'Worker cooperative', o_coop_sociale:'Social cooperative', o_coop_agricola:'Agricultural cooperative', o_coop_servizi:'Service cooperative', o_coop_altro:'Other',
   o_artigianato:'Crafts and traditions', o_enogastronomia:'Food and wine', o_cultura:'Culture and territory', o_natura:'Nature and adventure', o_mare:'Sea and sailing', o_guide:'Guides and escorts', o_trasporti:'Transport and mobility',
   h_artigianato:'Workshops, demonstrations, studios', h_enogastronomia:'Tastings, producers, cooking', h_cultura:'Archaeology, history, traditions', h_natura:'Trekking, outdoor, rural life', h_mare:'Boats, sailing, snorkelling', h_guide:'Tourist and nature guides', h_trasporti:'Transfers, NCC, group transport',
-  o_tessitura:'Weaving', o_ceramica:'Ceramics', o_coltelleria:'Knife making', o_legno:'Woodwork', o_metalli:'Metalwork', o_maschere:'Traditional masks', o_campanacci:'Cowbells', o_tessile:'Textile crafts', o_altre_artigianali:'Other crafts',
+  o_tessitura:'Weaving', o_ceramica:'Ceramics', o_coltelleria:'Knife making', o_legno:'Woodwork', o_metalli:'Metalwork', o_maschere:'Traditional masks', o_campanacci:'Cowbells', o_pelletteria:'Leatherwork', o_gioielli:'Jewellery', o_tessile:'Textile crafts', o_altre_artigianali:'Other crafts',
   o_laboratorio_pratico:'Hands-on workshop', o_dimostrazione:'Demonstration', o_visita_bottega:'Workshop visit', o_incontro_artigiano:'Meet the artisan', o_esperienza_privata:'Private experience', o_percorso_piu:'Route with several activities',
   o_vino:'Wine', o_formaggi:'Cheese', o_produzione_agricola:'Farm produce', o_panificazione:'Bread making', o_pasticceria:'Pastry', o_cucina_tradizionale:'Traditional cooking', o_olio:'Olive oil', o_altri_alimentari:'Other food products',
   o_degustazione:'Tasting', o_visita_produttore:'Producer visit', o_laboratorio:'Workshop', o_cooking_class:'Cooking class', o_pranzo_cena:'Experiential lunch or dinner', o_esperienza_combinata:'Combined experience',
   o_archeologia:'Archaeology', o_storia:'History', o_musei:'Museums', o_tradizioni_popolari:'Folk traditions', o_patrimonio:'Cultural heritage', o_architettura:'Architecture', o_cultura_locale:'Local culture',
   o_visita_guidata:'Guided visit', o_percorso_culturale:'Cultural route', o_incontro_culturale:'Cultural encounter',
-  o_trekking:'Trekking', o_escursionismo:'Hiking', o_naturalistiche:'Nature experiences', o_turismo_rurale:'Rural tourism', o_sport_outdoor:'Outdoor sports', o_montagna:'Mountain activities',
+  o_trekking:'Trekking', o_escursionismo:'Hiking', o_naturalistiche:'Nature experiences', o_turismo_rurale:'Rural tourism', o_sport_outdoor:'Outdoor sports', o_montagna:'Mountain activities', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Buggy', o_4x4_altro:'Other 4x4', o_cavalli:'Horses', o_asinelli:'Donkeys', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkelling', o_scuba:'Scuba diving',
   o_escursione_guidata:'Guided excursion', o_attivita_sportiva:'Sports activity', o_esperienza_naturalistica:'Nature experience', o_tour_privato:'Private tour', o_esperienza_gruppo:'Group experience',
   o_barca_motore:'Motor boat', o_barca_vela:'Sailing boat', o_catamarano:'Catamaran', o_snorkeling:'Snorkelling', o_attivita_acquatiche:'Water activities', o_escursioni_costiere:'Coastal excursions',
   o_escursione_privata:'Private excursion', o_escursione_condivisa:'Shared excursion', o_mezza_giornata:'Half day', o_giornata_intera:'Full day', o_esperienza_personalizzata:'Tailor-made experience',
@@ -1377,18 +1378,19 @@ it:{
   same_op:'La sede operativa coincide', same_opD:'Disattiva se operi da un indirizzo diverso.', op_addr:'Indirizzo sede operativa', op_comune:'Comune sede operativa',
   oc_title:'Contatti dell’organizzazione', oc_sub:'Dove viaggiatori e team possono raggiungere l’organizzazione.', use_contact:'Utilizza gli stessi contatti del referente', use_contactD:'Compila email e telefono. Puoi comunque modificarli.', org_email:'Email aziendale', org_phone:'Telefono aziendale', website:'Sito web', websitePh:'www.',
   cb_title:'Come vorresti collaborare?', cb_sub:'Scegline una o entrambe. Non ti chiederemo di nuovo i tuoi dati.',
-  path_A:'A. Esperienze e servizi', path_AD:'Laboratori, tour, degustazioni, guide, uscite in barca, transfer.',
-  path_B:'B. Convenzione commerciale', path_BD:'Hotel, strutture ricettive e ristoranti con condizioni dedicate ai nostri viaggiatori.',
+  path_A:'A. Esperienze', path_AD:'Laboratori, tour, degustazioni, natura, mare e attività culturali.',
+  path_B:'B. Convenzioni', path_BD:'Hotel, strutture ricettive e ristoranti con condizioni dedicate ai nostri viaggiatori.',
+  path_C:'C. Servizi e figure professionali', path_CD:'Guide, accompagnatori, transfer, NCC e mobilità.',
   es_title:'In quale settore rientra questa esperienza?', es_sub:'Scegli il più vicino.',
-  esp_title:'Qual è la tua specializzazione?', esp_sub:'Scegline una.', spec_other:'Descrivila brevemente',
-  et_title:'Che tipo di servizio è?', et_sub:'Scegli il formato più adatto.',
-  g1_title:'Dai un nome all’esperienza e descrivila', g1_sub:'Semplice e concreto.', exp_name:'Nome dell’esperienza', exp_namePh:'Per esempio Laboratorio di tessitura ad Aggius', exp_desc:'Descrizione', exp_descPh:'Cosa fanno, vedono e imparano gli ospiti, e chi incontrano.', desc_min:'Almeno {n} caratteri', desc_ok:'Lunghezza sufficiente',
+  esp_title:'Qual è la tua specializzazione?', esp_sub:'Seleziona più di un tasto.', spec_other:'Descrivila brevemente',
+  et_title:'Che tipo di servizio è?', et_sub:'Seleziona più di un tasto.',
+  g1_title:'Dai un breve titolo', g1_sub:'Semplice e concreto.', exp_name:'Breve titolo', exp_namePh:'Per esempio Laboratorio di tessitura ad Aggius', exp_desc:'Descrizione', exp_descPh:'Cosa fanno, vedono e imparano gli ospiti, e chi incontrano.', desc_min:'Almeno {n} caratteri', desc_ok:'Lunghezza sufficiente',
   g2_title:'Dove si svolge?', g2_sub:'Ci serve per organizzare la logistica.', exp_comune:'Comune', exp_loc:'Località', exp_meet:'Punto di incontro', exp_end:'Luogo di conclusione', exp_endHint:'Lascia vuoto se coincide con il punto di incontro.',
-  g3_title:'Durata e partecipanti', g3_sub:'Vanno bene valori indicativi.', dur:'Durata', parts:'Partecipanti ed età', durD:'Ore e minuti', hours:'Ore', minutes:'Minuti', minP:'Partecipanti minimi', minPD:'Il gruppo più piccolo che accetti', maxP:'Partecipanti massimi', maxPD:'Il gruppo più grande che puoi ospitare', minAge:'Età minima', minAgeD:'0 significa nessun limite',
+  g3_title:'Durata e partecipanti', g3_sub:'Vanno bene valori indicativi.', dur:'Durata', parts:'Partecipanti ed età', durD:'Ore', hours:'Ore', minutes:'Minuti', minP:'Partecipanti minimi', minPD:'Il gruppo più piccolo che accetti (sempre almeno 2)', maxP:'Partecipanti massimi', maxPD:'Il gruppo più grande che puoi ospitare', minAge:'Età minima', minAgeD:'0 significa nessun limite',
   g4_title:'Lingue e accessibilità', g4_sub:'Chi può partecipare.', exp_langs:'Lingue in cui la proponi', access:'Accessibilità', accessD:'Seleziona ciò che vale.',
   md_title:'Privata, condivisa o entrambe?', md_sub:'Privata significa un solo gruppo. Condivisa significa ospiti di prenotazioni diverse insieme.', md_privataD:'Un solo gruppo alla volta.', md_condivisaD:'Ospiti di prenotazioni diverse insieme.', md_entrambeD:'Puoi proporla in entrambi i modi.',
   in_title:'Cosa include?', in_sub:'Spunta ciò che offri e indica se è incluso o a supplemento.', inc:'Incluso', sup:'Supplemento',
-  eq_title:'Attrezzatura', eq_sub:'Cosa fornisci tu e cosa devono portare gli ospiti.', eq_provided:'Fornisci l’attrezzatura tecnica', eq_providedD:'Per esempio attrezzi, caschi, maschere da snorkeling.', eq_bring:'Gli ospiti devono portare',
+  eq_title:'Attrezzatura', eq_sub:'O fornisci tu l’attrezzatura, oppure indica cosa devono portare gli ospiti.', eq_provided:'Fornisci l’attrezzatura tecnica', eq_providedD:'Per esempio attrezzi, caschi, maschere da snorkeling.', eq_bring:'Gli ospiti devono portare', eq_bring_note:'Cosa devono portare gli ospiti', eq_bring_notePh:'Elenca l’attrezzatura che gli ospiti devono portare.',
   rq_title:'Requisiti e sicurezza', rq_sub:'Così possiamo proporla ai viaggiatori giusti.', difficulty:'Difficoltà', prev_exp:'Serve esperienza pregressa', prev_expD:'Per esempio esperienza di vela o arrampicata.', limits:'Limitazioni', limitsPh:'Per esempio non adatta in gravidanza.', safety:'Misure di sicurezza', safetyPh:'Per esempio giubbotti salvagente, kit di primo soccorso, assicurazione.',
   sq_title:'Qualche domanda su {s}', sq_sub:'Specifiche del tuo settore.',
   av_title:'Quando è disponibile?', av_sub:'Disponibilità indicativa, nessun calendario di prenotazione.', period:'Periodo', months:'Mesi', weekdays:'Giorni della settimana',
@@ -1430,13 +1432,13 @@ it:{
   o_coop_lavoro:'Cooperativa di lavoro', o_coop_sociale:'Cooperativa sociale', o_coop_agricola:'Cooperativa agricola', o_coop_servizi:'Cooperativa di servizi', o_coop_altro:'Altro',
   o_artigianato:'Artigianato e tradizioni', o_enogastronomia:'Enogastronomia', o_cultura:'Cultura e territorio', o_natura:'Natura e avventura', o_mare:'Mare e nautica', o_guide:'Guide e accompagnatori', o_trasporti:'Trasporti e mobilità',
   h_artigianato:'Laboratori, dimostrazioni, botteghe', h_enogastronomia:'Degustazioni, produttori, cucina', h_cultura:'Archeologia, storia, tradizioni', h_natura:'Trekking, outdoor, vita rurale', h_mare:'Barche, vela, snorkeling', h_guide:'Guide turistiche e ambientali', h_trasporti:'Transfer, NCC, trasporto gruppi',
-  o_tessitura:'Tessitura', o_ceramica:'Ceramica', o_coltelleria:'Coltelleria', o_legno:'Lavorazione del legno', o_metalli:'Lavorazione dei metalli', o_maschere:'Maschere tradizionali', o_campanacci:'Campanacci', o_tessile:'Artigianato tessile', o_altre_artigianali:'Altre attività artigianali',
+  o_tessitura:'Tessitura', o_ceramica:'Ceramica', o_coltelleria:'Coltelleria', o_legno:'Lavorazione del legno', o_metalli:'Lavorazione dei metalli', o_maschere:'Maschere tradizionali', o_campanacci:'Campanacci', o_pelletteria:'Pelletteria', o_gioielli:'Gioielli', o_tessile:'Artigianato tessile', o_altre_artigianali:'Altre attività artigianali',
   o_laboratorio_pratico:'Laboratorio pratico', o_dimostrazione:'Dimostrazione', o_visita_bottega:'Visita in bottega', o_incontro_artigiano:'Incontro con l’artigiano', o_esperienza_privata:'Esperienza privata', o_percorso_piu:'Percorso con più attività',
   o_vino:'Vino', o_formaggi:'Formaggi', o_produzione_agricola:'Produzione agricola', o_panificazione:'Panificazione', o_pasticceria:'Pasticceria', o_cucina_tradizionale:'Cucina tradizionale', o_olio:'Olio', o_altri_alimentari:'Altri prodotti alimentari',
   o_degustazione:'Degustazione', o_visita_produttore:'Visita al produttore', o_laboratorio:'Laboratorio', o_cooking_class:'Cooking class', o_pranzo_cena:'Pranzo o cena esperienziale', o_esperienza_combinata:'Esperienza combinata',
   o_archeologia:'Archeologia', o_storia:'Storia', o_musei:'Musei', o_tradizioni_popolari:'Tradizioni popolari', o_patrimonio:'Patrimonio culturale', o_architettura:'Architettura', o_cultura_locale:'Cultura locale',
   o_visita_guidata:'Visita guidata', o_percorso_culturale:'Percorso culturale', o_incontro_culturale:'Incontro culturale',
-  o_trekking:'Trekking', o_escursionismo:'Escursionismo', o_naturalistiche:'Esperienze naturalistiche', o_turismo_rurale:'Turismo rurale', o_sport_outdoor:'Sport outdoor', o_montagna:'Attività in montagna',
+  o_trekking:'Trekking', o_escursionismo:'Escursionismo', o_naturalistiche:'Esperienze naturalistiche', o_turismo_rurale:'Turismo rurale', o_sport_outdoor:'Sport outdoor', o_montagna:'Attività in montagna', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Buggy', o_4x4_altro:'Altro 4x4', o_cavalli:'Cavalli', o_asinelli:'Asinelli', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkeling', o_scuba:'Scuba diving',
   o_escursione_guidata:'Escursione guidata', o_attivita_sportiva:'Attività sportiva', o_esperienza_naturalistica:'Esperienza naturalistica', o_tour_privato:'Tour privato', o_esperienza_gruppo:'Esperienza di gruppo',
   o_barca_motore:'Barca a motore', o_barca_vela:'Barca a vela', o_catamarano:'Catamarano', o_snorkeling:'Snorkeling', o_attivita_acquatiche:'Attività acquatiche', o_escursioni_costiere:'Escursioni costiere',
   o_escursione_privata:'Escursione privata', o_escursione_condivisa:'Escursione condivisa', o_mezza_giornata:'Mezza giornata', o_giornata_intera:'Giornata intera', o_esperienza_personalizzata:'Esperienza personalizzata',
@@ -1504,10 +1506,10 @@ const MONTHS = { en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct'
    S.exps[] and each becomes its own record (experience_proposals).
    ===================================================================== */
 const newExp = () => ({
-  sector:'', spec:'', specOther:'', type:'',
+  sector:'', spec:[], specOther:'', type:[],
   name:'', desc:'', comune:'', localita:'', meet:'', end:'',
-  durH:2, durM:0, min:1, max:8, minAge:0, langs:[], access:[],
-  mode:'', incl:{}, equipProvided:false, bring:[],
+  durH:2, durM:0, min:2, max:8, minAge:0, langs:[], access:[],
+  mode:'', incl:{}, equipProvided:false, bring:[], bringNote:'',
   difficulty:'', prevExp:false, limits:'', safety:'', sq:{},
   period:'', months:[], days:[], bands:[], slots:[], notice:'', manual:true,
   priceMode:'', price:{ priv:{base:'',incl:1,extra:'',min:''}, shared:{base:'',incl:1,extra:'',min:''} },
@@ -1538,7 +1540,15 @@ function load(){
     return { ...d, ...s, submitting:false,
       contact:{...d.contact, ...s.contact}, org:{...d.org, ...s.org}, conv:{...newConv(), ...s.conv},
       consents:{...d.consents, ...s.consents},
-      exps:(s.exps||[]).map(e=>({...newExp(), ...e, price:{priv:{...newExp().price.priv, ...(e.price||{}).priv}, shared:{...newExp().price.shared, ...(e.price||{}).shared}}})) };
+      exps:(s.exps||[]).map(e=>{
+      const base={...newExp(), ...e, price:{priv:{...newExp().price.priv, ...(e.price||{}).priv}, shared:{...newExp().price.shared, ...(e.price||{}).shared}}};
+      if(!Array.isArray(base.spec)) base.spec = base.spec ? [base.spec] : [];
+      if(!Array.isArray(base.type)) base.type = base.type ? [base.type] : [];
+      if(base.min < 2) base.min = 2;
+      if(base.bringNote == null) base.bringNote = '';
+      base.durM = 0;
+      return base;
+    }) };
   }catch(e){ return null; }
 }
 let quotaWarned = false;
@@ -1741,7 +1751,8 @@ VW.org_contacts = () => split(head(t('oc_title'), t('oc_sub'), sec('org')), `
 VW.collab = () => split(head(t('cb_title'), t('cb_sub'), sec('collab'), true),
   photoCards('paths', [
     {v:'A', img:'/partner-form/img/cat-artisan.jpg', icon:'compass', label:t('path_A'), hint:t('path_AD')},
-    {v:'B', img:'/partner-form/img/path-b.jpg', icon:'handshake', label:t('path_B'), hint:t('path_BD')}
+    {v:'B', img:'/partner-form/img/path-b.jpg', icon:'handshake', label:t('path_B'), hint:t('path_BD')},
+    {v:'C', img:'/partner-form/img/cat-guide.jpg', icon:'briefcase', label:t('path_C'), hint:t('path_CD')}
   ], {multi:true, cls:'ct-photos--tall'}));
 
 const OK = {
@@ -1777,13 +1788,33 @@ const ecount = (i, extra) => t('exp_n',{n:i+1}) + (extra ? `: ${extra}` : '');
 const sectorQs = e => (SECTOR[e.sector]?.q || []).filter(q => !q.if || e.sq[q.if[0]] === q.if[1]);
 const blocks = e => e.mode==='entrambe' ? ['priv','shared'] : e.mode==='condivisa' ? ['shared'] : ['priv'];
 
+const sectorsForPaths = () => {
+  const hasA = S.paths.includes('A'), hasC = S.paths.includes('C');
+  return CONFIG.sectors.filter(s => {
+    const isService = s.code === 'guide' || s.code === 'trasporti';
+    if (hasA && hasC) return true;
+    if (hasC && !hasA) return isService;
+    if (hasA && !hasC) return !isService;
+    return true;
+  });
+};
+const specList = e => Array.isArray(e.spec) ? e.spec : (e.spec ? [e.spec] : []);
+const typeList = e => Array.isArray(e.type) ? e.type : (e.type ? [e.type] : []);
+const artisanTypesFor = e => {
+  let types = [...(SECTOR[e.sector]?.types || [])];
+  if (e.sector === 'artigianato' && specList(e).includes('coltelleria')) {
+    types = types.filter(x => x !== 'incontro_artigiano' && x !== 'esperienza_privata');
+  }
+  return types;
+};
 const EV = {
   sector: i => split(head(t('es_title'), t('es_sub'), ecount(i), true),
-    photoCards(P(i,'sector'), CONFIG.sectors.map(s=>({v:s.code, img:s.img, icon:s.icon, label:`${s.letter}. ${o(s.code)}`, hint:t('h_'+s.code)})))),
-  spec: i => { const e=E(i), s=SECTOR[e.sector]; return split(head(t('esp_title'), t('esp_sub'), ecount(i, o(e.sector))), `
-    ${pills(P(i,'spec'), s.spec)}
-    ${CONFIG.otherSpec.includes(e.spec) ? inp(P(i,'specOther'), t('spec_other')) : ''}`); },
-  type: i => { const e=E(i); return split(head(t('et_title'), t('et_sub'), ecount(i, o(e.spec))), pills(P(i,'type'), SECTOR[e.sector].types)); },
+    photoCards(P(i,'sector'), sectorsForPaths().map(s=>({v:s.code, img:s.img, icon:s.icon, label:`${s.letter}. ${o(s.code)}`, hint:t('h_'+s.code)})))),
+  /* Artisan specialization comes first so knife-only exclusions are known before type selection. */
+  type: i => { const e=E(i); const types = e.sector==='artigianato' ? artisanTypesFor(e) : SECTOR[e.sector].types; return split(head(t('et_title'), t('et_sub'), ecount(i, o(e.sector))), pills(P(i,'type'), types, {multi:true})); },
+  spec: i => { const e=E(i), s=SECTOR[e.sector]; const specs = specList(e); return split(head(t('esp_title'), t('esp_sub'), ecount(i, o(e.sector))), `
+    ${pills(P(i,'spec'), s.spec, {multi:true})}
+    ${specs.some(x => CONFIG.otherSpec.includes(x)) ? inp(P(i,'specOther'), t('spec_other')) : ''}`); },
   g1: i => { const e=E(i); return split(head(t('g1_title'), t('g1_sub'), ecount(i)), `
     ${inp(P(i,'name'), t('exp_name'), {ph:t('exp_namePh'), max:80})}
     <label class="ct-field"><span class="ct-field-label"><span>${t('exp_desc')}</span></span>
@@ -1793,9 +1824,9 @@ const EV = {
     <div class="ct-row">${town(P(i,'comune'), t('exp_comune'))}${inp(P(i,'localita'), t('exp_loc'), {req:false})}</div>
     ${inp(P(i,'meet'), t('exp_meet'))}
     ${inp(P(i,'end'), t('exp_end'), {req:false, hint:t('exp_endHint')})}`),
-  g3: i => { const e=E(i); return split(head(t('g3_title'), t('g3_sub'), ecount(i)), `
-    ${group(t('dur'), `<div class="ct-steppers">${stepper(P(i,'durH'), t('hours'), '', 0, 12)}${stepper(P(i,'durM'), t('minutes'), '', 0, 45, 15)}</div>`)}
-    ${group(t('parts'), `<div class="ct-steppers">${stepper(P(i,'min'), t('minP'), t('minPD'), 1, e.max)}${stepper(P(i,'max'), t('maxP'), t('maxPD'), e.min, 200)}${stepper(P(i,'minAge'), t('minAge'), t('minAgeD'), 0, 18)}</div>`)}`); },
+  g3: i => { const e=E(i); if(e.min < 2) e.min = 2; return split(head(t('g3_title'), t('g3_sub'), ecount(i)), `
+    ${group(t('dur'), `<div class="ct-steppers">${stepper(P(i,'durH'), t('hours'), t('durD'), 1, 12)}</div>`)}
+    ${group(t('parts'), `<div class="ct-steppers">${stepper(P(i,'min'), t('minP'), t('minPD'), 2, e.max)}${stepper(P(i,'max'), t('maxP'), t('maxPD'), Math.max(2, e.min), 200)}${stepper(P(i,'minAge'), t('minAge'), t('minAgeD'), 0, 18)}</div>`)}`); },
   g4: i => split(head(t('g4_title'), t('g4_sub'), ecount(i)), `
     ${group(t('exp_langs'), pills(P(i,'langs'), CONFIG.expLangs, {multi:true}))}
     ${group(t('access'), pills(P(i,'access'), CONFIG.access, {multi:true}), {req:false, sub:t('accessD')})}`),
@@ -1804,11 +1835,11 @@ const EV = {
     <div class="ct-incl">${CONFIG.includes.map(c=>{ const v=e.incl[c]; return `
       <div class="ct-incl-row"><label class="ct-check${v?' is-on':''}"><input type="checkbox" data-incl="${c}" data-i="${i}" ${v?'checked':''}><span class="ct-check-box" aria-hidden="true">${ic('check',14,2.4)}</span><span>${esc(o(c))}</span></label>
         ${v?`<span class="ct-seg" role="radiogroup" aria-label="${esc(o(c))}">${['inc','sup'].map(x=>`<button type="button" role="radio" aria-checked="${v===x}" class="${v===x?'is-on':''}" data-action="inclset" data-i="${i}" data-c="${c}" data-v="${x}">${t(x)}</button>`).join('')}</span>`:''}</div>`;}).join('')}</div>`); },
-  equip: i => split(head(t('eq_title'), t('eq_sub'), ecount(i)), `
+  equip: i => { const e=E(i); return split(head(t('eq_title'), t('eq_sub'), ecount(i)), `
     ${toggle(P(i,'equipProvided'), t('eq_provided'), t('eq_providedD'))}
-    ${group(t('eq_bring'), pills(P(i,'bring'), CONFIG.bring, {multi:true}), {req:false})}`),
-  reqs: i => { const e=E(i); return split(head(t('rq_title'), t('rq_sub'), ecount(i)), `
-    ${group(t('difficulty'), pills(P(i,'difficulty'), CONFIG.difficulty))}
+    ${e.equipProvided ? '' : inp(P(i,'bringNote'), t('eq_bring_note'), {area:'short', ph:t('eq_bring_notePh')})}`); },
+  reqs: i => { const e=E(i); const showDiff = e.sector !== 'artigianato'; return split(head(t('rq_title'), t('rq_sub'), ecount(i)), `
+    ${showDiff ? group(t('difficulty'), pills(P(i,'difficulty'), CONFIG.difficulty)) : ''}
     ${toggle(P(i,'prevExp'), t('prev_exp'), t('prev_expD'))}
     ${inp(P(i,'limits'), t('limits'), {req:false, area:'short', ph:t('limitsPh')})}
     ${inp(P(i,'safety'), t('safety'), {req:false, area:'short', ph:t('safetyPh')})}`); },
@@ -1860,15 +1891,16 @@ function qOk(e, q){
 }
 const EOK = {
   sector: e => !!e.sector,
-  spec: e => !!e.spec && (!CONFIG.otherSpec.includes(e.spec) || filled(e.specOther,3)),
-  type: e => !!e.type,
+  spec: e => { const sp = specList(e); return sp.length > 0 && (!sp.some(x => CONFIG.otherSpec.includes(x)) || filled(e.specOther,3)); },
+  type: e => typeList(e).length > 0 && typeList(e).every(x => artisanTypesFor(e).includes(x)),
   g1: e => filled(e.name,3) && e.desc.trim().length >= DESC_MIN,
   g2: e => filled(e.comune) && filled(e.meet,3),
-  g3: e => (e.durH*60 + e.durM) > 0 && e.max >= e.min,
+  g3: e => e.durH > 0 && e.min >= 2 && e.max >= e.min,
   g4: e => e.langs.length > 0,
   mode: e => !!e.mode,
-  incl: () => true, equip: () => true,
-  reqs: e => !!e.difficulty,
+  incl: () => true,
+  equip: e => e.equipProvided || filled(e.bringNote, 3),
+  reqs: e => e.sector === 'artigianato' ? true : !!e.difficulty,
   sq: e => sectorQs(e).every(q => qOk(e,q)),
   avail: e => !!e.period && e.months.length > 0 && e.days.length > 0,
   slots: e => e.bands.length > 0 && !!e.notice,
@@ -1953,11 +1985,16 @@ function screens(){
   if(S.org.form && S.org.form!=='impresa_ind') add('org_extra','org',VW.org_extra,OK.org_extra);
   ['org_ident','org_address','org_contacts'].forEach(k=>add(k,'org',VW[k],OK[k]));
   add('collab','collab',VW.collab,OK.collab);
-  if(S.paths.includes('A')){
-    S.exps.forEach((e,i)=>EXP_SCREENS.forEach(k=>{
+  if(S.paths.includes('A') || S.paths.includes('C')){
+    S.exps.forEach((e,i)=>(e.sector === 'artigianato'
+      ? ['sector','spec','type',...EXP_SCREENS.filter(k=>!['sector','spec','type'].includes(k))]
+      : EXP_SCREENS).forEach(k=>{
       if(k!=='sector' && !e.sector) return;            /* taxonomy first */
       if(['spec','type'].includes(k) && !e.sector) return;
-      if(k==='type' && !e.spec) return;
+      /* Other sectors retain type-first; artisans need specialization before type. */
+      if(e.sector === 'artigianato'){
+        if(k==='type' && !specList(e).length) return;
+      } else if(k==='spec' && !typeList(e).length) return;
       if(k==='sq' && !(SECTOR[e.sector]?.q||[]).length) return;
       add(`e${i}_${k}`, 'prop', () => EV[k](i), () => !!S.exps[i] && EOK[k](S.exps[i]));
     }));
@@ -2021,13 +2058,15 @@ function monthsText(e){
 function expTiles(){
   const n = S.exps.length; if(typeof RV.exp!=='number' || RV.exp >= n) RV.exp = 0; const i = RV.exp, e = S.exps[i]; if(!e) return '';
   const tabs = rvTabs(i);
-  const spec = e.spec ? (CONFIG.otherSpec.includes(e.spec) && e.specOther ? e.specOther : o(e.spec)) : '';
+  const specs = specList(e); const typesArr = typeList(e);
+  const spec = specs.map(x => CONFIG.otherSpec.includes(x) && e.specOther ? e.specOther : o(x)).filter(Boolean).join(', ');
+  const typeLab = typesArr.map(o).filter(Boolean).join(', ');
   const ph = e.photos;
   return `
   <section class="rv-tile rv-exp" aria-label="${esc(t('exp_n',{n:i+1}))}" data-exp="${i}">
     ${rvTop(SECTOR[e.sector]?.icon||'compass', `${tabs?t('r_expTitle'):t('exp_n',{n:i+1})}${tabs}`, `${rvEdit(`e${i}_g1`)}<button type="button" class="ct-tile-edit ct-tile-del" data-action="delexp" data-v="${i}" aria-label="${esc(t('r_delete'))}: ${esc(e.name||t('mo_untitled'))}">${ic('trash',16,1.8)}</button>`)}
     <h2 class="rv-name">${esc(e.name||t('mo_untitled'))}</h2>
-    ${chips([e.sector?o(e.sector):'', spec, e.type?o(e.type):''].filter(Boolean))}
+    ${chips([e.sector?o(e.sector):'', spec, typeLab].filter(Boolean))}
     ${e.desc?`<p class="rv-desc"><span>${esc(e.desc)}</span></p>`:''}
     ${rvFacts([['pin',t('exp_comune'),esc([e.comune,e.localita].filter(Boolean).join(', '))],['sliders',t('mode_l'),e.mode?o(e.mode):''],['clock',t('dur'),durLine(e)],['tag',t('pr_title'),priceLine(e)],['users',t('parts'),`${e.min} - ${e.max}${e.minAge?`, ${e.minAge}+`:''}`]],'rv-facts--3')}
   </section>
@@ -2048,7 +2087,7 @@ function convRows(){
 const opsRows = () => { const c=S.conv; return [[t('r_channels'),c.channels.map(o).join(', ')],[t('r_response'),c.response?o(c.response):''],[t('r_book'),c.sameBooking?esc(`${S.contact.first} ${S.contact.last}`):esc([c.bookName,c.bookEmail].filter(Boolean).join(', '))],[t('notes'),esc(c.notes)]]; };
 
 VW.review = () => {
-  const c=S.contact, g=S.org, inc=incomplete(), hasA=S.paths.includes('A')&&S.exps.length>0, hasB=S.paths.includes('B'), cv=S.conv;
+  const c=S.contact, g=S.org, inc=incomplete(), hasA=(S.paths.includes('A')||S.paths.includes('C'))&&S.exps.length>0, hasB=S.paths.includes('B'), cv=S.conv;
   const warn = inc.length ? `<div class="ct-warn rv-warn" role="alert"><b>${t('r_incomplete')}</b>${inc.slice(0,6).map(s=>`<button type="button" class="ct-link" data-action="goto" data-v="${s.id}" data-ret="1">${ic('arrowRight',14,1.8)} ${esc(screenLabel(s.id))}</button>`).join('')}</div>` : '';
   const pathsTxt = esc(andList(S.paths.slice().sort().map(p=>t('path_'+p).replace(/^[AB]\.\s*/,'')))||'-');
   const convOn = hasB && (!hasA || RV.exp==='conv');
@@ -2120,13 +2159,14 @@ const CARD_ICON = {
 };
 const cardIc = k => `<svg class="north-hot-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${CARD_ICON[k].map(d=>d.startsWith('circle:')?(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}"/>`)(d.slice(7).split(',')):`<path d="${d}"/>`).join('')}</svg>`;
 function cardData(e){
-  const spec = e.spec ? (CONFIG.otherSpec.includes(e.spec) && e.specOther ? e.specOther : o(e.spec)) : '';
+  const specs = specList(e); const typesArr = typeList(e);
+  const spec = specs.map(x => CONFIG.otherSpec.includes(x) && e.specOther ? e.specOther : o(x)).filter(Boolean).join(', ');
   const perk = PERK_ORDER.find(c => e.incl[c]==='inc');
   const bases = blocks(e).map(b=>Number(e.price[b].base)).filter(n=>n>0);
   return {
     image: e.photos[0]?.src || '',
     category: e.sector ? o(e.sector) : '',
-    type: [spec, e.type ? o(e.type) : ''].filter(Boolean).join(' · '),
+    type: [spec, typesArr.map(o).filter(Boolean).join(', ')].filter(Boolean).join(' · '),
     title: (e.name||'').trim(),
     amount: CARD_SHOW_PARTNER_PRICE && bases.length ? `€${Math.min(...bases).toLocaleString(S.lang==='it'?'it-IT':'en-GB')}` : '',
     unit: e.priceMode ? o(e.priceMode).toLowerCase() : '',
@@ -2406,7 +2446,7 @@ function genCode(){
   return `SDT-${YEAR}-` + [...r].map(x=>A[x % A.length]).join('');
 }
 function buildPayload(){
-  const hasA = S.paths.includes('A'), hasB = S.paths.includes('B');
+  const hasA = S.paths.includes('A') || S.paths.includes('C'), hasB = S.paths.includes('B');
   const strip = p => ({ name:p.name, sample:!!p.sample, src:p.src });
   return {
     schema_version: 3, ui_language: S.lang,
@@ -2593,9 +2633,10 @@ const closeModal = () => $('modal').classList.remove('is-open');
 function afterPick(p, prev){
   const m = p.match(/^exps\.(\d+)\.(sector|spec)$/);
   if(m){ const e = S.exps[+m[1]];
-    if(m[2]==='sector' && prev!==e.sector){ e.spec=''; e.specOther=''; e.type=''; e.sq={};
+    if(m[2]==='sector' && prev!==e.sector){ e.spec=[]; e.specOther=''; e.type=[]; e.sq={}; e.difficulty='';
       (SECTOR[e.sector].q||[]).forEach(q=>{ if(q.def!==undefined) e.sq[q.k]=q.def; else if(q.t==='multi') e.sq[q.k]=[]; else if(q.t==='stepper') e.sq[q.k]=0; }); }
-    if(m[2]==='spec' && prev!==e.spec && !CONFIG.otherSpec.includes(e.spec)) e.specOther=''; }
+    if(m[2]==='spec'){ const sp=specList(e); if(!sp.some(x=>CONFIG.otherSpec.includes(x))) e.specOther='';
+      e.type = typeList(e).filter(x => artisanTypesFor(e).includes(x)); } }
   const pm = p.match(/^exps\.(\d+)\.period$/);
   if(pm && get(p)==='op_year') S.exps[+pm[1]].months = [...Array(12).keys()];
 }
@@ -2604,8 +2645,8 @@ const ACT = {
   next, back,
   uilang: el => { S.lang = el.dataset.v; rerender(); },
   pick: el => { const p=el.dataset.p, prev=get(p); set(p, el.dataset.v); afterPick(p, prev); rerender(); },
-  tog: el => { const p=el.dataset.p, v=el.dataset.v, a=get(p)||[]; const k=a.indexOf(v); k<0?a.push(v):a.splice(k,1); set(p,a);
-    if(p==='paths' && v==='A' && a.includes('A') && !S.exps.length) S.exps.push(newExp());
+  tog: el => { const p=el.dataset.p, v=el.dataset.v, a=get(p)||[]; const k=a.indexOf(v); k<0?a.push(v):a.splice(k,1); set(p,a); afterPick(p, a);
+    if(p==='paths' && (v==='A'||v==='C') && (a.includes('A')||a.includes('C')) && !S.exps.length) S.exps.push(newExp());
     rerender(); },
   togn: el => { const p=el.dataset.p, v=+el.dataset.v, a=get(p); const k=a.indexOf(v); k<0?a.push(v):a.splice(k,1); a.sort((x,y)=>x-y); rerender(); },
   bool: el => { const p=el.dataset.p; set(p, !get(p));
@@ -2746,18 +2787,18 @@ if(DEV_FILL) (function(){
     const txt = () => EXP_TXT[e.sector] || EXP_TXT.artigianato;
     switch(k){
       case 'sector': { const prev = e.sector; e.sector = e.sector || PRE.sector || 'artigianato'; afterPick(`exps.${i}.sector`, prev); break; }
-      case 'spec': { const sp = SECTOR[e.sector].spec; if(!e.spec) e.spec = sp.find(x=>!CONFIG.otherSpec.includes(x)) || sp[0];
-        if(CONFIG.otherSpec.includes(e.spec) && !filled(e.specOther,3)) e.specOther = L('Specialità di prova','Test specialty'); break; }
-      case 'type': if(!e.type) e.type = SECTOR[e.sector].types[0]; break;
+      case 'spec': { const sp = SECTOR[e.sector].spec; if(!specList(e).length) e.spec = [sp.find(x=>!CONFIG.otherSpec.includes(x)) || sp[0]];
+        if(specList(e).some(x=>CONFIG.otherSpec.includes(x)) && !filled(e.specOther,3)) e.specOther = L('Specialità di prova','Test specialty'); break; }
+      case 'type': if(!typeList(e).length) e.type = [SECTOR[e.sector].types[0]]; break;
       case 'g1': e.name = L(txt()[0], txt()[1]);
         e.desc = L('Esperienza di prova creata con il riempimento automatico: gli ospiti incontrano il partner, seguono una breve introduzione e partecipano all\'attività in un piccolo gruppo.',
                    'Test experience created by the auto fill: guests meet the partner, follow a short introduction and take part in the activity in a small group.'); break;
       case 'g2': e.comune = txt()[2]; e.localita = L('Centro','Town centre'); e.meet = L('Piazza principale, punto di incontro di prova','Main square, test meeting point'); break;
-      case 'g3': e.durH = e.sector==='mare' ? 4 : 2; e.durM = 30; e.min = 2; e.max = 8; e.minAge = 6; break;
+      case 'g3': e.durH = e.sector==='mare' ? 4 : 2; e.durM = 0; e.min = 2; e.max = 8; e.minAge = 6; break;
       case 'g4': if(!e.langs.length) e.langs = ['it','en']; if(!e.access.length) e.access = ['acc_families']; break;
       case 'mode': if(!e.mode) e.mode = CONFIG.modes[0][0]; break;
       case 'incl': if(!Object.keys(e.incl).length) e.incl = {inc_guide:'inc', inc_materials:'inc', ...({enogastronomia:{inc_tasting:'inc'}, mare:{inc_drinks:'inc', inc_equipment:'inc'}, natura:{inc_equipment:'inc'}}[e.sector]||{})}; break;
-      case 'equip': e.equipProvided = true; if(!e.bring.length) e.bring = ['br_shoes','br_water']; break;
+      case 'equip': e.equipProvided = true; e.bringNote=''; break;
       case 'reqs': if(!e.difficulty) e.difficulty = CONFIG.difficulty[0]; break;
       case 'sq': (SECTOR[e.sector].q||[]).forEach(q=>{
         const v = e.sq[q.k];
@@ -2820,7 +2861,7 @@ if(DEV_FILL) (function(){
       case 'org_address': Object.assign(G, {addr:'Via di Prova 1', comune:'Tempio Pausania', prov:'SS', cap:'07029', region:'Sardegna', country:'Italia', sameOp:true}); break;
       case 'org_contacts': G.email = 'info.test@example.com'; G.phone = '+39 333 000 0000'; G.website = 'https://www.example.com'; break;
       case 'collab': if(!S.paths.length) S.paths = (PRE.paths || 'A').split(/[+ ]/).filter(x=>x==='A'||x==='B');
-        if(S.paths.includes('A') && !S.exps.length) S.exps.push(newExp()); break;
+        if((S.paths.includes('A')||S.paths.includes('C')) && !S.exps.length) S.exps.push(newExp()); break;
       case 'review': S.consents.privacy = true; S.consents.evaluation = true; break;
     }
     save(); render();

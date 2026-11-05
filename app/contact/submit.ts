@@ -1,8 +1,9 @@
 // Builds the request summary (what the owner receives) and submits it.
 import {
-  AIRPORTS, ARRIVAL_METHODS, BOAT_STYLES, BOAT_TYPES, BUDGETS, CELEBRATIONS, DURATIONS, HEARD_FROM,
-  INTERESTS, LOCATIONS, NEEDS, PORTS, QUICK_TOPICS, REPLY_VIA, SWIMMING, TRANSFER_ITEMS, TRANSFER_TRIPS, YES_NO, YES_NO_UNSURE,
-  asksPickup, labelOf, labelsOf, wantsBoat, wantsTransfer,
+  AIRPORTS, ARRIVAL_METHODS, BOAT_STYLES, BOAT_TYPES, BUDGETS, CAR_SEATS, CAR_SIZES, CAR_TYPES, CELEBRATIONS,
+  DURATIONS, HEARD_FROM, INTERESTS, LOCATIONS, NEEDS, PORTS, QUICK_TOPICS, RENTAL_CAR, REPLY_VIA, STAY_AMENITIES,
+  STAY_BOARD, STAY_ROOMS, STAY_ROOMS_COUNT, STAY_TYPES, SWIMMING, TRANSFER_ITEMS, TRANSFER_TRIPS, YES_NO,
+  asksPickup, isLargeGroup, labelOf, labelsOf, wantsBoat, wantsTransfer,
 } from "./contactData";
 import type { ContactData, StepId } from "./contactData";
 
@@ -58,6 +59,7 @@ export function buildReviewSections(d: ContactData): ReviewSection[] {
     ["Children (2 to 12)", d.children ? `${d.children} (ages ${d.childAges.join(", ")})` : "0"],
     ["Infants (under 2)", String(d.infants)],
     ["Everyone swims", wantsBoat(d) ? labelOf(SWIMMING, d.swimming) : ""],
+    ["Large group", isLargeGroup(d) ? "13 or more — tailor-made trip" : ""],
   ]) });
 
   out.push({ step: "arrival", title: "Getting to Sardinia", rows: rows([
@@ -66,20 +68,29 @@ export function buildReviewSections(d: ContactData): ReviewSection[] {
     ["Flight number", d.arrivalMethod === "plane" ? d.flightNumber.toUpperCase() : ""],
     ["Ferry port", d.arrivalMethod === "ferry" ? labelOf(PORTS, d.port) : ""],
     ["Arrival", d.arrivalMethod === "plane" || d.arrivalMethod === "ferry" ? [fmtDate(d.arrivalDate || d.tripArrival), d.arrivalTime].filter(Boolean).join(" at ") : ""],
-    ["Rental car", labelOf(YES_NO_UNSURE, d.rentalCar)],
+    ["Rental car", labelOf(RENTAL_CAR, d.rentalCar === "yes" ? "myself" : d.rentalCar)],
+    ["Car type", d.rentalCar === "for_me" ? labelOf(CAR_TYPES, d.rentalCarType) : ""],
+    ["Car seats", d.rentalCar === "for_me" ? labelOf(CAR_SEATS, d.rentalCarSeats) : ""],
+    ["Car size", d.rentalCar === "for_me" ? labelOf(CAR_SIZES, d.rentalCarSize) : ""],
     ["Needs pickup to boat/tour", asksPickup(d) ? labelOf(YES_NO, d.pickup) : ""],
   ]) });
 
   out.push({ step: "stay", title: "Where they're staying", rows: rows([
     ["Area / town", d.stayNotBooked ? "Not booked yet" : d.stayArea],
     ["Hotel / address", d.stayNotBooked ? "" : d.stayAddress],
+    ["Stay type", d.stayNotBooked ? labelOf(STAY_TYPES, d.stayType) : ""],
+    ["Room type", d.stayNotBooked ? labelOf(STAY_ROOMS, d.stayRoom) : ""],
+    ["Number of rooms", d.stayNotBooked ? labelOf(STAY_ROOMS_COUNT, d.stayRoomsCount) : ""],
+    ["Board", d.stayNotBooked ? labelOf(STAY_BOARD, d.stayBoard) : ""],
+    ["Amenities", d.stayNotBooked ? labelsOf(STAY_AMENITIES, d.stayAmenities) : ""],
+    ["Stay request", d.stayNotBooked ? d.stayRequest : ""],
   ]) });
 
   const needs = d.needs.map((n) => n === "celebration" && d.celebration ? `Celebration (${labelOf(CELEBRATIONS, d.celebration)})` : labelOf(NEEDS, n));
   out.push({ step: "extras", title: "Good to know", rows: rows([
     ["Special notes", needs.join(", ")],
     ["Details", d.needs.length ? d.needsDetail : ""],
-    ["Budget per person", labelOf(BUDGETS, d.budget)],
+    ["Budget per person", (() => { const l = labelOf(BUDGETS, d.budget); return l && l !== d.budget ? l : d.budget; })()],
     ["Message", d.message],
   ]) });
 

@@ -37,10 +37,19 @@ export type ContactData = {
   arrivalDate: string;
   arrivalTime: string;
   rentalCar: string;
+  rentalCarType: string;
+  rentalCarSeats: string;
+  rentalCarSize: string;
   pickup: string;
   stayArea: string;
   stayAddress: string;
   stayNotBooked: boolean;
+  stayType: string;
+  stayRoom: string;
+  stayRoomsCount: string;
+  stayBoard: string;
+  stayRequest: string;
+  stayAmenities: string[];
   needs: string[];
   celebration: string;
   needsDetail: string;
@@ -63,8 +72,9 @@ export const emptyData: ContactData = {
   transferFrom: "", transferTo: "", transferTrip: "", transferBags: 0, transferItems: [],
   tripArrival: "", tripDeparture: "", activityDate1: "", activityDate2: "", datesFlexible: false, datesNote: "",
   adults: 2, children: 0, childAges: [], infants: 0, swimming: "",
-  arrivalMethod: "", airport: "", flightNumber: "", port: "", arrivalDate: "", arrivalTime: "", rentalCar: "", pickup: "",
+  arrivalMethod: "", airport: "", flightNumber: "", port: "", arrivalDate: "", arrivalTime: "", rentalCar: "", rentalCarType: "", rentalCarSeats: "", rentalCarSize: "", pickup: "",
   stayArea: "", stayAddress: "", stayNotBooked: false,
+  stayType: "", stayRoom: "", stayRoomsCount: "", stayBoard: "", stayRequest: "", stayAmenities: [],
   needs: [], celebration: "", needsDetail: "", budget: "", message: "",
   firstName: "", lastName: "", email: "", phone: "", country: "", timeZone: "", replyVia: "", heardFrom: "",
 };
@@ -158,6 +168,78 @@ export const PORTS: Opt[] = [
   { value: "arbatax", label: "Arbatax" },
 ];
 
+/** Rental car: book yourself, ask us to arrange it, or skip. */
+export const RENTAL_CAR: Opt[] = [
+  { value: "myself", label: "I'll book it myself" },
+  { value: "for_me", label: "Book it for me" },
+  { value: "no", label: "No" },
+  { value: "notsure", label: "Not sure" },
+];
+
+export const CAR_TYPES: Opt[] = [
+  { value: "suv", label: "SUV" },
+  { value: "sport", label: "Sport" },
+  { value: "berlina", label: "Sedan" },
+  { value: "citycar", label: "City car" },
+];
+
+export const CAR_SEATS: Opt[] = [
+  { value: "2", label: "2 seats" },
+  { value: "4", label: "4 seats" },
+  { value: "5", label: "5 seats" },
+  { value: "7", label: "7 seats" },
+  { value: "9", label: "9+ seats" },
+];
+
+export const CAR_SIZES: Opt[] = [
+  { value: "small", label: "Small" },
+  { value: "medium", label: "Medium" },
+  { value: "large", label: "Large" },
+];
+
+export const STAY_TYPES: Opt[] = [
+  { value: "hotel_resort", label: "Hotel or resort" },
+  { value: "bnb", label: "B&B" },
+  { value: "apartment", label: "Private apartment" },
+  { value: "villa", label: "Villa" },
+];
+
+export const STAY_ROOMS: Opt[] = [
+  { value: "single", label: "Single" },
+  { value: "double", label: "Double" },
+  { value: "triple", label: "Triple" },
+  { value: "quad", label: "4 people" },
+  { value: "more", label: "More than 4" },
+];
+
+export const STAY_ROOMS_COUNT: Opt[] = [
+  { value: "1", label: "1 room" },
+  { value: "2", label: "2 rooms" },
+  { value: "3", label: "3 rooms" },
+];
+
+export const STAY_BOARD: Opt[] = [
+  { value: "bnb", label: "Bed and breakfast" },
+  { value: "half", label: "Half board" },
+  { value: "full", label: "Full board" },
+];
+
+export const STAY_AMENITIES: Opt[] = [
+  { value: "spa", label: "Spa" },
+  { value: "sea_view", label: "Sea view" },
+  { value: "pool", label: "Pool" },
+  { value: "parking", label: "Parking" },
+  { value: "animals", label: "Pets welcome" },
+  { value: "kids_club", label: "Kids club" },
+];
+
+/** Half day is only offered for RIB (gommone). */
+export const DURATIONS_RIB: Opt[] = DURATIONS;
+export const DURATIONS_OTHER: Opt[] = DURATIONS.filter((o) => o.value !== "half");
+
+export const guestTotal = (d: ContactData) => d.adults + d.children + d.infants;
+export const isLargeGroup = (d: ContactData) => guestTotal(d) >= 13;
+
 export const YES_NO_UNSURE: Opt[] = [
   { value: "yes", label: "Yes" },
   { value: "no", label: "No" },
@@ -241,8 +323,11 @@ export function stepValid(step: StepId, d: ContactData): boolean {
       return d.interests.length > 0 && (!d.interests.includes("other") || filled(d.interestOther));
     case "boatWhere":
       return !!d.boatLocation;
-    case "boatHow":
-      return !!d.boatType && !!d.boatDuration && !!d.boatStyle;
+    case "boatHow": {
+      if (!d.boatType || !d.boatDuration || !d.boatStyle) return false;
+      if (d.boatDuration === "half" && d.boatType !== "rib") return false;
+      return true;
+    }
     case "transfer":
       return filled(d.transferFrom) && filled(d.transferTo) && !!d.transferTrip;
     case "dates": {
@@ -255,10 +340,15 @@ export function stepValid(step: StepId, d: ContactData): boolean {
       if (!d.arrivalMethod) return false;
       if (d.arrivalMethod === "plane" && !d.airport) return false;
       if (d.arrivalMethod === "ferry" && !d.port) return false;
-      return !!d.rentalCar && (!asksPickup(d) || !!d.pickup);
+      // Migrate legacy "yes" answers to "myself".
+      const car = d.rentalCar === "yes" ? "myself" : d.rentalCar;
+      if (!car) return false;
+      if (car === "for_me" && (!d.rentalCarType || !d.rentalCarSeats || !d.rentalCarSize)) return false;
+      return (!asksPickup(d) || !!d.pickup);
     }
     case "stay":
-      return d.stayNotBooked || filled(d.stayArea);
+      if (d.stayNotBooked) return !!d.stayType;
+      return filled(d.stayArea);
     case "extras":
       return !!d.budget && (!d.needs.includes("celebration") || !!d.celebration);
     case "quick":
