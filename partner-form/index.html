@@ -1986,13 +1986,13 @@ function screens(){
   ['org_ident','org_address','org_contacts'].forEach(k=>add(k,'org',VW[k],OK[k]));
   add('collab','collab',VW.collab,OK.collab);
   if(S.paths.includes('A') || S.paths.includes('C')){
-    S.exps.forEach((e,i)=>(e.sector === 'artigianato'
+    S.exps.forEach((e,i)=>((e.sector === 'artigianato' || e.sector === 'guide')
       ? ['sector','spec','type',...EXP_SCREENS.filter(k=>!['sector','spec','type'].includes(k))]
       : EXP_SCREENS).forEach(k=>{
       if(k!=='sector' && !e.sector) return;            /* taxonomy first */
       if(['spec','type'].includes(k) && !e.sector) return;
-      /* Other sectors retain type-first; artisans need specialization before type. */
-      if(e.sector === 'artigianato'){
+      /* Other sectors retain type-first. Artisans and guides (Module F) ask specialization before service type. */
+      if(e.sector === 'artigianato' || e.sector === 'guide'){
         if(k==='type' && !specList(e).length) return;
       } else if(k==='spec' && !typeList(e).length) return;
       if(k==='sq' && !(SECTOR[e.sector]?.q||[]).length) return;
