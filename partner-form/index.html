@@ -113,7 +113,14 @@ img{display:block}
 .ct-pills--months .ct-pill{min-width:0;padding:0 8px}
 
 /* Soft, visible focus ring (no glow) */
-.ct-card:focus-visible,.ct-pill:focus-visible,.ct-toggle:focus-visible,.ct-step-btn:focus-visible,.ct-back:focus-visible,.ct-tile-edit:focus-visible,.ct-link:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,127,136,.3)}
+.ct-type-cards{display:flex;flex-direction:column;gap:12px}
+.ct-type-card{display:flex;flex-direction:column;align-items:flex-start;gap:6px;width:100%;margin:0;padding:16px 20px;border-radius:var(--ct-radius);border:1.5px solid transparent;background:var(--ct-fill);color:var(--ct-cream);font:inherit;text-align:left;cursor:pointer;transition:background .2s var(--ct-ease),border-color .2s var(--ct-ease)}
+.ct-type-card:hover{background:var(--ct-fill-hover)}
+.ct-type-card.is-on{border-color:var(--ct-teal);background:rgba(47,127,136,.14)}
+.ct-type-label{font-size:var(--t-card);font-weight:500;line-height:1.2}
+.ct-type-desc{font-size:var(--t-hint);color:var(--ct-muted);line-height:1.4}
+.ct-type-desc:empty{display:none}
+.ct-card:focus-visible,.ct-pill:focus-visible,.ct-type-card:focus-visible,.ct-toggle:focus-visible,.ct-step-btn:focus-visible,.ct-back:focus-visible,.ct-tile-edit:focus-visible,.ct-link:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,127,136,.3)}
 
 /* Fields */
 .ct-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
@@ -1296,6 +1303,7 @@ en:{
   h_artigianato:'Workshops, demonstrations, studios', h_enogastronomia:'Tastings, producers, cooking', h_cultura:'Archaeology, history, traditions', h_natura:'Trekking, outdoor, rural life', h_mare:'Boats, sailing, snorkelling', h_guide:'Tourist and nature guides', h_trasporti:'Transfers, NCC, group transport',
   o_tessitura:'Weaving', o_ceramica:'Ceramics', o_coltelleria:'Knife making', o_legno:'Woodwork', o_sughero:'Cork', o_metalli:'Metalwork', o_maschere:'Traditional masks', o_campanacci:'Cowbells', o_pelletteria:'Leatherwork', o_gioielli:'Jewellery', o_tessile:'Textile art', o_altre_artigianali:'Other crafts',
   o_laboratorio_pratico:'Hands-on workshop', o_dimostrazione:'Demonstration', o_visita_bottega:'Workshop visit', o_esperienza_privata:'Private experience', o_percorso_piu:'Route with several activities',
+  td_laboratorio_pratico:'A workshop where guests take part actively and hands-on.', td_dimostrazione:'', td_visita_bottega:'',
   o_vino:'Wine', o_formaggi:'Cheese', o_produzione_agricola:'Farm produce', o_panificazione:'Bread making', o_pasticceria:'Pastry', o_cucina_tradizionale:'Traditional cooking', o_olio:'Olive oil', o_altri_alimentari:'Other food products',
   o_degustazione:'Tasting', o_visita_produttore:'Producer visit', o_laboratorio:'Workshop', o_cooking_class:'Cooking class', o_pranzo_cena:'Experiential lunch or dinner', o_esperienza_combinata:'Combined experience',
   o_archeologia:'Archaeology', o_storia:'History', o_musei:'Museums', o_tradizioni_popolari:'Folk traditions', o_patrimonio:'Cultural heritage', o_architettura:'Architecture', o_cultura_locale:'Local culture',
@@ -1451,6 +1459,7 @@ it:{
   h_artigianato:'Laboratori, dimostrazioni, botteghe', h_enogastronomia:'Degustazioni, produttori, cucina', h_cultura:'Archeologia, storia, tradizioni', h_natura:'Trekking, outdoor, vita rurale', h_mare:'Barche, vela, snorkeling', h_guide:'Guide turistiche e ambientali', h_trasporti:'Transfer, NCC, trasporto gruppi',
   o_tessitura:'Tessitura', o_ceramica:'Ceramica', o_coltelleria:'Coltelleria', o_legno:'Lavorazione del legno', o_sughero:'Sughero', o_metalli:'Lavorazione dei metalli', o_maschere:'Maschere tradizionali', o_campanacci:'Campanacci', o_pelletteria:'Pelletteria', o_gioielli:'Gioielli', o_tessile:'Arte tessile', o_altre_artigianali:'Altre attività artigianali',
   o_laboratorio_pratico:'Laboratorio pratico', o_dimostrazione:'Dimostrazione', o_visita_bottega:'Visita in bottega', o_esperienza_privata:'Esperienza privata', o_percorso_piu:'Percorso con più attività',
+  td_laboratorio_pratico:'Workshop in cui il cliente partecipa attivamente ed in maniera pratica.', td_dimostrazione:'', td_visita_bottega:'',
   o_vino:'Vino', o_formaggi:'Formaggi', o_produzione_agricola:'Produzione agricola', o_panificazione:'Panificazione', o_pasticceria:'Pasticceria', o_cucina_tradizionale:'Cucina tradizionale', o_olio:'Olio', o_altri_alimentari:'Altri prodotti alimentari',
   o_degustazione:'Degustazione', o_visita_produttore:'Visita al produttore', o_laboratorio:'Laboratorio', o_cooking_class:'Cooking class', o_pranzo_cena:'Pranzo o cena esperienziale', o_esperienza_combinata:'Esperienza combinata',
   o_archeologia:'Archeologia', o_storia:'Storia', o_musei:'Musei', o_tradizioni_popolari:'Tradizioni popolari', o_patrimonio:'Patrimonio culturale', o_architettura:'Architettura', o_cultura_locale:'Cultura locale',
@@ -1648,6 +1657,18 @@ function money(p, label, {req=true, hint=''}={}){
     <span class="ct-money"><span>€</span><input id="${fid(p)}" data-cash="${p}" type="text" inputmode="numeric" autocomplete="off" value="${esc(shown)}"></span></label>`;
 }
 /* Single or multi choice pills */
+/* Artisan service types: a card per option, with a description slot (empty until copy is supplied). */
+function typeCards(p, codes){
+  const v = get(p) || [];
+  return `<div class="ct-type-cards" role="group">${codes.map(c=>{
+    const on = v.includes(c);
+    const desc = t('td_'+c);
+    return `<button type="button" class="ct-type-card${on?' is-on':''}" role="checkbox" aria-checked="${on}" data-action="tog" data-p="${p}" data-v="${esc(c)}">
+      <span class="ct-type-label">${esc(o(c))}</span>
+      <span class="ct-type-desc">${desc ? esc(desc) : ''}</span>
+    </button>`;
+  }).join('')}</div>`;
+}
 function pills(p, codes, {multi=false, lab=o, cls=''}={}){
   const v = get(p);
   return `<div class="ct-pills ${cls}" role="${multi?'group':'radiogroup'}">${codes.map(c=>{
@@ -1844,7 +1865,9 @@ function normalizeIncl(e){
 const EV = {
   sector: i => split(head(t('es_title'), t('es_sub'), ecount(i), true),
     photoCards(P(i,'sector'), sectorsForPaths().map(s=>({v:s.code, img:s.img, icon:s.icon, label:`${s.letter}. ${o(s.code)}`, hint:t('h_'+s.code)})))),
-  type: i => { const e=E(i); return split(head(t('et_title'), t('et_sub'), ecount(i, o(e.sector))), pills(P(i,'type'), allowedTypes(e), {multi:true})); },
+  type: i => { const e=E(i); const codes = allowedTypes(e);
+    const choices = e.sector === 'artigianato' ? typeCards(P(i,'type'), codes) : pills(P(i,'type'), codes, {multi:true});
+    return split(head(t('et_title'), t('et_sub'), ecount(i, o(e.sector))), choices); },
   spec: i => { const e=E(i), s=SECTOR[e.sector]; const specs = specList(e);
     const choices = s.specGroups
       ? `<div class="ct-spec-groups">${s.specGroups.map(g=>`<fieldset class="ct-group"><legend class="ct-spec-head">${esc(t(g.h))}</legend>${pills(P(i,'spec'), g.o)}</fieldset>`).join('')}</div>`
