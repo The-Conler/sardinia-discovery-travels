@@ -128,6 +128,7 @@ img{display:block}
 .ct-field input:focus,.ct-field textarea:focus{outline:none;border-color:var(--ct-teal);box-shadow:0 0 0 3px rgba(47,127,136,.3)}
 .ct-field input.is-bad{border-color:rgba(242,169,154,.7)}
 .ct-error{margin:0;font-size:var(--t-hint);color:#f2a99a}
+.ct-spec-note{margin:0;font-size:var(--t-hint);line-height:1.45;color:#ff6b6b}
 .ct-error[hidden]{display:none}
 .ct-input-ic{position:relative}
 .ct-input-ic>svg{position:absolute;left:22px;top:50%;transform:translateY(-50%);color:var(--ct-muted);pointer-events:none}
@@ -1232,7 +1233,7 @@ en:{
   path_B:'B. Commercial agreements', path_BD:'Hotels, accommodation and restaurants with dedicated terms for our travellers.',
   path_C:'C. Services and professionals', path_CD:'Guides, escorts, transfers, NCC and mobility.',
   es_title:'Which sector does this experience belong to?', es_sub:'Pick the closest one.',
-  esp_title:'What is your speciality?', esp_sub:'Select one.', spec_other:'Describe it briefly',
+  esp_title:'What is your speciality?', esp_sub:'Select one.', esp_another:'Offer another specialty too? Send us a second request after this one.', spec_other:'Describe it briefly',
   et_title:'What type of service is it?', et_sub:'Select more than one button if needed.',
   g1_title:'Give it a short title', g1_sub:'Keep it simple and concrete.', exp_name:'Short title', exp_namePh:'For example Weaving workshop in Aggius', exp_desc:'Description', exp_descPh:'What guests do, see and learn, and who they meet.', desc_min:'At least {n} characters', desc_ok:'Long enough',
   g2_title:'Where does it take place?', g2_sub:'So we can plan the logistics.', exp_comune:'Municipality', exp_loc:'Place or area', exp_meet:'Meeting point', exp_end:'End point', exp_endHint:'Leave empty if it is the same as the meeting point.',
@@ -1387,7 +1388,7 @@ it:{
   path_B:'B. Convenzioni', path_BD:'Hotel, strutture ricettive e ristoranti con condizioni dedicate ai nostri viaggiatori.',
   path_C:'C. Servizi e figure professionali', path_CD:'Guide, accompagnatori, transfer, NCC e mobilità.',
   es_title:'In quale settore rientra questa esperienza?', es_sub:'Scegli il più vicino.',
-  esp_title:'Qual è la tua specializzazione?', esp_sub:'Seleziona un solo tasto.', spec_other:'Descrivila brevemente',
+  esp_title:'Qual è la tua specializzazione?', esp_sub:'Seleziona un solo tasto.', esp_another:'Offri anche un’altra specialità? Inviaci una seconda richiesta dopo questa.', spec_other:'Descrivila brevemente',
   et_title:'Che tipo di servizio è?', et_sub:'Seleziona più di un tasto.',
   g1_title:'Dai un breve titolo', g1_sub:'Semplice e concreto.', exp_name:'Breve titolo', exp_namePh:'Per esempio Laboratorio di tessitura ad Aggius', exp_desc:'Descrizione', exp_descPh:'Cosa fanno, vedono e imparano gli ospiti, e chi incontrano.', desc_min:'Almeno {n} caratteri', desc_ok:'Lunghezza sufficiente',
   g2_title:'Dove si svolge?', g2_sub:'Ci serve per organizzare la logistica.', exp_comune:'Comune', exp_loc:'Località', exp_meet:'Punto di incontro', exp_end:'Luogo di conclusione', exp_endHint:'Lascia vuoto se coincide con il punto di incontro.',
@@ -1846,7 +1847,8 @@ const EV = {
     photoCards(P(i,'sector'), sectorsForPaths().map(s=>({v:s.code, img:s.img, icon:s.icon, label:`${s.letter}. ${o(s.code)}`, hint:t('h_'+s.code)})))),
   type: i => { const e=E(i); return split(head(t('et_title'), t('et_sub'), ecount(i, o(e.sector))), pills(P(i,'type'), allowedTypes(e), {multi:true})); },
   spec: i => { const e=E(i), s=SECTOR[e.sector]; const specs = specList(e); return split(head(t('esp_title'), t('esp_sub'), ecount(i, o(e.sector))), `
-    ${pills(P(i,'spec'), s.spec)}
+    <div class="ct-stack" style="gap:16px">${pills(P(i,'spec'), s.spec)}
+    ${specs.length ? `<p class="ct-spec-note">${esc(t('esp_another'))}</p>` : ''}</div>
     ${specs.some(x => CONFIG.otherSpec.includes(x)) ? inp(P(i,'specOther'), t('spec_other')) : ''}`); },
   g1: i => { const e=E(i); return split(head(t('g1_title'), t('g1_sub'), ecount(i)), `
     ${inp(P(i,'name'), t('exp_name'), {ph:t('exp_namePh'), max:80})}
