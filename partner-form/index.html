@@ -447,10 +447,14 @@ img{display:block}
 
 /* Segmented control (incluso / supplemento) */
 .ct-incl{display:flex;flex-direction:column;border-radius:var(--ct-radius);background:var(--ct-fill)}
-.ct-incl-row{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:72px;padding:12px 16px 12px 24px}
+.ct-incl-row{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px 16px;min-height:72px;padding:12px 16px 12px 24px}
 .ct-incl-row+.ct-incl-row{border-top:1px solid var(--ct-line)}
+.ct-incl-main{display:flex;align-items:center;justify-content:space-between;gap:16px;flex:1 1 100%;min-width:0}
 .ct-incl-row .ct-check{padding:0;background:transparent;border:0;align-items:center}
 .ct-incl-row .ct-check:hover{background:transparent}
+.ct-incl-price{flex:1 1 100%;max-width:360px;gap:8px;margin:0 0 4px}
+.ct-incl-price .ct-field-label{font-size:14px}
+.ct-incl-price input{height:48px;background:rgba(255,255,255,.06)}
 .ct-seg{display:inline-flex;flex:none;padding:4px;border-radius:999px;background:rgba(255,255,255,.06)}
 .ct-seg button{height:40px;padding:0 16px;border-radius:999px;border:1.5px solid transparent;background:transparent;color:var(--ct-muted);font:inherit;font-size:15px;font-weight:500;cursor:pointer;transition:background .2s var(--ct-ease),border-color .2s var(--ct-ease),color .2s var(--ct-ease)}
 .ct-seg button.is-on{border-color:var(--ct-teal);background:rgba(47,127,136,.18);color:var(--ct-cream)}
@@ -530,6 +534,7 @@ img{display:block}
   .ct-help-btn{right:16px;width:48px;padding:0;justify-content:center}
   .ct-help-btn span{display:none}
   .ct-incl-row{flex-direction:column;align-items:flex-start;padding:16px}
+  .ct-incl-price{max-width:none;width:100%}
   .ct-sections{gap:8px}
   .ct-sections li{font-size:13px}
   .ct-bar-inner{gap:8px}
@@ -1234,7 +1239,7 @@ en:{
   g3_title:'Duration and group size', g3_sub:'Approximate values are fine.', dur:'Duration', parts:'Participants and age', durD:'Hours', hours:'Hours', minutes:'Minutes', minP:'Minimum participants', minPD:'Smallest group you accept (always at least 2)', maxP:'Maximum participants', maxPD:'Largest group you can host', minAge:'Minimum age', minAgeD:'0 means no limit',
   g4_title:'Languages and accessibility', g4_sub:'Who can enjoy it.', exp_langs:'Languages you run it in', access:'Accessibility', accessD:'Select what applies.',
   md_title:'Private, shared or both?', md_sub:'Private means one group only. Shared means guests from different bookings together.', md_privataD:'Only one group at a time.', md_condivisaD:'Guests from different bookings join together.', md_entrambeD:'You can run it both ways.',
-  in_title:'What does it include?', in_sub:'Tick what you offer and say whether it is included or charged as a supplement.', inc:'Included', sup:'Supplement',
+  in_title:'What does it include?', in_sub:'Tick what you offer and say whether it is included or charged as a supplement.', inc:'Included', sup:'Supplement', sup_price:'Supplement price (€)', sup_price_err:'Enter the supplement price.', sup_review:'{item}: supplement €{n}', inc_review:'{item}: included',
   eq_title:'Equipment', eq_sub:'Either you provide the gear, or tell us what guests must bring.', eq_provided:'You provide the technical equipment', eq_providedD:'For example tools, helmets, snorkelling masks.', eq_bring:'Guests should bring', eq_bring_note:'What guests must bring', eq_bring_notePh:'List the gear guests need to bring with them.',
   rq_title:'Requirements and safety', rq_sub:'So we can suggest the experience to the right travellers.', difficulty:'Difficulty', prev_exp:'Previous experience required', prev_expD:'For example sailing or climbing experience.', limits:'Limitations', limitsPh:'For example not suitable during pregnancy.', safety:'Safety measures', safetyPh:'For example life jackets, first aid kit, insurance.',
   sq_title:'A few questions on {s}', sq_sub:'Specific to your sector.',
@@ -1389,7 +1394,7 @@ it:{
   g3_title:'Durata e partecipanti', g3_sub:'Vanno bene valori indicativi.', dur:'Durata', parts:'Partecipanti ed età', durD:'Ore', hours:'Ore', minutes:'Minuti', minP:'Partecipanti minimi', minPD:'Il gruppo più piccolo che accetti (sempre almeno 2)', maxP:'Partecipanti massimi', maxPD:'Il gruppo più grande che puoi ospitare', minAge:'Età minima', minAgeD:'0 significa nessun limite',
   g4_title:'Lingue e accessibilità', g4_sub:'Chi può partecipare.', exp_langs:'Lingue in cui la proponi', access:'Accessibilità', accessD:'Seleziona ciò che vale.',
   md_title:'Privata, condivisa o entrambe?', md_sub:'Privata significa un solo gruppo. Condivisa significa ospiti di prenotazioni diverse insieme.', md_privataD:'Un solo gruppo alla volta.', md_condivisaD:'Ospiti di prenotazioni diverse insieme.', md_entrambeD:'Puoi proporla in entrambi i modi.',
-  in_title:'Cosa include?', in_sub:'Spunta ciò che offri e indica se è incluso o a supplemento.', inc:'Incluso', sup:'Supplemento',
+  in_title:'Cosa include?', in_sub:'Spunta ciò che offri e indica se è incluso o a supplemento.', inc:'Incluso', sup:'Supplemento', sup_price:'Prezzo supplemento (€)', sup_price_err:'Indica il prezzo del supplemento.', sup_review:'{item}: supplemento {n} €', inc_review:'{item}: incluso',
   eq_title:'Attrezzatura', eq_sub:'O fornisci tu l’attrezzatura, oppure indica cosa devono portare gli ospiti.', eq_provided:'Fornisci l’attrezzatura tecnica', eq_providedD:'Per esempio attrezzi, caschi, maschere da snorkeling.', eq_bring:'Gli ospiti devono portare', eq_bring_note:'Cosa devono portare gli ospiti', eq_bring_notePh:'Elenca l’attrezzatura che gli ospiti devono portare.',
   rq_title:'Requisiti e sicurezza', rq_sub:'Così possiamo proporla ai viaggiatori giusti.', difficulty:'Difficoltà', prev_exp:'Serve esperienza pregressa', prev_expD:'Per esempio esperienza di vela o arrampicata.', limits:'Limitazioni', limitsPh:'Per esempio non adatta in gravidanza.', safety:'Misure di sicurezza', safetyPh:'Per esempio giubbotti salvagente, kit di primo soccorso, assicurazione.',
   sq_title:'Qualche domanda su {s}', sq_sub:'Specifiche del tuo settore.',
@@ -1805,6 +1810,21 @@ const specList = e => Array.isArray(e.spec) ? e.spec : (e.spec ? [e.spec] : []);
 const typeList = e => Array.isArray(e.type) ? e.type : (e.type ? [e.type] : []);
 const allowedTypes = e => [...(SECTOR[e.sector]?.types || [])];
 const showsDifficulty = e => e.sector === 'natura';
+const ARTISAN_OMIT_INCLUDES = ['inc_tasting','inc_meal','inc_drinks'];
+const includesFor = e => CONFIG.includes.filter(c => !(e?.sector === 'artigianato' && ARTISAN_OMIT_INCLUDES.includes(c)));
+function inclMode(e, c){ const v = e.incl?.[c]; if(!v) return ''; return typeof v === 'string' ? v : (v.mode || ''); }
+function inclPrice(e, c){ const v = e.incl?.[c]; if(!v || typeof v !== 'object') return ''; return v.price ?? ''; }
+function normalizeIncl(e){
+  if(!e.incl || typeof e.incl !== 'object' || Array.isArray(e.incl)) e.incl = {};
+  const allowed = e.sector ? new Set(includesFor(e)) : null;
+  for(const c of Object.keys(e.incl)){
+    if(allowed && !allowed.has(c)){ delete e.incl[c]; continue; }
+    const v = e.incl[c];
+    if(v === 'inc' || v === 'sup') e.incl[c] = { mode:v, price:'' };
+    else if(v && (v.mode === 'inc' || v.mode === 'sup')) e.incl[c] = { mode:v.mode, price: v.mode === 'sup' ? String(v.price ?? '').trim() : '' };
+    else delete e.incl[c];
+  }
+}
 const EV = {
   sector: i => split(head(t('es_title'), t('es_sub'), ecount(i), true),
     photoCards(P(i,'sector'), sectorsForPaths().map(s=>({v:s.code, img:s.img, icon:s.icon, label:`${s.letter}. ${o(s.code)}`, hint:t('h_'+s.code)})))),
@@ -1828,10 +1848,13 @@ const EV = {
     ${group(t('exp_langs'), pills(P(i,'langs'), CONFIG.expLangs, {multi:true}))}
     ${group(t('access'), pills(P(i,'access'), CONFIG.access, {multi:true}), {req:false, sub:t('accessD')})}`),
   mode: i => split(head(t('md_title'), t('md_sub'), ecount(i)), opts(P(i,'mode'), CONFIG.modes, {sub:c=>t('md_'+c+'D')})),
-  incl: i => { const e=E(i); return split(head(t('in_title'), t('in_sub'), ecount(i)), `
-    <div class="ct-incl">${CONFIG.includes.map(c=>{ const v=e.incl[c]; return `
-      <div class="ct-incl-row"><label class="ct-check${v?' is-on':''}"><input type="checkbox" data-incl="${c}" data-i="${i}" ${v?'checked':''}><span class="ct-check-box" aria-hidden="true">${ic('check',14,2.4)}</span><span>${esc(o(c))}</span></label>
-        ${v?`<span class="ct-seg" role="radiogroup" aria-label="${esc(o(c))}">${['inc','sup'].map(x=>`<button type="button" role="radio" aria-checked="${v===x}" class="${v===x?'is-on':''}" data-action="inclset" data-i="${i}" data-c="${c}" data-v="${x}">${t(x)}</button>`).join('')}</span>`:''}</div>`;}).join('')}</div>`); },
+  incl: i => { const e=E(i); normalizeIncl(e); return split(head(t('in_title'), t('in_sub'), ecount(i)), `
+    <div class="ct-incl">${includesFor(e).map(c=>{ const mode=inclMode(e,c); const price=inclPrice(e,c); const bad=mode==='sup' && !pos(price); return `
+      <div class="ct-incl-row"><div class="ct-incl-main"><label class="ct-check${mode?' is-on':''}"><input type="checkbox" data-incl="${c}" data-i="${i}" ${mode?'checked':''}><span class="ct-check-box" aria-hidden="true">${ic('check',14,2.4)}</span><span>${esc(o(c))}</span></label>
+        ${mode?`<span class="ct-seg" role="radiogroup" aria-label="${esc(o(c))}">${['inc','sup'].map(x=>`<button type="button" role="radio" aria-checked="${mode===x}" class="${mode===x?'is-on':''}" data-action="inclset" data-i="${i}" data-c="${c}" data-v="${x}">${t(x)}</button>`).join('')}</span>`:''}</div>
+        ${mode==='sup'?`<label class="ct-field ct-incl-price"><span class="ct-field-label"><span>${t('sup_price')}</span></span>
+          <span class="ct-money"><span>€</span><input id="${fid(P(i,'incl.'+c+'.price'))}" data-bind="${P(i,'incl.'+c+'.price')}" type="number" min="0" step="0.01" inputmode="decimal" value="${esc(price)}" class="${bad?'is-bad':''}" aria-invalid="${bad}"></span>
+          <span class="ct-error" ${bad?'':'hidden'}>${t('sup_price_err')}</span></label>`:''}</div>`;}).join('')}</div>`); },
   equip: i => { const e=E(i); return split(head(t('eq_title'), t('eq_sub'), ecount(i)), `
     ${toggle(P(i,'equipProvided'), t('eq_provided'), t('eq_providedD'))}
     ${e.equipProvided ? '' : inp(P(i,'bringNote'), t('eq_bring_note'), {area:'short', ph:t('eq_bring_notePh')})}`); },
@@ -1895,7 +1918,7 @@ const EOK = {
   g3: e => e.durH > 0 && e.min >= 2 && e.max >= e.min,
   g4: e => e.langs.length > 0,
   mode: e => !!e.mode,
-  incl: () => true,
+  incl: e => includesFor(e).every(c => inclMode(e,c) !== 'sup' || pos(inclPrice(e,c))),
   equip: e => e.equipProvided || filled(e.bringNote, 3),
   reqs: e => showsDifficulty(e) ? !!e.difficulty : true,
   sq: e => sectorQs(e).every(q => qOk(e,q)),
@@ -1984,6 +2007,7 @@ function screens(){
   add('collab','collab',VW.collab,OK.collab);
   if(S.paths.includes('A') || S.paths.includes('C')){
     S.exps.forEach(e => {
+      normalizeIncl(e);
       if(!e.sector) return;
       e.type = typeList(e).filter(x => allowedTypes(e).includes(x));
       if(!showsDifficulty(e)) e.difficulty = '';
@@ -2052,6 +2076,16 @@ const rvEdit = (go, label) => `<button type="button" class="ct-tile-edit" data-a
 const rvTop = (icon, label, acts) => `<div class="rv-top"><span class="ct-tile-badge rv-badge">${ic(icon,18,1.7)}</span><span class="rv-label">${label}</span><span class="rv-acts">${acts}</span></div>`;
 const rvDl = rows => { const r = rows.filter(([,v])=>v); return r.length ? `<dl class="rv-dl">${r.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>` : ''; };
 const rvFacts = (rows, cls='') => `<ul class="rv-facts ${cls}">${rows.map(([icon,k,v])=>`<li>${ic(icon,18,1.6)}<span><small>${k}</small><b>${v||'-'}</b></span></li>`).join('')}</ul>`;
+function supplAmount(v){ const n = Number(v); return Number.isInteger(n) ? String(n) : n.toLocaleString(S.lang==='it'?'it-IT':'en-GB', {maximumFractionDigits:2}); }
+function inclReview(e){
+  const rows = includesFor(e).flatMap(c => {
+    const mode = inclMode(e, c);
+    if(mode === 'sup' && pos(inclPrice(e, c))) return [t('sup_review', {item:o(c), n:supplAmount(inclPrice(e, c))})];
+    if(mode === 'inc') return [t('inc_review', {item:o(c)})];
+    return [];
+  });
+  return rows.length ? `<ul class="ct-tile-list">${rows.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>` : '';
+}
 function monthsText(e){
   if(e.months.length===12) return o('op_year');
   const M = MONTHS[S.lang], runs=[]; for(const x of e.months){ const r=runs[runs.length-1]; if(r && x===r[1]+1) r[1]=x; else runs.push([x,x]); }
@@ -2070,6 +2104,7 @@ function expTiles(){
     <h2 class="rv-name">${esc(e.name||t('mo_untitled'))}</h2>
     ${chips([e.sector?o(e.sector):'', spec, typeLab].filter(Boolean))}
     ${e.desc?`<p class="rv-desc"><span>${esc(e.desc)}</span></p>`:''}
+    ${inclReview(e)}
     ${rvFacts([['pin',t('exp_comune'),esc([e.comune,e.localita].filter(Boolean).join(', '))],['sliders',t('mode_l'),e.mode?o(e.mode):''],['clock',t('dur'),durLine(e)],['tag',t('pr_title'),priceLine(e)],['users',t('parts'),`${e.min} - ${e.max}${e.minAge?`, ${e.minAge}+`:''}`]],'rv-facts--3')}
   </section>
   <section class="rv-tile" aria-label="${esc(t('r_cond'))}">
@@ -2163,7 +2198,7 @@ const cardIc = k => `<svg class="north-hot-icon" viewBox="0 0 24 24" width="16" 
 function cardData(e){
   const specs = specList(e); const typesArr = typeList(e);
   const spec = specs.map(x => CONFIG.otherSpec.includes(x) && e.specOther ? e.specOther : o(x)).filter(Boolean).join(', ');
-  const perk = PERK_ORDER.find(c => e.incl[c]==='inc');
+  const perk = PERK_ORDER.find(c => inclMode(e, c)==='inc');
   const bases = blocks(e).map(b=>Number(e.price[b].base)).filter(n=>n>0);
   return {
     image: e.photos[0]?.src || '',
@@ -2241,7 +2276,7 @@ function detailData(e){
   return { ...d,
     gallery: e.photos.map(p=>p.src), summary: (e.desc||'').trim(), duration: durText(e),
     times: e.slots.length ? e.slots.join(' · ') : e.bands.map(o).join(' · '),
-    itin, included: CONFIG.includes.filter(c=>e.incl[c]==='inc').map(o),
+    itin, included: includesFor(e).filter(c=>inclMode(e, c)==='inc').map(o),
     departure: [e.meet, e.comune].map(x=>(x||'').trim()).filter(Boolean).join(', '),
     langs: andList(e.langs.map(o)),
     confirmation: t(e.manual ? 'pv_d_confManual' : 'pv_d_confInstant'),
@@ -2455,7 +2490,7 @@ function buildPayload(){
     contact: {...S.contact, phone_e164: S.contact.prefix + digits(S.contact.phone)},
     organization: {...S.org, vat: S.org.vat.replace(/\s/g,''), cf: S.org.cf.replace(/\s/g,'').toUpperCase(), manual_review: S.org.form==='altra_forma'},
     collaboration: { experiences: hasA, agreement: hasB },
-    experiences: hasA ? S.exps.map((e,i)=>({ position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>[b, e.price[b]])), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) })) : [],
+    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); return { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>[b, e.price[b]])), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; }) : [],
     agreement: hasB ? {...S.conv, group: cgroup()} : null,
     consents: {...S.consents, at: new Date().toISOString()},
     help_requests: S.help,
@@ -2656,7 +2691,7 @@ const ACT = {
     if(p==='org.useContact' && S.org.useContact){ S.org.email = S.contact.email; S.org.phone = `${S.contact.prefix} ${S.contact.phone}`.trim(); }
     rerender(); },
   step: el => { const p=el.dataset.p; set(p, Math.max(+el.dataset.min, Math.min(+el.dataset.max, (Number(get(p))||0) + (+el.dataset.d)))); rerender(); },
-  inclset: el => { S.exps[+el.dataset.i].incl[el.dataset.c] = el.dataset.v; rerender(); },
+  inclset: el => { const e=S.exps[+el.dataset.i], c=el.dataset.c; e.incl[c] = { mode:el.dataset.v, price: el.dataset.v==='sup' ? inclPrice(e,c) : '' }; rerender(); },
   slotadd: el => { const inp=$('slotIn'), v=inp?.value; if(!v) return inp?.focus(); const a=S.exps[+el.dataset.i].slots; if(!a.includes(v)){ a.push(v); a.sort(); } rerender(); $('slotIn')?.focus(); },
   slotdel: el => { S.exps[+el.dataset.i].slots.splice(+el.dataset.v,1); rerender(); },
   rvexp: el => { RV.exp = el.dataset.v==='conv' ? 'conv' : +el.dataset.v; render(); },
@@ -2698,9 +2733,10 @@ document.addEventListener('mousedown', e => { if(e.target.closest('.ct-sugg')) e
 function onField(e){
   const el = e.target;
   if(el.dataset.hbind){ H[el.dataset.hbind] = el.value; const b=$('helpSend'); if(b) b.disabled = !helpOk(); return; }
-  if(el.dataset.incl){ const inc=S.exps[+el.dataset.i].incl; if(el.checked) inc[el.dataset.incl]='inc'; else delete inc[el.dataset.incl]; return rerender(); }
+  if(el.dataset.incl){ const inc=S.exps[+el.dataset.i].incl, c=el.dataset.incl; if(el.checked) inc[c]={mode:'inc', price:''}; else delete inc[c]; return rerender(); }
   const p = el.dataset.bind; if(!p) return;
   set(p, el.type==='checkbox' ? el.checked : el.value);
+  if(/\.incl\.[^.]+\.price$/.test(p)){ const bad=!pos(el.value); el.classList.toggle('is-bad', bad); el.setAttribute('aria-invalid', String(bad)); const err=el.closest('.ct-incl-price')?.querySelector('.ct-error'); if(err) err.hidden=!bad; }
   if(el.type==='checkbox') el.closest('.ct-check')?.classList.toggle('is-on', el.checked);
   if(el.dataset.sugg){ hl=-1; showSugg(el); }
   const fix = (id, ok) => { const x=$(id); if(x && ok) x.hidden = true; };
