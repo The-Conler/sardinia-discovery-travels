@@ -29,6 +29,9 @@ export type ContactData = {
   children: number;
   childAges: string[];
   infants: number;
+  /** Set when adults + children + infants is 13 or more. */
+  groupType: string;
+  groupNotes: string;
   swimming: string;
   arrivalMethod: string;
   airport: string;
@@ -71,7 +74,7 @@ export const emptyData: ContactData = {
   boatLocation: "", boatType: "", boatDuration: "", boatStyle: "",
   transferFrom: "", transferTo: "", transferTrip: "", transferBags: 0, transferItems: [],
   tripArrival: "", tripDeparture: "", activityDate1: "", activityDate2: "", datesFlexible: false, datesNote: "",
-  adults: 2, children: 0, childAges: [], infants: 0, swimming: "",
+  adults: 2, children: 0, childAges: [], infants: 0, groupType: "", groupNotes: "", swimming: "",
   arrivalMethod: "", airport: "", flightNumber: "", port: "", arrivalDate: "", arrivalTime: "", rentalCar: "", rentalCarType: "", rentalCarSeats: "", rentalCarSize: "", pickup: "",
   stayArea: "", stayAddress: "", stayNotBooked: false,
   stayType: "", stayRoom: "", stayRoomsCount: "", stayBoard: "", stayRequest: "", stayAmenities: [],
@@ -240,6 +243,15 @@ export const DURATIONS_OTHER: Opt[] = DURATIONS.filter((o) => o.value !== "half"
 export const guestTotal = (d: ContactData) => d.adults + d.children + d.infants;
 export const isLargeGroup = (d: ContactData) => guestTotal(d) >= 13;
 
+/** Shown only when the party is 13 or more. Labels stay in the form's English. */
+export const GROUP_TYPES: Opt[] = [
+  { value: "family", label: "Family or friends" },
+  { value: "company", label: "Company" },
+  { value: "school", label: "School" },
+  { value: "association", label: "Association" },
+  { value: "other", label: "Other" },
+];
+
 export const YES_NO_UNSURE: Opt[] = [
   { value: "yes", label: "Yes" },
   { value: "no", label: "No" },
@@ -335,7 +347,7 @@ export function stepValid(step: StepId, d: ContactData): boolean {
       return d.datesFlexible ? haveDates || filled(d.datesNote) : haveDates;
     }
     case "guests":
-      return d.adults >= 1 && d.childAges.length === d.children && d.childAges.every(filled) && (!wantsBoat(d) || !!d.swimming);
+      return d.adults >= 1 && d.childAges.length === d.children && d.childAges.every(filled) && (!wantsBoat(d) || !!d.swimming) && (!isLargeGroup(d) || !!d.groupType);
     case "arrival": {
       if (!d.arrivalMethod) return false;
       if (d.arrivalMethod === "plane" && !d.airport) return false;

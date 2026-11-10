@@ -1,7 +1,7 @@
 // Builds the request summary (what the owner receives) and submits it.
 import {
   AIRPORTS, ARRIVAL_METHODS, BOAT_STYLES, BOAT_TYPES, BUDGETS, CAR_SEATS, CAR_SIZES, CAR_TYPES, CELEBRATIONS,
-  DURATIONS, HEARD_FROM, INTERESTS, LOCATIONS, NEEDS, PORTS, QUICK_TOPICS, RENTAL_CAR, REPLY_VIA, STAY_AMENITIES,
+  DURATIONS, GROUP_TYPES, HEARD_FROM, INTERESTS, LOCATIONS, NEEDS, PORTS, QUICK_TOPICS, RENTAL_CAR, REPLY_VIA, STAY_AMENITIES,
   STAY_BOARD, STAY_ROOMS, STAY_ROOMS_COUNT, STAY_TYPES, SWIMMING, TRANSFER_ITEMS, TRANSFER_TRIPS, YES_NO,
   asksPickup, isLargeGroup, labelOf, labelsOf, wantsBoat, wantsTransfer,
 } from "./contactData";
@@ -60,6 +60,8 @@ export function buildReviewSections(d: ContactData): ReviewSection[] {
     ["Infants (under 2)", String(d.infants)],
     ["Everyone swims", wantsBoat(d) ? labelOf(SWIMMING, d.swimming) : ""],
     ["Large group", isLargeGroup(d) ? "13 or more — tailor-made trip" : ""],
+    ["Group type", isLargeGroup(d) ? labelOf(GROUP_TYPES, d.groupType) : ""],
+    ["Group notes", isLargeGroup(d) ? d.groupNotes.trim() : ""],
   ]) });
 
   out.push({ step: "arrival", title: "Getting to Sardinia", rows: rows([
@@ -69,11 +71,18 @@ export function buildReviewSections(d: ContactData): ReviewSection[] {
     ["Ferry port", d.arrivalMethod === "ferry" ? labelOf(PORTS, d.port) : ""],
     ["Arrival", d.arrivalMethod === "plane" || d.arrivalMethod === "ferry" ? [fmtDate(d.arrivalDate || d.tripArrival), d.arrivalTime].filter(Boolean).join(" at ") : ""],
     ["Rental car", labelOf(RENTAL_CAR, d.rentalCar === "yes" ? "myself" : d.rentalCar)],
-    ["Car type", d.rentalCar === "for_me" ? labelOf(CAR_TYPES, d.rentalCarType) : ""],
-    ["Car seats", d.rentalCar === "for_me" ? labelOf(CAR_SEATS, d.rentalCarSeats) : ""],
-    ["Car size", d.rentalCar === "for_me" ? labelOf(CAR_SIZES, d.rentalCarSize) : ""],
     ["Needs pickup to boat/tour", asksPickup(d) ? labelOf(YES_NO, d.pickup) : ""],
   ]) });
+
+  const car = d.rentalCar === "yes" ? "myself" : d.rentalCar;
+  if (car === "for_me") {
+    out.push({ step: "arrival", title: "Richiesta auto a noleggio", rows: rows([
+      ["Handling", "Book it for me"],
+      ["Car type", labelOf(CAR_TYPES, d.rentalCarType)],
+      ["Seats", labelOf(CAR_SEATS, d.rentalCarSeats)],
+      ["Size", labelOf(CAR_SIZES, d.rentalCarSize)],
+    ]) });
+  }
 
   out.push({ step: "stay", title: "Where they're staying", rows: rows([
     ["Area / town", d.stayNotBooked ? "Not booked yet" : d.stayArea],
@@ -165,8 +174,23 @@ export function buildSummaryText(d: ContactData, sentAt = new Date()): string {
  * TODO: connect this to email delivery (e.g. a server route or form service) so the
  * summary is emailed to the owner. Right now it only builds the summary and logs it.
  */
+/** Car request kept as its own block so a future email backend can lift it out. No mail is sent from this preview. */
+export function rentalCarRequest(d: ContactData) {
+  const car = d.rentalCar === "yes" ? "myself" : d.rentalCar;
+  if (car !== "for_me") return null;
+  return {
+    title: "Richiesta auto a noleggio",
+    handling: "book_it_for_me",
+    carType: labelOf(CAR_TYPES, d.rentalCarType),
+    seats: labelOf(CAR_SEATS, d.rentalCarSeats),
+    size: labelOf(CAR_SIZES, d.rentalCarSize),
+  };
+}
+
 export async function submitContactRequest(data: ContactData): Promise<{ ok: true; summary: string }> {
   const summary = buildSummaryText(data);
+  const rental = rentalCarRequest(data);
   console.log("[contact] Request summary (email delivery not connected yet):\n\n" + summary);
+  if (rental) console.log("[contact] payload.rentalCarRequest", rental);
   return { ok: true, summary };
 }

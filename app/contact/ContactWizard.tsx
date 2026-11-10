@@ -7,7 +7,7 @@ import { Icon } from "./icons";
 import {
   AIRPORTS, ALL_STEPS, ARRIVAL_METHODS, BOAT_STYLES, BOAT_TYPES, CAR_SEATS, CAR_SIZES, CAR_TYPES,
   CELEBRATIONS, COUNTRY_SUGGESTIONS, DURATIONS, DURATIONS_OTHER, HEARD_FROM, INTERESTS, LOCATIONS, NEEDS,
-  PLACE_SUGGESTIONS, PORTS, QUICK_TOPICS, RENTAL_CAR, REPLY_VIA, STAY_AMENITIES, STAY_BOARD, STAY_ROOMS,
+  GROUP_TYPES, PLACE_SUGGESTIONS, PORTS, QUICK_TOPICS, RENTAL_CAR, REPLY_VIA, STAY_AMENITIES, STAY_BOARD, STAY_ROOMS,
   STAY_ROOMS_COUNT, STAY_TYPES, SWIMMING, TRANSFER_ITEMS, TRANSFER_TRIPS, YES_NO,
   activeSteps, asksPickup, emptyData, isEmail, isLargeGroup, stepValid, wantsBoat, wantsTransfer,
 } from "./contactData";
@@ -231,6 +231,7 @@ export function ContactWizard() {
       }
     }
     if (restored.rentalCar === "yes") restored.rentalCar = "myself";
+    if (!isLargeGroup(restored)) { restored.groupType = ""; restored.groupNotes = ""; }
     setData(restored);
     setStep(restoredStep);
     setReady(true);
@@ -242,6 +243,12 @@ export function ContactWizard() {
     if (!ready || step === "thanks") return;
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ data, step })); } catch { /* storage full or blocked */ }
   }, [data, step, ready]);
+
+  // Group questions exist only for parties of 13 or more.
+  useEffect(() => {
+    if (!ready || isLargeGroup(data) || (!data.groupType && !data.groupNotes)) return;
+    setData((d) => (isLargeGroup(d) ? d : { ...d, groupType: "", groupNotes: "" }));
+  }, [ready, data]);
 
   // Hide the fixed bottom bar once the footer scrolls into view.
   useEffect(() => {
@@ -544,9 +551,15 @@ export function ContactWizard() {
           )}
           {wantsBoat(data) && <Choice legend="Is everyone comfortable swimming?" options={SWIMMING} value={data.swimming} onChange={(v) => set("swimming", v)} />}
           {isLargeGroup(data) && (
-            <p className="ct-note" role="note">
-              Groups of 13 or more are planned as a tailor-made trip. Our standard experiences are for up to 12 guests.
-            </p>
+            <>
+              <p className="ct-note" role="note">
+                Groups of 13 or more are planned as a tailor-made trip. Our standard experiences are for up to 12 guests.
+              </p>
+              <Choice legend="What kind of group is this?" options={GROUP_TYPES} value={data.groupType} onChange={(v) => set("groupType", v)} layout="pills" />
+              <Field label="Notes about the group" optional hint="Anything that helps us plan for a group this size.">
+                <textarea rows={3} value={data.groupNotes} onChange={(e) => set("groupNotes", e.target.value)} placeholder="For example a school trip, or a company off-site" />
+              </Field>
+            </>
           )}
         </>
       );
