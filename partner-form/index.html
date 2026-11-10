@@ -1102,7 +1102,7 @@ const CONFIG = {
   sectors: [
     { code:'artigianato', letter:'A', img:'/sardinia-discovery-travels/partner-form/img/cat-artisan.jpg', icon:'amphora',
       spec:['ceramica','coltelleria','legno','metalli','maschere','pelletteria','gioielli','tessile','altre_artigianali'],
-      types:['laboratorio_pratico','dimostrazione','visita_bottega','incontro_artigiano','esperienza_privata','percorso_piu'],
+      types:['laboratorio_pratico','dimostrazione','visita_bottega','percorso_piu'],
       q:[ {k:'materials', t:'toggle'}, {k:'takehome', t:'toggle'},
           {k:'workshop_loc', t:'pills', o:['loc_bottega','loc_cliente','loc_entrambi'], req:true},
           {k:'live_demo', t:'toggle'}, {k:'sale', t:'toggle'} ] },
@@ -1279,7 +1279,7 @@ en:{
   o_artigianato:'Crafts and traditions', o_enogastronomia:'Food and wine', o_cultura:'Culture and territory', o_natura:'Nature and adventure', o_mare:'Sea and sailing', o_guide:'Guides and escorts', o_trasporti:'Transport and mobility',
   h_artigianato:'Workshops, demonstrations, studios', h_enogastronomia:'Tastings, producers, cooking', h_cultura:'Archaeology, history, traditions', h_natura:'Trekking, outdoor, rural life', h_mare:'Boats, sailing, snorkelling', h_guide:'Tourist and nature guides', h_trasporti:'Transfers, NCC, group transport',
   o_tessitura:'Weaving', o_ceramica:'Ceramics', o_coltelleria:'Knife making', o_legno:'Woodwork', o_metalli:'Metalwork', o_maschere:'Traditional masks', o_campanacci:'Cowbells', o_pelletteria:'Leatherwork', o_gioielli:'Jewellery', o_tessile:'Textile crafts', o_altre_artigianali:'Other crafts',
-  o_laboratorio_pratico:'Hands-on workshop', o_dimostrazione:'Demonstration', o_visita_bottega:'Workshop visit', o_incontro_artigiano:'Meet the artisan', o_esperienza_privata:'Private experience', o_percorso_piu:'Route with several activities',
+  o_laboratorio_pratico:'Hands-on workshop', o_dimostrazione:'Demonstration', o_visita_bottega:'Workshop visit', o_esperienza_privata:'Private experience', o_percorso_piu:'Route with several activities',
   o_vino:'Wine', o_formaggi:'Cheese', o_produzione_agricola:'Farm produce', o_panificazione:'Bread making', o_pasticceria:'Pastry', o_cucina_tradizionale:'Traditional cooking', o_olio:'Olive oil', o_altri_alimentari:'Other food products',
   o_degustazione:'Tasting', o_visita_produttore:'Producer visit', o_laboratorio:'Workshop', o_cooking_class:'Cooking class', o_pranzo_cena:'Experiential lunch or dinner', o_esperienza_combinata:'Combined experience',
   o_archeologia:'Archaeology', o_storia:'History', o_musei:'Museums', o_tradizioni_popolari:'Folk traditions', o_patrimonio:'Cultural heritage', o_architettura:'Architecture', o_cultura_locale:'Local culture',
@@ -1433,7 +1433,7 @@ it:{
   o_artigianato:'Artigianato e tradizioni', o_enogastronomia:'Enogastronomia', o_cultura:'Cultura e territorio', o_natura:'Natura e avventura', o_mare:'Mare e nautica', o_guide:'Guide e accompagnatori', o_trasporti:'Trasporti e mobilità',
   h_artigianato:'Laboratori, dimostrazioni, botteghe', h_enogastronomia:'Degustazioni, produttori, cucina', h_cultura:'Archeologia, storia, tradizioni', h_natura:'Trekking, outdoor, vita rurale', h_mare:'Barche, vela, snorkeling', h_guide:'Guide turistiche e ambientali', h_trasporti:'Transfer, NCC, trasporto gruppi',
   o_tessitura:'Tessitura', o_ceramica:'Ceramica', o_coltelleria:'Coltelleria', o_legno:'Lavorazione del legno', o_metalli:'Lavorazione dei metalli', o_maschere:'Maschere tradizionali', o_campanacci:'Campanacci', o_pelletteria:'Pelletteria', o_gioielli:'Gioielli', o_tessile:'Artigianato tessile', o_altre_artigianali:'Altre attività artigianali',
-  o_laboratorio_pratico:'Laboratorio pratico', o_dimostrazione:'Dimostrazione', o_visita_bottega:'Visita in bottega', o_incontro_artigiano:'Incontro con l’artigiano', o_esperienza_privata:'Esperienza privata', o_percorso_piu:'Percorso con più attività',
+  o_laboratorio_pratico:'Laboratorio pratico', o_dimostrazione:'Dimostrazione', o_visita_bottega:'Visita in bottega', o_esperienza_privata:'Esperienza privata', o_percorso_piu:'Percorso con più attività',
   o_vino:'Vino', o_formaggi:'Formaggi', o_produzione_agricola:'Produzione agricola', o_panificazione:'Panificazione', o_pasticceria:'Pasticceria', o_cucina_tradizionale:'Cucina tradizionale', o_olio:'Olio', o_altri_alimentari:'Altri prodotti alimentari',
   o_degustazione:'Degustazione', o_visita_produttore:'Visita al produttore', o_laboratorio:'Laboratorio', o_cooking_class:'Cooking class', o_pranzo_cena:'Pranzo o cena esperienziale', o_esperienza_combinata:'Esperienza combinata',
   o_archeologia:'Archeologia', o_storia:'Storia', o_musei:'Musei', o_tradizioni_popolari:'Tradizioni popolari', o_patrimonio:'Patrimonio culturale', o_architettura:'Architettura', o_cultura_locale:'Cultura locale',
@@ -1544,6 +1544,9 @@ function load(){
       const base={...newExp(), ...e, price:{priv:{...newExp().price.priv, ...(e.price||{}).priv}, shared:{...newExp().price.shared, ...(e.price||{}).shared}}};
       if(!Array.isArray(base.spec)) base.spec = base.spec ? [base.spec] : [];
       if(!Array.isArray(base.type)) base.type = base.type ? [base.type] : [];
+      const allowed = new Set(SECTOR[base.sector]?.types || []);
+      base.type = base.type.filter(x => allowed.has(x));
+      if(base.sector !== 'natura') base.difficulty = '';
       if(base.min < 2) base.min = 2;
       if(base.bringNote == null) base.bringNote = '';
       base.durM = 0;
@@ -1800,18 +1803,12 @@ const sectorsForPaths = () => {
 };
 const specList = e => Array.isArray(e.spec) ? e.spec : (e.spec ? [e.spec] : []);
 const typeList = e => Array.isArray(e.type) ? e.type : (e.type ? [e.type] : []);
-const artisanTypesFor = e => {
-  let types = [...(SECTOR[e.sector]?.types || [])];
-  if (e.sector === 'artigianato' && specList(e).includes('coltelleria')) {
-    types = types.filter(x => x !== 'incontro_artigiano' && x !== 'esperienza_privata');
-  }
-  return types;
-};
+const allowedTypes = e => [...(SECTOR[e.sector]?.types || [])];
+const showsDifficulty = e => e.sector === 'natura';
 const EV = {
   sector: i => split(head(t('es_title'), t('es_sub'), ecount(i), true),
     photoCards(P(i,'sector'), sectorsForPaths().map(s=>({v:s.code, img:s.img, icon:s.icon, label:`${s.letter}. ${o(s.code)}`, hint:t('h_'+s.code)})))),
-  /* Artisan specialization comes first so knife-only exclusions are known before type selection. */
-  type: i => { const e=E(i); const types = e.sector==='artigianato' ? artisanTypesFor(e) : SECTOR[e.sector].types; return split(head(t('et_title'), t('et_sub'), ecount(i, o(e.sector))), pills(P(i,'type'), types, {multi:true})); },
+  type: i => { const e=E(i); return split(head(t('et_title'), t('et_sub'), ecount(i, o(e.sector))), pills(P(i,'type'), allowedTypes(e), {multi:true})); },
   spec: i => { const e=E(i), s=SECTOR[e.sector]; const specs = specList(e); return split(head(t('esp_title'), t('esp_sub'), ecount(i, o(e.sector))), `
     ${pills(P(i,'spec'), s.spec, {multi:true})}
     ${specs.some(x => CONFIG.otherSpec.includes(x)) ? inp(P(i,'specOther'), t('spec_other')) : ''}`); },
@@ -1838,8 +1835,8 @@ const EV = {
   equip: i => { const e=E(i); return split(head(t('eq_title'), t('eq_sub'), ecount(i)), `
     ${toggle(P(i,'equipProvided'), t('eq_provided'), t('eq_providedD'))}
     ${e.equipProvided ? '' : inp(P(i,'bringNote'), t('eq_bring_note'), {area:'short', ph:t('eq_bring_notePh')})}`); },
-  reqs: i => { const e=E(i); const showDiff = e.sector !== 'artigianato'; return split(head(t('rq_title'), t('rq_sub'), ecount(i)), `
-    ${showDiff ? group(t('difficulty'), pills(P(i,'difficulty'), CONFIG.difficulty)) : ''}
+  reqs: i => { const e=E(i); if(!showsDifficulty(e)) e.difficulty = ''; return split(head(t('rq_title'), t('rq_sub'), ecount(i)), `
+    ${showsDifficulty(e) ? group(t('difficulty'), pills(P(i,'difficulty'), CONFIG.difficulty)) : ''}
     ${toggle(P(i,'prevExp'), t('prev_exp'), t('prev_expD'))}
     ${inp(P(i,'limits'), t('limits'), {req:false, area:'short', ph:t('limitsPh')})}
     ${inp(P(i,'safety'), t('safety'), {req:false, area:'short', ph:t('safetyPh')})}`); },
@@ -1892,7 +1889,7 @@ function qOk(e, q){
 const EOK = {
   sector: e => !!e.sector,
   spec: e => { const sp = specList(e); return sp.length > 0 && (!sp.some(x => CONFIG.otherSpec.includes(x)) || filled(e.specOther,3)); },
-  type: e => typeList(e).length > 0 && typeList(e).every(x => artisanTypesFor(e).includes(x)),
+  type: e => typeList(e).length > 0 && typeList(e).every(x => allowedTypes(e).includes(x)),
   g1: e => filled(e.name,3) && e.desc.trim().length >= DESC_MIN,
   g2: e => filled(e.comune) && filled(e.meet,3),
   g3: e => e.durH > 0 && e.min >= 2 && e.max >= e.min,
@@ -1900,7 +1897,7 @@ const EOK = {
   mode: e => !!e.mode,
   incl: () => true,
   equip: e => e.equipProvided || filled(e.bringNote, 3),
-  reqs: e => e.sector === 'artigianato' ? true : !!e.difficulty,
+  reqs: e => showsDifficulty(e) ? !!e.difficulty : true,
   sq: e => sectorQs(e).every(q => qOk(e,q)),
   avail: e => !!e.period && e.months.length > 0 && e.days.length > 0,
   slots: e => e.bands.length > 0 && !!e.notice,
@@ -1986,6 +1983,11 @@ function screens(){
   ['org_ident','org_address','org_contacts'].forEach(k=>add(k,'org',VW[k],OK[k]));
   add('collab','collab',VW.collab,OK.collab);
   if(S.paths.includes('A') || S.paths.includes('C')){
+    S.exps.forEach(e => {
+      if(!e.sector) return;
+      e.type = typeList(e).filter(x => allowedTypes(e).includes(x));
+      if(!showsDifficulty(e)) e.difficulty = '';
+    });
     S.exps.forEach((e,i)=>((e.sector === 'artigianato' || e.sector === 'guide')
       ? ['sector','spec','type',...EXP_SCREENS.filter(k=>!['sector','spec','type'].includes(k))]
       : EXP_SCREENS).forEach(k=>{
@@ -2453,7 +2455,7 @@ function buildPayload(){
     contact: {...S.contact, phone_e164: S.contact.prefix + digits(S.contact.phone)},
     organization: {...S.org, vat: S.org.vat.replace(/\s/g,''), cf: S.org.cf.replace(/\s/g,'').toUpperCase(), manual_review: S.org.form==='altra_forma'},
     collaboration: { experiences: hasA, agreement: hasB },
-    experiences: hasA ? S.exps.map((e,i)=>({ position:i+1, ...e, prices: Object.fromEntries(blocks(e).map(b=>[b, e.price[b]])), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) })) : [],
+    experiences: hasA ? S.exps.map((e,i)=>({ position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>[b, e.price[b]])), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) })) : [],
     agreement: hasB ? {...S.conv, group: cgroup()} : null,
     consents: {...S.consents, at: new Date().toISOString()},
     help_requests: S.help,
@@ -2636,7 +2638,8 @@ function afterPick(p, prev){
     if(m[2]==='sector' && prev!==e.sector){ e.spec=[]; e.specOther=''; e.type=[]; e.sq={}; e.difficulty='';
       (SECTOR[e.sector].q||[]).forEach(q=>{ if(q.def!==undefined) e.sq[q.k]=q.def; else if(q.t==='multi') e.sq[q.k]=[]; else if(q.t==='stepper') e.sq[q.k]=0; }); }
     if(m[2]==='spec'){ const sp=specList(e); if(!sp.some(x=>CONFIG.otherSpec.includes(x))) e.specOther='';
-      e.type = typeList(e).filter(x => artisanTypesFor(e).includes(x)); } }
+      e.type = typeList(e).filter(x => allowedTypes(e).includes(x)); }
+    if(!showsDifficulty(e)) e.difficulty = ''; }
   const pm = p.match(/^exps\.(\d+)\.period$/);
   if(pm && get(p)==='op_year') S.exps[+pm[1]].months = [...Array(12).keys()];
 }
@@ -2799,7 +2802,7 @@ if(DEV_FILL) (function(){
       case 'mode': if(!e.mode) e.mode = CONFIG.modes[0][0]; break;
       case 'incl': if(!Object.keys(e.incl).length) e.incl = {inc_guide:'inc', inc_materials:'inc', ...({enogastronomia:{inc_tasting:'inc'}, mare:{inc_drinks:'inc', inc_equipment:'inc'}, natura:{inc_equipment:'inc'}}[e.sector]||{})}; break;
       case 'equip': e.equipProvided = true; e.bringNote=''; break;
-      case 'reqs': if(!e.difficulty) e.difficulty = CONFIG.difficulty[0]; break;
+      case 'reqs': if(showsDifficulty(e)){ if(!e.difficulty) e.difficulty = CONFIG.difficulty[0]; } else e.difficulty = ''; break;
       case 'sq': (SECTOR[e.sector].q||[]).forEach(q=>{
         const v = e.sq[q.k];
         if(q.t==='toggle'){ if(v===undefined) e.sq[q.k] = q.def ?? true; }
