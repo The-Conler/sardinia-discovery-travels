@@ -1022,7 +1022,9 @@ html.is-embed .sd-header-in{justify-content:flex-end;border-bottom:0;padding-bot
 <div class="pv-modal" id="pvModal" role="dialog" aria-modal="true" aria-labelledby="pvTitle" aria-hidden="true"></div>
 <div class="sd-toast" id="toast" role="status" aria-live="polite"></div>
 <input type="file" id="fileIn" accept="image/jpeg,image/png,image/webp" multiple hidden>
+<script src="./it-money.js"></script>
 <script>
+const { formatItAmount, priceFromDigits } = ItMoney;
 /* =====================================================================
    Sardinia Discovery Travels: partner application wizard (prototype v3).
    Flow and data model follow BRIEF.md and ARCHITECTURE.md (Fase 1).
@@ -1640,8 +1642,10 @@ function sel(p, label, codes, {req=true, lab=o}={}){
     <select id="${fid(p)}" data-bind="${p}">${codes.map(c=>{const [val,txt]=Array.isArray(c)?c:[c,lab(c)]; return `<option value="${esc(val)}"${val===v?' selected':''}>${esc(txt)}</option>`;}).join('')}</select></label>`;
 }
 function money(p, label, {req=true, hint=''}={}){
+  const raw = get(p);
+  const shown = raw === '' || raw == null ? '' : formatItAmount(raw);
   return `<label class="ct-field"><span class="ct-field-label"><span>${label}${req?'':opt()}</span></span>${hint?`<span class="ct-field-hint">${hint}</span>`:''}
-    <span class="ct-money"><span>€</span><input id="${fid(p)}" data-bind="${p}" type="number" min="0" step="1" inputmode="decimal" value="${esc(get(p))}"></span></label>`;
+    <span class="ct-money"><span>€</span><input id="${fid(p)}" data-cash="${p}" type="text" inputmode="numeric" autocomplete="off" value="${esc(shown)}"></span></label>`;
 }
 /* Single or multi choice pills */
 function pills(p, codes, {multi=false, lab=o, cls=''}={}){
@@ -1825,21 +1829,7 @@ const ARTISAN_OMIT_INCLUDES = ['inc_tasting','inc_meal','inc_drinks'];
 const includesFor = e => CONFIG.includes.filter(c => !(e?.sector === 'artigianato' && ARTISAN_OMIT_INCLUDES.includes(c)));
 function inclMode(e, c){ const v = e.incl?.[c]; if(!v) return ''; return typeof v === 'string' ? v : (v.mode || ''); }
 function inclPrice(e, c){ const v = e.incl?.[c]; if(!v || typeof v !== 'object') return ''; return v.price ?? ''; }
-/* Cash-register cents: digits shift in from the right. 5 → 0,05, 1550 → 15,50, 125000 → 1.250,00. */
-function formatCents(cents){
-  const s = String(Math.max(0, Math.round(cents))).padStart(3,'0');
-  const dec = s.slice(-2), int = s.slice(0,-2).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  return int + ',' + dec;
-}
-function formatItAmount(amount){
-  if(amount === '' || amount == null || !Number.isFinite(Number(amount))) return '';
-  return formatCents(Math.round(Number(amount) * 100));
-}
-function priceFromDigits(raw){
-  const digits = String(raw ?? '').replace(/\D/g,'').slice(0, 9);
-  if(!digits) return '';
-  return Math.round(parseInt(digits, 10)) / 100;
-}
+/* Cash-register formatting lives in ./it-money.js (formatItAmount, priceFromDigits). */
 function normalizeIncl(e){
   if(!e.incl || typeof e.incl !== 'object' || Array.isArray(e.incl)) e.incl = {};
   const allowed = e.sector ? new Set(includesFor(e)) : null;
@@ -1885,7 +1875,7 @@ const EV = {
       <div class="ct-incl-row"><div class="ct-incl-main"><label class="ct-check${mode?' is-on':''}"><input type="checkbox" data-incl="${c}" data-i="${i}" ${mode?'checked':''}><span class="ct-check-box" aria-hidden="true">${ic('check',14,2.4)}</span><span>${esc(o(c))}</span></label>
         ${mode?`<span class="ct-seg" role="radiogroup" aria-label="${esc(o(c))}">${['inc','sup'].map(x=>`<button type="button" role="radio" aria-checked="${mode===x}" class="${mode===x?'is-on':''}" data-action="inclset" data-i="${i}" data-c="${c}" data-v="${x}">${t(x)}</button>`).join('')}</span>`:''}</div>
         ${mode==='sup'?`<label class="ct-field ct-incl-price"><span class="ct-field-label"><span>${t('sup_price')}</span></span>
-          <span class="ct-money"><span>€</span><input id="${fid(P(i,'incl.'+c+'.price'))}" data-supprice="${P(i,'incl.'+c+'.price')}" type="text" inputmode="numeric" autocomplete="off" value="${esc(formatItAmount(price))}" class="${bad?'is-bad':''}" aria-invalid="${bad}"></span>
+          <span class="ct-money"><span>€</span><input id="${fid(P(i,'incl.'+c+'.price'))}" data-cash="${P(i,'incl.'+c+'.price')}" type="text" inputmode="numeric" autocomplete="off" value="${esc(formatItAmount(price))}" class="${bad?'is-bad':''}" aria-invalid="${bad}"></span>
           <span class="ct-error" ${bad?'':'hidden'}>${t('sup_price_err')}</span></label>`:''}</div>`;}).join('')}</div>`); },
   equip: i => { const e=E(i); return split(head(t('eq_title'), t('eq_sub'), ecount(i)), `
     ${toggle(P(i,'equipProvided'), t('eq_provided'), t('eq_providedD'))}
@@ -2080,7 +2070,7 @@ function screenLabel(id){
   if(id==='conv_details') return t('cdt_title_'+cgroup());
   return t(TKEY[id]+'_title');
 }
-const fmtMoney = v => v==='' || v==null ? '' : `€ ${Number(v).toLocaleString(S.lang==='it'?'it-IT':'en-GB')}`;
+const fmtMoney = v => v==='' || v==null || !Number.isFinite(Number(v)) ? '' : `€ ${formatItAmount(v)}`;
 function priceLine(e){
   if(!e.priceMode) return '';
   return blocks(e).map(b=>{ const p=e.price[b]; const lab = blocks(e).length>1 ? t(b==='priv'?'pr_priv':'pr_shared')+': ' : '';
@@ -2241,7 +2231,7 @@ function cardData(e){
     category: e.sector ? o(e.sector) : '',
     type: [spec, typesArr.map(o).filter(Boolean).join(', ')].filter(Boolean).join(' · '),
     title: (e.name||'').trim(),
-    amount: CARD_SHOW_PARTNER_PRICE && bases.length ? `€${Math.min(...bases).toLocaleString(S.lang==='it'?'it-IT':'en-GB')}` : '',
+    amount: CARD_SHOW_PARTNER_PRICE && bases.length ? `€ ${formatItAmount(Math.min(...bases))}` : '',
     unit: e.priceMode ? o(e.priceMode).toLowerCase() : '',
     max: e.max,
     perk: perk ? t('pv_'+perk) : '', perkIcon: PERK_KIND[perk] || 'gear'
@@ -2770,14 +2760,17 @@ function onField(e){
   const el = e.target;
   if(el.dataset.hbind){ H[el.dataset.hbind] = el.value; const b=$('helpSend'); if(b) b.disabled = !helpOk(); return; }
   if(el.dataset.incl){ const inc=S.exps[+el.dataset.i].incl, c=el.dataset.incl; if(el.checked) inc[c]={mode:'inc', price:''}; else delete inc[c]; return rerender(); }
-  if(el.dataset.supprice){
+  if(el.dataset.cash){
     const amount = priceFromDigits(el.value);
-    set(el.dataset.supprice, amount);
+    set(el.dataset.cash, amount);
     const shown = amount === '' ? '' : formatItAmount(amount);
     if(el.value !== shown){ el.value = shown; const end = shown.length; try{ el.setSelectionRange(end, end); }catch(_){} }
-    const bad = !pos(amount);
-    el.classList.toggle('is-bad', bad); el.setAttribute('aria-invalid', String(bad));
-    const err = el.closest('.ct-incl-price')?.querySelector('.ct-error'); if(err) err.hidden = !bad;
+    const row = el.closest('.ct-incl-price');
+    if(row){
+      const bad = !pos(amount);
+      el.classList.toggle('is-bad', bad); el.setAttribute('aria-invalid', String(bad));
+      const err = row.querySelector('.ct-error'); if(err) err.hidden = !bad;
+    }
     save(); updateNav(); return;
   }
   const p = el.dataset.bind; if(!p) return;
