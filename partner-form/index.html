@@ -1239,7 +1239,7 @@ en:{
   g3_title:'Duration and group size', g3_sub:'Approximate values are fine.', dur:'Duration', parts:'Participants and age', durD:'Hours', hours:'Hours', minutes:'Minutes', minP:'Minimum participants', minPD:'Smallest group you accept (always at least 2)', maxP:'Maximum participants', maxPD:'Largest group you can host', minAge:'Minimum age', minAgeD:'0 means no limit',
   g4_title:'Languages and accessibility', g4_sub:'Who can enjoy it.', exp_langs:'Languages you run it in', access:'Accessibility', accessD:'Select what applies.',
   md_title:'Private, shared or both?', md_sub:'Private means one group only. Shared means guests from different bookings together.', md_privataD:'Only one group at a time.', md_condivisaD:'Guests from different bookings join together.', md_entrambeD:'You can run it both ways.',
-  in_title:'What does it include?', in_sub:'Tick what you offer and say whether it is included or charged as a supplement.', inc:'Included', sup:'Supplement', sup_price:'Supplement price (€)', sup_price_err:'Enter the supplement price.', sup_review:'{item}: supplement €{n}', inc_review:'{item}: included',
+  in_title:'What does it include?', in_sub:'Tick what you offer and say whether it is included or charged as a supplement.', inc:'Included', sup:'Supplement', sup_price:'Supplement price (€)', sup_price_err:'Enter the supplement price.', sup_review:'{item}: supplement {n} €', inc_review:'{item}: included',
   eq_title:'Equipment', eq_sub:'Either you provide the gear, or tell us what guests must bring.', eq_provided:'You provide the technical equipment', eq_providedD:'For example tools, helmets, snorkelling masks.', eq_bring:'Guests should bring', eq_bring_note:'What guests must bring', eq_bring_notePh:'List the gear guests need to bring with them.',
   rq_title:'Requirements and safety', rq_sub:'So we can suggest the experience to the right travellers.', difficulty:'Difficulty', prev_exp:'Previous experience required', prev_expD:'For example sailing or climbing experience.', prev_expD_art:'For example, weaving experience.', prev_exp_note:'The agency will contact you to ask for more details.', limits:'Limitations', limitsPh:'For example not suitable during pregnancy.', safety:'Safety measures', safetyPh:'For example life jackets, first aid kit, insurance.',
   sq_title:'A few questions on {s}', sq_sub:'Specific to your sector.',
@@ -1814,6 +1814,21 @@ const ARTISAN_OMIT_INCLUDES = ['inc_tasting','inc_meal','inc_drinks'];
 const includesFor = e => CONFIG.includes.filter(c => !(e?.sector === 'artigianato' && ARTISAN_OMIT_INCLUDES.includes(c)));
 function inclMode(e, c){ const v = e.incl?.[c]; if(!v) return ''; return typeof v === 'string' ? v : (v.mode || ''); }
 function inclPrice(e, c){ const v = e.incl?.[c]; if(!v || typeof v !== 'object') return ''; return v.price ?? ''; }
+/* Cash-register cents: digits shift in from the right. 5 → 0,05, 1550 → 15,50, 125000 → 1.250,00. */
+function formatCents(cents){
+  const s = String(Math.max(0, Math.round(cents))).padStart(3,'0');
+  const dec = s.slice(-2), int = s.slice(0,-2).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return int + ',' + dec;
+}
+function formatItAmount(amount){
+  if(amount === '' || amount == null || !Number.isFinite(Number(amount))) return '';
+  return formatCents(Math.round(Number(amount) * 100));
+}
+function priceFromDigits(raw){
+  const digits = String(raw ?? '').replace(/\D/g,'').slice(0, 9);
+  if(!digits) return '';
+  return Math.round(parseInt(digits, 10)) / 100;
+}
 function normalizeIncl(e){
   if(!e.incl || typeof e.incl !== 'object' || Array.isArray(e.incl)) e.incl = {};
   const allowed = e.sector ? new Set(includesFor(e)) : null;
@@ -1821,7 +1836,7 @@ function normalizeIncl(e){
     if(allowed && !allowed.has(c)){ delete e.incl[c]; continue; }
     const v = e.incl[c];
     if(v === 'inc' || v === 'sup') e.incl[c] = { mode:v, price:'' };
-    else if(v && (v.mode === 'inc' || v.mode === 'sup')) e.incl[c] = { mode:v.mode, price: v.mode === 'sup' ? String(v.price ?? '').trim() : '' };
+    else if(v && (v.mode === 'inc' || v.mode === 'sup')) e.incl[c] = { mode:v.mode, price: v.mode === 'sup' ? (Number.isFinite(Number(v.price)) && v.price !== '' ? Math.round(Number(v.price)*100)/100 : '') : '' };
     else delete e.incl[c];
   }
 }
@@ -1853,7 +1868,7 @@ const EV = {
       <div class="ct-incl-row"><div class="ct-incl-main"><label class="ct-check${mode?' is-on':''}"><input type="checkbox" data-incl="${c}" data-i="${i}" ${mode?'checked':''}><span class="ct-check-box" aria-hidden="true">${ic('check',14,2.4)}</span><span>${esc(o(c))}</span></label>
         ${mode?`<span class="ct-seg" role="radiogroup" aria-label="${esc(o(c))}">${['inc','sup'].map(x=>`<button type="button" role="radio" aria-checked="${mode===x}" class="${mode===x?'is-on':''}" data-action="inclset" data-i="${i}" data-c="${c}" data-v="${x}">${t(x)}</button>`).join('')}</span>`:''}</div>
         ${mode==='sup'?`<label class="ct-field ct-incl-price"><span class="ct-field-label"><span>${t('sup_price')}</span></span>
-          <span class="ct-money"><span>€</span><input id="${fid(P(i,'incl.'+c+'.price'))}" data-bind="${P(i,'incl.'+c+'.price')}" type="number" min="0" step="0.01" inputmode="decimal" value="${esc(price)}" class="${bad?'is-bad':''}" aria-invalid="${bad}"></span>
+          <span class="ct-money"><span>€</span><input id="${fid(P(i,'incl.'+c+'.price'))}" data-supprice="${P(i,'incl.'+c+'.price')}" type="text" inputmode="numeric" autocomplete="off" value="${esc(formatItAmount(price))}" class="${bad?'is-bad':''}" aria-invalid="${bad}"></span>
           <span class="ct-error" ${bad?'':'hidden'}>${t('sup_price_err')}</span></label>`:''}</div>`;}).join('')}</div>`); },
   equip: i => { const e=E(i); return split(head(t('eq_title'), t('eq_sub'), ecount(i)), `
     ${toggle(P(i,'equipProvided'), t('eq_provided'), t('eq_providedD'))}
@@ -2077,7 +2092,7 @@ const rvEdit = (go, label) => `<button type="button" class="ct-tile-edit" data-a
 const rvTop = (icon, label, acts) => `<div class="rv-top"><span class="ct-tile-badge rv-badge">${ic(icon,18,1.7)}</span><span class="rv-label">${label}</span><span class="rv-acts">${acts}</span></div>`;
 const rvDl = rows => { const r = rows.filter(([,v])=>v); return r.length ? `<dl class="rv-dl">${r.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>` : ''; };
 const rvFacts = (rows, cls='') => `<ul class="rv-facts ${cls}">${rows.map(([icon,k,v])=>`<li>${ic(icon,18,1.6)}<span><small>${k}</small><b>${v||'-'}</b></span></li>`).join('')}</ul>`;
-function supplAmount(v){ const n = Number(v); return Number.isInteger(n) ? String(n) : n.toLocaleString(S.lang==='it'?'it-IT':'en-GB', {maximumFractionDigits:2}); }
+function supplAmount(v){ return formatItAmount(v); }
 function inclReview(e){
   const rows = includesFor(e).flatMap(c => {
     const mode = inclMode(e, c);
@@ -2736,6 +2751,16 @@ function onField(e){
   const el = e.target;
   if(el.dataset.hbind){ H[el.dataset.hbind] = el.value; const b=$('helpSend'); if(b) b.disabled = !helpOk(); return; }
   if(el.dataset.incl){ const inc=S.exps[+el.dataset.i].incl, c=el.dataset.incl; if(el.checked) inc[c]={mode:'inc', price:''}; else delete inc[c]; return rerender(); }
+  if(el.dataset.supprice){
+    const amount = priceFromDigits(el.value);
+    set(el.dataset.supprice, amount);
+    const shown = amount === '' ? '' : formatItAmount(amount);
+    if(el.value !== shown){ el.value = shown; const end = shown.length; try{ el.setSelectionRange(end, end); }catch(_){} }
+    const bad = !pos(amount);
+    el.classList.toggle('is-bad', bad); el.setAttribute('aria-invalid', String(bad));
+    const err = el.closest('.ct-incl-price')?.querySelector('.ct-error'); if(err) err.hidden = !bad;
+    save(); updateNav(); return;
+  }
   const p = el.dataset.bind; if(!p) return;
   set(p, el.type==='checkbox' ? el.checked : el.value);
   if(/\.incl\.[^.]+\.price$/.test(p)){ const bad=!pos(el.value); el.classList.toggle('is-bad', bad); el.setAttribute('aria-invalid', String(bad)); const err=el.closest('.ct-incl-price')?.querySelector('.ct-error'); if(err) err.hidden=!bad; }
