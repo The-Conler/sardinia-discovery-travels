@@ -109,6 +109,8 @@ img{display:block}
 .ct-pill:hover{background:var(--ct-fill-hover);transform:scale(1.04)}
 .ct-pill:active{transform:scale(.97);transition-duration:.1s}
 .ct-pill.is-on{border-color:var(--ct-teal);background:rgba(47,127,136,.18)}
+.ct-pill.is-muted{opacity:.4}
+.ct-pill:disabled{opacity:.38;cursor:not-allowed}
 .ct-pills--months{display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}
 .ct-pills--months .ct-pill{min-width:0;padding:0 8px}
 
@@ -475,8 +477,8 @@ img{display:block}
 .ct-slot{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 8px 0 20px;border-radius:999px;border:1.5px solid var(--ct-teal);background:rgba(47,127,136,.18);font-size:var(--t-card);font-variant-numeric:tabular-nums}
 .ct-slot button{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:var(--ct-cream);cursor:pointer}
 .ct-slot-add{display:flex;gap:8px;align-items:center}
-.ct-slot-add input{height:48px;padding:0 16px;border-radius:999px;border:1.5px solid transparent;background:var(--ct-fill);color:var(--ct-cream);font:inherit;color-scheme:dark}
-.ct-slot-add input:focus{outline:none;border-color:var(--ct-teal)}
+.ct-slot-add input,.ct-slot-add select{height:48px;padding:0 16px;border-radius:999px;border:1.5px solid transparent;background:var(--ct-fill);color:var(--ct-cream);font:inherit;color-scheme:dark}
+.ct-slot-add input:focus,.ct-slot-add select:focus{outline:none;border-color:var(--ct-teal)}
 
 /* Price blocks */
 .ct-block{display:flex;flex-direction:column;gap:24px;padding:24px;border-radius:var(--ct-radius);background:var(--ct-fill)}
@@ -1264,7 +1266,7 @@ en:{
   av_title:'When is it available?', av_sub:'Indicative availability, no booking calendar.', period:'Period', months:'Months', weekdays:'Days of the week',
   sl_title:'Times and booking notice', sl_sub:'When it usually runs and how much notice you need.', bands:'Time of day', slots:'Start times', slot_add:'Add', slot_remove:'Remove {x}', notice:'Minimum notice', manual:'Manual confirmation', manualD:'You confirm each booking request before it is final.',
   pr_title:'Price for the agency', pr_sub:'Indicative. Prices are discussed during the evaluation.', pr_mode:'How do you price it?', pr_agency:'Cost for the agency: state how much you wish to receive to deliver the service. It is not necessarily the price that will be offered to the traveller.',
-  pr_priv:'Private experience', pr_shared:'Shared experience', pr_single:'Price', pr_base:'Base price', pr_incl:'People included', pr_inclD:'Covered by the base price', pr_extra:'Supplement per extra person', pr_min:'Minimum price',
+  pr_priv_short:'Private', pr_shared_short:'Shared', pr_art_persona:'Price per person', pr_art_min:'Minimum 2 participants', pr_priv:'Private experience', pr_shared:'Shared experience', pr_single:'Price', pr_base:'Base price', pr_incl:'People included', pr_inclD:'Covered by the base price', pr_extra:'Supplement per extra person', pr_min:'Minimum price',
   cd_title:'Terms and conditions', cd_sub:'Your usual terms. They can be discussed later.', cancel:'Free cancellation up to', penalties:'Penalties after that', penaltiesPh:'For example 50% up to 24 hours before.', noshow:'No show', weather:'Bad weather', exclusive:'Open to discussing commercial exclusivity', exclusiveD:'Only if it makes sense for both sides. Not binding.', billing:'Invoicing preference',
   ph_title:'Add some photos', ph_sub:'At least 1, ideally 3 or more. The first one is the cover.',
   p_drop:'Drag your photos here', p_dropD:'JPG, PNG or WEBP, up to 10 photos.', p_browse:'Choose photos', p_demo:'No photos at hand?', p_demoBtn:'Use sample photos (demo)',
@@ -1421,7 +1423,7 @@ it:{
   av_title:'Quando è disponibile?', av_sub:'Disponibilità indicativa, nessun calendario di prenotazione.', period:'Periodo', months:'Mesi', weekdays:'Giorni della settimana',
   sl_title:'Orari e preavviso', sl_sub:'Quando si svolge di solito e quanto preavviso ti serve.', bands:'Fascia oraria', slots:'Orari di partenza', slot_add:'Aggiungi', slot_remove:'Rimuovi {x}', notice:'Preavviso minimo', manual:'Conferma manuale', manualD:'Confermi ogni richiesta prima che la prenotazione sia definitiva.',
   pr_title:'Prezzo per l’agenzia', pr_sub:'Indicativo. I prezzi si discutono in fase di valutazione.', pr_mode:'Come la prezzi?', pr_agency:'Costo per l’agenzia: Indica quanto desideri ricevere per erogare il servizio. Non è necessariamente il prezzo che verrà proposto al viaggiatore.',
-  pr_priv:'Esperienza privata', pr_shared:'Esperienza condivisa', pr_single:'Prezzo', pr_base:'Prezzo base', pr_incl:'Persone incluse', pr_inclD:'Coperte dal prezzo base', pr_extra:'Supplemento per persona extra', pr_min:'Prezzo minimo',
+  pr_priv_short:'Privata', pr_shared_short:'Condivisa', pr_art_persona:'Prezzo a persona', pr_art_min:'Minimo 2 partecipanti', pr_priv:'Esperienza privata', pr_shared:'Esperienza condivisa', pr_single:'Prezzo', pr_base:'Prezzo base', pr_incl:'Persone incluse', pr_inclD:'Coperte dal prezzo base', pr_extra:'Supplemento per persona extra', pr_min:'Prezzo minimo',
   cd_title:'Termini e condizioni', cd_sub:'Le tue condizioni abituali. Se ne può parlare in seguito.', cancel:'Cancellazione gratuita fino a', penalties:'Penali successive', penaltiesPh:'Per esempio 50% fino a 24 ore prima.', noshow:'Mancata presentazione', weather:'Maltempo', exclusive:'Disponibile a valutare un’esclusiva commerciale', exclusiveD:'Solo se ha senso per entrambi. Non vincolante.', billing:'Preferenza di fatturazione',
   ph_title:'Aggiungi qualche foto', ph_sub:'Almeno 1, idealmente 3 o più. La prima è la copertina.',
   p_drop:'Trascina qui le tue foto', p_dropD:'JPG, PNG o WEBP, fino a 10 foto.', p_browse:'Scegli le foto', p_demo:'Non hai foto a portata di mano?', p_demoBtn:'Usa foto di esempio (demo)',
@@ -1537,7 +1539,7 @@ const newExp = () => ({
   durH:2, durM:0, min:2, max:8, minAge:0, langs:[], access:[],
   mode:'', incl:{}, equipProvided:false, bring:[], bringNote:'',
   difficulty:'', prevExp:false, limits:'', safety:'', sq:{},
-  period:'', months:[], days:[], bands:[], slots:[], notice:'', manual:true,
+  period:'', months:[], days:[], bands:[], slots:[], notice:'', manual:false,
   priceMode:'', price:{ priv:{base:'',incl:1,extra:'',min:''}, shared:{base:'',incl:1,extra:'',min:''} },
   cancel:'', penalties:'', noshow:'', weather:'', exclusive:false, billing:'', photos:[]
 });
@@ -1668,6 +1670,20 @@ function typeCards(p, codes){
       <span class="ct-type-desc">${desc ? esc(desc) : ''}</span>
     </button>`;
   }).join('')}</div>`;
+}
+function halfHours(){ return Array.from({length:48}, (_,i)=>`${String(Math.floor(i/2)).padStart(2,'0')}:${i%2?'30':'00'}`); }
+function bandPills(i, e){
+  const full = e.bands.includes('band_full');
+  return `<div class="ct-pills" role="group">${CONFIG.bands.map(c=>{
+    const on = e.bands.includes(c), muted = full && c !== 'band_full';
+    return `<button type="button" class="ct-pill${on?' is-on':''}${muted?' is-muted':''}" role="checkbox" aria-checked="${on}" data-action="band" data-i="${i}" data-v="${c}">${esc(o(c))}</button>`;
+  }).join('')}</div>`;
+}
+function slotPicker(i, e){
+  const have = new Set(e.slots);
+  const opts = halfHours().map(hm=>`<option value="${hm}"${have.has(hm)?' disabled':''}>${hm}</option>`).join('');
+  return `<div class="ct-slots">${e.slots.map((s,k)=>`<span class="ct-slot">${esc(s)}<button type="button" data-action="slotdel" data-i="${i}" data-v="${k}" aria-label="${esc(t('slot_remove',{x:s}))}">${ic('x',14,2)}</button></span>`).join('')}
+    <span class="ct-slot-add"><select id="slotIn" data-i="${i}" aria-label="${esc(t('slots'))}">${opts}</select><button type="button" class="ct-back" data-action="slotadd" data-i="${i}">${ic('plus',16,1.8)} ${t('slot_add')}</button></span></div>`;
 }
 function pills(p, codes, {multi=false, lab=o, cls=''}={}){
   const v = get(p);
@@ -1917,14 +1933,20 @@ const EV = {
     ${group(t('months'), `<div class="ct-pills ct-pills--months">${M.map((m,k)=>{const on=e.months.includes(k); return `<button type="button" class="ct-pill${on?' is-on':''}" role="checkbox" aria-checked="${on}" data-action="togn" data-p="${P(i,'months')}" data-v="${k}">${m}</button>`;}).join('')}</div>`, {multi:true})}
     ${group(t('weekdays'), pills(P(i,'days'), CONFIG.weekdays, {multi:true}), {multi:true})}`); },
   slots: i => { const e=E(i); return split(head(t('sl_title'), t('sl_sub'), ecount(i)), `
-    ${group(t('bands'), pills(P(i,'bands'), CONFIG.bands, {multi:true}), {multi:true})}
-    ${group(t('slots'), `<div class="ct-slots">${e.slots.map((s,k)=>`<span class="ct-slot">${esc(s)}<button type="button" data-action="slotdel" data-i="${i}" data-v="${k}" aria-label="${esc(t('slot_remove',{x:s}))}">${ic('x',14,2)}</button></span>`).join('')}
-      <span class="ct-slot-add"><input type="time" id="slotIn" data-i="${i}" step="900" aria-label="${esc(t('slots'))}"><button type="button" class="ct-back" data-action="slotadd" data-i="${i}">${ic('plus',16,1.8)} ${t('slot_add')}</button></span></div>`, {req:false, tip:'tip_slots'})}
-    ${group(t('notice'), pills(P(i,'notice'), CONFIG.notice), {tip:'tip_notice'})}
-    ${toggle(P(i,'manual'), t('manual'), t('manualD'), 'tip_manual')}`); },
-  price: i => { const e=E(i); const bl=blocks(e); return split(head(t('pr_title'), t('pr_sub'), ecount(i)), `
-    ${note(`<b>${t('pr_agency').split(':')[0]}:</b>${t('pr_agency').split(':').slice(1).join(':')}`, 'info')}
-    ${group(t('pr_mode'), pills(P(i,'priceMode'), CONFIG.priceModes), {tip:'tip_agency'})}
+    ${group(t('bands'), bandPills(i, e), {multi:true})}
+    ${group(t('slots'), slotPicker(i, e), {req:false, tip:'tip_slots'})}
+    ${group(t('notice'), pills(P(i,'notice'), CONFIG.notice), {tip:'tip_notice'})}`); },
+  price: i => { const e=E(i); const bl=blocks(e);
+    if(e.sector === 'artigianato'){
+      e.priceMode = 'pm_persona';
+      for(const b of ['priv','shared']){ e.price[b].extra = ''; e.price[b].incl = 1; }
+      return split(head(t('pr_title'), t('pr_sub'), ecount(i)), bl.map(b=>`<div class="ct-block">
+        <h3 class="ct-block-title">${t(b==='priv'?'pr_priv_short':'pr_shared_short')}</h3>
+        ${money(P(i,`price.${b}.base`), t('pr_art_persona'), {hint:t('pr_art_min')})}
+      </div>`).join(''));
+    }
+    return split(head(t('pr_title'), t('pr_sub'), ecount(i)), `
+    ${group(t('pr_mode'), pills(P(i,'priceMode'), CONFIG.priceModes))}
     ${bl.map(b=>`<div class="ct-block">${bl.length>1||e.mode?`<h3 class="ct-block-title">${t(bl.length>1?(b==='priv'?'pr_priv':'pr_shared'):'pr_single')}</h3>`:''}
       <div class="ct-row">${money(P(i,`price.${b}.base`), t('pr_base'))}${money(P(i,`price.${b}.min`), t('pr_min'), {req:false})}</div>
       <div class="ct-steppers">${stepper(P(i,`price.${b}.incl`), t('pr_incl'), t('pr_inclD'), 1, 200)}</div>
@@ -1971,7 +1993,7 @@ const EOK = {
   sq: e => sectorQs(e).every(q => qOk(e,q)),
   avail: e => !!e.period && e.months.length > 0 && e.days.length > 0,
   slots: e => e.bands.length > 0 && !!e.notice,
-  price: e => !!e.priceMode && blocks(e).every(b => pos(e.price[b].base) && e.price[b].incl >= 1),
+  price: e => e.sector === 'artigianato' ? blocks(e).every(b => pos(e.price[b].base)) : (!!e.priceMode && blocks(e).every(b => pos(e.price[b].base) && e.price[b].incl >= 1)),
   cond: e => !!(e.cancel && e.noshow && e.weather && e.billing),
   photos: e => e.photos.length >= MIN_PHOTOS
 };
@@ -2061,7 +2083,9 @@ function screens(){
       if(!e.sector) return;
       e.type = typeList(e).filter(x => allowedTypes(e).includes(x));
       if(!showsDifficulty(e)) e.difficulty = '';
-      if(e.sector === 'artigianato'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; e.limits = ''; e.safety = ''; e.localita = ''; e.meet = ''; e.end = ''; e.sq = e.sq || {}; delete e.sq.materials; delete e.sq.workshop_loc; delete e.sq.live_demo; delete e.sq.sale; if(e.sq.can_buy == null) e.sq.can_buy = false; if(e.sq.takehome == null) e.sq.takehome = false; }
+      if(e.sector === 'artigianato'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; e.limits = ''; e.safety = ''; e.localita = ''; e.meet = ''; e.end = ''; e.priceMode = 'pm_persona'; for(const b of ['priv','shared']){ e.price[b].extra = ''; e.price[b].incl = 1; } e.sq = e.sq || {}; delete e.sq.materials; delete e.sq.workshop_loc; delete e.sq.live_demo; delete e.sq.sale; if(e.sq.can_buy == null) e.sq.can_buy = false; if(e.sq.takehome == null) e.sq.takehome = false; }
+      e.manual = false;
+      { const ok = new Set(halfHours()); e.slots = (e.slots||[]).filter(s => ok.has(s)); }
     });
     S.exps.forEach((e,i)=>{
       /* Artigianato: requisiti, then periodic availability. No location screen, equipment or sector-question page in between. */
@@ -2101,6 +2125,7 @@ function screenLabel(id){
 }
 const fmtMoney = v => v==='' || v==null || !Number.isFinite(Number(v)) ? '' : `€ ${formatItAmount(v)}`;
 function priceLine(e){
+  if(e.sector === 'artigianato') return blocks(e).map(b=>`${t(b==='priv'?'pr_priv_short':'pr_shared_short')}: ${fmtMoney(e.price[b].base)} ${t('pr_art_persona').toLowerCase()}`).join('<br>');
   if(!e.priceMode) return '';
   return blocks(e).map(b=>{ const p=e.price[b]; const lab = blocks(e).length>1 ? t(b==='priv'?'pr_priv':'pr_shared')+': ' : '';
     return `${lab}${fmtMoney(p.base)} ${o(e.priceMode).toLowerCase()}${p.incl>1?`, ${p.incl} ${t('pr_incl').toLowerCase()}`:''}${p.extra?`, +${fmtMoney(p.extra)}`:''}`; }).join('<br>');
@@ -2545,7 +2570,7 @@ function buildPayload(){
     contact: {...S.contact, phone_e164: S.contact.prefix + digits(S.contact.phone)},
     organization: {...S.org, vat: S.org.vat.replace(/\s/g,''), cf: S.org.cf.replace(/\s/g,'').toUpperCase(), manual_review: S.org.form==='altra_forma'},
     collaboration: { experiences: hasA, agreement: hasB },
-    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); const row = { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>[b, e.price[b]])), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; if(e.sector === 'artigianato'){ delete row.equipProvided; delete row.bringNote; delete row.bring; delete row.limits; delete row.safety; delete row.localita; delete row.meet; delete row.end; if(row.sq){ delete row.sq.materials; delete row.sq.workshop_loc; delete row.sq.live_demo; delete row.sq.sale; } } else delete row.address; return row; }) : [],
+    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); const row = { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>{ const p={...e.price[b]}; if(e.sector==='artigianato'){ delete p.extra; p.incl = 1; p.min = ''; } return [b, p]; })), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; delete row.manual; if(e.sector === 'artigianato'){ row.priceMode = 'pm_persona'; delete row.equipProvided; delete row.bringNote; delete row.bring; delete row.limits; delete row.safety; delete row.localita; delete row.meet; delete row.end; if(row.sq){ delete row.sq.materials; delete row.sq.workshop_loc; delete row.sq.live_demo; delete row.sq.sale; } } else delete row.address; return row; }) : [],
     agreement: hasB ? {...S.conv, group: cgroup()} : null,
     consents: {...S.consents, at: new Date().toISOString()},
     help_requests: S.help,
@@ -2747,7 +2772,8 @@ const ACT = {
     rerender(); },
   step: el => { const p=el.dataset.p; set(p, Math.max(+el.dataset.min, Math.min(+el.dataset.max, (Number(get(p))||0) + (+el.dataset.d)))); rerender(); },
   inclset: el => { const e=S.exps[+el.dataset.i], c=el.dataset.c; e.incl[c] = { mode:el.dataset.v, price: el.dataset.v==='sup' ? inclPrice(e,c) : '' }; rerender(); },
-  slotadd: el => { const inp=$('slotIn'), v=inp?.value; if(!v) return inp?.focus(); const a=S.exps[+el.dataset.i].slots; if(!a.includes(v)){ a.push(v); a.sort(); } rerender(); $('slotIn')?.focus(); },
+  band: el => { const e=S.exps[+el.dataset.i], v=el.dataset.v; if(v==='band_full') e.bands = e.bands.includes('band_full') ? [] : ['band_full']; else { e.bands = e.bands.filter(x=>x!=='band_full'); const k=e.bands.indexOf(v); k<0 ? e.bands.push(v) : e.bands.splice(k,1); } rerender(); },
+  slotadd: el => { const inp=$('slotIn'), v=inp?.value; if(!v || !halfHours().includes(v)) return inp?.focus(); const a=S.exps[+el.dataset.i].slots; if(!a.includes(v)){ a.push(v); a.sort(); } rerender(); },
   slotdel: el => { S.exps[+el.dataset.i].slots.splice(+el.dataset.v,1); rerender(); },
   rvexp: el => { RV.exp = el.dataset.v==='conv' ? 'conv' : +el.dataset.v; render(); },
   goto: el => { if(el.dataset.ret) S.ret = true; go(el.dataset.v, 'f'); },
