@@ -1919,7 +1919,7 @@ const EOK = {
   g4: e => e.langs.length > 0,
   mode: e => !!e.mode,
   incl: e => includesFor(e).every(c => inclMode(e,c) !== 'sup' || pos(inclPrice(e,c))),
-  equip: e => e.equipProvided || filled(e.bringNote, 3),
+  equip: e => e.sector === 'artigianato' ? true : (e.equipProvided || filled(e.bringNote, 3)),
   reqs: e => showsDifficulty(e) ? !!e.difficulty : true,
   sq: e => sectorQs(e).every(q => qOk(e,q)),
   avail: e => !!e.period && e.months.length > 0 && e.days.length > 0,
@@ -2011,6 +2011,7 @@ function screens(){
       if(!e.sector) return;
       e.type = typeList(e).filter(x => allowedTypes(e).includes(x));
       if(!showsDifficulty(e)) e.difficulty = '';
+      if(e.sector === 'artigianato'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; }
     });
     S.exps.forEach((e,i)=>((e.sector === 'artigianato' || e.sector === 'guide')
       ? ['sector','spec','type',...EXP_SCREENS.filter(k=>!['sector','spec','type'].includes(k))]
@@ -2022,6 +2023,7 @@ function screens(){
         if(k==='type' && !specList(e).length) return;
       } else if(k==='spec' && !typeList(e).length) return;
       if(k==='sq' && !(SECTOR[e.sector]?.q||[]).length) return;
+      if(k==='equip' && e.sector === 'artigianato') return;
       add(`e${i}_${k}`, 'prop', () => EV[k](i), () => !!S.exps[i] && EOK[k](S.exps[i]));
     }));
     add('exp_more','prop',VW.exp_more,()=>S.exps.length>0);
@@ -2490,7 +2492,7 @@ function buildPayload(){
     contact: {...S.contact, phone_e164: S.contact.prefix + digits(S.contact.phone)},
     organization: {...S.org, vat: S.org.vat.replace(/\s/g,''), cf: S.org.cf.replace(/\s/g,'').toUpperCase(), manual_review: S.org.form==='altra_forma'},
     collaboration: { experiences: hasA, agreement: hasB },
-    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); return { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>[b, e.price[b]])), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; }) : [],
+    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); const row = { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>[b, e.price[b]])), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; if(e.sector === 'artigianato'){ delete row.equipProvided; delete row.bringNote; delete row.bring; } return row; }) : [],
     agreement: hasB ? {...S.conv, group: cgroup()} : null,
     consents: {...S.consents, at: new Date().toISOString()},
     help_requests: S.help,
