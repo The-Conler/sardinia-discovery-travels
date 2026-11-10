@@ -1108,7 +1108,7 @@ const CONFIG = {
     { code:'artigianato', letter:'A', img:'/partner-form/img/cat-artisan.jpg', icon:'amphora',
       spec:['ceramica','coltelleria','legno','metalli','maschere','pelletteria','gioielli','tessile','altre_artigianali'],
       types:['laboratorio_pratico','dimostrazione','visita_bottega','percorso_piu'],
-      q:[ {k:'materials', t:'toggle'}, {k:'takehome', t:'toggle'},
+      q:[ {k:'takehome', t:'toggle'},
           {k:'workshop_loc', t:'pills', o:['loc_bottega','loc_cliente','loc_entrambi'], req:true},
           {k:'live_demo', t:'toggle'}, {k:'sale', t:'toggle'} ] },
     { code:'enogastronomia', letter:'B', img:'/partner-form/img/cat-wine.jpg', icon:'wine',
@@ -1334,7 +1334,7 @@ en:{
   o_vh_auto:'Car', o_vh_van:'Van', o_vh_minibus:'Minibus', o_vh_bus:'Coach',
   o_sv_olb:'Olbia airport', o_sv_aho:'Alghero airport', o_sv_cag:'Cagliari airport', o_sv_ports:'Ferry ports', o_sv_island:'Whole island',
   /* Sector questions */
-  q_materials:'Materials included', q_takehome:'Guests take home what they make', q_workshop_loc:'Where it takes place', q_live_demo:'Live demonstration of the technique', q_sale:'Products for sale on site',
+  q_takehome:'Guests take home what they make', q_workshop_loc:'Where it takes place', q_live_demo:'Live demonstration of the technique', q_sale:'Products for sale on site',
   q_own_products:'Your own products', q_tasting:'The tasting includes', q_diets:'Dietary options', q_allergens:'Allergens managed on request', q_certs:'Certifications',
   q_tickets:'Entry tickets', q_site_booking:'You handle bookings at the sites', q_licensed_guide:'Led by a licensed guide', q_distance_km:'Distance (km)', q_elevation_m:'Elevation gain (m)', q_insurance:'Liability insurance in place',
   q_boat_type:'Boat type', q_boat_length:'Boat length (m)', q_boat_capacity:'Maximum passengers', q_skipper:'Skipper included', q_skipper_license:'Skipper qualification', q_port:'Departure port', q_fuel:'Fuel', q_onboard:'On board',
@@ -1487,7 +1487,7 @@ it:{
   o_ta_ncc:'Licenza NCC', o_ta_bus:'Autorizzazione autobus', o_ta_altro:'Altra autorizzazione',
   o_vh_auto:'Auto', o_vh_van:'Van', o_vh_minibus:'Minibus', o_vh_bus:'Pullman',
   o_sv_olb:'Aeroporto di Olbia', o_sv_aho:'Aeroporto di Alghero', o_sv_cag:'Aeroporto di Cagliari', o_sv_ports:'Porti traghetti', o_sv_island:'Tutta l’isola',
-  q_materials:'Materiali inclusi', q_takehome:'Gli ospiti portano a casa ciò che realizzano', q_workshop_loc:'Dove si svolge', q_live_demo:'Dimostrazione dal vivo della tecnica', q_sale:'Prodotti in vendita sul posto',
+  q_takehome:'Gli ospiti portano a casa ciò che realizzano', q_workshop_loc:'Dove si svolge', q_live_demo:'Dimostrazione dal vivo della tecnica', q_sale:'Prodotti in vendita sul posto',
   q_own_products:'Prodotti di tua produzione', q_tasting:'La degustazione comprende', q_diets:'Opzioni alimentari', q_allergens:'Allergeni gestiti su richiesta', q_certs:'Certificazioni',
   q_tickets:'Biglietti di ingresso', q_site_booking:'Gestisci tu le prenotazioni ai siti', q_licensed_guide:'Condotta da una guida abilitata', q_distance_km:'Distanza (km)', q_elevation_m:'Dislivello (m)', q_insurance:'Assicurazione RC attiva',
   q_boat_type:'Tipo di imbarcazione', q_boat_length:'Lunghezza (m)', q_boat_capacity:'Passeggeri massimi', q_skipper:'Skipper incluso', q_skipper_license:'Titolo dello skipper', q_port:'Porto di partenza', q_fuel:'Carburante', q_onboard:'A bordo',
@@ -1863,7 +1863,8 @@ const EV = {
     ${artisan ? `<div class="ct-stack" style="gap:16px">${toggle(P(i,'prevExp'), t('prev_exp'), t('prev_expD_art'))}${note(t('prev_exp_note'))}</div>` : `${toggle(P(i,'prevExp'), t('prev_exp'), t('prev_expD'))}${inp(P(i,'limits'), t('limits'), {req:false, area:'short', ph:t('limitsPh')})}${inp(P(i,'safety'), t('safety'), {req:false, area:'short', ph:t('safetyPh')})}`}`); },
   sq: i => { const e=E(i); return split(head(t('sq_title',{s:o(e.sector).toLowerCase()}), t('sq_sub'), ecount(i, o(e.sector))),
     `<div class="ct-stack" style="gap:32px">${sectorQs(e).map(q=>qField(i,q)).join('')}</div>`); },
-  avail: i => { const e=E(i); const M=MONTHS[S.lang]; return split(head(t('av_title'), t('av_sub'), ecount(i)), `
+  avail: i => { const e=E(i); const M=MONTHS[S.lang]; const artisanQs = e.sector==='artigianato' ? `<div class="ct-stack" style="gap:32px">${sectorQs(e).map(q=>qField(i,q)).join('')}</div>` : ''; return split(head(t('av_title'), t('av_sub'), ecount(i)), `
+    ${artisanQs}
     ${group(t('period'), pills(P(i,'period'), CONFIG.opening))}
     ${group(t('months'), `<div class="ct-pills ct-pills--months">${M.map((m,k)=>{const on=e.months.includes(k); return `<button type="button" class="ct-pill${on?' is-on':''}" role="checkbox" aria-checked="${on}" data-action="togn" data-p="${P(i,'months')}" data-v="${k}">${m}</button>`;}).join('')}</div>`)}
     ${group(t('weekdays'), pills(P(i,'days'), CONFIG.weekdays, {multi:true}))}`); },
@@ -1920,7 +1921,7 @@ const EOK = {
   equip: e => e.sector === 'artigianato' ? true : (e.equipProvided || filled(e.bringNote, 3)),
   reqs: e => showsDifficulty(e) ? !!e.difficulty : true,
   sq: e => sectorQs(e).every(q => qOk(e,q)),
-  avail: e => !!e.period && e.months.length > 0 && e.days.length > 0,
+  avail: e => !!e.period && e.months.length > 0 && e.days.length > 0 && (e.sector !== 'artigianato' || sectorQs(e).every(q => qOk(e,q))),
   slots: e => e.bands.length > 0 && !!e.notice,
   price: e => !!e.priceMode && blocks(e).every(b => pos(e.price[b].base) && e.price[b].incl >= 1),
   cond: e => !!(e.cancel && e.noshow && e.weather && e.billing),
@@ -2009,7 +2010,7 @@ function screens(){
       if(!e.sector) return;
       e.type = typeList(e).filter(x => allowedTypes(e).includes(x));
       if(!showsDifficulty(e)) e.difficulty = '';
-      if(e.sector === 'artigianato'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; e.limits = ''; e.safety = ''; }
+      if(e.sector === 'artigianato'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; e.limits = ''; e.safety = ''; if(e.sq) delete e.sq.materials; }
     });
     S.exps.forEach((e,i)=>((e.sector === 'artigianato' || e.sector === 'guide')
       ? ['sector','spec','type',...EXP_SCREENS.filter(k=>!['sector','spec','type'].includes(k))]
@@ -2020,7 +2021,7 @@ function screens(){
       if(e.sector === 'artigianato' || e.sector === 'guide'){
         if(k==='type' && !specList(e).length) return;
       } else if(k==='spec' && !typeList(e).length) return;
-      if(k==='sq' && !(SECTOR[e.sector]?.q||[]).length) return;
+      if(k==='sq' && (e.sector === 'artigianato' || !(SECTOR[e.sector]?.q||[]).length)) return;
       if(k==='equip' && e.sector === 'artigianato') return;
       add(`e${i}_${k}`, 'prop', () => EV[k](i), () => !!S.exps[i] && EOK[k](S.exps[i]));
     }));
@@ -2490,7 +2491,7 @@ function buildPayload(){
     contact: {...S.contact, phone_e164: S.contact.prefix + digits(S.contact.phone)},
     organization: {...S.org, vat: S.org.vat.replace(/\s/g,''), cf: S.org.cf.replace(/\s/g,'').toUpperCase(), manual_review: S.org.form==='altra_forma'},
     collaboration: { experiences: hasA, agreement: hasB },
-    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); const row = { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>[b, e.price[b]])), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; if(e.sector === 'artigianato'){ delete row.equipProvided; delete row.bringNote; delete row.bring; delete row.limits; delete row.safety; } return row; }) : [],
+    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); const row = { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>[b, e.price[b]])), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; if(e.sector === 'artigianato'){ delete row.equipProvided; delete row.bringNote; delete row.bring; delete row.limits; delete row.safety; if(row.sq) delete row.sq.materials; } return row; }) : [],
     agreement: hasB ? {...S.conv, group: cgroup()} : null,
     consents: {...S.consents, at: new Date().toISOString()},
     help_requests: S.help,
