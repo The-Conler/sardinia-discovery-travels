@@ -1904,7 +1904,7 @@ const EV = {
     ${toggle(P(i,'equipProvided'), t('eq_provided'), t('eq_providedD'))}
     ${e.equipProvided ? '' : inp(P(i,'bringNote'), t('eq_bring_note'), {area:'short', ph:t('eq_bring_notePh')})}`); },
   reqs: i => { const e=E(i); const artisan = e.sector === 'artigianato'; if(!showsDifficulty(e)) e.difficulty = ''; if(artisan){ e.limits = ''; e.safety = ''; e.localita = ''; e.meet = ''; e.end = ''; return split(head(t('rq_title_art'), t('rq_sub'), ecount(i)), `
-    <div class="ct-row">${town(P(i,'comune'), t('exp_comune'))}${inp(P(i,'address'), t('exp_addr'), {hint:t('exp_addr_hint'), ph:t('exp_addr_hint')})}</div>
+    <div class="ct-row">${town(P(i,'comune'), t('exp_comune'))}${inp(P(i,'address'), t('exp_addr'), {ph:t('exp_addr_hint')})}</div>
     <div class="ct-stack" style="gap:16px">${toggle(P(i,'prevExp'), t('prev_exp'), t('prev_expD_art'))}${note(t('prev_exp_note'))}</div>
     ${sectorQs(e).map(q=>qField(i,q)).join('')}`); }
     return split(head(t('rq_title'), t('rq_sub'), ecount(i)), `
@@ -2063,7 +2063,12 @@ function screens(){
       if(!showsDifficulty(e)) e.difficulty = '';
       if(e.sector === 'artigianato'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; e.limits = ''; e.safety = ''; e.localita = ''; e.meet = ''; e.end = ''; e.sq = e.sq || {}; delete e.sq.materials; delete e.sq.workshop_loc; delete e.sq.live_demo; delete e.sq.sale; if(e.sq.can_buy == null) e.sq.can_buy = false; if(e.sq.takehome == null) e.sq.takehome = false; }
     });
-    S.exps.forEach((e,i)=>['sector','spec','type',...EXP_SCREENS.filter(k=>!['sector','spec','type'].includes(k))].forEach(k=>{
+    S.exps.forEach((e,i)=>{
+      /* Artigianato: requisiti, then periodic availability. No location screen, equipment or sector-question page in between. */
+      const order = e.sector === 'artigianato'
+        ? ['sector','spec','type','g1','g3','g4','mode','incl','reqs','avail','slots','price','cond','photos']
+        : ['sector','spec','type',...EXP_SCREENS.filter(k=>!['sector','spec','type'].includes(k))];
+      order.forEach(k=>{
       if(k!=='sector' && !e.sector) return;            /* taxonomy first */
       if(['spec','type'].includes(k) && !e.sector) return;
       /* Specialization comes before service type for every sector. */
@@ -2071,7 +2076,8 @@ function screens(){
       if(k==='sq' && (e.sector === 'artigianato' || !(SECTOR[e.sector]?.q||[]).length)) return;
       if((k==='equip' || k==='g2') && e.sector === 'artigianato') return;
       add(`e${i}_${k}`, 'prop', () => EV[k](i), () => !!S.exps[i] && EOK[k](S.exps[i]));
-    }));
+      });
+    });
     add('exp_more','prop',VW.exp_more,()=>S.exps.length>0);
   }
   if(S.paths.includes('B')) ['conv_type','conv_details','conv_interest','conv_ops'].forEach(k=>{ if(k!=='conv_type' && !S.conv.type) return; add(k,'prop',VW[k],OK[k]); });
