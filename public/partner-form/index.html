@@ -140,6 +140,10 @@ img{display:block}
 .ct-field input:focus,.ct-field textarea:focus{outline:none;border-color:var(--ct-teal);box-shadow:0 0 0 3px rgba(47,127,136,.3)}
 .ct-field input.is-bad{border-color:rgba(242,169,154,.7)}
 .ct-error{margin:0;font-size:var(--t-hint);color:#f2a99a}
+.ct-term{display:flex;flex-direction:column;gap:8px}
+.ct-term h3{margin:0;font-size:var(--t-q);font-weight:500;color:var(--ct-cream)}
+.ct-term-ph{margin:0;padding:16px 20px;border-radius:var(--ct-radius);border:1.5px dashed rgba(248,244,238,.28);color:var(--ct-muted);font-style:italic;line-height:1.45}
+.ct-photo-spec{margin:16px 0 0;font-size:var(--t-hint);line-height:1.45;color:var(--ct-muted)}
 .ct-spec-note{margin:0;font-size:var(--t-hint);line-height:1.45;color:#ff6b6b}
 .ct-error[hidden]{display:none}
 .ct-input-ic{position:relative}
@@ -1030,7 +1034,7 @@ html.is-embed .sd-header-in{justify-content:flex-end;border-bottom:0;padding-bot
 </div>
 <div class="pv-modal" id="pvModal" role="dialog" aria-modal="true" aria-labelledby="pvTitle" aria-hidden="true"></div>
 <div class="sd-toast" id="toast" role="status" aria-live="polite"></div>
-<input type="file" id="fileIn" accept="image/jpeg,image/png,image/webp" multiple hidden>
+<input type="file" id="fileIn" accept="image/jpeg,.jpg,.jpeg" multiple hidden>
 <script src="./it-money.js"></script>
 <script>
 const { formatItAmount, priceFromDigits } = ItMoney;
@@ -1047,7 +1051,7 @@ const { formatItAmount, priceFromDigits } = ItMoney;
    ===================================================================== */
 const KEY = 'sdt-partner-wizard-v3';
 const YEAR = 2026;
-const MAX_PHOTOS = 10, MIN_PHOTOS = 1;
+const MAX_PHOTOS = 10, MIN_PHOTOS = 1, PHOTO_MAX_EDGE = 1920, PHOTO_QUALITY = 0.8, PHOTO_MAX_BYTES = Math.round(1.5 * 1024 * 1024);
 
 /* ---------- Line icons (Lucide-style, same set as the contact wizard) ---------- */
 const c = (cx, cy, r) => `M${cx - r} ${cy}a${r} ${r} 0 1 0 ${r * 2} 0a${r} ${r} 0 1 0 ${-r * 2} 0`;
@@ -1189,7 +1193,7 @@ const CONFIG = {
   cancel: ['c24','c48','c72','c7d','c_none'],
   noshow: ['ns_full','ns_half','ns_agree'],
   weather: ['w_refund','w_resched','w_both','w_na'],
-  billing: ['bill_einv','bill_receipt','bill_agree'],
+  billing: ['bill_einv','bill_agree'],
   /* Percorso B, section 14 */
   structures: [['st_hotel','bed','ricettivo'],['st_resort','sun','ricettivo'],['st_guesthouse','home','ricettivo'],['st_bb','coffee','ricettivo'],['st_agriturismo','leaf','ricettivo'],['st_casavacanze','key','ricettivo'],
     ['st_ristorante','utensils','ristorazione'],['st_trattoria','utensils','ristorazione'],['st_catering','pot','ristorazione'],['st_chef','pot','ristorazione'],['st_altro','message','altro']],
@@ -1267,9 +1271,9 @@ en:{
   sl_title:'Times and booking notice', sl_sub:'When it usually runs and how much notice you need.', bands:'Time of day', slots:'Start times', slot_add:'Add', slot_remove:'Remove {x}', notice:'Minimum notice', manual:'Manual confirmation', manualD:'You confirm each booking request before it is final.',
   pr_title:'Price for the agency', pr_sub:'Indicative. Prices are discussed during the evaluation.', pr_mode:'How do you price it?', pr_agency:'Cost for the agency: state how much you wish to receive to deliver the service. It is not necessarily the price that will be offered to the traveller.',
   pr_priv_short:'Private', pr_shared_short:'Shared', pr_art_persona:'Price per person', pr_art_min:'Minimum 2 participants', pr_priv:'Private experience', pr_shared:'Shared experience', pr_single:'Price', pr_base:'Base price', pr_incl:'People included', pr_inclD:'Covered by the base price', pr_extra:'Supplement per extra person', pr_min:'Minimum price',
-  cd_title:'Terms and conditions', cd_sub:'Your usual terms. They can be discussed later.', cancel:'Free cancellation up to', penalties:'Penalties after that', penaltiesPh:'For example 50% up to 24 hours before.', noshow:'No show', weather:'Bad weather', exclusive:'Open to discussing commercial exclusivity', exclusiveD:'Only if it makes sense for both sides. Not binding.', billing:'Invoicing preference',
+  cd_title:'Terms and conditions', cd_sub:'Sardinia Discovery Travels’ terms. You accept them; you do not set them.', term_pay:'Payment', term_cancel:'Cancellation', term_other:'Other conditions', term_ph:'Agency terms text to be inserted', term_accept:'I accept the terms and conditions of Sardinia Discovery Travels', exclusive:'Open to discussing commercial exclusivity', exclusiveD:'Only if it makes sense for both sides. Not binding.', billing:'Invoicing preference',
   ph_title:'Add some photos', ph_sub:'At least 1, ideally 3 or more. The first one is the cover.',
-  p_drop:'Drag your photos here', p_dropD:'JPG, PNG or WEBP, up to 10 photos.', p_browse:'Choose photos', p_demo:'No photos at hand?', p_demoBtn:'Use sample photos (demo)',
+  p_drop:'Drag your photos here', p_spec:'JPG format. Up to 10 photos. Each photo is compressed (long side up to 1920 px, JPEG quality 0.8) and stays within 1.5 MB.', p_dropD:'JPG format. Up to 10 photos.', p_browse:'Choose photos', p_demo:'No photos at hand?', p_demoBtn:'Use sample photos (demo)',
   p_cover:'Cover', p_setCover:'Make cover', p_remove:'Remove photo', p_add:'Add more', p_count:'{n} of 10', p_ready:'Ready', p_need:'Add at least {n}',
   mo_title:'Would you like to add another experience?', mo_sub:'Each experience is evaluated on its own. Your contact and organisation details stay the same.', mo_add:'Add another experience', mo_addD:'Start a new experience form.', mo_list:'Your experiences', mo_untitled:'Untitled experience',
   ct_title:'What type of business is it?', ct_sub:'Choose the type of structure.',
@@ -1289,7 +1293,7 @@ en:{
   ty_p3:'Submitting the application does not mean automatic acceptance into our partner network.',
   m_title:'Progress saved', m_sub:'Your answers are saved on this device. Open this page again to continue.', m_ok:'Continue editing', cancelBtn:'Cancel',
   del_title:'Delete this experience?', del_sub:'"{x}" and its photos will be removed from this application.', del_ok:'Delete',
-  t_restored:'Welcome back. Your progress was restored.', t_quota:'Your photos are too large to save on this device. Your other answers are saved.', t_max:'You can add up to 10 photos.', t_dup:'Your application has already been sent.',
+  t_restored:'Welcome back. Your progress was restored.', t_quota:'Your photos are too large to save on this device. Your other answers are saved.', t_max:'You can add up to 10 photos.', t_photo:'A photo is still over 1.5 MB after compression and was not added.', t_type:'Only JPG photos can be added.', t_dup:'Your application has already been sent.',
   tip_vat:'Partita IVA: the 11-digit VAT number of the business.', tip_cf:'Codice fiscale: 11 digits for organisations, 16 characters for individuals.', tip_runts:'Registro Unico Nazionale del Terzo Settore: the national register of non-profit organisations.', tip_albo:'The professional register you are enrolled in, if any.',
   tip_cin:'Codice Identificativo Nazionale: the national code assigned to accommodation in Italy.', tip_noshow:'A guest who does not show up and does not cancel.', tip_excl:'Working only with us for this experience or in an area. Only discussed, never automatic.',
   tip_agency:'Enter how much you wish to receive to provide the service. This is not necessarily the price that will be offered to the traveller.', tip_manual:'You receive a request and confirm availability before the booking is final.', tip_notice:'How long before the start you need to receive a booking.',
@@ -1424,9 +1428,9 @@ it:{
   sl_title:'Orari e preavviso', sl_sub:'Quando si svolge di solito e quanto preavviso ti serve.', bands:'Fascia oraria', slots:'Orari di partenza', slot_add:'Aggiungi', slot_remove:'Rimuovi {x}', notice:'Preavviso minimo', manual:'Conferma manuale', manualD:'Confermi ogni richiesta prima che la prenotazione sia definitiva.',
   pr_title:'Prezzo per l’agenzia', pr_sub:'Indicativo. I prezzi si discutono in fase di valutazione.', pr_mode:'Come la prezzi?', pr_agency:'Costo per l’agenzia: Indica quanto desideri ricevere per erogare il servizio. Non è necessariamente il prezzo che verrà proposto al viaggiatore.',
   pr_priv_short:'Privata', pr_shared_short:'Condivisa', pr_art_persona:'Prezzo a persona', pr_art_min:'Minimo 2 partecipanti', pr_priv:'Esperienza privata', pr_shared:'Esperienza condivisa', pr_single:'Prezzo', pr_base:'Prezzo base', pr_incl:'Persone incluse', pr_inclD:'Coperte dal prezzo base', pr_extra:'Supplemento per persona extra', pr_min:'Prezzo minimo',
-  cd_title:'Termini e condizioni', cd_sub:'Le tue condizioni abituali. Se ne può parlare in seguito.', cancel:'Cancellazione gratuita fino a', penalties:'Penali successive', penaltiesPh:'Per esempio 50% fino a 24 ore prima.', noshow:'Mancata presentazione', weather:'Maltempo', exclusive:'Disponibile a valutare un’esclusiva commerciale', exclusiveD:'Solo se ha senso per entrambi. Non vincolante.', billing:'Preferenza di fatturazione',
+  cd_title:'Termini e condizioni', cd_sub:'Condizioni di Sardinia Discovery Travels. Le sottoscrivi, non le stabilisci.', term_pay:'Pagamento', term_cancel:'Cancellazione', term_other:'Altre condizioni', term_ph:'Testo dei termini dell’agenzia da inserire', term_accept:'Accetto i termini e le condizioni di Sardinia Discovery Travels', exclusive:'Disponibile a valutare un’esclusiva commerciale', exclusiveD:'Solo se ha senso per entrambi. Non vincolante.', billing:'Preferenza di fatturazione',
   ph_title:'Aggiungi qualche foto', ph_sub:'Almeno 1, idealmente 3 o più. La prima è la copertina.',
-  p_drop:'Trascina qui le tue foto', p_dropD:'JPG, PNG o WEBP, fino a 10 foto.', p_browse:'Scegli le foto', p_demo:'Non hai foto a portata di mano?', p_demoBtn:'Usa foto di esempio (demo)',
+  p_drop:'Trascina qui le tue foto', p_spec:'Formato JPG. Massimo 10 foto. Ogni foto viene compressa (lato lungo fino a 1920 px, qualità JPEG 0,8) e non supera 1,5 MB.', p_dropD:'Formato JPG. Massimo 10 foto.', p_browse:'Scegli le foto', p_demo:'Non hai foto a portata di mano?', p_demoBtn:'Usa foto di esempio (demo)',
   p_cover:'Copertina', p_setCover:'Imposta come copertina', p_remove:'Rimuovi foto', p_add:'Aggiungi altre', p_count:'{n} di 10', p_ready:'Pronto', p_need:'Aggiungine almeno {n}',
   mo_title:'Vuoi aggiungere un’altra esperienza?', mo_sub:'Ogni esperienza viene valutata singolarmente. I dati di referente e organizzazione restano gli stessi.', mo_add:'Aggiungi un’altra esperienza', mo_addD:'Apri una nuova scheda esperienza.', mo_list:'Le tue esperienze', mo_untitled:'Esperienza senza titolo',
   ct_title:'Che tipo di attività è?', ct_sub:'Scegli la tipologia di struttura.',
@@ -1446,7 +1450,7 @@ it:{
   ty_p3:'L’invio della candidatura non comporta l’accettazione automatica nella nostra rete di partner.',
   m_title:'Progressi salvati', m_sub:'Le tue risposte sono salvate su questo dispositivo. Riapri questa pagina per continuare.', m_ok:'Continua a modificare', cancelBtn:'Annulla',
   del_title:'Eliminare questa esperienza?', del_sub:'"{x}" e le sue foto verranno rimosse da questa candidatura.', del_ok:'Elimina',
-  t_restored:'Bentornato. I tuoi progressi sono stati ripristinati.', t_quota:'Le foto sono troppo pesanti per essere salvate su questo dispositivo. Le altre risposte sono salvate.', t_max:'Puoi aggiungere fino a 10 foto.', t_dup:'La candidatura è già stata inviata.',
+  t_restored:'Bentornato. I tuoi progressi sono stati ripristinati.', t_quota:'Le foto sono troppo pesanti per essere salvate su questo dispositivo. Le altre risposte sono salvate.', t_max:'Puoi aggiungere fino a 10 foto.', t_photo:'Una foto supera 1,5 MB anche dopo la compressione e non è stata aggiunta.', t_type:'Si possono aggiungere solo foto JPG.', t_dup:'La candidatura è già stata inviata.',
   tip_vat:'Il numero di Partita IVA dell’attività, 11 cifre.', tip_cf:'Codice fiscale: 11 cifre per le organizzazioni, 16 caratteri per le persone fisiche.', tip_runts:'Registro Unico Nazionale del Terzo Settore, il registro nazionale degli enti non profit.', tip_albo:'L’albo professionale a cui sei iscritto, se previsto.',
   tip_cin:'Codice Identificativo Nazionale assegnato alle strutture ricettive in Italia.', tip_noshow:'Un ospite che non si presenta e non disdice.', tip_excl:'Lavorare solo con noi per questa esperienza o in un’area. Solo da valutare, mai automatica.',
   tip_agency:'Indica quanto desideri ricevere per erogare il servizio. Non è necessariamente il prezzo che verrà proposto al viaggiatore.', tip_manual:'Ricevi una richiesta e confermi la disponibilità prima che la prenotazione sia definitiva.', tip_notice:'Con quanto anticipo ti serve ricevere una prenotazione.',
@@ -1541,7 +1545,7 @@ const newExp = () => ({
   difficulty:'', prevExp:false, limits:'', safety:'', sq:{},
   period:'', months:[], days:[], bands:[], slots:[], notice:'', manual:false,
   priceMode:'', price:{ priv:{base:'',incl:1,extra:'',min:''}, shared:{base:'',incl:1,extra:'',min:''} },
-  cancel:'', penalties:'', noshow:'', weather:'', exclusive:false, billing:'', photos:[]
+  cancel:'', penalties:'', noshow:'', weather:'', exclusive:false, billing:'', termsAccepted:false, termsAcceptedAt:'', photos:[]
 });
 const newConv = () => ({
   type:'', stars:'', units:'', beds:'', cin:'', services:[], opening:'', months:[], groups:false,
@@ -1951,13 +1955,11 @@ const EV = {
       <div class="ct-row">${money(P(i,`price.${b}.base`), t('pr_base'))}${money(P(i,`price.${b}.min`), t('pr_min'), {req:false})}</div>
       <div class="ct-steppers">${stepper(P(i,`price.${b}.incl`), t('pr_incl'), t('pr_inclD'), 1, 200)}</div>
       ${money(P(i,`price.${b}.extra`), t('pr_extra'), {req:false})}</div>`).join('')}`); },
-  cond: i => split(head(t('cd_title'), t('cd_sub'), ecount(i)), `
-    ${group(t('cancel'), pills(P(i,'cancel'), CONFIG.cancel))}
-    ${inp(P(i,'penalties'), t('penalties'), {req:false, ph:t('penaltiesPh')})}
-    ${group(t('noshow'), pills(P(i,'noshow'), CONFIG.noshow), {tip:'tip_noshow'})}
-    ${group(t('weather'), pills(P(i,'weather'), CONFIG.weather))}
+  cond: i => { const e=E(i); if(e.billing==='bill_receipt') e.billing=''; return split(head(t('cd_title'), t('cd_sub'), ecount(i)), `
+    <div class="ct-terms">${['term_pay','term_cancel','term_other'].map(k=>`<section class="ct-term"><h3>${t(k)}</h3><p class="ct-term-ph">${t('term_ph')}</p></section>`).join('')}</div>
+    ${check(P(i,'termsAccepted'), t('term_accept'))}
     ${toggle(P(i,'exclusive'), t('exclusive'), t('exclusiveD'), 'tip_excl')}
-    ${group(t('billing'), pills(P(i,'billing'), CONFIG.billing))}`),
+    ${group(t('billing'), pills(P(i,'billing'), CONFIG.billing))}`); },
   photos: i => split(head(t('ph_title'), t('ph_sub'), ecount(i)), uploader(i))
 };
 function qField(i, q){
@@ -1994,7 +1996,7 @@ const EOK = {
   avail: e => !!e.period && e.months.length > 0 && e.days.length > 0,
   slots: e => e.bands.length > 0 && !!e.notice,
   price: e => e.sector === 'artigianato' ? blocks(e).every(b => pos(e.price[b].base)) : (!!e.priceMode && blocks(e).every(b => pos(e.price[b].base) && e.price[b].incl >= 1)),
-  cond: e => !!(e.cancel && e.noshow && e.weather && e.billing),
+  cond: e => !!e.termsAccepted && !!e.billing && e.billing !== 'bill_receipt',
   photos: e => e.photos.length >= MIN_PHOTOS
 };
 const EXP_SCREENS = Object.keys(EV);
@@ -2085,6 +2087,7 @@ function screens(){
       if(!showsDifficulty(e)) e.difficulty = '';
       if(e.sector === 'artigianato'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; e.limits = ''; e.safety = ''; e.localita = ''; e.meet = ''; e.end = ''; e.priceMode = 'pm_persona'; for(const b of ['priv','shared']){ e.price[b].extra = ''; e.price[b].incl = 1; } e.sq = e.sq || {}; delete e.sq.materials; delete e.sq.workshop_loc; delete e.sq.live_demo; delete e.sq.sale; if(e.sq.can_buy == null) e.sq.can_buy = false; if(e.sq.takehome == null) e.sq.takehome = false; }
       e.manual = false;
+      if(e.billing === 'bill_receipt') e.billing = '';
       { const ok = new Set(halfHours()); e.slots = (e.slots||[]).filter(s => ok.has(s)); }
     });
     S.exps.forEach((e,i)=>{
@@ -2190,7 +2193,7 @@ function expTiles(){
   <section class="rv-tile" aria-label="${esc(t('r_cond'))}">
     ${rvTop('file', t('r_cond'), rvEdit(`e${i}_cond`))}
     <h2 class="rv-name">${esc(e.name||t('mo_untitled'))}</h2>
-    ${rvFacts([['clock',t('r_notice'),e.notice?o(e.notice):''],['calendar',t('r_avail'),esc([monthsText(e), e.days.map(o).join(' ')].filter(Boolean).join(', '))],['users',t('r_noshow'),e.noshow?o(e.noshow):''],['file',t('r_payment'),e.billing?o(e.billing):''],['info',t('r_cancel'),esc([e.cancel?o(e.cancel):'', e.penalties].filter(Boolean).join('. '))]],'rv-facts--rows')}
+    ${rvFacts([['clock',t('r_notice'),e.notice?o(e.notice):''],['calendar',t('r_avail'),esc([monthsText(e), e.days.map(o).join(' ')].filter(Boolean).join(', '))],['file',t('r_payment'),e.billing?o(e.billing):''],['check',t('term_accept'),e.termsAccepted?t('yn_yes'):''],['handshake',t('exclusive'),e.exclusive?t('yn_yes'):t('yn_no')]],'rv-facts--rows')}
   </section>
   ${previewTile(i)}`;
 }
@@ -2352,7 +2355,6 @@ function detailData(e){
   const itin = [];
   if(e.meet || first) itin.push({time:first, title:t('pv_d_meet'), text:place.join(', ')});
   if(itin.length && mins) itin.push({time:first ? addMin(first, mins) : '', title:t('pv_d_end'), text:(e.end||'').trim() || (e.meet||'').trim()});
-  const cancelTxt = e.cancel ? (e.cancel==='c_none' ? o('c_none') : t('pv_d_cancelFree',{x:o(e.cancel)})) : '';
   return { ...d,
     gallery: e.photos.map(p=>p.src), summary: (e.desc||'').trim(), duration: durText(e),
     times: e.slots.length ? e.slots.join(' · ') : e.bands.map(o).join(' · '),
@@ -2360,8 +2362,8 @@ function detailData(e){
     departure: [e.meet || e.address, e.comune].map(x=>(x||'').trim()).filter(Boolean).join(', '),
     langs: andList(e.langs.map(o)),
     confirmation: t(e.manual ? 'pv_d_confManual' : 'pv_d_confInstant'),
-    cancellation: [cancelTxt, (e.penalties||'').trim()].filter(Boolean).join('. '),
-    terms: [e.cancel && e.cancel!=='c_none' ? t('pv_d_termCancel',{x:o(e.cancel)}) : '', e.manual ? '' : t('pv_d_termInstant')].filter(Boolean)
+    cancellation: '',
+    terms: [e.termsAccepted ? t('term_accept') : ''].filter(Boolean)
   };
 }
 function expDetail(e){
@@ -2570,9 +2572,10 @@ function buildPayload(){
     contact: {...S.contact, phone_e164: S.contact.prefix + digits(S.contact.phone)},
     organization: {...S.org, vat: S.org.vat.replace(/\s/g,''), cf: S.org.cf.replace(/\s/g,'').toUpperCase(), manual_review: S.org.form==='altra_forma'},
     collaboration: { experiences: hasA, agreement: hasB },
-    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); const row = { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>{ const p={...e.price[b]}; if(e.sector==='artigianato'){ delete p.extra; p.incl = 1; p.min = ''; } return [b, p]; })), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; delete row.manual; if(e.sector === 'artigianato'){ row.priceMode = 'pm_persona'; delete row.equipProvided; delete row.bringNote; delete row.bring; delete row.limits; delete row.safety; delete row.localita; delete row.meet; delete row.end; if(row.sq){ delete row.sq.materials; delete row.sq.workshop_loc; delete row.sq.live_demo; delete row.sq.sale; } } else delete row.address; return row; }) : [],
+    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); const row = { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>{ const p={...e.price[b]}; if(e.sector==='artigianato'){ delete p.extra; p.incl = 1; p.min = ''; } return [b, p]; })), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; delete row.manual; delete row.cancel; delete row.penalties; delete row.noshow; delete row.weather; if(row.billing==='bill_receipt') row.billing=''; if(e.sector === 'artigianato'){ row.priceMode = 'pm_persona'; delete row.equipProvided; delete row.bringNote; delete row.bring; delete row.limits; delete row.safety; delete row.localita; delete row.meet; delete row.end; if(row.sq){ delete row.sq.materials; delete row.sq.workshop_loc; delete row.sq.live_demo; delete row.sq.sale; } } else delete row.address; return row; }) : [],
     agreement: hasB ? {...S.conv, group: cgroup()} : null,
     consents: {...S.consents, at: new Date().toISOString()},
+    /* TODO(backend): when termsAccepted is true, generate the SDT partner contract PDF from the accepted terms and store it with termsAcceptedAt. This preview has no backend and does not create a PDF. */
     help_requests: S.help,
     submitted_at: new Date().toISOString()
   };
@@ -2602,10 +2605,11 @@ function submit(){
 const expIndex = () => { const m = S.pos.match(/^e(\d+)_/); return m ? +m[1] : -1; };
 function uploader(i){
   const ph = S.exps[i].photos, n = ph.length;
+  const spec = `<p class="ct-photo-spec">${t('p_spec')}</p>`;
   const demo = n < 3 ? `<div class="ct-demo">${t('p_demo')} <button type="button" class="ct-link" data-action="sample">${ic('imagePlus',16,1.8)}${t('p_demoBtn')}</button></div>` : '';
   if(!n) return `<div class="ct-drop" data-drop>
       <span class="ct-drop-badge">${ic('imagePlus',28,1.6)}</span><h3>${t('p_drop')}</h3><p>${t('p_dropD')}</p>
-      <button type="button" class="ct-back" data-action="browse">${t('p_browse')}</button></div>${demo}`;
+      <button type="button" class="ct-back" data-action="browse">${t('p_browse')}</button></div>${spec}${demo}`;
   return `<div class="ct-up-status"><strong>${n>=MIN_PHOTOS?ic('check',18,2)+t('p_ready'):t('p_need',{n:MIN_PHOTOS})}</strong>
       <span style="display:inline-flex;align-items:center;gap:16px">${t('p_count',{n})}<span class="ct-meter">${[0,1,2].map(k=>`<i class="${k<n?'is-on':''}"></i>`).join('')}</span></span></div>
     <div class="ct-ups" data-drop>
@@ -2614,22 +2618,29 @@ function uploader(i){
         <div class="ct-up-acts">${k>0?`<button type="button" data-action="cover" data-v="${k}">${ic('star',14,1.8)}${t('p_setCover')}</button>`:''}
           <button type="button" class="is-x" data-action="remove" data-v="${k}" aria-label="${esc(t('p_remove'))}">${ic('x',16,1.8)}</button></div></div>`).join('')}
       ${n<MAX_PHOTOS?`<button type="button" class="ct-up-add" data-action="browse">${ic('plus',24,1.6)}${t('p_add')}</button>`:''}
-    </div>${demo}`;
+    </div>${spec}${demo}`;
 }
-function downscale(file){
+function jpegBytes(dataUrl){ const i = dataUrl.indexOf(','); return Math.ceil((dataUrl.length - i - 1) * 3 / 4); }
+function compressJpeg(file){
   return new Promise(res=>{ const r = new FileReader();
     r.onload = () => { const img = new Image();
-      img.onload = () => { const m=1400, k=Math.min(1, m/Math.max(img.width,img.height)), cv=document.createElement('canvas');
-        cv.width=Math.round(img.width*k); cv.height=Math.round(img.height*k); cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height); res(cv.toDataURL('image/jpeg',.82)); };
-      img.onerror = () => res(r.result); img.src = r.result; };
-    r.readAsDataURL(file); });
+      img.onload = () => { const k=Math.min(1, PHOTO_MAX_EDGE/Math.max(img.width,img.height)), cv=document.createElement('canvas');
+        cv.width=Math.max(1, Math.round(img.width*k)); cv.height=Math.max(1, Math.round(img.height*k));
+        cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+        let q = PHOTO_QUALITY;
+        const finish = () => { const src = cv.toDataURL('image/jpeg', q); if(jpegBytes(src) > PHOTO_MAX_BYTES && q > 0.5){ q = Math.round((q-0.1)*10)/10; return finish(); }
+          res(jpegBytes(src) > PHOTO_MAX_BYTES ? null : {src, name:String(file.name||'photo').replace(/\.\w+$/i,'')+'.jpg'}); };
+        finish(); };
+      img.onerror = () => res(null); img.src = r.result; };
+    r.onerror = () => res(null); r.readAsDataURL(file); });
 }
 async function addFiles(files){
   const i = expIndex(); if(i<0) return; const ph = S.exps[i].photos;
-  const imgs = [...files].filter(f=>/^image\/(jpeg|png|webp)$/.test(f.type));
+  const imgs = [...files].filter(f => f.type === 'image/jpeg' || /\.jpe?g$/i.test(f.name||''));
+  if(imgs.length < files.length) toast(t('t_type'));
   const room = MAX_PHOTOS - ph.length; if(imgs.length > room) toast(t('t_max'));
-  /* SERVER DRAFT: production uploads each file to the draft bucket through a signed URL here. */
-  for(const f of imgs.slice(0, room)) ph.push({src: await downscale(f), name: f.name});
+  /* SERVER DRAFT: production uploads each compressed JPEG to the draft bucket through a signed URL here. */
+  for(const f of imgs.slice(0, room)){ const pic = await compressJpeg(f); if(!pic){ toast(t('t_photo')); continue; } ph.push(pic); }
   save(); render();
 }
 
@@ -2830,6 +2841,7 @@ function onField(e){
   }
   const p = el.dataset.bind; if(!p) return;
   set(p, el.type==='checkbox' ? el.checked : el.value);
+  if(/\.termsAccepted$/.test(p)){ const m=p.match(/^exps\.(\d+)\.termsAccepted$/); if(m) S.exps[+m[1]].termsAcceptedAt = el.checked ? new Date().toISOString() : ''; }
   if(/\.incl\.[^.]+\.price$/.test(p)){ const bad=!pos(el.value); el.classList.toggle('is-bad', bad); el.setAttribute('aria-invalid', String(bad)); const err=el.closest('.ct-incl-price')?.querySelector('.ct-error'); if(err) err.hidden=!bad; }
   if(el.type==='checkbox') el.closest('.ct-check')?.classList.toggle('is-on', el.checked);
   if(el.dataset.sugg){ hl=-1; showSugg(el); }
@@ -2948,7 +2960,7 @@ if(DEV_FILL) (function(){
         if(!e.notice) e.notice = 'n48'; break;
       case 'price': if(!e.priceMode) e.priceMode = CONFIG.priceModes[0];
         blocks(e).forEach(b=>{ const p = e.price[b]; if(!pos(p.base)) p.base = b==='priv' ? '120' : '60'; if(!(p.incl>=1)) p.incl = 1; }); break;
-      case 'cond': e.cancel = e.cancel || 'c48'; e.noshow = e.noshow || 'ns_full'; e.weather = e.weather || 'w_resched'; e.billing = e.billing || 'bill_einv'; break;
+      case 'cond': e.termsAccepted = true; if(!e.termsAcceptedAt) e.termsAcceptedAt = new Date().toISOString(); if(!e.billing || e.billing==='bill_receipt') e.billing = 'bill_einv'; break;
       case 'photos': { let n = 0; const si = SECTOR[e.sector]?.img; if(si && !e.photos.length) e.photos.push({src:si, name:si.split('/').pop(), sample:true}); while(e.photos.length < 3){ const src = SAMPLE_PHOTOS[(e.photos.length+i+n) % SAMPLE_PHOTOS.length]; e.photos.push({src, name:src.split('/').pop(), sample:true}); n++; } break; }
     }
   }
