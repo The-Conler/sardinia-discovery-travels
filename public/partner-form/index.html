@@ -1110,7 +1110,7 @@ const CONFIG = {
   /* Percorso A, section 7.2 of the brief. q = sector questions (section 9; Cultura and Natura use a subset). */
   sectors: [
     { code:'artigianato', letter:'A', img:'/partner-form/img/cat-artisan.jpg', icon:'amphora',
-      spec:['ceramica','coltelleria','legno','metalli','maschere','pelletteria','gioielli','tessile','altre_artigianali'],
+      spec:['ceramica','coltelleria','legno','sughero','metalli','maschere','pelletteria','gioielli','tessile','altre_artigianali'],
       types:['laboratorio_pratico','dimostrazione','visita_bottega'],
       q:[ {k:'takehome', t:'toggle'}, {k:'can_buy', t:'toggle', def:false} ] },
     { code:'enogastronomia', letter:'B', img:'/partner-form/img/cat-wine.jpg', icon:'wine',
@@ -1292,7 +1292,7 @@ en:{
   o_coop_lavoro:'Worker cooperative', o_coop_sociale:'Social cooperative', o_coop_agricola:'Agricultural cooperative', o_coop_servizi:'Service cooperative', o_coop_altro:'Other',
   o_artigianato:'Crafts and traditions', o_enogastronomia:'Food and wine', o_cultura:'Culture and territory', o_natura:'Nature and adventure', o_mare:'Sea and sailing', o_guide:'Guides and escorts', o_trasporti:'Transport and mobility',
   h_artigianato:'Workshops, demonstrations, studios', h_enogastronomia:'Tastings, producers, cooking', h_cultura:'Archaeology, history, traditions', h_natura:'Trekking, outdoor, rural life', h_mare:'Boats, sailing, snorkelling', h_guide:'Tourist and nature guides', h_trasporti:'Transfers, NCC, group transport',
-  o_tessitura:'Weaving', o_ceramica:'Ceramics', o_coltelleria:'Knife making', o_legno:'Woodwork', o_metalli:'Metalwork', o_maschere:'Traditional masks', o_campanacci:'Cowbells', o_pelletteria:'Leatherwork', o_gioielli:'Jewellery', o_tessile:'Textile art', o_altre_artigianali:'Other crafts',
+  o_tessitura:'Weaving', o_ceramica:'Ceramics', o_coltelleria:'Knife making', o_legno:'Woodwork', o_sughero:'Cork', o_metalli:'Metalwork', o_maschere:'Traditional masks', o_campanacci:'Cowbells', o_pelletteria:'Leatherwork', o_gioielli:'Jewellery', o_tessile:'Textile art', o_altre_artigianali:'Other crafts',
   o_laboratorio_pratico:'Hands-on workshop', o_dimostrazione:'Demonstration', o_visita_bottega:'Workshop visit', o_esperienza_privata:'Private experience', o_percorso_piu:'Route with several activities',
   o_vino:'Wine', o_formaggi:'Cheese', o_produzione_agricola:'Farm produce', o_panificazione:'Bread making', o_pasticceria:'Pastry', o_cucina_tradizionale:'Traditional cooking', o_olio:'Olive oil', o_altri_alimentari:'Other food products',
   o_degustazione:'Tasting', o_visita_produttore:'Producer visit', o_laboratorio:'Workshop', o_cooking_class:'Cooking class', o_pranzo_cena:'Experiential lunch or dinner', o_esperienza_combinata:'Combined experience',
@@ -1447,7 +1447,7 @@ it:{
   o_coop_lavoro:'Cooperativa di lavoro', o_coop_sociale:'Cooperativa sociale', o_coop_agricola:'Cooperativa agricola', o_coop_servizi:'Cooperativa di servizi', o_coop_altro:'Altro',
   o_artigianato:'Artigianato e tradizioni', o_enogastronomia:'Enogastronomia', o_cultura:'Cultura e territorio', o_natura:'Natura e avventura', o_mare:'Mare e nautica', o_guide:'Guide e accompagnatori', o_trasporti:'Trasporti e mobilità',
   h_artigianato:'Laboratori, dimostrazioni, botteghe', h_enogastronomia:'Degustazioni, produttori, cucina', h_cultura:'Archeologia, storia, tradizioni', h_natura:'Trekking, outdoor, vita rurale', h_mare:'Barche, vela, snorkeling', h_guide:'Guide turistiche e ambientali', h_trasporti:'Transfer, NCC, trasporto gruppi',
-  o_tessitura:'Tessitura', o_ceramica:'Ceramica', o_coltelleria:'Coltelleria', o_legno:'Lavorazione del legno', o_metalli:'Lavorazione dei metalli', o_maschere:'Maschere tradizionali', o_campanacci:'Campanacci', o_pelletteria:'Pelletteria', o_gioielli:'Gioielli', o_tessile:'Arte tessile', o_altre_artigianali:'Altre attività artigianali',
+  o_tessitura:'Tessitura', o_ceramica:'Ceramica', o_coltelleria:'Coltelleria', o_legno:'Lavorazione del legno', o_sughero:'Sughero', o_metalli:'Lavorazione dei metalli', o_maschere:'Maschere tradizionali', o_campanacci:'Campanacci', o_pelletteria:'Pelletteria', o_gioielli:'Gioielli', o_tessile:'Arte tessile', o_altre_artigianali:'Altre attività artigianali',
   o_laboratorio_pratico:'Laboratorio pratico', o_dimostrazione:'Dimostrazione', o_visita_bottega:'Visita in bottega', o_esperienza_privata:'Esperienza privata', o_percorso_piu:'Percorso con più attività',
   o_vino:'Vino', o_formaggi:'Formaggi', o_produzione_agricola:'Produzione agricola', o_panificazione:'Panificazione', o_pasticceria:'Pasticceria', o_cucina_tradizionale:'Cucina tradizionale', o_olio:'Olio', o_altri_alimentari:'Altri prodotti alimentari',
   o_degustazione:'Degustazione', o_visita_produttore:'Visita al produttore', o_laboratorio:'Laboratorio', o_cooking_class:'Cooking class', o_pranzo_cena:'Pranzo o cena esperienziale', o_esperienza_combinata:'Esperienza combinata',
