@@ -1269,7 +1269,7 @@ en:{
   sq_title:'A few questions on {s}', sq_sub:'Specific to your sector.',
   av_title:'When is it available?', av_sub:'Indicative availability, no booking calendar.', period:'Period', months:'Months', weekdays:'Days of the week',
   sl_title:'Times and booking notice', sl_sub:'When it usually runs and how much notice you need.', bands:'Time of day', slots:'Start times', slot_add:'Add', slot_remove:'Remove {x}', notice:'Minimum notice', manual:'Manual confirmation', manualD:'You confirm each booking request before it is final.',
-  pr_title:'Price for the agency', pr_sub:'Indicative. Prices are discussed during the evaluation.', pr_mode:'How do you price it?', pr_agency:'Cost for the agency: state how much you wish to receive to deliver the service. It is not necessarily the price that will be offered to the traveller.',
+  pr_title:'Price for the agency', pr_sub:'Indicative. Prices are discussed during the evaluation.', pr_vat:'The price is to be understood as net and inclusive of VAT.', pr_mode:'How do you price it?', pr_agency:'Cost for the agency: state how much you wish to receive to deliver the service. It is not necessarily the price that will be offered to the traveller.',
   pr_priv_short:'Private', pr_shared_short:'Shared', pr_art_persona:'Price per person', pr_art_min:'Minimum 2 participants', pr_priv:'Private experience', pr_shared:'Shared experience', pr_single:'Price', pr_base:'Base price', pr_incl:'People included', pr_inclD:'Covered by the base price', pr_extra:'Supplement per extra person', pr_min:'Minimum price',
   cd_title:'Terms and conditions', cd_sub:'Sardinia Discovery Travels’ terms. You accept them; you do not set them.', term_pay:'Payment', term_cancel:'Cancellation', term_other:'Other conditions', term_ph:'Agency terms text to be inserted', term_accept:'I accept the terms and conditions of Sardinia Discovery Travels', exclusive:'Open to discussing commercial exclusivity', exclusiveD:'Only if it makes sense for both sides. Not binding.', billing:'Invoicing preference',
   ph_title:'Add some photos', ph_sub:'At least 1, ideally 3 or more. The first one is the cover.',
@@ -1426,7 +1426,7 @@ it:{
   sq_title:'Qualche domanda su {s}', sq_sub:'Specifiche del tuo settore.',
   av_title:'Quando è disponibile?', av_sub:'Disponibilità indicativa, nessun calendario di prenotazione.', period:'Periodo', months:'Mesi', weekdays:'Giorni della settimana',
   sl_title:'Orari e preavviso', sl_sub:'Quando si svolge di solito e quanto preavviso ti serve.', bands:'Fascia oraria', slots:'Orari di partenza', slot_add:'Aggiungi', slot_remove:'Rimuovi {x}', notice:'Preavviso minimo', manual:'Conferma manuale', manualD:'Confermi ogni richiesta prima che la prenotazione sia definitiva.',
-  pr_title:'Prezzo per l’agenzia', pr_sub:'Indicativo. I prezzi si discutono in fase di valutazione.', pr_mode:'Come la prezzi?', pr_agency:'Costo per l’agenzia: Indica quanto desideri ricevere per erogare il servizio. Non è necessariamente il prezzo che verrà proposto al viaggiatore.',
+  pr_title:'Prezzo per l’agenzia', pr_sub:'Indicativo. I prezzi si discutono in fase di valutazione.', pr_vat:'Il prezzo deve essere inteso al netto e comprensivo di IVA.', pr_mode:'Come la prezzi?', pr_agency:'Costo per l’agenzia: Indica quanto desideri ricevere per erogare il servizio. Non è necessariamente il prezzo che verrà proposto al viaggiatore.',
   pr_priv_short:'Privata', pr_shared_short:'Condivisa', pr_art_persona:'Prezzo a persona', pr_art_min:'Minimo 2 partecipanti', pr_priv:'Esperienza privata', pr_shared:'Esperienza condivisa', pr_single:'Prezzo', pr_base:'Prezzo base', pr_incl:'Persone incluse', pr_inclD:'Coperte dal prezzo base', pr_extra:'Supplemento per persona extra', pr_min:'Prezzo minimo',
   cd_title:'Termini e condizioni', cd_sub:'Condizioni di Sardinia Discovery Travels. Le sottoscrivi, non le stabilisci.', term_pay:'Pagamento', term_cancel:'Cancellazione', term_other:'Altre condizioni', term_ph:'Testo dei termini dell’agenzia da inserire', term_accept:'Accetto i termini e le condizioni di Sardinia Discovery Travels', exclusive:'Disponibile a valutare un’esclusiva commerciale', exclusiveD:'Solo se ha senso per entrambi. Non vincolante.', billing:'Preferenza di fatturazione',
   ph_title:'Aggiungi qualche foto', ph_sub:'Almeno 1, idealmente 3 o più. La prima è la copertina.',
@@ -1940,16 +1940,17 @@ const EV = {
     ${group(t('bands'), bandPills(i, e), {multi:true})}
     ${group(t('slots'), slotPicker(i, e), {req:false, tip:'tip_slots'})}
     ${group(t('notice'), pills(P(i,'notice'), CONFIG.notice), {tip:'tip_notice'})}`); },
-  price: i => { const e=E(i); const bl=blocks(e);
+  price: i => { const e=E(i); const bl=blocks(e); const vat = note(t('pr_vat'), 'info');
     if(e.sector === 'artigianato'){
       e.priceMode = 'pm_persona';
       for(const b of ['priv','shared']){ e.price[b].extra = ''; e.price[b].incl = 1; }
-      return split(head(t('pr_title'), t('pr_sub'), ecount(i)), bl.map(b=>`<div class="ct-block">
+      return split(head(t('pr_title'), t('pr_sub'), ecount(i)), `${vat}
+      ${bl.map(b=>`<div class="ct-block">
         <h3 class="ct-block-title">${t(b==='priv'?'pr_priv_short':'pr_shared_short')}</h3>
         ${money(P(i,`price.${b}.base`), t('pr_art_persona'), {hint:t('pr_art_min')})}
-      </div>`).join(''));
+      </div>`).join('')}`);
     }
-    return split(head(t('pr_title'), t('pr_sub'), ecount(i)), `
+    return split(head(t('pr_title'), t('pr_sub'), ecount(i)), `${vat}
     ${group(t('pr_mode'), pills(P(i,'priceMode'), CONFIG.priceModes))}
     ${bl.map(b=>`<div class="ct-block">${bl.length>1||e.mode?`<h3 class="ct-block-title">${t(bl.length>1?(b==='priv'?'pr_priv':'pr_shared'):'pr_single')}</h3>`:''}
       <div class="ct-row">${money(P(i,`price.${b}.base`), t('pr_base'))}${money(P(i,`price.${b}.min`), t('pr_min'), {req:false})}</div>
@@ -2091,10 +2092,10 @@ function screens(){
       { const ok = new Set(halfHours()); e.slots = (e.slots||[]).filter(s => ok.has(s)); }
     });
     S.exps.forEach((e,i)=>{
-      /* Artigianato: requisiti, then periodic availability. No location screen, equipment or sector-question page in between. */
+      /* Price comes immediately after Privata / Condivisa / Entrambe. Artigianato still skips location, equipment and the sector-question page. */
       const order = e.sector === 'artigianato'
-        ? ['sector','spec','type','g1','g3','g4','mode','incl','reqs','avail','slots','price','cond','photos']
-        : ['sector','spec','type',...EXP_SCREENS.filter(k=>!['sector','spec','type'].includes(k))];
+        ? ['sector','spec','type','g1','g3','g4','mode','price','incl','reqs','avail','slots','cond','photos']
+        : ['sector','spec','type','g1','g2','g3','g4','mode','price','incl','equip','reqs','sq','avail','slots','cond','photos'];
       order.forEach(k=>{
       if(k!=='sector' && !e.sector) return;            /* taxonomy first */
       if(['spec','type'].includes(k) && !e.sector) return;
