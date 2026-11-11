@@ -1129,19 +1129,20 @@ const CONFIG = {
       types:['laboratorio_pratico','dimostrazione','visita_bottega'],
       q:[ {k:'takehome', t:'toggle'}, {k:'can_buy', t:'toggle', def:false} ] },
     { code:'enogastronomia', letter:'B', img:'/sardinia-discovery-travels/partner-form/img/cat-wine.jpg', icon:'wine',
-      spec:['vino','formaggi','produzione_agricola','panificazione','pasticceria','cucina_tradizionale','cooking_class','olio','altri_alimentari'],
-      types:['degustazione','visita_produttore','laboratorio','cooking_class','pranzo_cena','esperienza_combinata'],
-      q:[ {k:'own_products', t:'toggle'},
-          {k:'tasting', t:'multi', o:['tp_vino','tp_formaggi','tp_salumi','tp_olio','tp_pane','tp_dolci','tp_miele']},
+      spec:['vino','formaggi','salumi_carni','olio','panificazione','cereali_farine','pastificio','pasticceria','altri_alimentari'],
+      types:['degustazione','visita_produttore','laboratorio','pranzo_cena'],
+      q:[ {k:'tasting', t:'multi', o:['tp_vino','tp_formaggi','tp_salumi','tp_olio','tp_pane','tp_dolci','tp_miele']},
           {k:'diets', t:'multi', o:['diet_veg','diet_vegan','diet_gf','diet_lf']},
           {k:'allergens', t:'toggle'},
-          {k:'certs', t:'multi', o:['cert_bio','cert_dop','cert_doc','cert_igp','cert_none']} ] },
-    { code:'cultura', letter:'C', img:'/sardinia-discovery-travels/partner-form/img/cat-culture.jpg', icon:'landmark',
+          {k:'certs', t:'multi', o:['cert_bio','cert_dop','cert_doc','cert_docg','cert_igp','cert_igt','cert_none']} ] },
+    { code:'cooking_class', letter:'C', img:'/sardinia-discovery-travels/partner-form/img/cat-cooking.jpg', icon:'utensils',
+      spec:[], types:[], q:[] },
+    { code:'cultura', letter:'D', img:'/sardinia-discovery-travels/partner-form/img/cat-culture.jpg', icon:'landmark',
       spec:['archeologia','storia','musei','tradizioni_popolari','patrimonio','architettura','cultura_locale'],
       types:['visita_guidata','percorso_culturale','incontro_culturale','laboratorio','esperienza_privata'],
       q:[ {k:'tickets', t:'pills', o:['tk_inc','tk_extra','tk_na'], req:true},
           {k:'site_booking', t:'toggle'}, {k:'licensed_guide', t:'toggle'} ] },
-    { code:'natura', letter:'D', img:'/sardinia-discovery-travels/partner-form/img/cat-hiking.jpg', icon:'mountain',
+    { code:'natura', letter:'E', img:'/sardinia-discovery-travels/partner-form/img/cat-hiking.jpg', icon:'mountain',
       spec:['trekking','escursionismo','naturalistiche','jeep','quad','buggy','4x4_altro','cavalli','asinelli','kayak','sup','snorkeling','scuba'],
       specGroups:[
         {h:'sg_natura', o:['trekking','escursionismo','naturalistiche']},
@@ -1152,7 +1153,7 @@ const CONFIG = {
       types:['escursione_guidata','attivita_sportiva','esperienza_naturalistica','tour_privato','esperienza_gruppo'],
       q:[ {k:'distance_km', t:'num', min:0, max:100, step:.5}, {k:'elevation_m', t:'num', min:0, max:3000, step:10},
           {k:'licensed_guide', t:'toggle'}, {k:'insurance', t:'toggle'} ] },
-    { code:'mare', letter:'E', img:'/sardinia-discovery-travels/partner-form/img/cat-boat.jpg', icon:'sailboat',
+    { code:'mare', letter:'F', img:'/sardinia-discovery-travels/partner-form/img/cat-boat.jpg', icon:'sailboat',
       spec:['barca_motore','barca_vela','catamarano','attivita_acquatiche','escursioni_costiere'],
       types:['escursione_privata','escursione_condivisa','mezza_giornata','giornata_intera','esperienza_personalizzata'],
       q:[ {k:'boat_type', t:'pills', o:['bt_motore','bt_vela','bt_catamarano','bt_gommone','bt_altro'], req:true},
@@ -1163,13 +1164,13 @@ const CONFIG = {
           {k:'port', t:'text', req:true},
           {k:'fuel', t:'pills', o:['fuel_inc','fuel_extra','fuel_na']},
           {k:'onboard', t:'multi', o:['ob_snorkel','ob_lunch','ob_drinks','ob_toilet','ob_shade','ob_sup']} ] },
-    { code:'guide', letter:'F', img:'/sardinia-discovery-travels/partner-form/img/cat-guide.jpg', icon:'compass',
+    { code:'guide', letter:'G', img:'/sardinia-discovery-travels/partner-form/img/cat-guide.jpg', icon:'compass',
       spec:['guida_turistica','guida_gae','accompagnatore','guida_specializzata'],
       types:['guida_oraria','mezza_giornata','giornata_intera','tour_privato','accompagnamento_gruppi'],
       q:[ {k:'license_type', t:'pills', o:['gl_turistica','gl_gae','gl_accomp','gl_altro'], req:true},
           {k:'license_no', t:'text', req:true, tip:'tip_license'},
           {k:'areas', t:'text'}, {k:'insurance', t:'toggle'} ] },
-    { code:'trasporti', letter:'G', img:'/sardinia-discovery-travels/partner-form/img/cat-transport.jpg', icon:'bus',
+    { code:'trasporti', letter:'H', img:'/sardinia-discovery-travels/partner-form/img/cat-transport.jpg', icon:'bus',
       spec:['ncc','transfer','trasporto_gruppi','minibus','noleggio_conducente','altri_autorizzati'],
       types:['trasferimento_singolo','andata_ritorno','servizio_orario','mezza_giornata','giornata_intera','servizio_personalizzato'],
       q:[ {k:'auth_type', t:'pills', o:['ta_ncc','ta_bus','ta_altro'], req:true, tip:'tip_ncc'},
@@ -1257,7 +1258,7 @@ en:{
   es_title:'Which sector does this experience belong to?', es_sub:'Pick the closest one.',
   sg_natura:'NATURE', sg_4x4:'4X4', sg_animali:'ANIMALS', sg_sport:'SPORT',
   esp_title:'What is your speciality?', esp_sub:'Select one.', esp_another:'Offer another specialty too? At the end of this form you can add a new request.', spec_other:'Describe it briefly',
-  et_title:'What type of service is it?', et_sub:'You can select more than one.',
+  et_title:'What type of service is it?', et_sub:'You can select more than one.', et_combined:'By selecting more than one type you will be offering a combined experience.',
   g1_title:'Give it a short title', g1_sub:'Keep it simple and concrete.', exp_name:'Short title', exp_namePh:'For example Weaving workshop in Aggius', exp_desc:'Description', exp_descPh:'What guests do, see and learn, and who they meet.', desc_min:'At least {n} characters', desc_ok:'Long enough',
   g2_title:'Where does it take place?', g2_sub:'So we can plan the logistics.', exp_comune:'Municipality', exp_addr:'Full address', exp_addr_hint:'Street, number, postcode, province', exp_loc:'Place or area', exp_meet:'Meeting point', exp_end:'End point', exp_endHint:'Leave empty if it is the same as the meeting point.',
   g3_title:'Duration and group size', g3_sub:'Approximate values are fine.', dur:'Duration', parts:'Participants and age', durD:'Hours', hours:'Hours', minutes:'Minutes', minP:'Minimum participants', minPD:'Smallest group you accept (always at least 2)', maxP:'Maximum participants', maxPD:'Largest group you can host', minAge:'Minimum age', minAgeD:'0 means no limit',
@@ -1306,11 +1307,11 @@ en:{
   o_assoc_cult:'Cultural association', o_aps:'APS', o_ets:'ETS', o_odv:'ODV', o_pro_loco:'Pro Loco', o_assoc_altro:'Other',
   o_coop_lavoro:'Worker cooperative', o_coop_sociale:'Social cooperative', o_coop_agricola:'Agricultural cooperative', o_coop_servizi:'Service cooperative', o_coop_altro:'Other',
   o_artigianato:'Crafts and traditions', o_enogastronomia:'Food and wine', o_cultura:'Culture and territory', o_natura:'Nature and adventure', o_mare:'Sea and sailing', o_guide:'Guides and escorts', o_trasporti:'Transport and mobility',
-  h_artigianato:'Workshops, demonstrations, studios', h_enogastronomia:'Tastings, producers, cooking', h_cultura:'Archaeology, history, traditions', h_natura:'Trekking, outdoor, rural life', h_mare:'Boats, sailing, snorkelling', h_guide:'Tourist and nature guides', h_trasporti:'Transfers, NCC, group transport',
+  h_artigianato:'Workshops, demonstrations, studios', h_enogastronomia:'Tastings, producers, cooking', h_cooking_class:'Cooking courses and hands-on lessons', h_cultura:'Archaeology, history, traditions', h_natura:'Trekking, outdoor, rural life', h_mare:'Boats, sailing, snorkelling', h_guide:'Tourist and nature guides', h_trasporti:'Transfers, NCC, group transport',
   o_tessitura:'Weaving', o_ceramica:'Ceramics', o_coltelleria:'Knife making', o_legno:'Woodwork', o_sughero:'Cork', o_metalli:'Metalwork', o_maschere:'Traditional masks', o_campanacci:'Cowbells', o_pelletteria:'Leatherwork', o_gioielli:'Jewellery', o_tessile:'Textile art', o_altre_artigianali:'Other crafts',
   o_laboratorio_pratico:'Hands-on workshop', o_dimostrazione:'Demonstration', o_visita_bottega:'Workshop visit', o_esperienza_privata:'Private experience', o_percorso_piu:'Route with several activities',
   td_laboratorio_pratico:'An experience in which the visitor takes an active part in making a craft product.', td_dimostrazione:'An experience in which the visitor watches an artisan while a product is being made.', td_visita_bottega:'An experience in which the visitor discovers the craft products on display and can buy them.',
-  o_vino:'Wine', o_formaggi:'Cheese', o_produzione_agricola:'Farm', o_panificazione:'Bread making', o_pasticceria:'Pastry', o_cucina_tradizionale:'Traditional cooking', o_olio:'Olive oil', o_altri_alimentari:'Other food products',
+  o_vino:'Wine', o_formaggi:'Cheese', o_salumi_carni:'Cured meats and meats', o_olio:'Olive oil', o_panificazione:'Bread making', o_cereali_farine:'Grains and flours', o_pastificio:'Pasta maker', o_pasticceria:'Pastry', o_altri_alimentari:'Other food products',
   o_degustazione:'Tasting', o_visita_produttore:'Producer visit', o_laboratorio:'Workshop', o_cooking_class:'Cooking class', o_pranzo_cena:'Experiential lunch or dinner', o_esperienza_combinata:'Combined experience',
   o_archeologia:'Archaeology', o_storia:'History', o_musei:'Museums', o_tradizioni_popolari:'Folk traditions', o_patrimonio:'Cultural heritage', o_architettura:'Architecture', o_cultura_locale:'Local culture',
   o_visita_guidata:'Guided visit', o_percorso_culturale:'Cultural route', o_incontro_culturale:'Cultural encounter',
@@ -1348,7 +1349,7 @@ en:{
   o_loc_bottega:'In my workshop', o_loc_cliente:'At the guest’s location', o_loc_entrambi:'Both',
   o_tp_vino:'Wine', o_tp_formaggi:'Cheese', o_tp_salumi:'Cured meats', o_tp_olio:'Olive oil', o_tp_pane:'Bread', o_tp_dolci:'Sweets', o_tp_miele:'Honey',
   o_diet_veg:'Vegetarian', o_diet_vegan:'Vegan', o_diet_gf:'Gluten free', o_diet_lf:'Lactose free',
-  o_cert_bio:'Organic', o_cert_dop:'DOP', o_cert_doc:'DOC', o_cert_igp:'IGP', o_cert_none:'None',
+  o_cert_bio:'Organic', o_cert_dop:'DOP', o_cert_doc:'DOC', o_cert_docg:'DOCG', o_cert_igp:'IGP', o_cert_igt:'IGT', o_cert_none:'None',
   o_tk_inc:'Tickets included', o_tk_extra:'Tickets as supplement', o_tk_na:'No tickets needed',
   o_bt_motore:'Motor boat', o_bt_vela:'Sailing boat', o_bt_catamarano:'Catamaran', o_bt_gommone:'RIB', o_bt_altro:'Other',
   o_lic_entro12:'Licence within 12 miles', o_lic_oltre12:'Licence beyond 12 miles', o_lic_prof:'Professional title',
@@ -1360,7 +1361,7 @@ en:{
   o_sv_olb:'Olbia airport', o_sv_aho:'Alghero airport', o_sv_cag:'Cagliari airport', o_sv_ports:'Ferry ports', o_sv_island:'Whole island',
   /* Sector questions */
   q_takehome:'Guests take home what they make', q_workshop_loc:'Where it takes place', q_live_demo:'Live demonstration of the technique', q_sale:'Products for sale on site', q_can_buy:'Can guests buy the products?', yn_yes:'Yes', yn_no:'No',
-  q_own_products:'Your own products', q_tasting:'The tasting includes', q_diets:'Dietary options', q_allergens:'Allergens managed on request', q_certs:'Certifications',
+  q_own_products:'Your own products', q_tasting:'The tasting also includes', q_diets:'Dietary options', q_allergens:'Allergens managed on request', q_certs:'Certifications',
   q_tickets:'Entry tickets', q_site_booking:'You handle bookings at the sites', q_licensed_guide:'Led by a licensed guide', q_distance_km:'Distance (km)', q_elevation_m:'Elevation gain (m)', q_insurance:'Liability insurance in place',
   q_boat_type:'Boat type', q_boat_length:'Boat length (m)', q_boat_capacity:'Maximum passengers', q_skipper:'Skipper included', q_skipper_license:'Skipper qualification', q_port:'Departure port', q_fuel:'Fuel', q_onboard:'On board',
   q_license_type:'Qualification', q_license_no:'Licence or badge number', q_areas:'Areas you cover',
@@ -1414,7 +1415,7 @@ it:{
   es_title:'In quale settore rientra questa esperienza?', es_sub:'Scegli il più vicino.',
   sg_natura:'NATURA', sg_4x4:'4X4', sg_animali:'ANIMALI', sg_sport:'SPORT',
   esp_title:'Qual è la tua specializzazione?', esp_sub:'Seleziona un solo tasto.', esp_another:'Offri anche un’altra specialità? Alla fine di questo modulo potrai aggiungere una nuova richiesta.', spec_other:'Descrivila brevemente',
-  et_title:'Che tipo di servizio è?', et_sub:'Seleziona più di un tasto.',
+  et_title:'Che tipo di servizio è?', et_sub:'Seleziona più di un tasto.', et_combined:'Selezionando più tipologie proporrai un’esperienza combinata.',
   g1_title:'Dai un breve titolo', g1_sub:'Semplice e concreto.', exp_name:'Breve titolo', exp_namePh:'Per esempio Laboratorio di tessitura ad Aggius', exp_desc:'Descrizione', exp_descPh:'Cosa fanno, vedono e imparano gli ospiti, e chi incontrano.', desc_min:'Almeno {n} caratteri', desc_ok:'Lunghezza sufficiente',
   g2_title:'Dove si svolge?', g2_sub:'Ci serve per organizzare la logistica.', exp_comune:'Comune', exp_addr:'Indirizzo completo', exp_addr_hint:'Via, numero, CAP, provincia', exp_loc:'Località', exp_meet:'Punto di incontro', exp_end:'Luogo di conclusione', exp_endHint:'Lascia vuoto se coincide con il punto di incontro.',
   g3_title:'Durata e partecipanti', g3_sub:'Vanno bene valori indicativi.', dur:'Durata', parts:'Partecipanti ed età', durD:'Ore', hours:'Ore', minutes:'Minuti', minP:'Partecipanti minimi', minPD:'Il gruppo più piccolo che accetti (sempre almeno 2)', maxP:'Partecipanti massimi', maxPD:'Il gruppo più grande che puoi ospitare', minAge:'Età minima', minAgeD:'0 significa nessun limite',
@@ -1462,11 +1463,11 @@ it:{
   o_assoc_cult:'Associazione culturale', o_aps:'APS', o_ets:'ETS', o_odv:'ODV', o_pro_loco:'Pro Loco', o_assoc_altro:'Altro',
   o_coop_lavoro:'Cooperativa di lavoro', o_coop_sociale:'Cooperativa sociale', o_coop_agricola:'Cooperativa agricola', o_coop_servizi:'Cooperativa di servizi', o_coop_altro:'Altro',
   o_artigianato:'Artigianato e tradizioni', o_enogastronomia:'Enogastronomia', o_cultura:'Cultura e territorio', o_natura:'Natura e avventura', o_mare:'Mare e nautica', o_guide:'Guide e accompagnatori', o_trasporti:'Trasporti e mobilità',
-  h_artigianato:'Laboratori, dimostrazioni, botteghe', h_enogastronomia:'Degustazioni, produttori, cucina', h_cultura:'Archeologia, storia, tradizioni', h_natura:'Trekking, outdoor, vita rurale', h_mare:'Barche, vela, snorkeling', h_guide:'Guide turistiche e ambientali', h_trasporti:'Transfer, NCC, trasporto gruppi',
+  h_artigianato:'Laboratori, dimostrazioni, botteghe', h_enogastronomia:'Degustazioni, produttori, cucina', h_cooking_class:'Corsi di cucina e lezioni pratiche', h_cultura:'Archeologia, storia, tradizioni', h_natura:'Trekking, outdoor, vita rurale', h_mare:'Barche, vela, snorkeling', h_guide:'Guide turistiche e ambientali', h_trasporti:'Transfer, NCC, trasporto gruppi',
   o_tessitura:'Tessitura', o_ceramica:'Ceramica', o_coltelleria:'Coltelleria', o_legno:'Lavorazione del legno', o_sughero:'Sughero', o_metalli:'Lavorazione dei metalli', o_maschere:'Maschere tradizionali', o_campanacci:'Campanacci', o_pelletteria:'Pelletteria', o_gioielli:'Gioielli', o_tessile:'Arte tessile', o_altre_artigianali:'Altre attività artigianali',
   o_laboratorio_pratico:'Laboratorio pratico', o_dimostrazione:'Dimostrazione', o_visita_bottega:'Visita in bottega', o_esperienza_privata:'Esperienza privata', o_percorso_piu:'Percorso con più attività',
   td_laboratorio_pratico:'Esperienza in cui il visitatore partecipa attivamente alla creazione di un prodotto artigianale.', td_dimostrazione:'Esperienza in cui il visitatore osserva un artigiano durante la lavorazione di un prodotto.', td_visita_bottega:'Esperienza in cui il visitatore scopre e può acquistare i prodotti artigianali esposti.',
-  o_vino:'Vino', o_formaggi:'Formaggi', o_produzione_agricola:'Azienda agricola', o_panificazione:'Panificazione', o_pasticceria:'Pasticceria', o_cucina_tradizionale:'Cucina tradizionale', o_olio:'Olio', o_altri_alimentari:'Altri prodotti alimentari',
+  o_vino:'Vino', o_formaggi:'Formaggi', o_salumi_carni:'Salumi e carni', o_olio:'Olio', o_panificazione:'Panificazione', o_cereali_farine:'Cereali e farine', o_pastificio:'Pastificio', o_pasticceria:'Pasticceria', o_altri_alimentari:'Altri prodotti alimentari',
   o_degustazione:'Degustazione', o_visita_produttore:'Visita al produttore', o_laboratorio:'Laboratorio', o_cooking_class:'Cooking class', o_pranzo_cena:'Pranzo o cena esperienziale', o_esperienza_combinata:'Esperienza combinata',
   o_archeologia:'Archeologia', o_storia:'Storia', o_musei:'Musei', o_tradizioni_popolari:'Tradizioni popolari', o_patrimonio:'Patrimonio culturale', o_architettura:'Architettura', o_cultura_locale:'Cultura locale',
   o_visita_guidata:'Visita guidata', o_percorso_culturale:'Percorso culturale', o_incontro_culturale:'Incontro culturale',
@@ -1504,7 +1505,7 @@ it:{
   o_loc_bottega:'Nella mia bottega', o_loc_cliente:'Presso il cliente', o_loc_entrambi:'Entrambi',
   o_tp_vino:'Vino', o_tp_formaggi:'Formaggi', o_tp_salumi:'Salumi', o_tp_olio:'Olio', o_tp_pane:'Pane', o_tp_dolci:'Dolci', o_tp_miele:'Miele',
   o_diet_veg:'Vegetariana', o_diet_vegan:'Vegana', o_diet_gf:'Senza glutine', o_diet_lf:'Senza lattosio',
-  o_cert_bio:'Biologico', o_cert_dop:'DOP', o_cert_doc:'DOC', o_cert_igp:'IGP', o_cert_none:'Nessuna',
+  o_cert_bio:'Biologico', o_cert_dop:'DOP', o_cert_doc:'DOC', o_cert_docg:'DOCG', o_cert_igp:'IGP', o_cert_igt:'IGT', o_cert_none:'Nessuna',
   o_tk_inc:'Biglietti inclusi', o_tk_extra:'Biglietti a supplemento', o_tk_na:'Nessun biglietto necessario',
   o_bt_motore:'Barca a motore', o_bt_vela:'Barca a vela', o_bt_catamarano:'Catamarano', o_bt_gommone:'Gommone', o_bt_altro:'Altro',
   o_lic_entro12:'Patente entro 12 miglia', o_lic_oltre12:'Patente oltre 12 miglia', o_lic_prof:'Titolo professionale',
@@ -1515,7 +1516,7 @@ it:{
   o_vh_auto:'Auto', o_vh_van:'Van', o_vh_minibus:'Minibus', o_vh_bus:'Pullman',
   o_sv_olb:'Aeroporto di Olbia', o_sv_aho:'Aeroporto di Alghero', o_sv_cag:'Aeroporto di Cagliari', o_sv_ports:'Porti traghetti', o_sv_island:'Tutta l’isola',
   q_takehome:'Gli ospiti portano a casa ciò che realizzano', q_workshop_loc:'Dove si svolge', q_live_demo:'Dimostrazione dal vivo della tecnica', q_sale:'Prodotti in vendita sul posto', q_can_buy:'È possibile acquistare i prodotti?', yn_yes:'Sì', yn_no:'No',
-  q_own_products:'Prodotti di tua produzione', q_tasting:'La degustazione comprende', q_diets:'Opzioni alimentari', q_allergens:'Allergeni gestiti su richiesta', q_certs:'Certificazioni',
+  q_own_products:'Prodotti di tua produzione', q_tasting:'La degustazione comprende (anche)', q_diets:'Opzioni alimentari', q_allergens:'Allergeni gestiti su richiesta', q_certs:'Certificazioni',
   q_tickets:'Biglietti di ingresso', q_site_booking:'Gestisci tu le prenotazioni ai siti', q_licensed_guide:'Condotta da una guida abilitata', q_distance_km:'Distanza (km)', q_elevation_m:'Dislivello (m)', q_insurance:'Assicurazione RC attiva',
   q_boat_type:'Tipo di imbarcazione', q_boat_length:'Lunghezza (m)', q_boat_capacity:'Passeggeri massimi', q_skipper:'Skipper incluso', q_skipper_license:'Titolo dello skipper', q_port:'Porto di partenza', q_fuel:'Carburante', q_onboard:'A bordo',
   q_license_type:'Abilitazione', q_license_no:'Numero di licenza o tesserino', q_areas:'Zone in cui operi',
@@ -1862,9 +1863,21 @@ const sectorsForPaths = () => {
     return true;
   });
 };
+const hasSpec = e => (SECTOR[e.sector]?.spec || []).length > 0;
+const hasType = e => (SECTOR[e.sector]?.types || []).length > 0;
 const specList = e => { const raw = Array.isArray(e.spec) ? e.spec : (e.spec ? [e.spec] : []); const allowed = e.sector ? (SECTOR[e.sector]?.spec || []) : null; const one = allowed ? raw.find(x => allowed.includes(x)) : raw[0]; return one ? [one] : []; };
 const typeList = e => Array.isArray(e.type) ? e.type : (e.type ? [e.type] : []);
 const allowedTypes = e => [...(SECTOR[e.sector]?.types || [])];
+const TASTE_OF = { vino:'tp_vino', formaggi:'tp_formaggi', salumi_carni:'tp_salumi', olio:'tp_olio', panificazione:'tp_pane', pasticceria:'tp_dolci' };
+function qOpts(e, q){
+  if(q.k === 'tasting' && e.sector === 'enogastronomia'){
+    const hide = TASTE_OF[specList(e)[0]];
+    return hide ? q.o.filter(x => x !== hide) : q.o;
+  }
+  return q.o || [];
+}
+function typeNote(e){ return typeList(e).length > 1 ? `<p class="ct-spec-note">${esc(t('et_combined'))}</p>` : ''; }
+const sectorLabel = e => (e.sector && SECTOR[e.sector]) ? `${SECTOR[e.sector].letter}. ${o(e.sector)}` : (e.sector ? o(e.sector) : '');
 const showsDifficulty = e => e.sector === 'natura';
 const ARTISAN_OMIT_INCLUDES = ['inc_tasting','inc_meal','inc_drinks'];
 const includesFor = e => CONFIG.includes.filter(c => !(e?.sector === 'artigianato' && ARTISAN_OMIT_INCLUDES.includes(c)));
@@ -1887,7 +1900,7 @@ const EV = {
     photoCards(P(i,'sector'), sectorsForPaths().map(s=>({v:s.code, img:s.img, icon:s.icon, label:`${s.letter}. ${o(s.code)}`, hint:t('h_'+s.code)})))),
   type: i => { const e=E(i); const codes = allowedTypes(e);
     const choices = e.sector === 'artigianato' ? typeCards(P(i,'type'), codes) : pills(P(i,'type'), codes, {multi:true});
-    return split(head(t('et_title'), t('et_sub'), ecount(i, o(e.sector))), choices); },
+    return split(head(t('et_title'), t('et_sub'), ecount(i, o(e.sector))), `<div class="ct-stack" style="gap:16px">${choices}${typeNote(e)}</div>`); },
   spec: i => { const e=E(i), s=SECTOR[e.sector]; const specs = specList(e);
     const choices = s.specGroups
       ? `<div class="ct-spec-groups">${s.specGroups.map(g=>`<fieldset class="ct-group"><legend class="ct-spec-head">${esc(t(g.h))}</legend>${pills(P(i,'spec'), g.o)}</fieldset>`).join('')}</div>`
@@ -1929,7 +1942,7 @@ const EV = {
     ${sectorQs(e).map(q=>qField(i,q)).join('')}`); }
     return split(head(t('rq_title'), t('rq_sub'), ecount(i)), `
     ${showsDifficulty(e) ? group(t('difficulty'), pills(P(i,'difficulty'), CONFIG.difficulty)) : ''}
-    ${toggle(P(i,'prevExp'), t('prev_exp'), t('prev_expD'))}${inp(P(i,'limits'), t('limits'), {req:false, area:'short', ph:t('limitsPh')})}${inp(P(i,'safety'), t('safety'), {req:false, area:'short', ph:t('safetyPh')})}`); },
+    ${e.sector === 'enogastronomia' ? '' : toggle(P(i,'prevExp'), t('prev_exp'), t('prev_expD'))}${inp(P(i,'limits'), t('limits'), {req:false, area:'short', ph:t('limitsPh')})}${inp(P(i,'safety'), t('safety'), {req:false, area:'short', ph:t('safetyPh')})}`); },
   sq: i => { const e=E(i); return split(head(t('sq_title',{s:o(e.sector).toLowerCase()}), t('sq_sub'), ecount(i, o(e.sector))),
     `<div class="ct-stack" style="gap:32px">${sectorQs(e).map(q=>qField(i,q)).join('')}</div>`); },
   avail: i => { const e=E(i); const M=MONTHS[S.lang]; return split(head(t('av_title'), t('av_sub'), ecount(i)), `
@@ -1964,11 +1977,12 @@ const EV = {
   photos: i => split(head(t('ph_title'), t('ph_sub'), ecount(i)), uploader(i))
 };
 function qField(i, q){
+  const e = E(i);
   const p = P(i, 'sq.'+q.k), L = t('q_'+q.k);
   switch(q.t){
     case 'toggle': return toggle(p, L, '', q.tip);
-    case 'pills': return group(L, pills(p, q.o), {req:!!q.req, tip:q.tip});
-    case 'multi': return group(L, pills(p, q.o, {multi:true}), {req:!!q.req, tip:q.tip, multi:true});
+    case 'pills': return group(L, pills(p, qOpts(e, q)), {req:!!q.req, tip:q.tip});
+    case 'multi': return group(L, pills(p, qOpts(e, q), {multi:true}), {req:!!q.req, tip:q.tip, multi:true});
     case 'num': return inp(p, L, {type:'number', req:!!q.req, tk:q.tip});
     case 'stepper': return `<div class="ct-steppers">${stepper(p, L, '', q.min, q.max)}</div>`;
     default: return inp(p, L, {req:!!q.req, tk:q.tip});
@@ -1983,8 +1997,8 @@ function qOk(e, q){
 }
 const EOK = {
   sector: e => !!e.sector,
-  spec: e => { const sp = specList(e); return sp.length > 0 && (!sp.some(x => CONFIG.otherSpec.includes(x)) || filled(e.specOther,3)); },
-  type: e => typeList(e).length > 0 && typeList(e).every(x => allowedTypes(e).includes(x)),
+  spec: e => !hasSpec(e) || (specList(e).length > 0 && (!specList(e).some(x => CONFIG.otherSpec.includes(x)) || filled(e.specOther,3))),
+  type: e => !hasType(e) || (typeList(e).length > 0 && typeList(e).every(x => allowedTypes(e).includes(x))),
   g1: e => filled(e.name,3) && e.desc.trim().length >= DESC_MIN,
   g2: e => filled(e.comune) && filled(e.meet,3),
   g3: e => e.durH > 0 && e.min >= 2 && e.max >= e.min,
@@ -2084,10 +2098,12 @@ function screens(){
       e.spec = specList(e)[0] || '';
       if(!CONFIG.otherSpec.includes(e.spec)) e.specOther = '';
       if(!e.sector) return;
+      e.manual = false;
       e.type = typeList(e).filter(x => allowedTypes(e).includes(x));
       if(!showsDifficulty(e)) e.difficulty = '';
       if(e.sector === 'artigianato'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; e.limits = ''; e.safety = ''; e.localita = ''; e.meet = ''; e.end = ''; e.priceMode = 'pm_persona'; for(const b of ['priv','shared']){ e.price[b].extra = ''; e.price[b].incl = 1; } e.sq = e.sq || {}; delete e.sq.materials; delete e.sq.workshop_loc; delete e.sq.live_demo; delete e.sq.sale; if(e.sq.can_buy == null) e.sq.can_buy = false; if(e.sq.takehome == null) e.sq.takehome = false; }
-      e.manual = false;
+      if(e.sector === 'enogastronomia' || e.sector === 'cooking_class'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; }
+      if(e.sector === 'enogastronomia'){ e.prevExp = false; const hide = TASTE_OF[specList(e)[0]]; if(hide && Array.isArray(e.sq?.tasting)) e.sq.tasting = e.sq.tasting.filter(x => x !== hide); }
       if(e.billing === 'bill_receipt') e.billing = '';
       { const ok = new Set(halfHours()); e.slots = (e.slots||[]).filter(s => ok.has(s)); }
     });
@@ -2099,10 +2115,13 @@ function screens(){
       order.forEach(k=>{
       if(k!=='sector' && !e.sector) return;            /* taxonomy first */
       if(['spec','type'].includes(k) && !e.sector) return;
-      /* Specialization comes before service type for every sector. */
-      if(k==='type' && !specList(e).length) return;
+      /* Specialization comes before service type, except a sector that has neither list. */
+      if(k==='spec' && !hasSpec(e)) return;
+      if(k==='type' && !hasType(e)) return;
+      if(k==='type' && hasSpec(e) && !specList(e).length) return;
       if(k==='sq' && (e.sector === 'artigianato' || !(SECTOR[e.sector]?.q||[]).length)) return;
-      if((k==='equip' || k==='g2') && e.sector === 'artigianato') return;
+      if(k==='g2' && e.sector === 'artigianato') return;
+      if(k==='equip' && (e.sector === 'artigianato' || e.sector === 'enogastronomia' || e.sector === 'cooking_class')) return;
       add(`e${i}_${k}`, 'prop', () => EV[k](i), () => !!S.exps[i] && EOK[k](S.exps[i]));
       });
     });
@@ -2185,7 +2204,7 @@ function expTiles(){
   <section class="rv-tile rv-exp" aria-label="${esc(t('exp_n',{n:i+1}))}" data-exp="${i}">
     ${rvTop(SECTOR[e.sector]?.icon||'compass', `${tabs?t('r_expTitle'):t('exp_n',{n:i+1})}${tabs}`, `${rvEdit(`e${i}_g1`)}<button type="button" class="ct-tile-edit ct-tile-del" data-action="delexp" data-v="${i}" aria-label="${esc(t('r_delete'))}: ${esc(e.name||t('mo_untitled'))}">${ic('trash',16,1.8)}</button>`)}
     <h2 class="rv-name">${esc(e.name||t('mo_untitled'))}</h2>
-    ${chips([e.sector?o(e.sector):'', spec, typeLab].filter(Boolean))}
+    ${chips([sectorLabel(e), spec, typeLab].filter(Boolean))}
     ${e.desc?`<p class="rv-desc"><span>${esc(e.desc)}</span></p>`:''}
     ${inclReview(e)}
     ${e.sector==='artigianato' ? `<ul class="ct-tile-list"><li>${esc(t('prev_exp'))}: <b>${esc(t(e.prevExp ? 'yn_yes' : 'yn_no'))}</b></li><li>${esc(t('q_takehome'))}: <b>${esc(t(e.sq?.takehome ? 'yn_yes' : 'yn_no'))}</b></li><li>${esc(t('q_can_buy'))}: <b>${esc(t(e.sq?.can_buy ? 'yn_yes' : 'yn_no'))}</b></li></ul>` : ''}
@@ -2286,7 +2305,7 @@ function cardData(e){
   const bases = blocks(e).map(b=>Number(e.price[b].base)).filter(n=>n>0);
   return {
     image: e.photos[0]?.src || '',
-    category: e.sector ? o(e.sector) : '',
+    category: sectorLabel(e),
     type: [spec, typesArr.map(o).filter(Boolean).join(', ')].filter(Boolean).join(' · '),
     title: (e.name||'').trim(),
     amount: CARD_SHOW_PARTNER_PRICE && bases.length ? `€ ${formatItAmount(Math.min(...bases))}` : '',
@@ -2765,7 +2784,8 @@ function afterPick(p, prev){
     if(m[2]==='sector' && prev!==e.sector){ e.spec=[]; e.specOther=''; e.type=[]; e.sq={}; e.difficulty='';
       (SECTOR[e.sector].q||[]).forEach(q=>{ if(q.def!==undefined) e.sq[q.k]=q.def; else if(q.t==='multi') e.sq[q.k]=[]; else if(q.t==='stepper') e.sq[q.k]=0; }); }
     if(m[2]==='spec'){ const sp=specList(e); if(!sp.some(x=>CONFIG.otherSpec.includes(x))) e.specOther='';
-      e.type = typeList(e).filter(x => allowedTypes(e).includes(x)); }
+      e.type = typeList(e).filter(x => allowedTypes(e).includes(x));
+      if(e.sector==='enogastronomia' && Array.isArray(e.sq?.tasting)){ const hide=TASTE_OF[sp[0]]; if(hide) e.sq.tasting = e.sq.tasting.filter(x => x!==hide); } }
     if(!showsDifficulty(e)) e.difficulty = ''; }
   const pm = p.match(/^exps\.(\d+)\.period$/);
   if(pm && get(p)==='op_year') S.exps[+pm[1]].months = [...Array(12).keys()];
@@ -2933,9 +2953,9 @@ if(DEV_FILL) (function(){
     const txt = () => EXP_TXT[e.sector] || EXP_TXT.artigianato;
     switch(k){
       case 'sector': { const prev = e.sector; e.sector = e.sector || PRE.sector || 'artigianato'; afterPick(`exps.${i}.sector`, prev); break; }
-      case 'spec': { const sp = SECTOR[e.sector].spec; if(!specList(e).length) e.spec = sp.find(x=>!CONFIG.otherSpec.includes(x)) || sp[0];
+      case 'spec': { const sp = SECTOR[e.sector].spec || []; if(sp.length && !specList(e).length) e.spec = sp.find(x=>!CONFIG.otherSpec.includes(x)) || sp[0];
         if(specList(e).some(x=>CONFIG.otherSpec.includes(x)) && !filled(e.specOther,3)) e.specOther = L('Specialità di prova','Test specialty'); break; }
-      case 'type': if(!typeList(e).length) e.type = [SECTOR[e.sector].types[0]]; break;
+      case 'type': if(allowedTypes(e).length && !typeList(e).length) e.type = [allowedTypes(e)[0]]; break;
       case 'g1': e.name = L(txt()[0], txt()[1]);
         e.desc = L('Esperienza di prova creata con il riempimento automatico: gli ospiti incontrano il partner, seguono una breve introduzione e partecipano all\'attività in un piccolo gruppo.',
                    'Test experience created by the auto fill: guests meet the partner, follow a short introduction and take part in the activity in a small group.'); break;
