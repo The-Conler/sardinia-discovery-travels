@@ -61,7 +61,10 @@ export function buildReviewTiles(d: ContactData): ReviewTile[] {
   tiles.push({
     step: "interests", icon: "compass", title: "Interested in",
     headline: cap(andList(interests)) || "Nothing chosen",
-    details: d.interests.includes("other") && d.interestOther.trim() ? [end(d.interestOther)] : [],
+    details: [
+      ...(d.interests.includes("other") && d.interestOther.trim() ? [end(d.interestOther)] : []),
+      ...(d.interests.includes("wine") ? [d.multiWinery ? "I'd like to visit more than one winery." : "A single winery is fine."] : []),
+    ],
   });
 
   // Transfer

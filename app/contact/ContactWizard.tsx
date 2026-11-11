@@ -8,8 +8,8 @@ import {
   AIRPORTS, ALL_STEPS, ARRIVAL_METHODS, BOAT_STYLES, BOAT_TYPES, CAR_SEATS, CAR_SIZES, CAR_TYPES,
   CELEBRATIONS, COUNTRY_SUGGESTIONS, DURATIONS, DURATIONS_OTHER, HEARD_FROM, INTERESTS, LOCATIONS, NEEDS,
   GROUP_TYPES, PLACE_SUGGESTIONS, PORTS, QUICK_TOPICS, RENTAL_CAR, REPLY_VIA, STAY_AMENITIES, STAY_BOARD, STAY_ROOMS,
-  STAY_ROOMS_COUNT, STAY_TYPES, SWIMMING, TRANSFER_ITEMS, TRANSFER_TRIPS, YES_NO,
-  activeSteps, asksPickup, emptyData, isEmail, isLargeGroup, stepValid, wantsBoat, wantsTransfer,
+  STAY_ROOMS_COUNT, STAY_TYPES, SWIMMING, TRANSFER_ITEMS, TRANSFER_TRIPS, WINE_MULTI_COPY, YES_NO,
+  activeSteps, asksPickup, emptyData, isEmail, isLargeGroup, stepValid, wantsBoat, wantsTransfer, wantsWine,
 } from "./contactData";
 import type { ContactData, Opt, StepId } from "./contactData";
 import { labelOf } from "./contactData";
@@ -196,9 +196,15 @@ export function ContactWizard() {
   const navigated = useRef(false);
 
   const set = <K extends keyof ContactData>(k: K, v: ContactData[K]) => setData((d) => ({ ...d, [k]: v }));
-  type ListKey = "interests" | "transferItems" | "needs" | "quickTopics" | "stayAmenities";
+  type ListKey = "transferItems" | "needs" | "stayAmenities";
   const toggleIn = (k: ListKey) => (v: string) =>
     setData((d) => ({ ...d, [k]: d[k].includes(v) ? d[k].filter((x) => x !== v) : [...d[k], v] }));
+  const toggleWineList = (k: "interests" | "quickTopics") => (v: string) =>
+    setData((d) => {
+      const next = d[k].includes(v) ? d[k].filter((x) => x !== v) : [...d[k], v];
+      const draft = { ...d, [k]: next };
+      return wantsWine(draft) ? draft : { ...draft, multiWinery: false };
+    });
 
   // Restore saved progress, read ?step=N (dev preview) and detect the time zone.
   useEffect(() => {
@@ -232,6 +238,7 @@ export function ContactWizard() {
     }
     if (restored.rentalCar === "yes") restored.rentalCar = "myself";
     if (!isLargeGroup(restored)) { restored.groupType = ""; restored.groupNotes = ""; }
+    if (!wantsWine(restored)) restored.multiWinery = false;
     setData(restored);
     setStep(restoredStep);
     setReady(true);
@@ -439,7 +446,10 @@ export function ContactWizard() {
       body = (
         <>
           {head("What are you interested in?")}
-          <MultiChoice legend="Choose all that apply" options={INTERESTS} values={data.interests} onToggle={toggleIn("interests")} layout="photos" />
+          <MultiChoice legend="Choose all that apply" options={INTERESTS} values={data.interests} onToggle={toggleWineList("interests")} layout="photos" />
+          {data.interests.includes("wine") && (
+            <Toggle label={WINE_MULTI_COPY.en.label} sub={WINE_MULTI_COPY.en.hint} on={data.multiWinery} onChange={(v) => set("multiWinery", v)} />
+          )}
           {data.interests.includes("other") && (
             <Field label="Tell us what you have in mind">
               <textarea rows={3} value={data.interestOther} onChange={(e) => set("interestOther", e.target.value)} placeholder="For example a cooking class, a hike or a wine tasting" />
@@ -725,7 +735,10 @@ export function ContactWizard() {
           </div>
           {data.email && !isEmail(data.email) && <p className="ct-error" role="alert">Please check your email address.</p>}
           <Choice legend="How should we reply?" options={REPLY_VIA} value={data.replyVia} onChange={(v) => set("replyVia", v)} layout="pills" />
-          <MultiChoice legend="What is it about?" sub="Optional" options={QUICK_TOPICS} values={data.quickTopics} onToggle={toggleIn("quickTopics")} layout="pills" />
+          <MultiChoice legend="What is it about?" sub="Optional" options={QUICK_TOPICS} values={data.quickTopics} onToggle={toggleWineList("quickTopics")} layout="pills" />
+          {data.quickTopics.includes("wine") && (
+            <Toggle label={WINE_MULTI_COPY.en.label} sub={WINE_MULTI_COPY.en.hint} on={data.multiWinery} onChange={(v) => set("multiWinery", v)} />
+          )}
           <Field label="Rough dates" optional><input value={data.quickDates} onChange={(e) => set("quickDates", e.target.value)} placeholder="For example a week in mid June" /></Field>
           <div className="ct-steppers">
             <Stepper label="Number of people" sub="Optional" value={data.quickPeople} min={0} max={50} onChange={(n) => set("quickPeople", n)} />

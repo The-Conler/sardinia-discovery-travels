@@ -3,7 +3,7 @@ import {
   AIRPORTS, ARRIVAL_METHODS, BOAT_STYLES, BOAT_TYPES, BUDGETS, CAR_SEATS, CAR_SIZES, CAR_TYPES, CELEBRATIONS,
   DURATIONS, GROUP_TYPES, HEARD_FROM, INTERESTS, LOCATIONS, NEEDS, PORTS, QUICK_TOPICS, RENTAL_CAR, REPLY_VIA, STAY_AMENITIES,
   STAY_BOARD, STAY_ROOMS, STAY_ROOMS_COUNT, STAY_TYPES, SWIMMING, TRANSFER_ITEMS, TRANSFER_TRIPS, YES_NO,
-  asksPickup, isLargeGroup, labelOf, labelsOf, wantsBoat, wantsTransfer,
+  asksPickup, isLargeGroup, labelOf, labelsOf, wantsBoat, wantsTransfer, wantsWine,
 } from "./contactData";
 import type { ContactData, StepId } from "./contactData";
 
@@ -24,6 +24,7 @@ export function buildReviewSections(d: ContactData): ReviewSection[] {
   out.push({ step: "interests", title: "Interested in", rows: rows([
     ["Interests", labelsOf(INTERESTS, d.interests)],
     ["Details", d.interests.includes("other") ? d.interestOther : ""],
+    ["More than one winery", wantsWine(d) && d.interests.includes("wine") ? (d.multiWinery ? "Yes" : "No") : ""],
   ]) });
 
   if (wantsBoat(d)) {
@@ -135,6 +136,7 @@ export function buildSummaryText(d: ContactData, sentAt = new Date()): string {
       ["Preferred reply", labelOf(REPLY_VIA, d.replyVia)],
       ["Time zone", d.timeZone],
       ["About", labelsOf(QUICK_TOPICS, d.quickTopics)],
+      ["More than one winery", d.quickTopics.includes("wine") ? (d.multiWinery ? "Yes" : "No") : ""],
       ["Rough dates", d.quickDates.trim()],
       ["People", d.quickPeople > 0 ? String(d.quickPeople) : ""],
     ] as [string, string][]).filter(([, v]) => v && v.trim() !== "");

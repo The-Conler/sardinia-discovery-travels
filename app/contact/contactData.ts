@@ -10,6 +10,8 @@ export type ContactData = {
   quickPeople: number;
   interests: string[];
   interestOther: string;
+  /** Optional, only when the Wine Tour interest is selected. */
+  multiWinery: boolean;
   boatLocation: string;
   boatType: string;
   boatDuration: string;
@@ -70,7 +72,7 @@ export type ContactData = {
 
 export const emptyData: ContactData = {
   mode: "guided", quickTopics: [], quickDates: "", quickPeople: 0,
-  interests: [], interestOther: "",
+  interests: [], interestOther: "", multiWinery: false,
   boatLocation: "", boatType: "", boatDuration: "", boatStyle: "",
   transferFrom: "", transferTo: "", transferTrip: "", transferBags: 0, transferItems: [],
   tripArrival: "", tripDeparture: "", activityDate1: "", activityDate2: "", datesFlexible: false, datesNote: "",
@@ -84,14 +86,35 @@ export const emptyData: ContactData = {
 
 export const INTERESTS: Opt[] = [
   { value: "boat", label: "Boat tour", icon: "sailboat", hint: "A day on the water", image: "/contact/card-boat.webp" },
+  { value: "wine", label: "Wine tour", icon: "wine", hint: "Tastings at local wineries", image: "/destinations/north/ns-wine.webp" },
   { value: "transfer", label: "Private transfer", icon: "car", hint: "Airport, port or hotel rides", image: "/contact/card-transfer.webp" },
   { value: "trip", label: "Destination / multi-day trip", icon: "map", hint: "Several days around the island", image: "/contact/card-trip.webp" },
   { value: "other", label: "Something else", icon: "message", hint: "Tell us what you'd like", image: "/contact/card-other.webp" },
 ];
 
+/**
+ * Optional Wine Tour checkbox. The form itself is English.
+ * it and nl match the languages in the site header.
+ */
+export const WINE_MULTI_COPY = {
+  en: {
+    label: "I'd like to visit more than one winery",
+    hint: "The tour operator will suggest the best combination of nearby wineries.",
+  },
+  it: {
+    label: "Voglio visitare più cantine",
+    hint: "Il tour operator ti proporrà la combinazione di cantine vicine più adatta.",
+  },
+  nl: {
+    label: "Ik wil graag meer dan één wijnhuis bezoeken",
+    hint: "De touroperator stelt de beste combinatie van wijnhuizen in de buurt voor.",
+  },
+} as const;
+
 /** Topics for the quick request (same values as INTERESTS, shorter labels). */
 export const QUICK_TOPICS: Opt[] = [
   { value: "boat", label: "Boat tour", icon: "sailboat" },
+  { value: "wine", label: "Wine tour", icon: "wine" },
   { value: "transfer", label: "Private transfer", icon: "car" },
   { value: "trip", label: "Multi-day trip", icon: "map" },
   { value: "other", label: "Something else", icon: "message" },
@@ -313,6 +336,7 @@ export const ALL_STEPS: StepId[] = [
 ];
 
 export const wantsBoat = (d: ContactData) => d.interests.includes("boat");
+export const wantsWine = (d: ContactData) => d.interests.includes("wine") || d.quickTopics.includes("wine");
 export const wantsTransfer = (d: ContactData) => d.interests.includes("transfer");
 /** The pickup question is pointless when the only thing asked for is a transfer. */
 export const asksPickup = (d: ContactData) => !(d.interests.length === 1 && wantsTransfer(d));
