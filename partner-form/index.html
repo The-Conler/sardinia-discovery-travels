@@ -1880,7 +1880,16 @@ function typeNote(e){ return typeList(e).length > 1 ? `<p class="ct-spec-note">$
 const sectorLabel = e => (e.sector && SECTOR[e.sector]) ? `${SECTOR[e.sector].letter}. ${o(e.sector)}` : (e.sector ? o(e.sector) : '');
 const showsDifficulty = e => e.sector === 'natura';
 const ARTISAN_OMIT_INCLUDES = ['inc_tasting','inc_meal','inc_drinks'];
-const includesFor = e => CONFIG.includes.filter(c => !(e?.sector === 'artigianato' && ARTISAN_OMIT_INCLUDES.includes(c)));
+const ENO_OMIT_INCLUDES = ['inc_materials','inc_tickets','inc_equipment','inc_insurance','inc_meal','inc_drinks'];
+const includesFor = e => CONFIG.includes.filter(c => {
+  if(e?.sector === 'artigianato' && ARTISAN_OMIT_INCLUDES.includes(c)) return false;
+  if(e?.sector === 'enogastronomia'){
+    if(ENO_OMIT_INCLUDES.includes(c)) return false;
+    /* Degustazione is already the service type, so it is not listed again. */
+    if(c === 'inc_tasting' && typeList(e).includes('degustazione')) return false;
+  }
+  return true;
+});
 function inclMode(e, c){ const v = e.incl?.[c]; if(!v) return ''; return typeof v === 'string' ? v : (v.mode || ''); }
 function inclPrice(e, c){ const v = e.incl?.[c]; if(!v || typeof v !== 'object') return ''; return v.price ?? ''; }
 /* Cash-register formatting lives in ./it-money.js (formatItAmount, priceFromDigits). */
@@ -2094,16 +2103,16 @@ function screens(){
   add('collab','collab',VW.collab,OK.collab);
   if(S.paths.includes('A') || S.paths.includes('C')){
     S.exps.forEach(e => {
-      normalizeIncl(e);
       e.spec = specList(e)[0] || '';
       if(!CONFIG.otherSpec.includes(e.spec)) e.specOther = '';
-      if(!e.sector) return;
+      if(!e.sector){ normalizeIncl(e); return; }
       e.manual = false;
       e.type = typeList(e).filter(x => allowedTypes(e).includes(x));
       if(!showsDifficulty(e)) e.difficulty = '';
       if(e.sector === 'artigianato'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; e.limits = ''; e.safety = ''; e.localita = ''; e.meet = ''; e.end = ''; e.priceMode = 'pm_persona'; for(const b of ['priv','shared']){ e.price[b].extra = ''; e.price[b].incl = 1; } e.sq = e.sq || {}; delete e.sq.materials; delete e.sq.workshop_loc; delete e.sq.live_demo; delete e.sq.sale; if(e.sq.can_buy == null) e.sq.can_buy = false; if(e.sq.takehome == null) e.sq.takehome = false; }
       if(e.sector === 'enogastronomia' || e.sector === 'cooking_class'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; }
-      if(e.sector === 'enogastronomia'){ e.prevExp = false; const hide = TASTE_OF[specList(e)[0]]; if(hide && Array.isArray(e.sq?.tasting)) e.sq.tasting = e.sq.tasting.filter(x => x !== hide); }
+      if(e.sector === 'enogastronomia'){ e.prevExp = false; e.limits = ''; e.safety = ''; e.difficulty = ''; const hide = TASTE_OF[specList(e)[0]]; if(hide && Array.isArray(e.sq?.tasting)) e.sq.tasting = e.sq.tasting.filter(x => x !== hide); }
+      normalizeIncl(e);
       if(e.billing === 'bill_receipt') e.billing = '';
       { const ok = new Set(halfHours()); e.slots = (e.slots||[]).filter(s => ok.has(s)); }
     });
@@ -2122,6 +2131,7 @@ function screens(){
       if(k==='sq' && (e.sector === 'artigianato' || !(SECTOR[e.sector]?.q||[]).length)) return;
       if(k==='g2' && e.sector === 'artigianato') return;
       if(k==='equip' && (e.sector === 'artigianato' || e.sector === 'enogastronomia' || e.sector === 'cooking_class')) return;
+      if(k==='reqs' && e.sector === 'enogastronomia') return;
       add(`e${i}_${k}`, 'prop', () => EV[k](i), () => !!S.exps[i] && EOK[k](S.exps[i]));
       });
     });
@@ -2592,7 +2602,7 @@ function buildPayload(){
     contact: {...S.contact, phone_e164: S.contact.prefix + digits(S.contact.phone)},
     organization: {...S.org, vat: S.org.vat.replace(/\s/g,''), cf: S.org.cf.replace(/\s/g,'').toUpperCase(), manual_review: S.org.form==='altra_forma'},
     collaboration: { experiences: hasA, agreement: hasB },
-    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); const row = { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>{ const p={...e.price[b]}; if(e.sector==='artigianato'){ delete p.extra; p.incl = 1; p.min = ''; } return [b, p]; })), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; delete row.manual; delete row.cancel; delete row.penalties; delete row.noshow; delete row.weather; if(row.billing==='bill_receipt') row.billing=''; if(e.sector === 'artigianato'){ row.priceMode = 'pm_persona'; delete row.equipProvided; delete row.bringNote; delete row.bring; delete row.limits; delete row.safety; delete row.localita; delete row.meet; delete row.end; if(row.sq){ delete row.sq.materials; delete row.sq.workshop_loc; delete row.sq.live_demo; delete row.sq.sale; } } else delete row.address; return row; }) : [],
+    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); const row = { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>{ const p={...e.price[b]}; if(e.sector==='artigianato'){ delete p.extra; p.incl = 1; p.min = ''; } return [b, p]; })), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; delete row.manual; delete row.cancel; delete row.penalties; delete row.noshow; delete row.weather; if(row.billing==='bill_receipt') row.billing=''; if(e.sector === 'artigianato'){ row.priceMode = 'pm_persona'; delete row.equipProvided; delete row.bringNote; delete row.bring; delete row.limits; delete row.safety; delete row.localita; delete row.meet; delete row.end; if(row.sq){ delete row.sq.materials; delete row.sq.workshop_loc; delete row.sq.live_demo; delete row.sq.sale; } } else delete row.address; if(e.sector === 'enogastronomia'){ delete row.limits; delete row.safety; delete row.prevExp; delete row.difficulty; } return row; }) : [],
     agreement: hasB ? {...S.conv, group: cgroup()} : null,
     consents: {...S.consents, at: new Date().toISOString()},
     /* TODO(backend): when termsAccepted is true, generate the SDT partner contract PDF from the accepted terms and store it with termsAcceptedAt. This preview has no backend and does not create a PDF. */
@@ -2963,7 +2973,13 @@ if(DEV_FILL) (function(){
       case 'g3': e.durH = e.sector==='mare' ? 4 : 2; e.durM = 0; e.min = 2; e.max = 8; e.minAge = 6; break;
       case 'g4': if(!e.langs.length) e.langs = ['it','en']; if(!e.access.length) e.access = ['acc_families']; break;
       case 'mode': if(!e.mode) e.mode = CONFIG.modes[0][0]; break;
-      case 'incl': if(!Object.keys(e.incl).length) e.incl = {inc_guide:'inc', inc_materials:'inc', ...({enogastronomia:{inc_tasting:'inc'}, mare:{inc_drinks:'inc', inc_equipment:'inc'}, natura:{inc_equipment:'inc'}}[e.sector]||{})}; break;
+      case 'incl': if(!Object.keys(e.incl).length){
+        const extra = e.sector === 'enogastronomia'
+          ? (typeList(e).includes('degustazione') ? {} : {inc_tasting:'inc'})
+          : {inc_materials:'inc', ...({mare:{inc_drinks:'inc', inc_equipment:'inc'}, natura:{inc_equipment:'inc'}}[e.sector]||{})};
+        e.incl = {inc_guide:'inc', ...extra};
+        normalizeIncl(e);
+      } break;
       case 'equip': e.equipProvided = true; e.bringNote=''; break;
       case 'reqs': if(e.sector==='artigianato'){ if(!e.comune) e.comune = txt()[2]; if(!filled(e.address,3)) e.address = L('Via Roma 12','12 Via Roma'); } if(showsDifficulty(e)){ if(!e.difficulty) e.difficulty = CONFIG.difficulty[0]; } else e.difficulty = ''; break;
       case 'sq': (SECTOR[e.sector].q||[]).forEach(q=>{
