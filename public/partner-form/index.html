@@ -1138,8 +1138,8 @@ const CONFIG = {
     { code:'cooking_class', letter:'C', img:'/partner-form/img/cat-cooking.jpg', icon:'utensils',
       spec:[], types:[], q:[] },
     { code:'cultura', letter:'D', img:'/partner-form/img/cat-culture.jpg', icon:'landmark',
-      spec:['archeologia','storia','musei','tradizioni_popolari','patrimonio','architettura','cultura_locale'],
-      types:['visita_guidata','percorso_culturale','incontro_culturale','laboratorio','esperienza_privata'],
+      spec:['archeologia','musei','architettura','patrimonio'],
+      types:['visita_guidata','laboratorio'],
       q:[ {k:'tickets', t:'pills', o:['tk_inc','tk_extra','tk_na'], req:true},
           {k:'site_booking', t:'toggle'}, {k:'licensed_guide', t:'toggle'} ] },
     { code:'natura', letter:'E', img:'/partner-form/img/cat-hiking.jpg', icon:'mountain',
@@ -1307,13 +1307,14 @@ en:{
   o_assoc_cult:'Cultural association', o_aps:'APS', o_ets:'ETS', o_odv:'ODV', o_pro_loco:'Pro Loco', o_assoc_altro:'Other',
   o_coop_lavoro:'Worker cooperative', o_coop_sociale:'Social cooperative', o_coop_agricola:'Agricultural cooperative', o_coop_servizi:'Service cooperative', o_coop_altro:'Other',
   o_artigianato:'Crafts and traditions', o_enogastronomia:'Food and wine', o_cultura:'Culture and territory', o_natura:'Nature and adventure', o_mare:'Sea and sailing', o_guide:'Guides and escorts', o_trasporti:'Transport and mobility',
-  h_artigianato:'Workshops, demonstrations, studios', h_enogastronomia:'Tastings, producers, cooking', h_cooking_class:'Cooking courses and hands-on lessons', h_cultura:'Archaeology, history, traditions', h_natura:'Trekking, outdoor, rural life', h_mare:'Boats, sailing, snorkelling', h_guide:'Tourist and nature guides', h_trasporti:'Transfers, NCC, group transport',
+  h_artigianato:'Workshops, demonstrations, studios', h_enogastronomia:'Tastings, producers, cooking', h_cooking_class:'Cooking courses and hands-on lessons', h_cultura:'Archaeological sites, museums, architecture, heritage', h_natura:'Trekking, outdoor, rural life', h_mare:'Boats, sailing, snorkelling', h_guide:'Tourist and nature guides', h_trasporti:'Transfers, NCC, group transport',
   o_tessitura:'Weaving', o_ceramica:'Ceramics', o_coltelleria:'Knife making', o_legno:'Woodwork', o_sughero:'Cork', o_metalli:'Metalwork', o_maschere:'Traditional masks', o_campanacci:'Cowbells', o_pelletteria:'Leatherwork', o_gioielli:'Jewellery', o_tessile:'Textile art', o_altre_artigianali:'Other crafts',
   o_laboratorio_pratico:'Hands-on workshop', o_dimostrazione:'Demonstration', o_visita_bottega:'Workshop visit', o_esperienza_privata:'Private experience', o_percorso_piu:'Route with several activities',
   td_laboratorio_pratico:'An experience in which the visitor takes an active part in making a craft product.', td_dimostrazione:'An experience in which the visitor watches an artisan while a product is being made.', td_visita_bottega:'An experience in which the visitor discovers the craft products on display and can buy them.',
   o_vino:'Wine', o_formaggi:'Cheese', o_salumi_carni:'Cured meats and meats', o_olio:'Olive oil', o_panificazione:'Bread making', o_cereali_farine:'Grains and flours', o_pastificio:'Pasta maker', o_pasticceria:'Pastry', o_miele:'Honey', o_mirto:'Myrtle liqueur (mirto)', o_altri_alimentari:'Other food products',
   o_degustazione:'Tasting', o_visita_produttore:'Producer visit', o_laboratorio:'Workshop', o_cooking_class:'Cooking class', o_pranzo_cena:'Experiential lunch or dinner', o_esperienza_combinata:'Combined experience',
-  o_archeologia:'Archaeology', o_storia:'History', o_musei:'Museums', o_tradizioni_popolari:'Folk traditions', o_patrimonio:'Cultural heritage', o_architettura:'Architecture', o_cultura_locale:'Local culture',
+  o_archeologia:'Archaeological site', o_storia:'History', o_musei:'Museums', o_tradizioni_popolari:'Folk traditions', o_patrimonio:'Cultural heritage', o_architettura:'Architecture', o_cultura_locale:'Local culture',
+  sd_archeologia:'Giants\' tombs, nuraghi, mines, Roman remains, baths, menhirs, dolmens.', sd_musei:'Artistic, historical, archaeological, naturalistic, cultural.', sd_architettura:'Churches, cathedrals, historic palaces, squares, botanical gardens.', sd_patrimonio:'Canto a tenore, domus de janas, UNESCO, Nino di Gallura\'s house, Villa Asquer.',
   o_visita_guidata:'Guided visit', o_percorso_culturale:'Cultural route', o_incontro_culturale:'Cultural encounter',
   o_trekking:'Trekking', o_escursionismo:'Hiking', o_naturalistiche:'Nature experiences', o_turismo_rurale:'Rural tourism', o_sport_outdoor:'Outdoor sports', o_montagna:'Mountain activities', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Buggy', o_4x4_altro:'Other', o_cavalli:'Horses', o_asinelli:'Donkeys', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkelling', o_scuba:'Scuba diving',
   o_escursione_guidata:'Guided excursion', o_attivita_sportiva:'Sports activity', o_esperienza_naturalistica:'Nature experience', o_tour_privato:'Private tour', o_esperienza_gruppo:'Group experience',
@@ -1464,13 +1465,14 @@ it:{
   o_assoc_cult:'Associazione culturale', o_aps:'APS', o_ets:'ETS', o_odv:'ODV', o_pro_loco:'Pro Loco', o_assoc_altro:'Altro',
   o_coop_lavoro:'Cooperativa di lavoro', o_coop_sociale:'Cooperativa sociale', o_coop_agricola:'Cooperativa agricola', o_coop_servizi:'Cooperativa di servizi', o_coop_altro:'Altro',
   o_artigianato:'Artigianato e tradizioni', o_enogastronomia:'Enogastronomia', o_cultura:'Cultura e territorio', o_natura:'Natura e avventura', o_mare:'Mare e nautica', o_guide:'Guide e accompagnatori', o_trasporti:'Trasporti e mobilità',
-  h_artigianato:'Laboratori, dimostrazioni, botteghe', h_enogastronomia:'Degustazioni, produttori, cucina', h_cooking_class:'Corsi di cucina e lezioni pratiche', h_cultura:'Archeologia, storia, tradizioni', h_natura:'Trekking, outdoor, vita rurale', h_mare:'Barche, vela, snorkeling', h_guide:'Guide turistiche e ambientali', h_trasporti:'Transfer, NCC, trasporto gruppi',
+  h_artigianato:'Laboratori, dimostrazioni, botteghe', h_enogastronomia:'Degustazioni, produttori, cucina', h_cooking_class:'Corsi di cucina e lezioni pratiche', h_cultura:'Siti archeologici, musei, architettura, patrimonio', h_natura:'Trekking, outdoor, vita rurale', h_mare:'Barche, vela, snorkeling', h_guide:'Guide turistiche e ambientali', h_trasporti:'Transfer, NCC, trasporto gruppi',
   o_tessitura:'Tessitura', o_ceramica:'Ceramica', o_coltelleria:'Coltelleria', o_legno:'Lavorazione del legno', o_sughero:'Sughero', o_metalli:'Lavorazione dei metalli', o_maschere:'Maschere tradizionali', o_campanacci:'Campanacci', o_pelletteria:'Pelletteria', o_gioielli:'Gioielli', o_tessile:'Arte tessile', o_altre_artigianali:'Altre attività artigianali',
   o_laboratorio_pratico:'Laboratorio pratico', o_dimostrazione:'Dimostrazione', o_visita_bottega:'Visita in bottega', o_esperienza_privata:'Esperienza privata', o_percorso_piu:'Percorso con più attività',
   td_laboratorio_pratico:'Esperienza in cui il visitatore partecipa attivamente alla creazione di un prodotto artigianale.', td_dimostrazione:'Esperienza in cui il visitatore osserva un artigiano durante la lavorazione di un prodotto.', td_visita_bottega:'Esperienza in cui il visitatore scopre e può acquistare i prodotti artigianali esposti.',
   o_vino:'Vino', o_formaggi:'Formaggi', o_salumi_carni:'Salumi e carni', o_olio:'Olio', o_panificazione:'Panificazione', o_cereali_farine:'Cereali e farine', o_pastificio:'Pastificio', o_pasticceria:'Pasticceria', o_miele:'Miele', o_mirto:'Mirto', o_altri_alimentari:'Altri prodotti alimentari',
   o_degustazione:'Degustazione', o_visita_produttore:'Visita al produttore', o_laboratorio:'Laboratorio', o_cooking_class:'Cooking class', o_pranzo_cena:'Pranzo o cena esperienziale', o_esperienza_combinata:'Esperienza combinata',
-  o_archeologia:'Archeologia', o_storia:'Storia', o_musei:'Musei', o_tradizioni_popolari:'Tradizioni popolari', o_patrimonio:'Patrimonio culturale', o_architettura:'Architettura', o_cultura_locale:'Cultura locale',
+  o_archeologia:'Sito archeologico', o_storia:'Storia', o_musei:'Musei', o_tradizioni_popolari:'Tradizioni popolari', o_patrimonio:'Patrimonio culturale', o_architettura:'Architettura', o_cultura_locale:'Cultura locale',
+  sd_archeologia:'Tombe dei giganti, nuraghe, miniere, resti romani, terme, menhir, dolmen.', sd_musei:'Artistici, storici, archeologici, naturalistici, culturali.', sd_architettura:'Chiese, cattedrali, palazzi storici, piazze, orti botanici.', sd_patrimonio:'Canto a tenore, domus de janas, UNESCO, casa di Nino di Gallura, Villa Asquer.',
   o_visita_guidata:'Visita guidata', o_percorso_culturale:'Percorso culturale', o_incontro_culturale:'Incontro culturale',
   o_trekking:'Trekking', o_escursionismo:'Escursionismo', o_naturalistiche:'Esperienze naturalistiche', o_turismo_rurale:'Turismo rurale', o_sport_outdoor:'Sport outdoor', o_montagna:'Attività in montagna', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Buggy', o_4x4_altro:'Altro', o_cavalli:'Cavalli', o_asinelli:'Asinelli', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkeling', o_scuba:'Scuba diving',
   o_escursione_guidata:'Escursione guidata', o_attivita_sportiva:'Attività sportiva', o_esperienza_naturalistica:'Esperienza naturalistica', o_tour_privato:'Tour privato', o_esperienza_gruppo:'Esperienza di gruppo',
@@ -1667,6 +1669,17 @@ function money(p, label, {req=true, hint=''}={}){
 }
 /* Single or multi choice pills */
 /* Artisan service types: a card per option, with a description slot (empty until copy is supplied). */
+function specCards(p, codes){
+  const v = get(p);
+  return `<div class="ct-type-cards" role="radiogroup">${codes.map(c=>{
+    const on = v===c;
+    const desc = t('sd_'+c);
+    return `<button type="button" class="ct-type-card${on?' is-on':''}" role="radio" aria-checked="${on}" data-action="pick" data-p="${p}" data-v="${esc(c)}">
+      <span class="ct-type-label">${esc(o(c))}</span>
+      <span class="ct-type-desc">${desc ? esc(desc) : ''}</span>
+    </button>`;
+  }).join('')}</div>`;
+}
 function typeCards(p, codes){
   const v = get(p) || [];
   return `<div class="ct-type-cards" role="group">${codes.map(c=>{
@@ -1916,8 +1929,10 @@ const sectorLabel = e => (e.sector && SECTOR[e.sector]) ? `${SECTOR[e.sector].le
 const showsDifficulty = e => e.sector === 'natura';
 const ARTISAN_OMIT_INCLUDES = ['inc_tasting','inc_meal','inc_drinks'];
 const ENO_OMIT_INCLUDES = ['inc_materials','inc_tickets','inc_equipment','inc_insurance','inc_meal','inc_drinks'];
+const CULTURA_OMIT_INCLUDES = ['inc_materials','inc_tasting','inc_meal','inc_drinks'];
 const includesFor = e => CONFIG.includes.filter(c => {
   if(e?.sector === 'artigianato' && ARTISAN_OMIT_INCLUDES.includes(c)) return false;
+  if(e?.sector === 'cultura' && CULTURA_OMIT_INCLUDES.includes(c)) return false;
   if(e?.sector === 'enogastronomia'){
     if(ENO_OMIT_INCLUDES.includes(c)) return false;
     /* Degustazione is already the service type, so it is not listed again. */
@@ -1948,7 +1963,7 @@ const EV = {
   spec: i => { const e=E(i), s=SECTOR[e.sector]; const specs = specList(e);
     const choices = s.specGroups
       ? `<div class="ct-spec-groups">${s.specGroups.map(g=>`<fieldset class="ct-group"><legend class="ct-spec-head">${esc(t(g.h))}</legend>${pills(P(i,'spec'), g.o)}</fieldset>`).join('')}</div>`
-      : pills(P(i,'spec'), s.spec);
+      : (e.sector === 'cultura' ? specCards(P(i,'spec'), s.spec) : pills(P(i,'spec'), s.spec));
     return split(head(t('esp_title'), t('esp_sub'), ecount(i, o(e.sector))), `
     <div class="ct-stack" style="gap:16px">${choices}
     ${specs.length ? `<p class="ct-spec-note">${esc(t('esp_another'))}</p>` : ''}</div>
@@ -3026,7 +3041,9 @@ if(DEV_FILL) (function(){
       case 'incl': if(!Object.keys(e.incl).length){
         const extra = e.sector === 'enogastronomia'
           ? (typeList(e).includes('degustazione') ? {} : {inc_tasting:'inc'})
-          : {inc_materials:'inc', ...({mare:{inc_drinks:'inc', inc_equipment:'inc'}, natura:{inc_equipment:'inc'}}[e.sector]||{})};
+          : e.sector === 'cultura'
+            ? {}
+            : {inc_materials:'inc', ...({mare:{inc_drinks:'inc', inc_equipment:'inc'}, natura:{inc_equipment:'inc'}}[e.sector]||{})};
         e.incl = {inc_guide:'inc', ...extra};
         normalizeIncl(e);
       } break;
