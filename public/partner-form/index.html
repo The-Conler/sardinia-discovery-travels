@@ -110,6 +110,8 @@ img{display:block}
 .ct-pill:active{transform:scale(.97);transition-duration:.1s}
 .ct-pill.is-on{border-color:var(--ct-teal);background:rgba(47,127,136,.18)}
 .ct-pill.is-muted{opacity:.4}
+.ct-pill.has-desc{height:auto;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;padding:10px 20px;text-align:left}
+.ct-pill-desc{font-size:var(--t-hint);font-weight:400;line-height:1.35;color:var(--ct-muted)}
 .ct-pill:disabled{opacity:.38;cursor:not-allowed}
 .ct-pills--months{display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}
 .ct-pills--months .ct-pill{min-width:0;padding:0 8px}
@@ -1143,13 +1145,13 @@ const CONFIG = {
       q:[ {k:'tickets', t:'pills', o:['tk_inc','tk_extra','tk_na'], req:true},
           {k:'site_booking', t:'toggle'}, {k:'licensed_guide', t:'toggle'} ] },
     { code:'natura', letter:'E', img:'/partner-form/img/cat-hiking.jpg', icon:'mountain',
-      spec:['trekking','escursionismo','naturalistiche','jeep','quad','buggy','4x4_altro','cavalli','asinelli','kayak','sup','snorkeling','scuba','barefooting','pet_therapy','pilates','yoga','natura_altro'],
+      spec:['trekking','escursionismo','naturalistiche','jeep','quad','buggy','4x4_altro','cavalli','asinelli','kayak','sup','snorkeling','scuba','barefooting','pet_therapy','pilates','yoga','meditazione','percorsi_termali','spa','natura_altro'],
       specGroups:[
         {h:'sg_natura', o:['trekking','escursionismo','naturalistiche']},
         {h:'sg_offroad', o:['jeep','quad','buggy','4x4_altro']},
         {h:'sg_animali', o:['cavalli','asinelli']},
         {h:'sg_sport', o:['kayak','sup','snorkeling','scuba']},
-        {h:'sg_benessere', o:['barefooting','pet_therapy','pilates','yoga']},
+        {h:'sg_benessere', o:['barefooting','pet_therapy','pilates','yoga','meditazione','percorsi_termali','spa']},
         {h:'sg_altro', o:['natura_altro']}
       ],
       types:['escursione_guidata','attivita_sportiva','esperienza_naturalistica','tour_privato','esperienza_gruppo'],
@@ -1316,9 +1318,9 @@ en:{
   o_vino:'Wine', o_formaggi:'Cheese', o_salumi_carni:'Cured meats and meats', o_olio:'Olive oil', o_panificazione:'Bread making', o_cereali_farine:'Grains and flours', o_pastificio:'Pasta maker', o_pasticceria:'Pastry', o_miele:'Honey', o_mirto:'Myrtle liqueur (mirto)', o_altri_alimentari:'Other food products',
   o_degustazione:'Tasting', o_visita_produttore:'Producer visit', o_laboratorio:'Workshop', o_cooking_class:'Cooking class', o_pranzo_cena:'Experiential lunch or dinner', o_esperienza_combinata:'Combined experience',
   o_archeologia:'Archaeological site', o_storia:'History', o_musei:'Museums', o_tradizioni_popolari:'Folk traditions', o_patrimonio:'Cultural heritage', o_architettura:'Architecture', o_cultura_locale:'Local culture',
-  sd_archeologia:'Giants\' tombs, nuraghi, mines, Roman remains, baths, menhirs, dolmens.', sd_musei:'Artistic, historical, archaeological, naturalistic, cultural.', sd_architettura:'Churches, cathedrals, historic palaces, squares, botanical gardens.', sd_patrimonio:'Canto a tenore, domus de janas, UNESCO, Nino di Gallura\'s house, Villa Asquer.',
+  sd_archeologia:'Giants\' tombs, nuraghi, mines, Roman remains, baths, menhirs, dolmens.', sd_musei:'Artistic, historical, archaeological, naturalistic, cultural.', sd_architettura:'Churches, cathedrals, historic palaces, squares, botanical gardens.', sd_patrimonio:'Canto a tenore, domus de janas, UNESCO, Nino di Gallura\'s house, Villa Asquer.', sd_spa:'Massages, aromatherapy and mud therapy.',
   o_visita_guidata:'Guided visit', o_percorso_culturale:'Cultural route', o_incontro_culturale:'Cultural encounter',
-  o_trekking:'Trekking', o_escursionismo:'Hiking', o_naturalistiche:'Nature experiences', o_turismo_rurale:'Rural tourism', o_sport_outdoor:'Outdoor sports', o_montagna:'Mountain activities', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Baggy', o_4x4_altro:'Other', o_cavalli:'Horses', o_asinelli:'Donkeys', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkelling', o_scuba:'Scuba diving', o_barefooting:'Barefooting', o_pet_therapy:'Pet Therapy', o_pilates:'Pilates', o_yoga:'Yoga', o_natura_altro:'Other',
+  o_trekking:'Trekking', o_escursionismo:'Hiking', o_naturalistiche:'Nature experiences', o_turismo_rurale:'Rural tourism', o_sport_outdoor:'Outdoor sports', o_montagna:'Mountain activities', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Baggy', o_4x4_altro:'Other', o_cavalli:'Horses', o_asinelli:'Donkeys', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkelling', o_scuba:'Scuba diving', o_barefooting:'Barefooting', o_pet_therapy:'Pet Therapy', o_pilates:'Pilates', o_yoga:'Yoga', o_meditazione:'Meditation', o_percorsi_termali:'Thermal circuits', o_spa:'SPA', o_natura_altro:'Other',
   o_escursione_guidata:'Guided excursion', o_attivita_sportiva:'Sports activity', o_esperienza_naturalistica:'Nature experience', o_tour_privato:'Private tour', o_esperienza_gruppo:'Group experience',
   o_barca_motore:'Motor boat', o_barca_vela:'Sailing boat', o_catamarano:'Catamaran', o_snorkeling:'Snorkelling', o_attivita_acquatiche:'Water activities', o_escursioni_costiere:'Coastal excursions',
   o_escursione_privata:'Private excursion', o_escursione_condivisa:'Shared excursion', o_mezza_giornata:'Half day', o_giornata_intera:'Full day', o_esperienza_personalizzata:'Tailor-made experience',
@@ -1474,9 +1476,9 @@ it:{
   o_vino:'Vino', o_formaggi:'Formaggi', o_salumi_carni:'Salumi e carni', o_olio:'Olio', o_panificazione:'Panificazione', o_cereali_farine:'Cereali e farine', o_pastificio:'Pastificio', o_pasticceria:'Pasticceria', o_miele:'Miele', o_mirto:'Mirto', o_altri_alimentari:'Altri prodotti alimentari',
   o_degustazione:'Degustazione', o_visita_produttore:'Visita al produttore', o_laboratorio:'Laboratorio', o_cooking_class:'Cooking class', o_pranzo_cena:'Pranzo o cena esperienziale', o_esperienza_combinata:'Esperienza combinata',
   o_archeologia:'Sito archeologico', o_storia:'Storia', o_musei:'Musei', o_tradizioni_popolari:'Tradizioni popolari', o_patrimonio:'Patrimonio culturale', o_architettura:'Architettura', o_cultura_locale:'Cultura locale',
-  sd_archeologia:'Tombe dei giganti, nuraghe, miniere, resti romani, terme, menhir, dolmen.', sd_musei:'Artistici, storici, archeologici, naturalistici, culturali.', sd_architettura:'Chiese, cattedrali, palazzi storici, piazze, orti botanici.', sd_patrimonio:'Canto a tenore, domus de janas, UNESCO, casa di Nino di Gallura, Villa Asquer.',
+  sd_archeologia:'Tombe dei giganti, nuraghe, miniere, resti romani, terme, menhir, dolmen.', sd_musei:'Artistici, storici, archeologici, naturalistici, culturali.', sd_architettura:'Chiese, cattedrali, palazzi storici, piazze, orti botanici.', sd_patrimonio:'Canto a tenore, domus de janas, UNESCO, casa di Nino di Gallura, Villa Asquer.', sd_spa:'Massaggi, aromaterapia e fangoterapia.',
   o_visita_guidata:'Visita guidata', o_percorso_culturale:'Percorso culturale', o_incontro_culturale:'Incontro culturale',
-  o_trekking:'Trekking', o_escursionismo:'Escursionismo', o_naturalistiche:'Esperienze naturalistiche', o_turismo_rurale:'Turismo rurale', o_sport_outdoor:'Sport outdoor', o_montagna:'Attività in montagna', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Baggy', o_4x4_altro:'Altro', o_cavalli:'Cavalli', o_asinelli:'Asinelli', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkeling', o_scuba:'Scuba diving', o_barefooting:'Barefooting', o_pet_therapy:'Pet Therapy', o_pilates:'Pilates', o_yoga:'Yoga', o_natura_altro:'Altro',
+  o_trekking:'Trekking', o_escursionismo:'Escursionismo', o_naturalistiche:'Esperienze naturalistiche', o_turismo_rurale:'Turismo rurale', o_sport_outdoor:'Sport outdoor', o_montagna:'Attività in montagna', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Baggy', o_4x4_altro:'Altro', o_cavalli:'Cavalli', o_asinelli:'Asinelli', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkeling', o_scuba:'Scuba diving', o_barefooting:'Barefooting', o_pet_therapy:'Pet Therapy', o_pilates:'Pilates', o_yoga:'Yoga', o_meditazione:'Meditazione', o_percorsi_termali:'Percorsi termali', o_spa:'SPA', o_natura_altro:'Altro',
   o_escursione_guidata:'Escursione guidata', o_attivita_sportiva:'Attività sportiva', o_esperienza_naturalistica:'Esperienza naturalistica', o_tour_privato:'Tour privato', o_esperienza_gruppo:'Esperienza di gruppo',
   o_barca_motore:'Barca a motore', o_barca_vela:'Barca a vela', o_catamarano:'Catamarano', o_snorkeling:'Snorkeling', o_attivita_acquatiche:'Attività acquatiche', o_escursioni_costiere:'Escursioni costiere',
   o_escursione_privata:'Escursione privata', o_escursione_condivisa:'Escursione condivisa', o_mezza_giornata:'Mezza giornata', o_giornata_intera:'Giornata intera', o_esperienza_personalizzata:'Esperienza personalizzata',
@@ -1707,11 +1709,13 @@ function slotPicker(i, e){
   return `<div class="ct-slots">${e.slots.map((s,k)=>`<span class="ct-slot">${esc(s)}<button type="button" data-action="slotdel" data-i="${i}" data-v="${k}" aria-label="${esc(t('slot_remove',{x:s}))}">${ic('x',14,2)}</button></span>`).join('')}
     <span class="ct-slot-add"><select id="slotIn" data-i="${i}" aria-label="${esc(t('slots'))}">${opts}</select><button type="button" class="ct-back" data-action="slotadd" data-i="${i}">${ic('plus',16,1.8)} ${t('slot_add')}</button></span></div>`;
 }
+function specDesc(c){ const k = 'sd_'+c; return I18N[S.lang]?.[k] ?? I18N.en[k] ?? ''; }
 function pills(p, codes, {multi=false, lab=o, cls=''}={}){
   const v = get(p);
   return `<div class="ct-pills ${cls}" role="${multi?'group':'radiogroup'}">${codes.map(c=>{
     const on = multi ? (v||[]).includes(c) : v===c;
-    return `<button type="button" class="ct-pill${on?' is-on':''}" role="${multi?'checkbox':'radio'}" aria-checked="${on}" data-action="${multi?'tog':'pick'}" data-p="${p}" data-v="${esc(c)}">${esc(lab(c))}</button>`;}).join('')}</div>`;
+    const desc = specDesc(c);
+    return `<button type="button" class="ct-pill${on?' is-on':''}${desc?' has-desc':''}" role="${multi?'checkbox':'radio'}" aria-checked="${on}" data-action="${multi?'tog':'pick'}" data-p="${p}" data-v="${esc(c)}"><span>${esc(lab(c))}</span>${desc?`<span class="ct-pill-desc">${esc(desc)}</span>`:''}</button>`;}).join('')}</div>`;
 }
 /* Icon tiles (roles, legal forms, structures, modes) */
 function opts(p, items, {multi=false, sub=null, cls=''}={}){
