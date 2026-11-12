@@ -125,25 +125,23 @@ img{display:block}
 .ct-type-desc{font-size:var(--t-hint);color:var(--ct-muted);line-height:1.4}
 .ct-type-desc:empty{display:none}
 .ct-split-side{min-width:0;display:flex;flex-direction:column;gap:28px}
-.hk-viz{border-radius:var(--ct-radius);padding:16px 16px 14px;background:radial-gradient(120% 90% at 50% 115%, var(--hk-c), transparent 62%), linear-gradient(180deg, rgba(255,255,255,.045), rgba(0,0,0,.2));border:1px solid rgba(255,255,255,.08);overflow:hidden}
-.hk-viz.is-green{--hk-a:#1e8f5a;--hk-b:#9ee0bf;--hk-c:#123524;--hk-line:#d8f5e6}
-.hk-viz.is-orange{--hk-a:#c47a2a;--hk-b:#f3c98a;--hk-c:#3d2810;--hk-line:#ffe3bf}
-.hk-viz.is-red{--hk-a:#c4544c;--hk-b:#f3b7b0;--hk-c:#3d1614;--hk-line:#ffd4ce}
-.hk-viz.is-sand{--hk-a:#6f675f;--hk-b:#ddd4c8;--hk-c:#2a2420;--hk-line:#f3ece4}
-.hk-svg{width:100%;height:auto;display:block;filter:drop-shadow(0 16px 14px rgba(0,0,0,.35))}
-.hk-floor line{stroke:rgba(248,244,238,.16);stroke-width:1}
-.hk-floor{animation:hk-drift 7s ease-in-out infinite}
-.hk-front{animation:hk-float 5.5s ease-in-out infinite}
-.hk-ridge{stroke-dasharray:520;stroke-dashoffset:520;animation:hk-draw 2.1s var(--ease-luxury) forwards}
-.hk-peak-dot{animation:hk-pulse 2.6s ease-in-out infinite}
+.hk-viz{--hk:#8e8e93;border-radius:22px;padding:20px 20px 18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,system-ui,sans-serif}
+.hk-top{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:28px;margin:0 0 8px}
+.hk-top:not(:has(.hk-pill:not([hidden]))){min-height:0;margin:0}
+.hk-pill{display:inline-flex;align-items:center;max-width:100%;height:28px;padding:0 12px;border-radius:999px;background:color-mix(in srgb, var(--hk) 18%, transparent);color:var(--hk);font-size:13px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hk-pill[hidden]{display:none}
+.hk-step{flex:none;color:rgba(255,255,255,.42);font-size:12px;font-weight:600;letter-spacing:.01em}
+.hk-svg{width:100%;height:auto;display:block}
+.hk-line{fill:none;stroke:var(--hk);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;path-length:1;stroke-dasharray:1;stroke-dashoffset:1;animation:hk-draw 1.15s cubic-bezier(.22,1,.36,1) forwards;transition:d .7s cubic-bezier(.22,1,.36,1)}
+.hk-area{transition:d .7s cubic-bezier(.22,1,.36,1);opacity:0;animation:hk-fade .7s ease .25s forwards}
+.hk-halo,.hk-summit{transition:cx .7s cubic-bezier(.22,1,.36,1),cy .7s cubic-bezier(.22,1,.36,1)}
 @keyframes hk-draw{to{stroke-dashoffset:0}}
-@keyframes hk-float{50%{transform:translateY(-5px)}}
-@keyframes hk-drift{50%{opacity:.45}}
-@keyframes hk-pulse{50%{opacity:.35}}
-.hk-readout,.hk-legend{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin:10px 0 0;padding:0;list-style:none}
-.hk-legend{display:flex;flex-wrap:wrap}
-.hk-readout small{display:block;color:var(--ct-muted);font-size:12px;line-height:1.3}
-.hk-readout b{font-weight:600;font-variant-numeric:tabular-nums}
+@keyframes hk-fade{to{opacity:1}}
+.hk-metrics,.hk-legend{display:grid;grid-template-columns:1fr 1fr;gap:16px 12px;margin:6px 0 0;padding:0;list-style:none}
+.hk-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:4px}
+.hk-metrics b{display:block;color:#f5f5f7;font-size:22px;font-weight:600;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums}
+.hk-metrics b.is-empty{color:rgba(255,255,255,.28);font-weight:500}
+.hk-metrics span{display:block;margin-top:5px;color:rgba(255,255,255,.42);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .hk-legend li{display:inline-flex;align-items:center;gap:8px;color:var(--ct-muted);font-size:14px}
 .hk-legend li.is-on{color:var(--ct-cream)}
 .hk-legend i,.hk-dot,.hk-badge i{width:10px;height:10px;border-radius:50%;flex:none}
@@ -165,7 +163,7 @@ img{display:block}
 .hk-cai-name{display:block;font-weight:600;line-height:1.25}
 .hk-cai-desc{display:block;margin-top:4px;color:var(--ct-muted);font-size:14px;line-height:1.4}
 .hk-src{margin:12px 0 0;font-size:13px;line-height:1.4;color:var(--ct-muted)}
-@media (prefers-reduced-motion:reduce){.hk-floor,.hk-front,.hk-ridge,.hk-peak-dot{animation:none}.hk-ridge{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.hk-line,.hk-area,.hk-halo,.hk-summit{animation:none;transition:none}.hk-line{stroke-dashoffset:0}.hk-area{opacity:1}}
 .ct-card:focus-visible,.ct-pill:focus-visible,.ct-type-card:focus-visible,.ct-toggle:focus-visible,.ct-step-btn:focus-visible,.ct-back:focus-visible,.ct-tile-edit:focus-visible,.ct-link:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,127,136,.3)}
 
 /* Fields */
@@ -1322,7 +1320,7 @@ en:{
   hk_cai_e_code:'E', hk_cai_e_name:'Hiking', hk_cai_e_desc:'Varied terrain, possible steep sections, hiking experience needed',
   hk_cai_ee_code:'EE', hk_cai_ee_name:'Expert hikers', hk_cai_ee_desc:'Rough, unstable or exposed terrain, possible rocky passages',
   hk_cai_eea_code:'EEA', hk_cai_eea_name:'Experts with equipment', hk_cai_eea_desc:'Via ferrata and routes that require specific protective equipment',
-  hk_km:'Distance (km)', hk_elev:'Elevation gain (m)', hk_dur:'Duration', hk_alt:'Maximum altitude (m)',
+  hk_km:'Distance (km)', hk_elev:'Elevation gain (m)', hk_dur:'Duration', hk_alt:'Maximum altitude (m)', hk_ml_km:'Distance', hk_ml_elev:'Elevation', hk_ml_dur:'Duration', hk_ml_alt:'Altitude',
   hk_car:'Are car transfers planned?', hk_car_from:'From where to where', hk_car_dur:'How long', hk_car_kind:'Route type',
   hk_ck_paved:'Paved road', hk_ck_dirt:'Dirt track', hk_ck_offroad:'Off road', hk_ck_exposed:'Exposed',
   sq_title:'A few questions on {s}', sq_sub:'Specific to your sector.',
@@ -1492,7 +1490,7 @@ it:{
   hk_cai_e_code:'E', hk_cai_e_name:'Escursionistico', hk_cai_e_desc:'Terreni variabili, possibili tratti ripidi, necessaria esperienza escursionistica',
   hk_cai_ee_code:'EE', hk_cai_ee_name:'Escursionisti esperti', hk_cai_ee_desc:'Terreni impervi, instabili o esposti, possibili passaggi rocciosi',
   hk_cai_eea_code:'EEA', hk_cai_eea_name:'Esperti con attrezzatura', hk_cai_eea_desc:'Vie ferrate e percorsi che richiedono specifici dispositivi di protezione',
-  hk_km:'Distanza (km)', hk_elev:'Dislivello (m)', hk_dur:'Durata', hk_alt:'Altitudine massima (m)',
+  hk_km:'Distanza (km)', hk_elev:'Dislivello (m)', hk_dur:'Durata', hk_alt:'Altitudine massima (m)', hk_ml_km:'Distanza', hk_ml_elev:'Dislivello', hk_ml_dur:'Durata', hk_ml_alt:'Altitudine',
   hk_car:'Sono previsti spostamenti in auto?', hk_car_from:'Da dove a dove', hk_car_dur:'Quanto dura', hk_car_kind:'Tipo di percorso',
   hk_ck_paved:'Strada asfaltata', hk_ck_dirt:'Sterrato', hk_ck_offroad:'Off road', hk_ck_exposed:'Esposto',
   sq_title:'Qualche domanda su {s}', sq_sub:'Specifiche del tuo settore.',
@@ -2038,8 +2036,9 @@ const HIKE_MODES = ['facile','media','difficile'];
 const CAI_CODES = ['t','e','ee','eea'];
 const CAR_KINDS = ['paved','dirt','offroad','exposed'];
 const HIKE_TONE = {facile:'green', media:'orange', difficile:'red'};
-const CAI_TONE = {t:'green', e:'orange', ee:'red', eea:'red'};
-function hikeTone(mode, cai){ return HIKE_TONE[mode] || CAI_TONE[cai] || 'sand'; }
+/* CAI class wins over the mode. E and EE must not share a colour, and EEA is red. */
+const HK_COLOR = {t:'#30D158', e:'#34C759', ee:'#FF9F0A', eea:'#FF453A', facile:'#30D158', media:'#FF9F0A', difficile:'#FF453A', sand:'#8E8E93'};
+function hikeTone(mode, cai){ if(cai && HK_COLOR[cai]) return cai; if(mode && HK_COLOR[mode]) return mode; return 'sand'; }
 function ensureHike(e){
   const prev = e.hike && typeof e.hike === 'object' ? e.hike : {};
   const profiles = {};
@@ -2078,69 +2077,122 @@ function hikeReqOk(e){
   const key = hikeInlineKey(e);
   return key ? profileOk(h.profiles[key]) && carOk(h) : true;
 }
-function hikeSpecValue(p, k){
-  const v = p?.[k]; if(v === '' || v == null) return '—';
-  if(k === 'km') return `${v} km`;
-  if(k === 'elev' || k === 'alt') return `${v} m`;
-  return String(v);
+function hkFormat(n, max=0){
+  const loc = S.lang === 'it' ? 'it-IT' : 'en-GB';
+  return new Intl.NumberFormat(loc, { maximumFractionDigits: max, minimumFractionDigits: 0, useGrouping: true }).format(n);
+}
+function hkMetric(p, k){
+  const v = p?.[k];
+  if(v === '' || v == null) return { text:'–', empty:true };
+  if(k === 'dur') return { text:String(v), empty:false };
+  const n = Number(String(v).replace(',', '.'));
+  if(!Number.isFinite(n)) return { text:String(v), empty:false };
+  if(k === 'km') return { text: hkFormat(n, 1) + ' km', empty:false };
+  if(k === 'elev') return { text: '+' + hkFormat(n) + ' m', empty:false };
+  return { text: hkFormat(n) + ' m', empty:false };
+}
+function hikeAxis(p){
+  const alt = Number(p?.alt), elev = Number(p?.elev);
+  if(alt > 0 && elev > 0){ const lo = Math.max(0, Math.round(alt - elev)); return [hkFormat(alt), hkFormat(Math.round((alt + lo) / 2)), hkFormat(lo)]; }
+  if(alt > 0) return [hkFormat(alt), hkFormat(Math.round(alt / 2)), '0'];
+  if(elev > 0) return ['+' + hkFormat(elev), '+' + hkFormat(Math.round(elev / 2)), '0'];
+  return ['', '', ''];
+}
+function profileYs(p){
+  const elev = Number(p?.elev)||0, alt = Number(p?.alt)||0, km = Number(p?.km)||0, n = 24;
+  const gain = elev || (alt ? Math.min(alt, Math.max(80, alt * 0.22)) : 0);
+  const amp = gain ? Math.max(26, Math.min(84, 18 + gain / 11)) : 14;
+  const peakAt = km > 0 && elev ? Math.max(0.38, Math.min(0.74, 0.4 + elev / (km * 800))) : 0.62;
+  const ys = [];
+  for(let i = 0; i < n; i++){
+    const t = i / (n - 1);
+    const y = t <= peakAt ? Math.pow(t / peakAt, 1.28) : Math.pow(1 - (t - peakAt) / (1 - peakAt), 0.7) * 0.9;
+    const wobble = Math.sin(t * 17.4 + km * 0.13) * 0.05 + Math.sin(t * 8.1 + elev * 0.002) * 0.035 + Math.sin(t * 29 + alt * 0.001) * 0.02;
+    let h = y;
+    if(i !== 0 && i !== n - 1 && Math.abs(t - peakAt) > 0.05) h += wobble;
+    ys.push(Math.max(0.04, Math.min(1, h)) * amp);
+  }
+  ys[0] = amp * 0.05; ys[n - 1] = amp * 0.1;
+  const pi = Math.round(peakAt * (n - 1)); ys[pi] = amp;
+  return { ys, peak: pi };
+}
+function smoothPath(pts){
+  let d = `M${pts[0].x} ${pts[0].y}`;
+  for(let i = 0; i < pts.length - 1; i++){
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    const c1x = (p1.x + (p2.x - p0.x) / 6).toFixed(1), c1y = (p1.y + (p2.y - p0.y) / 6).toFixed(1);
+    const c2x = (p2.x - (p3.x - p1.x) / 6).toFixed(1), c2y = (p2.y - (p3.y - p1.y) / 6).toFixed(1);
+    d += `C${c1x} ${c1y} ${c2x} ${c2y} ${p2.x} ${p2.y}`;
+  }
+  return d;
+}
+function hikeGeometry(p){
+  const { ys, peak } = profileYs(p || {});
+  const L = 36, R = 8, base = 108, step = (320 - L - R) / (ys.length - 1);
+  const pts = ys.map((h, i) => ({ x:+(L + i * step).toFixed(1), y:+(base - h).toFixed(1) }));
+  const line = smoothPath(pts);
+  return { line, area:`${line}L${pts.at(-1).x} ${base}L${pts[0].x} ${base}Z`, peak:pts[peak], axis:hikeAxis(p) };
 }
 function hikeSvg(p){
-  const elev = Number(p?.elev)||0, alt = Number(p?.alt)||0, km = Number(p?.km)||0;
-  const height = Math.max(36, Math.min(150, 36 + ((elev || (alt ? alt * 0.2 : 70)) / 6.2)));
-  const steep = km > 0 && elev ? Math.max(0.22, Math.min(0.9, elev / (km * 130))) : (elev > 600 ? 0.82 : elev > 250 ? 0.58 : 0.4);
-  const y0 = 178, peakY = Math.round(y0 - height), peakX = Math.round(86 + steep * 140);
-  const front = `M8 ${y0} C ${Math.round(peakX*0.42)} ${y0} ${peakX-42} ${peakY+16} ${peakX} ${peakY} C ${peakX+34} ${peakY+22} 292 ${y0-4} 352 ${y0}`;
-  const back = `M20 ${y0-8} C ${Math.round(peakX*0.45)} ${y0-10} ${peakX-20} ${peakY+8} ${peakX+14} ${peakY-16} C ${peakX+46} ${peakY+6} 310 ${y0-12} 348 ${y0-6}`;
-  const side = `M${peakX} ${peakY} L${peakX+22} ${peakY+16} L352 ${y0+10} L352 ${y0} C 292 ${y0-4} ${peakX+34} ${peakY+22} ${peakX} ${peakY}`;
-  const cai = p?.cai ? t('hk_cai_'+p.cai+'_code') : '';
-  const floor = [0,1,2,3,4,5].map(i=>`<line x1="8" y1="${188+i*3}" x2="352" y2="${178+i*5}"/>`).join('');
-  return `<svg viewBox="0 0 360 210" class="hk-svg"><defs>
-      <linearGradient id="hkFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--hk-b)"/><stop offset="1" stop-color="var(--hk-a)"/></linearGradient>
-      <linearGradient id="hkSide" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--hk-a)"/><stop offset="1" stop-color="var(--hk-c)"/></linearGradient>
+  const g = hikeGeometry(p);
+  const ax = g.axis.map((txt, i) => `<text id="hkAx${i}" x="0" y="${[34, 72, 111][i]}">${esc(txt)}</text>`).join('');
+  return `<svg viewBox="0 0 320 124" class="hk-svg" aria-hidden="true"><defs>
+      <linearGradient id="hkAreaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--hk)" stop-opacity="0.35"/><stop offset="1" stop-color="var(--hk)" stop-opacity="0"/></linearGradient>
     </defs>
-    <path class="hk-back" d="${back} L348 ${y0+8} L20 ${y0+4} Z" fill="var(--hk-c)" opacity=".9"/>
-    <path d="${side}" fill="url(#hkSide)"/>
-    <path class="hk-front" d="${front} L352 ${y0} L8 ${y0} Z" fill="url(#hkFill)"/>
-    <path class="hk-ridge" d="${front}" fill="none" stroke="var(--hk-line)" stroke-width="2.4" stroke-linecap="round"/>
-    <g class="hk-floor">${floor}</g>
-    <line x1="${peakX}" y1="${peakY}" x2="${peakX}" y2="${y0}" stroke="var(--hk-line)" stroke-dasharray="3 4" opacity=".75"/>
-    <circle class="hk-peak-dot" cx="${peakX}" cy="${peakY}" r="4.5" fill="var(--hk-line)"/>
-    ${cai?`<text x="18" y="28" fill="var(--hk-line)" font-size="18" font-family="Montserrat,sans-serif" font-weight="600">${esc(cai)}</text>`:''}
+    <g class="hk-grid" stroke="rgba(255,255,255,.14)" stroke-width=".6" vector-effect="non-scaling-stroke">
+      <line x1="36" y1="28" x2="312" y2="28"/><line x1="36" y1="68" x2="312" y2="68"/><line x1="36" y1="108" x2="312" y2="108" stroke="rgba(255,255,255,.22)"/>
+    </g>
+    <g fill="rgba(255,255,255,.38)" font-size="9" font-family="-apple-system,BlinkMacSystemFont,SF Pro Text,Inter,system-ui,sans-serif">${ax}</g>
+    <path class="hk-area" d="${g.area}" style="d:path('${g.area}')" fill="url(#hkAreaGrad)"/>
+    <path class="hk-line" pathLength="1" d="${g.line}" style="d:path('${g.line}')"/>
+    <circle class="hk-halo" cx="${g.peak.x}" cy="${g.peak.y}" r="8" fill="var(--hk)" opacity=".22"/>
+    <circle class="hk-summit" cx="${g.peak.x}" cy="${g.peak.y}" r="3.25" fill="var(--hk)"/>
   </svg>`;
 }
-function overviewSvg(selected){
-  const peaks = [{m:'facile',x:78,h:64,c:'#3dbe7a'},{m:'media',x:178,h:102,c:'#e39a3c'},{m:'difficile',x:276,h:140,c:'#e15b4a'}];
-  return `<svg viewBox="0 0 360 210" class="hk-svg">${peaks.map(pk=>{
-    const on = (selected||[]).includes(pk.m), y = 178-pk.h;
-    const d = `M${pk.x-64} 178 C ${pk.x-28} 178 ${pk.x-18} ${y+20} ${pk.x} ${y} C ${pk.x+20} ${y+22} ${pk.x+46} 170 ${pk.x+72} 178`;
-    return `<path d="${d} L${pk.x+72} 196 L${pk.x-64} 196 Z" fill="${pk.c}" opacity="${on?0.92:0.28}"/><path class="hk-ridge" d="${d}" fill="none" stroke="${pk.c}" stroke-width="2" opacity="${on?1:0.4}"/>`;
-  }).join('')}</svg>`;
+function hikePill(mode, cai){
+  if(cai && HK_COLOR[cai] && cai !== 'sand') return `${t('hk_cai_'+cai+'_code')} · ${t('hk_cai_'+cai+'_name')}`;
+  if(HIKE_MODES.includes(mode)) return t('hk_'+mode);
+  return '';
+}
+function applyHikeTone(root, mode, cai){
+  const tone = hikeTone(mode, cai);
+  root.style.setProperty('--hk', HK_COLOR[tone]);
+  root.dataset.tone = tone;
+}
+function hikeMetrics(profile){
+  return `<ul class="hk-metrics">${['km','elev','dur','alt'].map(k=>{
+    const m = hkMetric(profile, k);
+    return `<li><b class="${m.empty?'is-empty':''}" data-spec="${k}">${esc(m.text)}</b><span>${esc(t('hk_ml_'+k))}</span></li>`;
+  }).join('')}</ul>`;
 }
 function hikeVizHtml(i, key, profile, mode, step){
   const overview = key === 'overview';
-  const tone = overview ? 'sand' : hikeTone(mode, profile?.cai);
+  const toneMode = overview ? '' : (mode === 'solo' ? '' : mode);
+  const tone = overview ? 'sand' : hikeTone(toneMode, profile?.cai);
+  const pill = overview ? '' : hikePill(toneMode, profile?.cai);
   const modes = E(i).hike?.modes || [];
-  return `<div class="hk-viz is-${tone}" id="hkViz" data-i="${i}" data-key="${esc(key)}">
-    ${step?`<p class="hk-ind hk-ind--viz"><span class="hk-badge is-${HIKE_TONE[step.mode]}"><i></i>${esc(t('hk_'+step.mode))}</span><span>${esc(t('hk_mode_n',{n:step.n,total:step.total}))}</span></p>`:''}
-    <div class="hk-scene" aria-hidden="true">${overview ? overviewSvg(modes) : hikeSvg(profile)}</div>
-    ${overview
-      ? `<ul class="hk-legend">${HIKE_MODES.map(m=>`<li class="is-${HIKE_TONE[m]}${modes.includes(m)?' is-on':''}"><i></i>${esc(t('hk_'+m))}</li>`).join('')}</ul>`
-      : `<ul class="hk-readout">
-          <li><small>${esc(t('hk_km'))}</small><b data-spec="km">${esc(hikeSpecValue(profile,'km'))}</b></li>
-          <li><small>${esc(t('hk_elev'))}</small><b data-spec="elev">${esc(hikeSpecValue(profile,'elev'))}</b></li>
-          <li><small>${esc(t('hk_dur'))}</small><b data-spec="dur">${esc(hikeSpecValue(profile,'dur'))}</b></li>
-          <li><small>${esc(t('hk_alt'))}</small><b data-spec="alt">${esc(hikeSpecValue(profile,'alt'))}</b></li>
-        </ul>`}
+  return `<div class="hk-viz" id="hkViz" data-i="${i}" data-key="${esc(key)}" data-tone="${tone}" style="--hk:${HK_COLOR[tone]}">
+    <div class="hk-top">${pill?`<span class="hk-pill">${esc(pill)}</span>`:'<span class="hk-pill" hidden></span>'}${step?`<span class="hk-step">${esc(t('hk_mode_n',{n:step.n,total:step.total}))}</span>`:''}</div>
+    <div class="hk-scene">${hikeSvg(overview ? {} : profile)}</div>
+    ${overview ? `<ul class="hk-legend">${HIKE_MODES.map(m=>`<li class="${modes.includes(m)?'is-on':''}"><i style="background:${HK_COLOR[m]}"></i>${esc(t('hk_'+m))}</li>`).join('')}</ul>` : ''}
+    ${hikeMetrics(overview ? {} : profile)}
   </div>`;
 }
 function paintHikeViz(){
   const root = document.getElementById('hkViz');
   if(!root || root.dataset.key === 'overview') return;
-  const e = S.exps[+root.dataset.i]; const key = root.dataset.key; const p = e?.hike?.profiles?.[key]; if(!p) return;
-  const mode = key === 'solo' ? 'solo' : key;
-  root.className = 'hk-viz is-' + hikeTone(mode, p.cai);
-  const scene = root.querySelector('.hk-scene'); if(scene) scene.innerHTML = hikeSvg(p);
-  root.querySelectorAll('[data-spec]').forEach(el => { el.textContent = hikeSpecValue(p, el.dataset.spec); });
+  const e = S.exps[+root.dataset.i], key = root.dataset.key, p = e?.hike?.profiles?.[key]; if(!p) return;
+  const mode = key === 'solo' ? '' : key;
+  applyHikeTone(root, mode, p.cai);
+  const g = hikeGeometry(p);
+  const line = root.querySelector('.hk-line'), area = root.querySelector('.hk-area');
+  if(line){ line.setAttribute('d', g.line); line.style.d = `path('${g.line}')`; }
+  if(area){ area.setAttribute('d', g.area); area.style.d = `path('${g.area}')`; }
+  root.querySelectorAll('.hk-halo,.hk-summit').forEach(el => { el.setAttribute('cx', g.peak.x); el.setAttribute('cy', g.peak.y); });
+  g.axis.forEach((txt, i) => { const el = root.querySelector('#hkAx'+i); if(el) el.textContent = txt; });
+  ['km','elev','dur','alt'].forEach(k => { const el = root.querySelector('[data-spec="'+k+'"]'); if(!el) return; const m = hkMetric(p, k); el.textContent = m.text; el.classList.toggle('is-empty', m.empty); });
+  const pill = root.querySelector('.hk-pill');
+  if(pill){ const label = hikePill(mode, p.cai); pill.hidden = !label; pill.textContent = label || ''; }
 }
 function modePills(i){
   const modes = E(i).hike?.modes || [];
