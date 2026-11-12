@@ -1270,7 +1270,7 @@ en:{
   g4_title:'Languages and accessibility', g4_sub:'Who can enjoy it.', exp_langs:'Languages you run it in', access:'Accessibility', accessD:'Select what applies.',
   md_title:'Private, shared or both?', md_sub:'Private means one group only. Shared means guests from different bookings together.', md_privataD:'Only one group at a time.', md_condivisaD:'Guests from different bookings join together.', md_entrambeD:'You can run it both ways.',
   in_title:'What does it include?', in_sub:'Tick what you offer and say whether it is included or charged as a supplement.', inc:'Included', sup:'Supplement', sup_price:'Supplement price (€)', sup_price_err:'Enter the supplement price.', sup_review:'{item}: supplement {n} €', inc_review:'{item}: included',
-  eq_title:'Equipment', eq_sub:'Either you provide the gear, or tell us what guests must bring.', eq_provided:'You provide the technical equipment', eq_providedD:'For example tools, helmets, snorkelling masks.', eq_bring:'Guests should bring', eq_bring_note:'What guests must bring', eq_bring_notePh:'List the gear guests need to bring with them.',
+  eq_title:'Equipment', eq_sub:'Either you provide the gear, or tell us what guests must bring.', eq_provided:'You provide the technical equipment', eq_providedD:'For example tools, helmets, snorkelling masks.', eq_providedD_hike:'E.g. poles, helmet, harness, snowshoes.', eq_bring:'Guests should bring', eq_bring_note:'What guests must bring', eq_bring_notePh:'List the gear guests need to bring with them.',
   rq_title:'Requirements and safety', rq_title_art:'Requirements and details for crafts and traditions', rq_sub:'So we can suggest the experience to the right travellers.', difficulty:'Difficulty', prev_exp:'Previous experience required', prev_expD:'For example sailing or climbing experience.', prev_expD_art:'For example, weaving experience.', prev_exp_note:'The agency will contact you to ask for more details.', limits:'Limitations', limitsPh:'For example not suitable during pregnancy.', safety:'Safety measures', safetyPh:'For example life jackets, first aid kit, insurance.',
   sq_title:'A few questions on {s}', sq_sub:'Specific to your sector.',
   av_title:'When is it available?', av_sub:'Indicative availability, no booking calendar.', period:'Period', months:'Months', weekdays:'Days of the week',
@@ -1429,7 +1429,7 @@ it:{
   g4_title:'Lingue e accessibilità', g4_sub:'Chi può partecipare.', exp_langs:'Lingue in cui la proponi', access:'Accessibilità', accessD:'Seleziona ciò che vale.',
   md_title:'Privata, condivisa o entrambe?', md_sub:'Privata significa un solo gruppo. Condivisa significa ospiti di prenotazioni diverse insieme.', md_privataD:'Un solo gruppo alla volta.', md_condivisaD:'Ospiti di prenotazioni diverse insieme.', md_entrambeD:'Puoi proporla in entrambi i modi.',
   in_title:'Cosa include?', in_sub:'Spunta ciò che offri e indica se è incluso o a supplemento.', inc:'Incluso', sup:'Supplemento', sup_price:'Prezzo supplemento (€)', sup_price_err:'Indica il prezzo del supplemento.', sup_review:'{item}: supplemento {n} €', inc_review:'{item}: incluso',
-  eq_title:'Attrezzatura', eq_sub:'O fornisci tu l’attrezzatura, oppure indica cosa devono portare gli ospiti.', eq_provided:'Fornisci l’attrezzatura tecnica', eq_providedD:'Per esempio attrezzi, caschi, maschere da snorkeling.', eq_bring:'Gli ospiti devono portare', eq_bring_note:'Cosa devono portare gli ospiti', eq_bring_notePh:'Elenca l’attrezzatura che gli ospiti devono portare.',
+  eq_title:'Attrezzatura', eq_sub:'O fornisci tu l’attrezzatura, oppure indica cosa devono portare gli ospiti.', eq_provided:'Fornisci l’attrezzatura tecnica', eq_providedD:'Per esempio attrezzi, caschi, maschere da snorkeling.', eq_providedD_hike:'Es. bastoncini, caschetto, imbrago, ciaspole.', eq_bring:'Gli ospiti devono portare', eq_bring_note:'Cosa devono portare gli ospiti', eq_bring_notePh:'Elenca l’attrezzatura che gli ospiti devono portare.',
   rq_title:'Requisiti e sicurezza', rq_title_art:'Requisiti e specifiche su artigianato e tradizioni', rq_sub:'Così possiamo proporla ai viaggiatori giusti.', difficulty:'Difficoltà', prev_exp:'Serve esperienza pregressa', prev_expD:'Per esempio esperienza di vela o arrampicata.', prev_expD_art:'Per esempio esperienza di tessitura.', prev_exp_note:'L’agenzia ti contatterà per chiederti maggiori informazioni.', limits:'Limitazioni', limitsPh:'Per esempio non adatta in gravidanza.', safety:'Misure di sicurezza', safetyPh:'Per esempio giubbotti salvagente, kit di primo soccorso, assicurazione.',
   sq_title:'Qualche domanda su {s}', sq_sub:'Specifiche del tuo settore.',
   av_title:'Quando è disponibile?', av_sub:'Disponibilità indicativa, nessun calendario di prenotazione.', period:'Periodo', months:'Mesi', weekdays:'Giorni della settimana',
@@ -1936,6 +1936,9 @@ const placeOk = e => {
 };
 const sectorLabel = e => (e.sector && SECTOR[e.sector]) ? `${SECTOR[e.sector].letter}. ${o(e.sector)}` : (e.sector ? o(e.sector) : '');
 const showsDifficulty = e => e.sector === 'natura';
+const HIKE_SPECS = ['trekking','ciaspolate','vie_ferrate','arrampicata','acquatrek'];
+const isHike = e => e?.sector === 'natura' && HIKE_SPECS.includes(specList(e)[0]);
+const priceModesFor = e => isHike(e) ? CONFIG.priceModes.filter(m => m !== 'pm_ora' && m !== 'pm_esperienza') : CONFIG.priceModes;
 const ARTISAN_OMIT_INCLUDES = ['inc_tasting','inc_meal','inc_drinks'];
 const ENO_OMIT_INCLUDES = ['inc_materials','inc_tickets','inc_equipment','inc_insurance','inc_meal','inc_drinks'];
 const CULTURA_OMIT_INCLUDES = ['inc_materials','inc_tasting','inc_meal','inc_drinks','inc_equipment'];
@@ -1947,6 +1950,7 @@ const includesFor = e => CONFIG.includes.filter(c => {
     /* Degustazione is already the service type, so it is not listed again. */
     if(c === 'inc_tasting' && typeList(e).includes('degustazione')) return false;
   }
+  if(isHike(e) && c === 'inc_materials') return false;
   return true;
 });
 function inclMode(e, c){ const v = e.incl?.[c]; if(!v) return ''; return typeof v === 'string' ? v : (v.mode || ''); }
@@ -1999,7 +2003,7 @@ const EV = {
           <span class="ct-money"><span>€</span><input id="${fid(P(i,'incl.'+c+'.price'))}" data-cash="${P(i,'incl.'+c+'.price')}" type="text" inputmode="numeric" autocomplete="off" value="${esc(formatItAmount(price))}" class="${bad?'is-bad':''}" aria-invalid="${bad}"></span>
           <span class="ct-error" ${bad?'':'hidden'}>${t('sup_price_err')}</span></label>`:''}</div>`;}).join('')}</div>`); },
   equip: i => { const e=E(i); return split(head(t('eq_title'), t('eq_sub'), ecount(i)), `
-    ${toggle(P(i,'equipProvided'), t('eq_provided'), t('eq_providedD'))}
+    ${toggle(P(i,'equipProvided'), t('eq_provided'), t(isHike(e) ? 'eq_providedD_hike' : 'eq_providedD'))}
     ${e.equipProvided ? '' : inp(P(i,'bringNote'), t('eq_bring_note'), {area:'short', ph:t('eq_bring_notePh')})}`); },
   reqs: i => { const e=E(i); const artisan = e.sector === 'artigianato'; if(!showsDifficulty(e)) e.difficulty = ''; if(artisan){ e.limits = ''; e.safety = ''; e.localita = ''; e.meet = ''; e.end = ''; return split(head(t('rq_title_art'), t('rq_sub'), ecount(i)), `
     <div class="ct-stack" style="gap:16px">${placeFields(i)}${toggle(P(i,'prevExp'), t('prev_exp'), t('prev_expD_art'))}${note(t('prev_exp_note'))}</div>
@@ -2028,7 +2032,7 @@ const EV = {
       </div>`).join('')}`);
     }
     return split(head(t('pr_title'), t('pr_sub'), ecount(i)), `${vat}
-    ${group(t('pr_mode'), pills(P(i,'priceMode'), CONFIG.priceModes))}
+    ${group(t('pr_mode'), pills(P(i,'priceMode'), priceModesFor(e)))}
     ${bl.map(b=>`<div class="ct-block">${bl.length>1||e.mode?`<h3 class="ct-block-title">${t(bl.length>1?(b==='priv'?'pr_priv':'pr_shared'):'pr_single')}</h3>`:''}
       <div class="ct-row">${money(P(i,`price.${b}.base`), t('pr_base'))}${money(P(i,`price.${b}.min`), t('pr_min'), {req:false, hint:t('pr_minD')})}</div>
       <div class="ct-steppers">${stepper(P(i,`price.${b}.incl`), t('pr_incl'), t('pr_inclD'), 1, 200)}</div>
@@ -2062,7 +2066,7 @@ function qOk(e, q){
 const EOK = {
   sector: e => !!e.sector,
   spec: e => !hasSpec(e) || (specList(e).length > 0 && (!specList(e).some(x => CONFIG.otherSpec.includes(x)) || filled(e.specOther,3))),
-  type: e => !hasType(e) || (typeList(e).length > 0 && typeList(e).every(x => allowedTypes(e).includes(x))),
+  type: e => isHike(e) || !hasType(e) || (typeList(e).length > 0 && typeList(e).every(x => allowedTypes(e).includes(x))),
   g1: e => filled(e.name,3) && e.desc.trim().length >= DESC_MIN,
   g2: e => placeOk(e),
   g3: e => e.durH > 0 && e.min >= 2 && e.max >= e.min,
@@ -2163,6 +2167,7 @@ function screens(){
       if(!e.sector){ normalizeIncl(e); return; }
       e.manual = false;
       e.type = typeList(e).filter(x => allowedTypes(e).includes(x));
+      if(isHike(e)){ e.type = []; if(e.priceMode === 'pm_ora' || e.priceMode === 'pm_esperienza') e.priceMode = ''; }
       if(!showsDifficulty(e)) e.difficulty = '';
       if(e.sector === 'artigianato'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; e.limits = ''; e.safety = ''; e.localita = ''; e.meet = ''; e.end = ''; e.priceMode = 'pm_persona'; for(const b of ['priv','shared']){ e.price[b].extra = ''; e.price[b].incl = 1; } e.sq = e.sq || {}; delete e.sq.materials; delete e.sq.workshop_loc; delete e.sq.live_demo; delete e.sq.sale; if(e.sq.can_buy == null) e.sq.can_buy = false; if(e.sq.takehome == null) e.sq.takehome = false; }
       if(e.sector === 'enogastronomia' || e.sector === 'cooking_class' || e.sector === 'cultura'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; }
@@ -2189,6 +2194,7 @@ function screens(){
       /* Specialization comes before service type, except a sector that has neither list. */
       if(k==='spec' && !hasSpec(e)) return;
       if(k==='type' && !hasType(e)) return;
+      if(k==='type' && isHike(e)) return;
       if(k==='type' && hasSpec(e) && !specList(e).length) return;
       if(k==='sq' && (e.sector === 'artigianato' || !(SECTOR[e.sector]?.q||[]).length)) return;
       if(k==='sq' && hasTicketPage(e) && !ticketsChosen(e)) return;
@@ -3043,7 +3049,7 @@ if(DEV_FILL) (function(){
       case 'sector': { const prev = e.sector; e.sector = e.sector || PRE.sector || 'artigianato'; afterPick(`exps.${i}.sector`, prev); break; }
       case 'spec': { const sp = SECTOR[e.sector].spec || []; if(sp.length && !specList(e).length) e.spec = sp.find(x=>!CONFIG.otherSpec.includes(x)) || sp[0];
         if(specList(e).some(x=>CONFIG.otherSpec.includes(x)) && !filled(e.specOther,3)) e.specOther = L('Specialità di prova','Test specialty'); break; }
-      case 'type': if(allowedTypes(e).length && !typeList(e).length) e.type = [allowedTypes(e)[0]]; break;
+      case 'type': if(!isHike(e) && allowedTypes(e).length && !typeList(e).length) e.type = [allowedTypes(e)[0]]; break;
       case 'g1': e.name = L(txt()[0], txt()[1]);
         e.desc = L('Esperienza di prova creata con il riempimento automatico: gli ospiti incontrano il partner, seguono una breve introduzione e partecipano all\'attività in un piccolo gruppo.',
                    'Test experience created by the auto fill: guests meet the partner, follow a short introduction and take part in the activity in a small group.'); break;
