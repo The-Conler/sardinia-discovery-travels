@@ -163,37 +163,6 @@ img{display:block}
 .hk-cai-name{display:block;font-weight:600;line-height:1.25}
 .hk-cai-desc{display:block;margin-top:4px;color:var(--ct-muted);font-size:14px;line-height:1.4}
 .hk-src{margin:12px 0 0;font-size:13px;line-height:1.4;color:var(--ct-muted)}
-.hk-fields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-/* Hiking requirements: one screen above the bottom bar at short desktop heights. */
-.ct-wizard.is-hike{padding-top:calc(clamp(28px,4.6vw,72px) + clamp(60px,6.4vw,88px) + clamp(20px,2.6vw,34px) + 8px);padding-bottom:76px}
-.ct-wizard.is-hike .ct-split{grid-template-columns:minmax(220px,.9fr) minmax(0,1.55fr);column-gap:20px;row-gap:8px}
-.ct-wizard.is-hike .ct-split-side{gap:8px}
-.ct-wizard.is-hike .ct-split-body{gap:6px}
-.ct-wizard.is-hike .ct-count{margin-bottom:4px;font-size:13px}
-.ct-wizard.is-hike .ct-title{font-size:clamp(26px,2.4vw,36px);line-height:1.05}
-.ct-wizard.is-hike .ct-sub{margin-top:4px;font-size:13px;line-height:1.3}
-.ct-wizard.is-hike .ct-legend{margin-bottom:4px;font-size:14px;line-height:1.2}
-.ct-wizard.is-hike .ct-multi-hint{margin-bottom:4px;font-size:13px;line-height:1.25}
-.ct-wizard.is-hike .ct-pill{height:32px;min-width:0;padding:0 12px;font-size:13px}
-.ct-wizard.is-hike .ct-field{gap:3px}
-.ct-wizard.is-hike .ct-field-label{font-size:11px;line-height:1.15}
-.ct-wizard.is-hike .ct-field input{height:32px;padding:0 10px;border-radius:12px;font-size:14px}
-.ct-wizard.is-hike .hk-cai{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-.ct-wizard.is-hike .hk-cai-card{gap:8px;padding:5px 8px;border-radius:12px;align-items:center}
-.ct-wizard.is-hike .hk-cai-code{min-width:26px;font-size:12px}
-.ct-wizard.is-hike .hk-cai-name{font-size:12.5px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ct-wizard.is-hike .hk-cai-desc{margin-top:1px;font-size:11px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ct-wizard.is-hike .hk-src{margin:3px 0 0;font-size:11px;line-height:1.25}
-.ct-wizard.is-hike .hk-viz{padding:8px 10px 8px;border-radius:16px}
-.ct-wizard.is-hike .hk-top{min-height:0;margin:0 0 2px}
-.ct-wizard.is-hike .hk-pill{height:22px;padding:0 8px;font-size:11px}
-.ct-wizard.is-hike .hk-svg{height:78px}
-.ct-wizard.is-hike .hk-metrics{gap:6px 8px;margin-top:2px}
-.ct-wizard.is-hike .hk-metrics b{font-size:14px}
-.ct-wizard.is-hike .hk-metrics span{margin-top:1px;font-size:9px}
-.ct-wizard.is-hike .hk-ind{font-size:14px}
-.ct-wizard.is-hike .hk-badge{height:28px;padding:0 10px}
-@media (max-width:860px){.hk-fields{grid-template-columns:1fr 1fr}}
 @media (prefers-reduced-motion:reduce){.hk-line,.hk-area,.hk-halo,.hk-summit{animation:none;transition:none}.hk-line{stroke-dashoffset:0}.hk-area{opacity:1}}
 .ct-card:focus-visible,.ct-pill:focus-visible,.ct-type-card:focus-visible,.ct-toggle:focus-visible,.ct-step-btn:focus-visible,.ct-back:focus-visible,.ct-tile-edit:focus-visible,.ct-link:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,127,136,.3)}
 
@@ -2242,7 +2211,8 @@ function caiCards(p){
 function hikeDetailBlock(i, key){
   const base = P(i, 'hike.profiles.'+key);
   return `${group(t('hk_cai'), `${caiCards(base+'.cai')}<p class="hk-src">${esc(t('hk_cai_src'))}</p>`)}
-    <div class="hk-fields">${inp(base+'.km', t('hk_km'), {type:'number'})}${inp(base+'.elev', t('hk_elev'), {type:'number'})}${inp(base+'.dur', t('hk_dur'))}${inp(base+'.alt', t('hk_alt'), {type:'number'})}</div>`;
+    <div class="ct-row">${inp(base+'.km', t('hk_km'), {type:'number'})}${inp(base+'.elev', t('hk_elev'), {type:'number'})}</div>
+    <div class="ct-row">${inp(base+'.dur', t('hk_dur'))}${inp(base+'.alt', t('hk_alt'), {type:'number'})}</div>`;
 }
 function hikeCarFields(i){
   const h = E(i).hike;
@@ -2964,9 +2934,7 @@ function cur(){ const L = screens(); let k = L.findIndex(s=>s.id===S.pos); if(k<
 function render(dir){
   const {s} = cur(), stage = $('stage'), wiz = $('wizard');
   const bg = BG_SCREENS.test(s.id);
-  const hm = s.id.match(/^e(\d+)_(reqs|hk\d+)$/);
-  const hikeFit = !!(hm && isHike(S.exps[+hm[1]]));
-  wiz.className = 'ct-wizard' + (s.id==='welcome' ? ' is-intro' : '') + (bg ? ' has-bg' : '') + (hikeFit ? ' is-hike' : '');
+  wiz.className = 'ct-wizard' + (s.id==='welcome' ? ' is-intro' : '') + (bg ? ' has-bg' : '');
   $('bgSlot').innerHTML = bg ? '<div class="ct-bg" aria-hidden="true"><img src="/sardinia-discovery-travels/partner-form/img/bg-mariolu.jpg" alt="" decoding="async"></div>' : '';
   const kind = s.id.replace(/^e\d+_/, 'exp-');
   stage.className = 'ct-stage ct-stage--' + kind + (dir ? '' : ' no-anim');
