@@ -228,7 +228,7 @@
     ]
   },
   "app/pacchetti/PackagesView.tsx": {
-    "file": "_next/static/chunks/PackagesView-Or50HXP8.js",
+    "file": "_next/static/chunks/PackagesView-ZhTK-4my.js",
     "name": "PackagesView",
     "src": "app/pacchetti/PackagesView.tsx",
     "isDynamicEntry": true,
@@ -271,7 +271,7 @@
     ]
   },
   "node_modules/vinext/dist/shims/layout-segment-context.js": {
-    "file": "_next/static/chunks/layout-segment-context-1juMDMXR.js",
+    "file": "_next/static/chunks/layout-segment-context-DBlwD_Q3.js",
     "name": "layout-segment-context",
     "src": "node_modules/vinext/dist/shims/layout-segment-context.js",
     "isDynamicEntry": true,
@@ -282,7 +282,7 @@
     ]
   },
   "node_modules/vinext/dist/shims/script.js": {
-    "file": "_next/static/chunks/script-DwC21DQC.js",
+    "file": "_next/static/chunks/script-C_oYV365.js",
     "name": "script",
     "src": "node_modules/vinext/dist/shims/script.js",
     "isDynamicEntry": true,
@@ -293,7 +293,7 @@
     ]
   },
   "virtual:vinext-app-browser-entry": {
-    "file": "_next/static/chunks/index-DF0FFuiy.js",
+    "file": "_next/static/chunks/index-CXh-fJ4G.js",
     "name": "index",
     "src": "virtual:vinext-app-browser-entry",
     "isEntry": true,
