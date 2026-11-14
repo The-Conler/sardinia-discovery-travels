@@ -153,16 +153,21 @@ export function PackagesView() {
     document.getElementById("pk-packages")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  const hero = PACKAGES[0]?.images[0];
-  const search = (
-    <div className={`pk-search${stuck ? " is-stuck" : ""}${filtersOpen ? " is-open" : ""}${stuck && overFooter ? " is-hidden" : ""}`}>
+  const hero = "/destinations/north/nd-costa-smeralda.webp";
+  function explorePackages(event?: { preventDefault: () => void }) {
+    event?.preventDefault();
+    const el = document.getElementById("pk-packages");
+    const smoother = (window as unknown as { ScrollSmoother?: { get?: () => { scrollTo: (target: Element, smooth: boolean, pos: string) => void } | undefined } }).ScrollSmoother?.get?.();
+    if (smoother && el) smoother.scrollTo(el, true, "top 80px");
+    else el?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  const search = stuck ? (
+    <div className={`pk-search is-stuck${filtersOpen ? " is-open" : ""}${overFooter ? " is-hidden" : ""}`}>
       <div className="pk-search-card">
-        {stuck && (
-          <button type="button" className="pk-filters-toggle trip-tab" aria-expanded={filtersOpen} onClick={() => setFiltersOpen((open) => !open)}>
-            {t.filters}
-          </button>
-        )}
-        {stuck && !filtersOpen ? (
+        <button type="button" className="pk-filters-toggle trip-tab" aria-expanded={filtersOpen} onClick={() => setFiltersOpen((open) => !open)}>
+          {t.filters}
+        </button>
+        {!filtersOpen ? (
           <p className="pk-filter-summary">
             {t.duration}: {duration === "all" ? t.summaryAll.duration : DURATIONS.find((d) => d.id === duration)?.[lang]}
             {" · "}
@@ -179,18 +184,47 @@ export function PackagesView() {
         )}
       </div>
     </div>
+  ) : (
+    <div className="pk-search pk-search--hero">
+      <form className="pk-hero-bar" onSubmit={(event) => { event.preventDefault(); explorePackages(event); }}>
+        <HeroField icon="calendar" label={t.duration} value={duration} onChange={setDuration} valueLabel={duration === "all" ? t.anyLength : DURATIONS.find((d) => d.id === duration)?.[lang] ?? t.anyLength} options={[{ id: "all" as const, label: t.anyLength }, ...DURATIONS.map((d) => ({ id: d.id, label: d[lang] }))]} />
+        <HeroField icon="pin" label={t.zone} value={zone} onChange={setZone} valueLabel={zone === "all" ? t.allAreas : ZONES.find((z) => z.id === zone)?.[lang] ?? t.allAreas} options={[{ id: "all" as const, label: t.allAreas }, ...ZONES.map((z) => ({ id: z.id, label: z[lang] }))]} />
+        <HeroField icon="compass" label={t.theme} value={theme} onChange={setTheme} valueLabel={theme === "all" ? t.allThemes : THEMES.find((th) => th.id === theme)?.[lang] ?? t.allThemes} options={[{ id: "all" as const, label: t.allThemes }, ...THEMES.map((th) => ({ id: th.id, label: th[lang] }))]} />
+        <button type="submit" className="pk-hero-search" aria-label={t.heroCta}>
+          <HIcon name="search" size={18} />
+        </button>
+      </form>
+    </div>
   );
   const bar = stuck && typeof document !== "undefined" ? createPortal(search, document.body) : search;
 
   return (
     <div className="pk-page" ref={root}>
-      <section className="pk-hero">
-        {hero && <img src={hero} alt="" />}
+      <section className="pk-hero pk-hero-home">
+        <img src={hero} alt="" />
+        <div className="pk-hero-halo" aria-hidden="true" />
         <div className="pk-shade" />
         <div className="pk-hero-copy">
-          <p className="pk-kicker">✦ {t.kicker} ✦</p>
+          <p className="pk-hero-kicker">
+            <span>{t.kicker}</span>
+            <span className="pk-hero-rule" aria-hidden="true">
+              <i />
+              <svg viewBox="0 0 24 24" width="16" height="16">
+                <path d="M3 13h11l-2 3M14 13l7-5-3 8-4-3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round" />
+              </svg>
+            </span>
+          </p>
           <h1>{t.title}</h1>
-          <p className="pk-sub">{t.sub}</p>
+          <p className="pk-hero-sub">{t.heroSub}</p>
+          <a className="pk-hero-cta" href="#pk-packages" onClick={explorePackages}>
+            <span>{t.heroCta}</span>
+            <span className="pk-hero-cta-go" aria-hidden="true">
+              <span className="pk-hero-cta-rail">
+                <span>→</span>
+                <span>→</span>
+              </span>
+            </span>
+          </a>
         </div>
       </section>
 
@@ -426,6 +460,42 @@ function PackageCard({ pkg, lang }: { pkg: SamplePackage; lang: "it" | "en" }) {
         </a>
       </div>
     </article>
+  );
+}
+
+function HeroField<T extends string>({ icon, label, value, valueLabel, options, onChange }: { icon: "calendar" | "pin" | "compass"; label: string; value: T; valueLabel: string; options: { id: T; label: string }[]; onChange: (v: T) => void }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (event: MouseEvent) => {
+      if (!ref.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [open]);
+  return (
+    <div className={`pk-hero-field${open ? " is-open" : ""}`} ref={ref}>
+      <button type="button" aria-expanded={open} onClick={() => setOpen((current) => !current)}>
+        <HIcon name={icon} size={18} />
+        <span>
+          <small>{label}</small>
+          <strong>{valueLabel}</strong>
+        </span>
+        <HIcon name="chevronDown" size={16} />
+      </button>
+      {open && (
+        <ul>
+          {options.map((option) => (
+            <li key={option.id}>
+              <button type="button" aria-pressed={option.id === value} onClick={() => { onChange(option.id); setOpen(false); }}>
+                {option.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 
