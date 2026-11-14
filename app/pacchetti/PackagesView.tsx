@@ -42,9 +42,9 @@ export function PackagesView() {
 
   return (
     <div className="pk-page" ref={root}>
-      <header className="service-stories-header pk-head">
-        <p data-reveal-02="words">✦ {t.kicker} ✦</p>
-        <h1 data-reveal-02="lines">{t.title}</h1>
+      <header className="pk-head">
+        <p className="pk-kicker">✦ {t.kicker} ✦</p>
+        <h1>{t.title}</h1>
         <p className="pk-lead">{t.intro}</p>
       </header>
 
@@ -63,7 +63,7 @@ export function PackagesView() {
             const side = i % 2 === 0 ? "is-left" : "is-right";
             return (
               <li className={`pk-tilt ${side}`} key={p.slug} style={{ zIndex: i + 1 }}>
-                <a className="pk-photo service-story-card" href={`/pacchetti/${p.slug}`} aria-label={copy.title}>
+                <a className="pk-photo" href={`/pacchetti/${p.slug}`} aria-label={copy.title}>
                   <img src={p.images[0]} alt="" />
                   <span className="service-card-overlay" />
                   <span className="pk-badge">{t.example}</span>

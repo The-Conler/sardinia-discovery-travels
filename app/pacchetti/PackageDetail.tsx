@@ -27,15 +27,15 @@ export function PackageDetail({ pkg }: { pkg: SamplePackage }) {
         <img src={pkg.images[photo]} alt="" />
         <div className="service-card-overlay" />
         <div className="pk-hero-copy">
-          <p className="hero-eyebrow" data-reveal-02="words">✦ {t.kicker} ✦</p>
-          <h1 data-reveal-02="lines">{copy.title}</h1>
+          <p className="pk-kicker">✦ {t.kicker} ✦</p>
+          <h1>{copy.title}</h1>
           <span className="pk-badge pk-badge--inline">{t.example}</span>
           <p className="pk-hero-meta">{t.nights(pkg.days, pkg.nights)} · {zone} · {theme}</p>
         </div>
       </header>
 
       <div className="pk-detail-body">
-        <p className="pk-lead" data-reveal-02="words">{copy.intro}</p>
+        <p className="pk-lead">{copy.intro}</p>
         <div className="pk-thumbs" role="group" aria-label={t.gallery}>
           {pkg.images.map((src, i) => (
             <button key={src} type="button" className={i === photo ? "is-on" : ""} aria-pressed={i === photo} onClick={() => setPhoto(i)}>
