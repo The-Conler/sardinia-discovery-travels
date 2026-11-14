@@ -47,22 +47,6 @@ export function PackagesView() {
   }), [duration, zone, theme]);
 
   useEffect(() => {
-    const el = root.current;
-    if (!el) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
-    el.classList.add("pk-animate");
-    const nodes = [...el.querySelectorAll("[data-reveal]")];
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) entry.target.classList.add("is-in");
-      });
-    }, { rootMargin: "0px 0px 30% 0px", threshold: 0 });
-    nodes.forEach((node) => io.observe(node));
-    return () => io.disconnect();
-  }, [list, lang]);
-
-  useEffect(() => {
     const el = sentinel.current;
     if (!el) return;
     const io = new IntersectionObserver(([entry]) => {
@@ -197,28 +181,14 @@ export function PackagesView() {
       <section className="pk-hero pk-hero-home ht-page">
         <img src={hero} alt="" />
         <div className="pk-shade" />
-        <div className="pk-hero-halo" aria-hidden="true" />
         <div className="ht-hero-inner">
           <div className="pk-hero-copy">
-            <p className="pk-hero-kicker">
-              <span>{t.kicker}</span>
-              <span className="pk-hero-rule" aria-hidden="true">
-                <i />
-                <svg viewBox="0 0 24 24" width="16" height="16">
-                  <path d="M3 13h11l-2 3M14 13l7-5-3 8-4-3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round" />
-                </svg>
-              </span>
-            </p>
-            <h1>{t.title}</h1>
-            <p className="pk-hero-sub">{t.heroSub}</p>
-            <a className="pk-hero-cta" href="#pk-packages" onClick={explorePackages}>
-              <span>{t.heroCta}</span>
-              <span className="pk-hero-cta-go" aria-hidden="true">
-                <span className="pk-hero-cta-rail">
-                  <span>→</span>
-                  <span>→</span>
-                </span>
-              </span>
+            <p className="ht-kicker">{t.kicker}</p>
+            <h1 className="ht-title ht-title--xl">{t.title}</h1>
+            <p className="ht-lead">{t.heroSub}</p>
+            <a className="button-02" href="#pk-packages" onClick={explorePackages}>
+              <span className="inner">{t.heroCta}</span>
+              <span className="circle" aria-hidden="true"><span>→</span></span>
             </a>
           </div>
           <form className="ht-search" role="search" aria-label={t.search} onSubmit={(event) => { event.preventDefault(); explorePackages(event); }}>
@@ -270,24 +240,24 @@ export function PackagesView() {
       <div className="pk-search-sentinel" ref={sentinel} aria-hidden="true" />
       {bar}
 
-      <div className="ht-page pk-examples" data-reveal>
+      <div className="ht-page pk-examples">
         <section className="ht-section ht-stays" aria-labelledby="pk-examples-title">
           <div className="ht-inner">
             <div className="ht-head ht-head--stays">
               <div>
                 <p className="ht-kicker">{t.examples}</p>
-                <div className="pk-examples-titleline">
-                  <h2 id="pk-examples-title" className="ht-title">{t.deals}</h2>
-                  <div className="ht-arrows">
-                    <button type="button" className="ht-arrow" aria-label={lang === "it" ? "Esempi precedenti" : "Previous examples"} disabled={!canPrev} onClick={() => step(-1)}>
-                      <HIcon name="arrowLeft" size={16} />
-                    </button>
-                    <button type="button" className="ht-arrow" aria-label={lang === "it" ? "Esempi successivi" : "Next examples"} disabled={!canNext} onClick={() => step(1)}>
-                      <HIcon name="arrowRight" size={16} />
-                    </button>
-                  </div>
-                </div>
+                <h2 id="pk-examples-title" className="ht-title">{t.deals}</h2>
                 <p className="ht-lead">{t.intro}</p>
+              </div>
+              <div className="ht-stays-side">
+                <div className="ht-arrows">
+                  <button type="button" className="ht-arrow" aria-label={lang === "it" ? "Esempi precedenti" : "Previous examples"} disabled={!canPrev} onClick={() => step(-1)}>
+                    <HIcon name="arrowLeft" size={16} />
+                  </button>
+                  <button type="button" className="ht-arrow" aria-label={lang === "it" ? "Esempi successivi" : "Next examples"} disabled={!canNext} onClick={() => step(1)}>
+                    <HIcon name="arrowRight" size={16} />
+                  </button>
+                </div>
               </div>
             </div>
           <div
@@ -310,9 +280,15 @@ export function PackagesView() {
         </section>
       </div>
 
-      <section className="pk-block ht-page pk-areas" data-reveal>
+      <section className="pk-block ht-section ht-page pk-areas">
         <div className="pk-areas-inner">
-          <h2 className="pk-areas-title">{t.zones}</h2>
+          <div className="ht-head">
+            <div>
+              <p className="ht-kicker">{lang === "it" ? "Zone" : "Areas"}</p>
+              <h2 className="ht-title">{t.zones}</h2>
+              <p className="ht-lead">{t.zonesLead}</p>
+            </div>
+          </div>
           <div className="pk-areas-track" role="list">
             {ZONES.map((z) => {
               const card = ZONE_CARD[z.id];
@@ -321,22 +297,6 @@ export function PackagesView() {
                   <span className="pk-area-photo">
                     <img src={card.src} alt="" style={{ objectPosition: card.focus }} />
                   </span>
-                  <svg className="pk-area-shape" viewBox="0 0 200 160" aria-hidden="true">
-                    <defs>
-                      <linearGradient id={`pk-tint-${z.id}`} x1="0" y1="1" x2="1" y2="0">
-                        <stop offset="0%" stopColor="#f3e6d0" stopOpacity="0.2" />
-                        <stop offset="72%" stopColor="#f3e6d0" stopOpacity="0" />
-                      </linearGradient>
-                      <radialGradient id={`pk-mask-${z.id}`} cx="50%" cy="55%" r="55%">
-                        <stop offset="55%" stopColor="#fff" />
-                        <stop offset="100%" stopColor="#fff" stopOpacity="0" />
-                      </radialGradient>
-                      <mask id={`pk-soft-${z.id}`}>
-                        <rect width="200" height="160" fill={`url(#pk-mask-${z.id})`} />
-                      </mask>
-                    </defs>
-                    <path d={card.shape} fill={`url(#pk-tint-${z.id})`} mask={`url(#pk-soft-${z.id})`} />
-                  </svg>
                   <span className="pk-area-shade" aria-hidden="true" />
                   <span className="pk-area-body">
                     <ZoneIcon name={card.icon} />
@@ -344,11 +304,8 @@ export function PackagesView() {
                     <span className="pk-area-line">
                       <em>{ZONE_LINE[z.id]}</em>
                       <span className="pk-area-go" aria-hidden="true">
-                      <span className="pk-area-go-rail">
-                        <span><HIcon name="arrowRight" size={14} /></span>
-                        <span><HIcon name="arrowRight" size={14} /></span>
+                        <HIcon name="arrowRight" size={16} />
                       </span>
-                    </span>
                     </span>
                   </span>
                 </button>
@@ -358,32 +315,39 @@ export function PackagesView() {
         </div>
       </section>
 
-      <section className="pk-block ht-page pk-reco" id="pk-packages" data-reveal>
+      <section className="pk-block ht-section ht-page pk-reco" id="pk-packages">
         <div className="pk-reco-inner">
-          <h2 className="pk-reco-title">
-            {t.recoLead}{" "}
-            <span className="pk-reco-word">
-              {t.recoWord}
-              <svg className="pk-reco-swoosh" viewBox="0 0 160 16" aria-hidden="true">
-                <path d="M2 10c16-8 30 7 48-1 16-7 26 8 44 1 16-6 28 5 46-2 8-2 14 2 18 1" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </span>
-          </h2>
+          <div className="ht-head">
+            <div>
+              <p className="ht-kicker">{t.examples}</p>
+              <h2 className="ht-title">{t.recoTitle}</h2>
+            </div>
+          </div>
           <div className="pk-reco-track" role="list">
             {PACKAGES.map((p) => <PackageCard key={p.slug} pkg={p} lang={lang} />)}
           </div>
         </div>
       </section>
 
-      <section className="pk-block" data-reveal>
-        <h2>{t.why}</h2>
-        <div className="pk-why">
-          {t.whyItems.map((item) => (
-            <article className="ct-tile" key={item.title}>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-            </article>
-          ))}
+      <section className="pk-block ht-section ht-page">
+        <div className="ht-inner">
+          <div className="ht-head">
+            <div>
+              <p className="ht-kicker">{t.nav}</p>
+              <h2 className="ht-title">{t.why}</h2>
+            </div>
+          </div>
+          <ol className="ht-steps">
+            {t.whyItems.map((item) => (
+              <li className="ht-step" key={item.title}>
+                <span className="ht-step-top">
+                  <span className="ht-step-badge"><HIcon name={item.icon} size={26} /></span>
+                </span>
+                <h3 className="ht-step-title">{item.title}</h3>
+                <p className="ht-step-text">{item.text}</p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
     </div>
@@ -475,7 +439,7 @@ function DealCard({ pkg, lang, saved, onSave }: { pkg: SamplePackage; lang: "it"
       </div>
       <div className="ht-card-body">
         <h3 className="ht-card-title">{copy.title}</h3>
-        <p className="ht-card-meta"><HIcon name="clock" size={12} />{t.nights(pkg.days, pkg.nights)} · {zone}</p>
+        <p className="ht-card-meta"><HIcon name="clock" size={16} />{t.nights(pkg.days, pkg.nights)}, {zone}</p>
         <p className="ht-card-text">{copy.intro}</p>
         <ul className="ht-amen">
           {CHIPS[pkg.theme].map((chip) => (
@@ -486,13 +450,10 @@ function DealCard({ pkg, lang, saved, onSave }: { pkg: SamplePackage; lang: "it"
           <p className="ht-price">
             <span className="ht-price-from">{t.from}</span>
             <strong>{euroMark(pkg.priceFrom)}</strong>
-            <span className="ht-price-night">/ {t.per}</span>
+            <span className="ht-price-night">/{lang === "it" ? "persona" : "person"}</span>
           </p>
-          <a className="ht-arrow pk-card-go" href={`/pacchetti/${pkg.slug}`} aria-label={t.discover}>
-            <span className="pk-card-go-rail">
-              <span><HIcon name="arrowRight" size={14} /></span>
-              <span><HIcon name="arrowRight" size={14} /></span>
-            </span>
+          <a className="ht-arrow" href={`/pacchetti/${pkg.slug}`} aria-label={t.discover}>
+            <HIcon name="arrowRight" size={16} />
           </a>
         </div>
       </div>
