@@ -15,13 +15,6 @@ const ZONE_IMAGE: Record<ZoneId, string> = {
   interno: "/destinations/interlands.png",
 };
 
-const THEME_IMAGE: Record<ThemeId, string> = {
-  mare: "/experiences/boat-tour.webp",
-  natura: "/off-road/area-supramonte.webp",
-  enogastronomia: "/destinations/north/ns-wine.webp",
-  cultura: "/about/tile-culture-traditions.webp",
-};
-
 export function PackagesView() {
   const lang = useSiteLang();
   const t = PK[lang];
@@ -70,10 +63,6 @@ export function PackagesView() {
 
   function pickZone(id: ZoneId) {
     setZone(id);
-    document.getElementById("pk-packages")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-  function pickTheme(id: ThemeId) {
-    setTheme(id);
     document.getElementById("pk-packages")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
@@ -147,18 +136,6 @@ export function PackagesView() {
       </section>
 
       <section className="pk-block pk-block--lift" data-reveal>
-        <h2>{t.themes}</h2>
-        <div className="pk-themes">
-          {THEMES.map((th) => (
-            <button key={th.id} type="button" className={`pk-theme service-story-card${theme === th.id ? " is-on" : ""}`} onClick={() => pickTheme(th.id)}>
-              <img src={THEME_IMAGE[th.id]} alt="" />
-              <strong>{th[lang]}</strong>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section className="pk-block" data-reveal>
         <h2>{t.why}</h2>
         <div className="pk-why">
           {t.whyItems.map((item) => (

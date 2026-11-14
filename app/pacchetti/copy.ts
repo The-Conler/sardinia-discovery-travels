@@ -12,7 +12,6 @@ export const PK = {
     deals: "Esempi per il prossimo viaggio",
     zones: "Le zone della Sardegna",
     recommended: "Pacchetti consigliati",
-    themes: "Scegli un tema",
     why: "Perché questi esempi",
     whyItems: [
       { title: "Sempre esempio", text: "Ogni viaggio in pagina è un campione. Il badge Esempio resta finché non lo sostituiamo." },
@@ -53,7 +52,6 @@ export const PK = {
     deals: "Examples for the next trip",
     zones: "Sardinia’s areas",
     recommended: "Recommended packages",
-    themes: "Choose a theme",
     why: "Why these examples",
     whyItems: [
       { title: "Always an example", text: "Every trip on this page is a sample. The Example badge stays until we replace it." },
