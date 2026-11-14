@@ -79,7 +79,7 @@
 .pk-tilt.is-left .pk-photo:hover,
 .pk-tilt.is-right .pk-photo:hover,
 .pk-tilt.is-left .pk-photo:focus-visible,
-.pk-tilt.is-right .pk-photo:focus-visible { transform: rotate(0deg) scale(1.03); outline: none; }
+.pk-tilt.is-right .pk-photo:focus-visible { transform: matrix(1.03, 0, 0, 1.03, 0, 0); outline: none; }
 .pk-photo img { transform: scale(1.04); }
 .pk-photo:hover img { transform: scale(1.08); filter: saturate(1.05) contrast(1.04); }
 .pk-badge {
@@ -155,7 +155,7 @@
   .pk-tilt.is-left .pk-photo:hover,
   .pk-tilt.is-right .pk-photo:hover,
   .pk-tilt.is-left .pk-photo:focus-visible,
-  .pk-tilt.is-right .pk-photo:focus-visible { transform: rotate(0deg) scale(1.02); }
+  .pk-tilt.is-right .pk-photo:focus-visible { transform: matrix(1.02, 0, 0, 1.02, 0, 0); }
   .pk-tilt + .pk-tilt { margin-top: 28px; }
   .pk-lists { grid-template-columns: 1fr; }
   .pk-days p { margin-left: 0; }
