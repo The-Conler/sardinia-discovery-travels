@@ -51,7 +51,7 @@ export const PK = {
     scroll: "Scroll",
     deals: "Examples for the next trip",
     examples: "Examples",
-    zones: "Sardinia’s areas",
+    zones: "Sardinia’s Areas",
     recoLead: "Explore our top",
     recoWord: "packages",
     why: "Why these examples",

@@ -9,13 +9,18 @@ import type { DurationId, SamplePackage, ThemeId, ZoneId } from "./packages";
 import { useSiteLang } from "../siteLang";
 import { HIcon } from "../hotels/icons";
 
-const ZONE_IMAGE: Record<ZoneId, string> = {
-  nord: "/destinations/north/nd-costa-smeralda.webp",
-  sud: "/destinations/south-sardinia.png",
-  est: "/off-road/hero-supramonte-track.webp",
-  ovest: "/destinations/west-sardinia.png",
-  interno: "/destinations/interlands.png",
+const ZONE_CARD: Record<ZoneId, { src: string; focus: string; glow?: boolean; icon: "waves" | "arch" | "mountains" | "nuraghe" }> = {
+  nord: { src: "/destinations/north/nd-costa-smeralda.webp", focus: "center 34%", icon: "waves" },
+  sud: { src: "/destinations/south-sardinia.png", focus: "center 42%", glow: true, icon: "arch" },
+  est: { src: "/off-road/hero-supramonte-track.webp", focus: "center 40%", icon: "mountains" },
+  ovest: { src: "/destinations/west-sardinia.png", focus: "center 48%", icon: "waves" },
+  interno: { src: "/destinations/interlands.png", focus: "center 30%", glow: true, icon: "nuraghe" },
 };
+
+function zoneFrom(id: ZoneId) {
+  const prices = PACKAGES.filter((p) => p.zone === id).map((p) => p.priceFrom);
+  return prices.length ? Math.min(...prices) : null;
+}
 
 export function PackagesView() {
   const lang = useSiteLang();
@@ -233,22 +238,36 @@ export function PackagesView() {
         </section>
       </div>
 
-      <section className="pk-block pk-block--lift" data-reveal>
-        <h2>{t.zones}</h2>
-        <div className="pk-zones">
-          {ZONES.map((z) => {
-            const inZone = PACKAGES.filter((p) => p.zone === z.id);
-            const cheapest = inZone.reduce((min, p) => Math.min(min, p.priceFrom), Number.POSITIVE_INFINITY);
-            return (
-              <button key={z.id} type="button" className={`pk-zone service-story-card${zone === z.id ? " is-on" : ""}`} onClick={() => pickZone(z.id)}>
-                <img src={ZONE_IMAGE[z.id]} alt="" />
-                <span>
-                  <strong>{z[lang]}</strong>
-                  {inZone.length > 0 && <em>{t.from} {formatEuro(cheapest)}</em>}
-                </span>
-              </button>
-            );
-          })}
+      <section className="pk-block ht-page pk-areas" data-reveal>
+        <div className="pk-areas-inner">
+          <h2 className="pk-areas-title">{t.zones}</h2>
+          <div className="pk-areas-track" role="list">
+            {ZONES.map((z) => {
+              const card = ZONE_CARD[z.id];
+              const from = zoneFrom(z.id);
+              return (
+                <button key={z.id} type="button" className={`pk-area pk-area--${z.id}${zone === z.id ? " is-on" : ""}`} role="listitem" onClick={() => pickZone(z.id)}>
+                  <span className={`pk-area-photo${card.glow ? " has-glow" : ""}`}>
+                    <img src={card.src} alt="" style={{ objectPosition: card.focus }} />
+                  </span>
+                  <svg className="pk-area-wave" viewBox="0 0 300 56" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M0 36C34 10 62 48 104 26 146 4 176 46 220 24 258 6 280 32 300 20V56H0Z" />
+                  </svg>
+                  <span className="pk-area-body">
+                    <ZoneIcon name={card.icon} />
+                    <strong>{z[lang]}</strong>
+                    {from != null && <em>{t.from} {formatEuro(from)}</em>}
+                    <span className="pk-area-go" aria-hidden="true">
+                      <span className="pk-area-go-rail">
+                        <span><HIcon name="arrowRight" size={14} /></span>
+                        <span><HIcon name="arrowRight" size={14} /></span>
+                      </span>
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -269,7 +288,7 @@ export function PackagesView() {
         </div>
       </section>
 
-      <section className="pk-block pk-block--lift" data-reveal>
+      <section className="pk-block" data-reveal>
         <h2>{t.why}</h2>
         <div className="pk-why">
           {t.whyItems.map((item) => (
@@ -324,6 +343,28 @@ const CARD_FOCUS: Record<string, string> = {
   "esempio-tavola-gallura": "center 72%",
   "esempio-nuraghi": "center 30%",
 };
+
+function ZoneIcon({ name }: { name: "waves" | "arch" | "mountains" | "nuraghe" }) {
+  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.4, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  return (
+    <svg className="pk-area-icon" viewBox="0 0 24 24" aria-hidden="true">
+      {name === "waves" && (
+        <>
+          <path d="M2 8c1.2 1 2.2 1.4 3.4 1.4 2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2c1.2 0 2.2.4 3.4 1.4" {...common} />
+          <path d="M2 14c1.2 1 2.2 1.4 3.4 1.4 2.2 0 2.2-2 4.4-2s2.2 2 4.4 2 2.2-2 4.4-2c1.2 0 2.2.4 3.4 1.4" {...common} />
+        </>
+      )}
+      {name === "arch" && <path d="M4 20V11a8 8 0 0 1 16 0v9M4 20h16" {...common} />}
+      {name === "mountains" && <path d="M3 19 9 8l4 6 2.5-3.5L21 19H3z" {...common} />}
+      {name === "nuraghe" && (
+        <>
+          <path d="M7 20V12a5 5 0 0 1 10 0v8M6 20h12" {...common} />
+          <path d="M9 16h.01M12 14h.01M15 16h.01" {...common} />
+        </>
+      )}
+    </svg>
+  );
+}
 
 function DealCard({ pkg, lang, saved, onSave }: { pkg: SamplePackage; lang: "it" | "en"; saved: boolean; onSave: () => void }) {
   const t = PK[lang];
