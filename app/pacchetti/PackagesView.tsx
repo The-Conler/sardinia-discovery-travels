@@ -3,8 +3,23 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PK } from "./copy";
 import { DURATIONS, PACKAGES, THEMES, ZONES, durationBand, formatEuro } from "./packages";
-import type { DurationId, ThemeId, ZoneId } from "./packages";
+import type { DurationId, SamplePackage, ThemeId, ZoneId } from "./packages";
 import { useSiteLang } from "../siteLang";
+
+const ZONE_IMAGE: Record<ZoneId, string> = {
+  nord: "/destinations/north/nd-costa-smeralda.webp",
+  sud: "/destinations/south-sardinia.png",
+  est: "/off-road/hero-supramonte-track.webp",
+  ovest: "/destinations/west-sardinia.png",
+  interno: "/destinations/interlands.png",
+};
+
+const THEME_IMAGE: Record<ThemeId, string> = {
+  mare: "/experiences/boat-tour.webp",
+  natura: "/off-road/area-supramonte.webp",
+  enogastronomia: "/destinations/north/ns-wine.webp",
+  cultura: "/about/tile-culture-traditions.webp",
+};
 
 export function PackagesView() {
   const lang = useSiteLang();
@@ -21,23 +36,32 @@ export function PackagesView() {
     return true;
   }), [duration, zone, theme]);
 
-  const hero = PACKAGES[0]?.images[0];
-
   useEffect(() => {
     const el = root.current;
     if (!el) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
     el.classList.add("pk-animate");
-    const bands = [...el.querySelectorAll(".pk-band")];
+    const nodes = [...el.querySelectorAll("[data-reveal]")];
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) entry.target.classList.add("is-in");
       });
-    }, { threshold: 0.28 });
-    bands.forEach((band) => io.observe(band));
+    }, { threshold: 0.2 });
+    nodes.forEach((node) => io.observe(node));
     return () => io.disconnect();
-  }, [list]);
+  }, [list, lang]);
+
+  function pickZone(id: ZoneId) {
+    setZone(id);
+    document.getElementById("pk-packages")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  function pickTheme(id: ThemeId) {
+    setTheme(id);
+    document.getElementById("pk-packages")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  const hero = PACKAGES[0]?.images[0];
 
   return (
     <div className="pk-page" ref={root}>
@@ -48,51 +72,130 @@ export function PackagesView() {
           <p className="pk-kicker">✦ {t.kicker} ✦</p>
           <h1>{t.title}</h1>
           <p className="pk-sub">{t.sub}</p>
-          <p className="pk-disclaimer">{t.intro}</p>
         </div>
-        <button
-          type="button"
-          className="pk-cue"
-          onClick={() => document.getElementById("pk-list")?.scrollIntoView({ behavior: "smooth" })}
-        >
-          <span>{t.scroll}</span>
-          <i aria-hidden="true" />
-        </button>
       </section>
 
-      <div className="pk-filters" id="pk-list">
-        <div className="pk-bar">
+      <div className="pk-search">
+        <div className="pk-search-card">
           <Filter label={t.duration} value={duration} onChange={setDuration} options={[{ id: "all" as const, label: t.all }, ...DURATIONS.map((d) => ({ id: d.id, label: d[lang] }))]} />
           <Filter label={t.zone} value={zone} onChange={setZone} options={[{ id: "all" as const, label: t.all }, ...ZONES.map((z) => ({ id: z.id, label: z[lang] }))]} />
           <Filter label={t.theme} value={theme} onChange={setTheme} options={[{ id: "all" as const, label: t.all }, ...THEMES.map((th) => ({ id: th.id, label: th[lang] }))]} />
         </div>
       </div>
 
-      {list.length === 0 ? <p className="pk-empty">{t.empty}</p> : list.map((p) => {
-        const copy = p[lang];
-        const themeLabel = THEMES.find((th) => th.id === p.theme)?.[lang] ?? "";
-        const zoneLabel = ZONES.find((z) => z.id === p.zone)?.[lang] ?? "";
-        const tagline = copy.intro.split(". ")[0].replace(/\.$/, "");
-        return (
-          <section className="pk-band" key={p.slug}>
-            <div className="pk-band-copy">
-              <span className="pk-badge">{t.example}</span>
-              <h2>{copy.title}</h2>
-              <p className="pk-tag">{tagline}.</p>
-              <p className="pk-facts">{t.nights(p.days, p.nights)} · {zoneLabel} · {themeLabel}</p>
-              <p className="pk-price">{t.from} {formatEuro(p.priceFrom)} {t.per}</p>
-              <div className="pk-actions">
-                <a className="pk-pill" href={`/pacchetti/${p.slug}`}>{t.discover}</a>
-                <a className="pk-link" href={`/contact?package=${p.slug}&lang=${lang}`}>{t.request} ›</a>
-              </div>
-            </div>
-            <a className="pk-frame" href={`/pacchetti/${p.slug}`} aria-label={copy.title}>
-              <img src={p.images[0]} alt="" />
-            </a>
-          </section>
-        );
-      })}
+      <section className="pk-block" data-reveal>
+        <h2>{t.deals}</h2>
+        <p className="pk-intro">{t.intro}</p>
+        <div className="pk-deals">
+          {PACKAGES.map((p) => <DealCard key={p.slug} pkg={p} lang={lang} />)}
+        </div>
+      </section>
+
+      <section className="pk-block pk-block--lift" data-reveal>
+        <h2>{t.zones}</h2>
+        <div className="pk-zones">
+          {ZONES.map((z) => {
+            const inZone = PACKAGES.filter((p) => p.zone === z.id);
+            const cheapest = inZone.reduce((min, p) => Math.min(min, p.priceFrom), Number.POSITIVE_INFINITY);
+            return (
+              <button key={z.id} type="button" className={`pk-zone${zone === z.id ? " is-on" : ""}`} onClick={() => pickZone(z.id)}>
+                <img src={ZONE_IMAGE[z.id]} alt="" />
+                <span>
+                  <strong>{z[lang]}</strong>
+                  {inZone.length > 0 && <em>{t.from} {formatEuro(cheapest)}</em>}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="pk-block" id="pk-packages" data-reveal>
+        <h2>{t.recommended}</h2>
+        {list.length === 0 ? <p className="pk-empty">{t.empty}</p> : (
+          <div className="pk-grid">
+            {list.map((p) => <PackageCard key={p.slug} pkg={p} lang={lang} />)}
+          </div>
+        )}
+      </section>
+
+      <section className="pk-block pk-block--lift" data-reveal>
+        <h2>{t.themes}</h2>
+        <div className="pk-themes">
+          {THEMES.map((th) => (
+            <button key={th.id} type="button" className={`pk-theme${theme === th.id ? " is-on" : ""}`} onClick={() => pickTheme(th.id)}>
+              <img src={THEME_IMAGE[th.id]} alt="" />
+              <strong>{th[lang]}</strong>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="pk-block" data-reveal>
+        <h2>{t.why}</h2>
+        <div className="pk-why">
+          {t.whyItems.map((item) => (
+            <article key={item.title}>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="pk-close" data-reveal>
+        <h2>{t.closing}</h2>
+        <p>{t.closingText}</p>
+        <a className="pk-pill" href={`/contact?lang=${lang}`}>{t.closingCta}</a>
+      </section>
     </div>
+  );
+}
+
+function DealCard({ pkg, lang }: { pkg: SamplePackage; lang: "it" | "en" }) {
+  const t = PK[lang];
+  const copy = pkg[lang];
+  const zone = ZONES.find((z) => z.id === pkg.zone)?.[lang] ?? "";
+  return (
+    <article className="pk-deal">
+      <a className="pk-deal-photo" href={`/pacchetti/${pkg.slug}`}>
+        <img src={pkg.images[0]} alt="" />
+        <span className="pk-badge">{t.example}</span>
+      </a>
+      <div className="pk-deal-body">
+        <h3>{copy.title}</h3>
+        <p className="pk-meta">{t.nights(pkg.days, pkg.nights)} · {zone}</p>
+        <p>{copy.intro}</p>
+        <p className="pk-price">{t.from} {formatEuro(pkg.priceFrom)} {t.per}</p>
+        <a className="pk-link" href={`/pacchetti/${pkg.slug}`}>{t.discover} ›</a>
+      </div>
+    </article>
+  );
+}
+
+function PackageCard({ pkg, lang }: { pkg: SamplePackage; lang: "it" | "en" }) {
+  const t = PK[lang];
+  const copy = pkg[lang];
+  const zone = ZONES.find((z) => z.id === pkg.zone)?.[lang] ?? "";
+  const theme = THEMES.find((th) => th.id === pkg.theme)?.[lang] ?? "";
+  return (
+    <article className="pk-card">
+      <a className="pk-card-photo" href={`/pacchetti/${pkg.slug}`}>
+        <img src={pkg.images[0]} alt="" />
+        <span className="pk-badge">{t.example}</span>
+        <span className="pk-nights">{t.nights(pkg.days, pkg.nights)}</span>
+      </a>
+      <div className="pk-card-body">
+        <h3>{copy.title}</h3>
+        <p className="pk-meta">{zone} · {theme}</p>
+        <p className="pk-price">{t.from} {formatEuro(pkg.priceFrom)}</p>
+        <p className="pk-per">{t.per}</p>
+        <div className="pk-actions">
+          <a className="pk-pill" href={`/pacchetti/${pkg.slug}`}>{t.discover}</a>
+          <a className="pk-link" href={`/contact?package=${pkg.slug}&lang=${lang}`}>{t.request} ›</a>
+        </div>
+      </div>
+    </article>
   );
 }
 

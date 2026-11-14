@@ -39,7 +39,8 @@ export function PackageDetail({ pkg }: { pkg: SamplePackage }) {
         </div>
       </header>
 
-      <div className="pk-dbody">
+      <div className="pk-dlayout">
+        <div className="pk-dbody">
         <p className="pk-lead">{copy.intro}</p>
 
         <ul className="pk-tiles">
@@ -90,6 +91,16 @@ export function PackageDetail({ pkg }: { pkg: SamplePackage }) {
           <p className="pk-price">{t.from} {formatEuro(pkg.priceFrom)} {t.per}</p>
           <p className="pk-note">{t.priceNote}</p>
         </section>
+        </div>
+
+        <aside className={`pk-pricebox${bar ? " is-on" : ""}`}>
+          <span className="pk-badge">{t.example}</span>
+          <p className="pk-price">{t.from} {formatEuro(pkg.priceFrom)}</p>
+          <p className="pk-per">{t.per}</p>
+          <p className="pk-meta">{t.nights(pkg.days, pkg.nights)} · {zone}</p>
+          <p className="pk-note">{t.priceNote}</p>
+          <a className="pk-pill" href={contact}>{t.request}</a>
+        </aside>
       </div>
 
       <div className={`pk-buybar${bar ? " is-on" : ""}`}>
