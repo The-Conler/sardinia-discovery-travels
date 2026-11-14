@@ -223,6 +223,7 @@
   width: 100%;
   margin: 0;
   padding: 0 0 calc(8 * var(--hu));
+  gap: calc(16 * var(--hu));
   grid-auto-columns: calc((100% - 3 * 16 * var(--hu)) / 4);
   overflow-x: hidden;
 }
