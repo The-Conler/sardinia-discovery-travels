@@ -64,11 +64,22 @@
 
 .pk-search-sentinel { height: 1px; margin: 0; }
 .pk-search {
+  --pu: calc(1px / var(--site-zoom, 1));
   position: sticky;
   top: calc(56 * var(--pu));
   z-index: 8;
   margin-top: calc(-72 * var(--pu));
   padding: 0 4vw calc(8 * var(--pu));
+}
+.pk-search-spacer { height: calc(96 * var(--pu)); }
+.pk-search.is-stuck {
+  position: fixed;
+  top: calc(56 * var(--pu));
+  left: 0;
+  z-index: 19;
+  width: calc(100 * var(--vw));
+  margin: 0;
+  padding: calc(6 * var(--pu)) 4vw 0;
 }
 .pk-filters-toggle {
   height: calc(32 * var(--pu));
@@ -384,6 +395,6 @@
   .pk-buybar strong { display: block; font-size: 15px; }
   .pk-buybar span { color: var(--muted); font-size: 14px; }
   .pk-hero, .pk-dhero { min-height: calc(70 * var(--vh)); }
-  .pk-search.is-stuck { top: 72px; }
+  .pk-search.is-stuck { top: 72px; width: 100%; }
   .pk-block, .pk-close, #pk-packages { scroll-margin-top: 140px; }
 }

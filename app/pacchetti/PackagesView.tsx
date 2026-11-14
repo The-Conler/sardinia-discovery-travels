@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { PK } from "./copy";
 import { DURATIONS, PACKAGES, THEMES, ZONES, durationBand, formatEuro } from "./packages";
 import type { DurationId, SamplePackage, ThemeId, ZoneId } from "./packages";
@@ -77,6 +78,21 @@ export function PackagesView() {
   }
 
   const hero = PACKAGES[0]?.images[0];
+  const search = (
+    <div className={`pk-search${stuck ? " is-stuck" : ""}${filtersOpen ? " is-open" : ""}`}>
+      <div className="pk-search-card">
+        {stuck && (
+          <button type="button" className="pk-filters-toggle" aria-expanded={filtersOpen} onClick={() => setFiltersOpen((open) => !open)}>
+            {t.filters}
+          </button>
+        )}
+        <Filter label={t.duration} value={duration} onChange={setDuration} options={[{ id: "all" as const, label: t.all }, ...DURATIONS.map((d) => ({ id: d.id, label: d[lang] }))]} />
+        <Filter label={t.zone} value={zone} onChange={setZone} options={[{ id: "all" as const, label: t.all }, ...ZONES.map((z) => ({ id: z.id, label: z[lang] }))]} />
+        <Filter label={t.theme} value={theme} onChange={setTheme} options={[{ id: "all" as const, label: t.all }, ...THEMES.map((th) => ({ id: th.id, label: th[lang] }))]} />
+      </div>
+    </div>
+  );
+  const bar = stuck && typeof document !== "undefined" ? createPortal(search, document.body) : search;
 
   return (
     <div className="pk-page" ref={root}>
@@ -91,18 +107,8 @@ export function PackagesView() {
       </section>
 
       <div className="pk-search-sentinel" ref={sentinel} aria-hidden="true" />
-      <div className={`pk-search${stuck ? " is-stuck" : ""}${filtersOpen ? " is-open" : ""}`}>
-        <div className="pk-search-card">
-          {stuck && (
-            <button type="button" className="pk-filters-toggle" aria-expanded={filtersOpen} onClick={() => setFiltersOpen((open) => !open)}>
-              {t.filters}
-            </button>
-          )}
-          <Filter label={t.duration} value={duration} onChange={setDuration} options={[{ id: "all" as const, label: t.all }, ...DURATIONS.map((d) => ({ id: d.id, label: d[lang] }))]} />
-          <Filter label={t.zone} value={zone} onChange={setZone} options={[{ id: "all" as const, label: t.all }, ...ZONES.map((z) => ({ id: z.id, label: z[lang] }))]} />
-          <Filter label={t.theme} value={theme} onChange={setTheme} options={[{ id: "all" as const, label: t.all }, ...THEMES.map((th) => ({ id: th.id, label: th[lang] }))]} />
-        </div>
-      </div>
+      {stuck && <div className="pk-search-spacer" aria-hidden="true" />}
+      {bar}
 
       <section className="pk-block" data-reveal>
         <h2>{t.deals}</h2>
