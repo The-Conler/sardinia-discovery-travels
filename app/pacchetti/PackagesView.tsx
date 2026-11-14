@@ -21,6 +21,7 @@ export function PackagesView() {
   const root = useRef<HTMLDivElement>(null);
   const sentinel = useRef<HTMLDivElement>(null);
   const [stuck, setStuck] = useState(false);
+  const [overFooter, setOverFooter] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [duration, setDuration] = useState<DurationId | "all">("all");
   const [zone, setZone] = useState<ZoneId | "all">("all");
@@ -61,6 +62,14 @@ export function PackagesView() {
     return () => io.disconnect();
   }, []);
 
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (!footer) return;
+    const io = new IntersectionObserver(([entry]) => setOverFooter(entry.isIntersecting), { threshold: 0 });
+    io.observe(footer);
+    return () => io.disconnect();
+  }, []);
+
   function pickZone(id: ZoneId) {
     setZone(id);
     document.getElementById("pk-packages")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -68,7 +77,7 @@ export function PackagesView() {
 
   const hero = PACKAGES[0]?.images[0];
   const search = (
-    <div className={`pk-search${stuck ? " is-stuck" : ""}${filtersOpen ? " is-open" : ""}`}>
+    <div className={`pk-search${stuck ? " is-stuck" : ""}${filtersOpen ? " is-open" : ""}${stuck && overFooter ? " is-hidden" : ""}`}>
       <div className="pk-search-card">
         {stuck && (
             <button type="button" className="pk-filters-toggle trip-tab" aria-expanded={filtersOpen} onClick={() => setFiltersOpen((open) => !open)}>
