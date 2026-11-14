@@ -259,7 +259,41 @@
 }
 .pk-actions { display: flex; flex-wrap: wrap; align-items: center; gap: calc(12 * var(--pu)) calc(18 * var(--pu)); margin-top: calc(16 * var(--pu)); }
 .pk-actions .pk-link { margin-top: 0; }
-.pk-actions .button-02 { flex: none; }
+.pk-page .button-02,
+.pk-detail .button-02 {
+  height: calc(48 * var(--pu));
+  font-size: calc(16 * var(--pu));
+}
+.pk-page .button-02 .inner,
+.pk-page .button-02 .circle,
+.pk-detail .button-02 .inner,
+.pk-detail .button-02 .circle {
+  height: calc(48 * var(--pu));
+  font-size: calc(16 * var(--pu));
+}
+.pk-page .button-02 .inner,
+.pk-detail .button-02 .inner { padding-inline: calc(22 * var(--pu)); }
+.pk-page .button-02 .circle,
+.pk-detail .button-02 .circle { width: calc(48 * var(--pu)); }
+.pk-page .button-02:hover .inner,
+.pk-detail .button-02:hover .inner { width: calc(100% - calc(52 * var(--pu))); }
+.pk-deal .arrow_link,
+.pk-actions .arrow_link {
+  min-width: 0;
+  width: auto;
+  overflow: visible;
+  text-transform: none;
+  font-size: calc(16 * var(--pu));
+}
+.pk-deal .arrow_link span,
+.pk-actions .arrow_link span,
+.pk-deal .arrow_link:hover span,
+.pk-actions .arrow_link:hover span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transform: none;
+}
 
 .pk-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: calc(22 * var(--pu)); }
 .pk-zones { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: calc(14 * var(--pu)); }
