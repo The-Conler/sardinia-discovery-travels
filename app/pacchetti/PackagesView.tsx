@@ -199,18 +199,18 @@ export function PackagesView() {
             <div className="ht-head ht-head--stays">
               <div>
                 <p className="ht-kicker">{t.examples}</p>
-                <h2 id="pk-examples-title" className="ht-title">{t.deals}</h2>
-                <p className="ht-lead">{t.intro}</p>
-              </div>
-              <div className="ht-stays-side">
-                <div className="ht-arrows">
-                  <button type="button" className="ht-arrow" aria-label={lang === "it" ? "Esempi precedenti" : "Previous examples"} disabled={!canPrev} onClick={() => step(-1)}>
-                    <HIcon name="arrowLeft" size={20} />
-                  </button>
-                  <button type="button" className="ht-arrow" aria-label={lang === "it" ? "Esempi successivi" : "Next examples"} disabled={!canNext} onClick={() => step(1)}>
-                    <HIcon name="arrowRight" size={20} />
-                  </button>
+                <div className="pk-examples-titleline">
+                  <h2 id="pk-examples-title" className="ht-title">{t.deals}</h2>
+                  <div className="ht-arrows">
+                    <button type="button" className="ht-arrow" aria-label={lang === "it" ? "Esempi precedenti" : "Previous examples"} disabled={!canPrev} onClick={() => step(-1)}>
+                      <HIcon name="arrowLeft" size={16} />
+                    </button>
+                    <button type="button" className="ht-arrow" aria-label={lang === "it" ? "Esempi successivi" : "Next examples"} disabled={!canNext} onClick={() => step(1)}>
+                      <HIcon name="arrowRight" size={16} />
+                    </button>
+                  </div>
                 </div>
+                <p className="ht-lead">{t.intro}</p>
               </div>
             </div>
           <div
@@ -306,7 +306,7 @@ function ArrowLink({ href, children }: { href: string; children: string }) {
 const CHIPS: Record<ThemeId, { icon: string; it: string; en: string }[]> = {
   mare: [
     { icon: "ship", it: "Barca", en: "Boat" },
-    { icon: "seaview", it: "Vista mare", en: "Sea view" },
+    { icon: "seaview", it: "Mare", en: "Sea view" },
     { icon: "parking", it: "Parcheggio", en: "Parking" },
   ],
   natura: [
@@ -330,27 +330,34 @@ function euroMark(amount: number) {
   return `€${formatEuro(amount).replace(/\s*€$/, "")}`;
 }
 
+const CARD_FOCUS: Record<string, string> = {
+  "esempio-costa-smeralda": "center 46%",
+  "esempio-supramonte": "center 40%",
+  "esempio-tavola-gallura": "center 72%",
+  "esempio-nuraghi": "center 30%",
+};
+
 function DealCard({ pkg, lang, saved, onSave }: { pkg: SamplePackage; lang: "it" | "en"; saved: boolean; onSave: () => void }) {
   const t = PK[lang];
   const copy = pkg[lang];
   const zone = ZONES.find((z) => z.id === pkg.zone)?.[lang] ?? "";
   return (
     <article className="ht-card" role="listitem" aria-label={copy.title}>
-      <img className="ht-card-img" src={pkg.images[0]} alt="" loading="lazy" decoding="async" draggable={false} />
+      <img className="ht-card-img" src={pkg.images[0]} alt="" loading="lazy" decoding="async" draggable={false} style={{ objectPosition: CARD_FOCUS[pkg.slug] ?? "center" }} />
       <div className="ht-card-shade" aria-hidden="true" />
       <div className="ht-card-top">
         <span className="pk-badge">{t.example}</span>
         <button type="button" className={`ht-heart${saved ? " is-on" : ""}`} aria-pressed={saved} aria-label={lang === "it" ? `Salva ${copy.title}` : `Save ${copy.title}`} onClick={onSave}>
-          <HIcon name="heart" size={18} />
+          <HIcon name="heart" size={13} />
         </button>
       </div>
       <div className="ht-card-body">
         <h3 className="ht-card-title">{copy.title}</h3>
-        <p className="ht-card-meta"><HIcon name="clock" size={16} />{t.nights(pkg.days, pkg.nights)} · {zone}</p>
+        <p className="ht-card-meta"><HIcon name="clock" size={12} />{t.nights(pkg.days, pkg.nights)} · {zone}</p>
         <p className="ht-card-text">{copy.intro}</p>
         <ul className="ht-amen">
           {CHIPS[pkg.theme].map((chip) => (
-            <li key={chip.icon}><HIcon name={chip.icon} size={16} />{chip[lang]}</li>
+            <li key={chip.icon}><HIcon name={chip.icon} size={12} />{chip[lang]}</li>
           ))}
         </ul>
         <div className="pk-card-foot">
@@ -359,7 +366,7 @@ function DealCard({ pkg, lang, saved, onSave }: { pkg: SamplePackage; lang: "it"
             <strong>{euroMark(pkg.priceFrom)}</strong>
             <span className="ht-price-night">/ {t.per}</span>
           </p>
-          <a className="ht-arrow" href={`/pacchetti/${pkg.slug}`} aria-label={t.discover}><HIcon name="arrowRight" size={18} /></a>
+          <a className="ht-arrow" href={`/pacchetti/${pkg.slug}`} aria-label={t.discover}><HIcon name="arrowRight" size={14} /></a>
         </div>
       </div>
     </article>

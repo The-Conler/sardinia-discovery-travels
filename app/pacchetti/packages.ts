@@ -91,7 +91,7 @@ export const PACKAGES: SamplePackage[] = [
     ],
     it: {
       title: "Quattro giorni in Costa Smeralda",
-      intro: "Un viaggio di prova tra cale e isole. Il programma e il prezzo sono inventati, da sostituire con un viaggio vero.",
+      intro: "Un viaggio di prova tra cale e isole. Programma e prezzo sono solo un esempio.",
       days: [
         { title: "Arrivo a Olbia", text: "Trasferimento di esempio verso un paese della costa. Passeggiata serale sul porto. Nessuna prenotazione reale." },
         { title: "Arcipelago", text: "Giornata in barca di esempio verso calette vicine. Soste per nuotare, rientro nel pomeriggio." },
@@ -104,7 +104,7 @@ export const PACKAGES: SamplePackage[] = [
     },
     en: {
       title: "Four days on the Costa Smeralda",
-      intro: "A sample trip of coves and islands. The plan and the price are made up, and will be replaced by a real trip.",
+      intro: "A sample trip of coves and islands. The plan and the price are examples.",
       days: [
         { title: "Arrival in Olbia", text: "A sample transfer to a coastal village. An evening walk on the harbour. Nothing here is a real booking." },
         { title: "The archipelago", text: "A sample boat day toward nearby coves, with swimming stops and a return in the afternoon." },
