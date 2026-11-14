@@ -253,10 +253,18 @@ export function PackagesView() {
       </section>
 
       <section className="pk-block ht-page pk-reco" id="pk-packages" data-reveal>
-        <h2>{t.recommended}</h2>
         <div className="pk-reco-inner">
+          <h2 className="pk-reco-title">
+            {t.recoLead}{" "}
+            <span className="pk-reco-word">
+              {t.recoWord}
+              <svg className="pk-reco-swoosh" viewBox="0 0 160 16" aria-hidden="true">
+                <path d="M2 10c16-8 30 7 48-1 16-7 26 8 44 1 16-6 28 5 46-2 8-2 14 2 18 1" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </span>
+          </h2>
           <div className="pk-reco-track" role="list">
-            {(list.length >= 4 ? list : PACKAGES).map((p) => <PackageCard key={p.slug} pkg={p} lang={lang} />)}
+            {PACKAGES.map((p) => <PackageCard key={p.slug} pkg={p} lang={lang} />)}
           </div>
         </div>
       </section>
@@ -358,24 +366,15 @@ function PackageCard({ pkg, lang }: { pkg: SamplePackage; lang: "it" | "en" }) {
     <article className="pk-ticket" role="listitem">
       <img src={pkg.images[0]} alt="" style={{ objectPosition: CARD_FOCUS[pkg.slug] ?? "center" }} />
       <div className="pk-ticket-shade" aria-hidden="true" />
-      <span className="pk-badge">{t.example}</span>
-      <h3>{copy.title}</h3>
       <div className="pk-ticket-lower">
-        <p className="pk-ticket-meta">{t.nights(pkg.days, pkg.nights)} · {t.from}</p>
-        <p className="pk-ticket-price">{euroMark(pkg.priceFrom)}</p>
+        <h3>{copy.title}</h3>
+        <p className="pk-ticket-when"><HIcon name="calendar" size={14} />{t.nights(pkg.days, pkg.nights)}</p>
+        <p className="pk-ticket-from">{t.from}</p>
+        <p className="pk-ticket-price">{formatEuro(pkg.priceFrom)}</p>
         <p className="pk-ticket-per">{t.per}</p>
-        <a className="arrow_link pk-ticket-cta" href={`/pacchetti/${pkg.slug}`}>
-          <span>
-            {t.discover}
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="10" viewBox="0 0 50.987 14.208" aria-hidden="true">
-              <g transform="translate(-1143 -7586.331)">
-                <g transform="translate(1164.072 7575.435)">
-                  <path d="M7.5,18H57.073" transform="translate(-28.573)" fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="2" />
-                  <path d="M18,7.5l6.4,6.4-6.4,6.4" transform="translate(4.103 4.103)" fill="none" stroke="currentColor" strokeWidth="2" />
-                </g>
-              </g>
-            </svg>
-          </span>
+        <a className="pk-ticket-cta" href={`/pacchetti/${pkg.slug}`}>
+          {t.discover}
+          <span className="pk-ticket-arrow" aria-hidden="true">→</span>
         </a>
       </div>
     </article>

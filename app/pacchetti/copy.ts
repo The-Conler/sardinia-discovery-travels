@@ -12,7 +12,8 @@ export const PK = {
     deals: "Esempi per il prossimo viaggio",
     examples: "Esempi",
     zones: "Le zone della Sardegna",
-    recommended: "Pacchetti consigliati",
+    recoLead: "Scopri i nostri migliori",
+    recoWord: "pacchetti",
     why: "Perché questi esempi",
     whyItems: [
       { title: "Sempre esempio", text: "Ogni viaggio in pagina è un campione. Il badge Esempio resta finché non lo sostituiamo." },
@@ -51,7 +52,8 @@ export const PK = {
     deals: "Examples for the next trip",
     examples: "Examples",
     zones: "Sardinia’s areas",
-    recommended: "Recommended packages",
+    recoLead: "Explore our top",
+    recoWord: "packages",
     why: "Why these examples",
     whyItems: [
       { title: "Always an example", text: "Every trip on this page is a sample. The Example badge stays until we replace it." },
