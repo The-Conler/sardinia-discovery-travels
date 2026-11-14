@@ -341,12 +341,14 @@ export function PackagesView() {
                   <span className="pk-area-body">
                     <ZoneIcon name={card.icon} />
                     <strong>{z[lang]}</strong>
-                    <em>{ZONE_LINE[z.id]}</em>
-                    <span className="pk-area-go" aria-hidden="true">
+                    <span className="pk-area-line">
+                      <em>{ZONE_LINE[z.id]}</em>
+                      <span className="pk-area-go" aria-hidden="true">
                       <span className="pk-area-go-rail">
                         <span><HIcon name="arrowRight" size={14} /></span>
                         <span><HIcon name="arrowRight" size={14} /></span>
                       </span>
+                    </span>
                     </span>
                   </span>
                 </button>
