@@ -566,9 +566,9 @@
 }
 .pk-reco .pk-reco-title {
   position: relative;
-  max-width: 14em;
-  margin: 0 auto calc(56 * var(--pu));
-  text-align: center;
+  max-width: none;
+  margin: 0 0 calc(48 * var(--pu));
+  text-align: left;
   font-family: var(--font-display-serif, "Playfair Display"), Georgia, serif;
   font-weight: 500;
   font-style: normal;
@@ -588,7 +588,7 @@
   bottom: calc(-6 * var(--pu));
   width: 108%;
   height: calc(12 * var(--pu));
-  color: #2b7780;
+  color: #079a98;
   overflow: visible;
   pointer-events: none;
 }
@@ -606,7 +606,7 @@
 .pk-ticket {
   --notch: calc(14 * var(--pu));
   position: relative;
-  aspect-ratio: 3 / 5;
+  aspect-ratio: 3 / 5.15;
   overflow: hidden;
   border-radius: calc(26 * var(--pu));
   background: #1c1a18;
@@ -641,7 +641,7 @@
 .pk-ticket-shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.08) 42%, rgba(0, 0, 0, 0.55) 68%, rgba(0, 0, 0, 0.82) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 48%, rgba(0, 0, 0, 0.28) 62%, rgba(0, 0, 0, 0.62) 100%);
   pointer-events: none;
 }
 .pk-ticket-lower {
@@ -649,13 +649,13 @@
   z-index: 1;
   left: 0;
   right: 0;
-  top: 56%;
+  top: calc(55% + var(--notch) + 8px);
   bottom: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  padding: 0 calc(16 * var(--pu)) calc(12 * var(--pu));
+  padding: 0 calc(20 * var(--pu)) calc(24 * var(--pu));
 }
 .pk-ticket h3 {
   margin: 0 0 calc(4 * var(--pu));
@@ -663,9 +663,10 @@
   font-family: var(--font-display-serif, "Playfair Display"), Georgia, serif;
   font-style: italic;
   font-weight: 500;
-  font-size: calc(24 * var(--pu));
+  font-size: calc(22 * var(--pu));
   line-height: 1.05;
   letter-spacing: -0.02em;
+  white-space: nowrap;
 }
 .pk-ticket-when {
   display: flex;
@@ -704,7 +705,7 @@
   margin-top: auto;
   padding: 0;
   background: none;
-  color: #2b7780;
+  color: #2ee0d6;
   font-size: calc(15 * var(--pu));
   font-weight: 600;
   line-height: 1;

@@ -311,6 +311,13 @@ function euroMark(amount: number) {
   return `€${formatEuro(amount).replace(/\s*€$/, "")}`;
 }
 
+const TICKET_NAME: Record<string, { it: string; en: string }> = {
+  "esempio-costa-smeralda": { it: "Costa Smeralda", en: "Costa Smeralda" },
+  "esempio-supramonte": { it: "Sentieri del Supramonte", en: "Supramonte trails" },
+  "esempio-tavola-gallura": { it: "Tavola in Gallura", en: "A Gallura table" },
+  "esempio-nuraghi": { it: "Nuraghi e paesi", en: "Nuraghi and villages" },
+};
+
 const CARD_FOCUS: Record<string, string> = {
   "esempio-costa-smeralda": "center 46%",
   "esempio-supramonte": "center 40%",
@@ -367,7 +374,7 @@ function PackageCard({ pkg, lang }: { pkg: SamplePackage; lang: "it" | "en" }) {
       <img src={pkg.images[0]} alt="" style={{ objectPosition: CARD_FOCUS[pkg.slug] ?? "center" }} />
       <div className="pk-ticket-shade" aria-hidden="true" />
       <div className="pk-ticket-lower">
-        <h3>{copy.title}</h3>
+        <h3>{TICKET_NAME[pkg.slug]?.[lang] ?? copy.title}</h3>
         <p className="pk-ticket-when"><HIcon name="calendar" size={14} />{t.nights(pkg.days, pkg.nights)}</p>
         <p className="pk-ticket-from">{t.from}</p>
         <p className="pk-ticket-price">{formatEuro(pkg.priceFrom)}</p>
