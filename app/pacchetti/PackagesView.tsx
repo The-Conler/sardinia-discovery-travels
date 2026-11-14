@@ -82,7 +82,7 @@ export function PackagesView() {
     <div className={`pk-search${stuck ? " is-stuck" : ""}${filtersOpen ? " is-open" : ""}`}>
       <div className="pk-search-card">
         {stuck && (
-          <button type="button" className="pk-filters-toggle" aria-expanded={filtersOpen} onClick={() => setFiltersOpen((open) => !open)}>
+            <button type="button" className="pk-filters-toggle trip-tab" aria-expanded={filtersOpen} onClick={() => setFiltersOpen((open) => !open)}>
             {t.filters}
           </button>
         )}
@@ -125,7 +125,7 @@ export function PackagesView() {
             const inZone = PACKAGES.filter((p) => p.zone === z.id);
             const cheapest = inZone.reduce((min, p) => Math.min(min, p.priceFrom), Number.POSITIVE_INFINITY);
             return (
-              <button key={z.id} type="button" className={`pk-zone${zone === z.id ? " is-on" : ""}`} onClick={() => pickZone(z.id)}>
+              <button key={z.id} type="button" className={`pk-zone service-story-card${zone === z.id ? " is-on" : ""}`} onClick={() => pickZone(z.id)}>
                 <img src={ZONE_IMAGE[z.id]} alt="" />
                 <span>
                   <strong>{z[lang]}</strong>
@@ -150,7 +150,7 @@ export function PackagesView() {
         <h2>{t.themes}</h2>
         <div className="pk-themes">
           {THEMES.map((th) => (
-            <button key={th.id} type="button" className={`pk-theme${theme === th.id ? " is-on" : ""}`} onClick={() => pickTheme(th.id)}>
+            <button key={th.id} type="button" className={`pk-theme service-story-card${theme === th.id ? " is-on" : ""}`} onClick={() => pickTheme(th.id)}>
               <img src={THEME_IMAGE[th.id]} alt="" />
               <strong>{th[lang]}</strong>
             </button>
@@ -162,7 +162,7 @@ export function PackagesView() {
         <h2>{t.why}</h2>
         <div className="pk-why">
           {t.whyItems.map((item) => (
-            <article key={item.title}>
+            <article className="ct-tile" key={item.title}>
               <h3>{item.title}</h3>
               <p>{item.text}</p>
             </article>
@@ -173,9 +173,36 @@ export function PackagesView() {
       <section className="pk-close" data-reveal>
         <h2>{t.closing}</h2>
         <p>{t.closingText}</p>
-        <a className="pk-pill" href={`/contact?lang=${lang}`}>{t.closingCta}</a>
+        <SiteButton href={`/contact?lang=${lang}`}>{t.closingCta}</SiteButton>
       </section>
     </div>
+  );
+}
+
+function SiteButton({ href, children }: { href: string; children: string }) {
+  return (
+    <a className="button-02 button-02--teal" href={href}>
+      <span className="inner">{children}</span>
+      <span className="circle" aria-hidden="true"><span>→</span></span>
+    </a>
+  );
+}
+
+function ArrowLink({ href, children }: { href: string; children: string }) {
+  return (
+    <a className="arrow_link white" href={href}>
+      <span>
+        {children}
+        <svg xmlns="http://www.w3.org/2000/svg" width="50.987" height="14.208" viewBox="0 0 50.987 14.208" aria-hidden="true">
+          <g transform="translate(-1143 -7586.331)">
+            <g transform="translate(1164.072 7575.435)">
+              <path d="M7.5,18H57.073" transform="translate(-28.573)" fill="none" stroke="#fff" strokeLinejoin="round" strokeWidth="2" />
+              <path d="M18,7.5l6.4,6.4-6.4,6.4" transform="translate(4.103 4.103)" fill="none" stroke="#fff" strokeWidth="2" />
+            </g>
+          </g>
+        </svg>
+      </span>
+    </a>
   );
 }
 
@@ -185,7 +212,7 @@ function DealCard({ pkg, lang }: { pkg: SamplePackage; lang: "it" | "en" }) {
   const zone = ZONES.find((z) => z.id === pkg.zone)?.[lang] ?? "";
   return (
     <article className="pk-deal">
-      <a className="pk-deal-photo" href={`/pacchetti/${pkg.slug}`}>
+      <a className="pk-deal-photo service-story-card" href={`/pacchetti/${pkg.slug}`}>
         <img src={pkg.images[0]} alt="" />
         <span className="pk-badge">{t.example}</span>
       </a>
@@ -194,7 +221,7 @@ function DealCard({ pkg, lang }: { pkg: SamplePackage; lang: "it" | "en" }) {
         <p className="pk-meta">{t.nights(pkg.days, pkg.nights)} · {zone}</p>
         <p>{copy.intro}</p>
         <p className="pk-price">{t.from} {formatEuro(pkg.priceFrom)} {t.per}</p>
-        <a className="pk-link" href={`/pacchetti/${pkg.slug}`}>{t.discover} ›</a>
+        <ArrowLink href={`/pacchetti/${pkg.slug}`}>{t.discover}</ArrowLink>
       </div>
     </article>
   );
@@ -207,7 +234,7 @@ function PackageCard({ pkg, lang }: { pkg: SamplePackage; lang: "it" | "en" }) {
   const theme = THEMES.find((th) => th.id === pkg.theme)?.[lang] ?? "";
   return (
     <article className="pk-card">
-      <a className="pk-card-photo" href={`/pacchetti/${pkg.slug}`}>
+      <a className="pk-card-photo service-story-card" href={`/pacchetti/${pkg.slug}`}>
         <img src={pkg.images[0]} alt="" />
         <span className="pk-badge">{t.example}</span>
         <span className="pk-nights">{t.nights(pkg.days, pkg.nights)}</span>
@@ -218,8 +245,8 @@ function PackageCard({ pkg, lang }: { pkg: SamplePackage; lang: "it" | "en" }) {
         <p className="pk-price">{t.from} {formatEuro(pkg.priceFrom)}</p>
         <p className="pk-per">{t.per}</p>
         <div className="pk-actions">
-          <a className="pk-pill" href={`/pacchetti/${pkg.slug}`}>{t.discover}</a>
-          <a className="pk-link" href={`/contact?package=${pkg.slug}&lang=${lang}`}>{t.request} ›</a>
+          <SiteButton href={`/pacchetti/${pkg.slug}`}>{t.discover}</SiteButton>
+          <ArrowLink href={`/contact?package=${pkg.slug}&lang=${lang}`}>{t.request}</ArrowLink>
         </div>
       </div>
     </article>
@@ -232,7 +259,7 @@ function Filter<T extends string>({ label, value, onChange, options }: { label: 
       <span>{label}</span>
       <div className="pk-chips" role="radiogroup" aria-label={label}>
         {options.map((o) => (
-          <button key={o.id} type="button" role="radio" aria-checked={value === o.id} className={`pk-chip${value === o.id ? " is-on" : ""}`} onClick={() => onChange(o.id)}>
+          <button key={o.id} type="button" role="radio" aria-checked={value === o.id} className={`pk-chip trip-tab${value === o.id ? " is-on is-active" : ""}`} onClick={() => onChange(o.id)}>
             {o.label}
           </button>
         ))}

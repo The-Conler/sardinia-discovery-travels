@@ -52,13 +52,13 @@ export function PackageDetail({ pkg }: { pkg: SamplePackage }) {
 
         <div className="pk-thumbs" role="group" aria-label={t.gallery}>
           {pkg.images.map((src, i) => (
-            <button key={src} type="button" className={i === photo ? "is-on" : ""} aria-pressed={i === photo} onClick={() => setPhoto(i)}>
+            <button key={src} type="button" className={`north-detail-thumb${i === photo ? " is-on" : ""}`} aria-pressed={i === photo} onClick={() => setPhoto(i)}>
               <img src={src} alt="" />
             </button>
           ))}
         </div>
 
-        <ol className="pk-days">
+        <ol className="pk-days pt-faq-list">
           {copy.days.map((day, i) => {
             const on = open === i;
             return (
@@ -99,7 +99,7 @@ export function PackageDetail({ pkg }: { pkg: SamplePackage }) {
           <p className="pk-per">{t.per}</p>
           <p className="pk-meta">{t.nights(pkg.days, pkg.nights)} · {zone}</p>
           <p className="pk-note">{t.priceNote}</p>
-          <a className="pk-pill" href={contact}>{t.request}</a>
+          <a className="button-02 button-02--teal" href={contact}><span className="inner">{t.request}</span><span className="circle" aria-hidden="true"><span>→</span></span></a>
         </aside>
       </div>
 
@@ -108,7 +108,7 @@ export function PackageDetail({ pkg }: { pkg: SamplePackage }) {
           <strong>{copy.title}</strong>
           <span>{t.from} {formatEuro(pkg.priceFrom)} {t.per}</span>
         </div>
-        <a className="pk-pill" href={contact}>{t.request}</a>
+        <a className="button-02 button-02--teal" href={contact}><span className="inner">{t.request}</span><span className="circle" aria-hidden="true"><span>→</span></span></a>
       </div>
     </article>
   );
