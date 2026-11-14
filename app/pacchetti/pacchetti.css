@@ -1,6 +1,7 @@
 @import "../contact/contact.css";
 @import "../destinations/north-sardinia/north-sardinia.css";
 @import "../private-transfers/private-transfers.css";
+@import "../hotels/hotels.css";
 /* Packages. Desktop zoom is 0.5, so --pu is one visual pixel and --vh
    is one visual viewport-height percent. Sections span the page. */
 .pk-page,
@@ -190,7 +191,32 @@
   width: min(100%, calc(1280 * var(--pu)));
   margin: 0 auto;
 }
-.pk-deals { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: calc(22 * var(--pu)); }
+.pk-examples .ht-head { align-items: start; }
+.pk-examples .ht-stays-side { align-items: flex-end; }
+.pk-examples .ht-lead { margin-top: calc(14 * var(--hu)); }
+.pk-examples .ht-track {
+  --ht-edge: 0px;
+  width: 100%;
+  grid-auto-columns: calc((100% - 3 * 20 * var(--hu)) / 4);
+  padding-inline: 0;
+}
+.pk-examples .ht-card { justify-content: flex-start; }
+.pk-examples .ht-card-img,
+.pk-examples .ht-card-shade { height: 55%; bottom: auto; }
+.pk-examples .ht-card-body { position: relative; z-index: 1; margin-top: 55%; flex: 1; }
+.pk-examples .ht-card-top { justify-content: space-between; }
+.pk-examples .ht-card-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pk-examples .pk-card-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: calc(12 * var(--hu)); margin-top: auto; }
+.pk-examples .pk-card-foot .ht-price { margin: 0; }
+.pk-examples a.ht-arrow { text-decoration: none; }
+@media (max-width: 860px) {
+  .pk-examples .ht-track { grid-auto-columns: 100%; }
+}
 .pk-deal, .pk-card {
   overflow: hidden;
   border-radius: calc(24 * var(--pu));

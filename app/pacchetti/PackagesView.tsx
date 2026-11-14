@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import { createPortal } from "react-dom";
 import { PK } from "./copy";
 import { DURATIONS, PACKAGES, THEMES, ZONES, durationBand, formatEuro } from "./packages";
 import type { DurationId, SamplePackage, ThemeId, ZoneId } from "./packages";
 import { useSiteLang } from "../siteLang";
+import { HIcon } from "../hotels/icons";
 
 const ZONE_IMAGE: Record<ZoneId, string> = {
   nord: "/destinations/north/nd-costa-smeralda.webp",
@@ -70,6 +72,77 @@ export function PackagesView() {
     return () => io.disconnect();
   }, []);
 
+  const [saved, setSaved] = useState<Set<string>>(() => new Set());
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(true);
+  const updateArrows = useCallback(() => {
+    const t = trackRef.current;
+    if (!t) return;
+    setCanPrev(t.scrollLeft > 4);
+    setCanNext(t.scrollLeft + t.clientWidth < t.scrollWidth - 4);
+  }, []);
+  useEffect(() => {
+    updateArrows();
+    window.addEventListener("resize", updateArrows);
+    return () => window.removeEventListener("resize", updateArrows);
+  }, [updateArrows]);
+  const snapTimer = useRef<number | undefined>(undefined);
+  const step = (dir: 1 | -1) => {
+    const t = trackRef.current;
+    if (!t) return;
+    const card = t.querySelector<HTMLElement>(".ht-card");
+    const gap = parseFloat(getComputedStyle(t).columnGap) || 0;
+    const size = card ? card.offsetWidth + gap : t.clientWidth;
+    const max = t.scrollWidth - t.clientWidth;
+    const target = Math.max(0, Math.min(max, (Math.round(t.scrollLeft / size) + dir) * size));
+    t.style.scrollSnapType = "none";
+    t.scrollTo({ left: target, behavior: "smooth" });
+    window.clearTimeout(snapTimer.current);
+    snapTimer.current = window.setTimeout(() => {
+      t.style.scrollSnapType = "";
+    }, 700);
+  };
+  const drag = useRef<{ x: number; left: number; moved: boolean; id: number; k: number } | null>(null);
+  const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse" || e.button !== 0) return;
+    const t = trackRef.current;
+    if (!t) return;
+    const w = t.getBoundingClientRect().width;
+    drag.current = { x: e.clientX, left: t.scrollLeft, moved: false, id: e.pointerId, k: w > 0 ? t.clientWidth / w : 1 };
+  };
+  const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const d = drag.current;
+    const t = trackRef.current;
+    if (!d || !t) return;
+    const dx = e.clientX - d.x;
+    if (!d.moved && Math.abs(dx) > 5) {
+      d.moved = true;
+      t.classList.add("is-dragging");
+      t.setPointerCapture(d.id);
+    }
+    if (d.moved) t.scrollLeft = d.left - dx * d.k;
+  };
+  const endDrag = () => {
+    const d = drag.current;
+    const t = trackRef.current;
+    drag.current = null;
+    if (!d || !t || !d.moved) return;
+    t.classList.remove("is-dragging");
+    const stop = (ev: MouseEvent) => {
+      ev.stopPropagation();
+      ev.preventDefault();
+    };
+    t.addEventListener("click", stop, { capture: true, once: true });
+    setTimeout(() => t.removeEventListener("click", stop, { capture: true }), 0);
+  };
+  const toggleSaved = (id: string) => setSaved((prev) => {
+    const next = new Set(prev);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    return next;
+  });
+
   function pickZone(id: ZoneId) {
     setZone(id);
     document.getElementById("pk-packages")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -108,13 +181,45 @@ export function PackagesView() {
       {stuck && <div className="pk-search-spacer" aria-hidden="true" />}
       {bar}
 
-      <section className="pk-block" data-reveal>
-        <h2>{t.deals}</h2>
-        <p className="pk-intro">{t.intro}</p>
-        <div className="pk-deals">
-          {PACKAGES.map((p) => <DealCard key={p.slug} pkg={p} lang={lang} />)}
-        </div>
-      </section>
+      <div className="ht-page pk-examples" data-reveal>
+        <section className="ht-section ht-stays" aria-labelledby="pk-examples-title">
+          <div className="ht-inner">
+            <div className="ht-head ht-head--stays">
+              <div>
+                <p className="ht-kicker">{t.examples}</p>
+                <h2 id="pk-examples-title" className="ht-title">{t.deals}</h2>
+                <p className="ht-lead">{t.intro}</p>
+              </div>
+              <div className="ht-stays-side">
+                <div className="ht-arrows">
+                  <button type="button" className="ht-arrow" aria-label={lang === "it" ? "Esempi precedenti" : "Previous examples"} disabled={!canPrev} onClick={() => step(-1)}>
+                    <HIcon name="arrowLeft" size={20} />
+                  </button>
+                  <button type="button" className="ht-arrow" aria-label={lang === "it" ? "Esempi successivi" : "Next examples"} disabled={!canNext} onClick={() => step(1)}>
+                    <HIcon name="arrowRight" size={20} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ht-track"
+            ref={trackRef}
+            role="list"
+            aria-label={t.deals}
+            onScroll={updateArrows}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={endDrag}
+            onPointerCancel={endDrag}
+            onDragStart={(e) => e.preventDefault()}
+          >
+            {PACKAGES.map((p) => (
+              <DealCard key={p.slug} pkg={p} lang={lang} saved={saved.has(p.slug)} onSave={() => toggleSaved(p.slug)} />
+            ))}
+          </div>
+        </section>
+      </div>
 
       <section className="pk-block pk-block--lift" data-reveal>
         <h2>{t.zones}</h2>
@@ -186,22 +291,68 @@ function ArrowLink({ href, children }: { href: string; children: string }) {
   );
 }
 
-function DealCard({ pkg, lang }: { pkg: SamplePackage; lang: "it" | "en" }) {
+const CHIPS: Record<ThemeId, { icon: string; it: string; en: string }[]> = {
+  mare: [
+    { icon: "ship", it: "Barca", en: "Boat" },
+    { icon: "seaview", it: "Vista mare", en: "Sea view" },
+    { icon: "parking", it: "Parcheggio", en: "Parking" },
+  ],
+  natura: [
+    { icon: "mountain", it: "Trekking", en: "Hiking" },
+    { icon: "seaview", it: "Natura", en: "Nature" },
+    { icon: "users", it: "Privato", en: "Private" },
+  ],
+  enogastronomia: [
+    { icon: "breakfast", it: "Cibo", en: "Food" },
+    { icon: "wine", it: "Vino", en: "Wine" },
+    { icon: "pin", it: "Locale", en: "Local" },
+  ],
+  cultura: [
+    { icon: "landmark", it: "Cultura", en: "Culture" },
+    { icon: "note", it: "Storia", en: "History" },
+    { icon: "mountain", it: "Natura", en: "Nature" },
+  ],
+};
+
+function shortTitle(title: string) {
+  return title.replace(/^(Esempio|Example):\s*/i, "");
+}
+
+function euroMark(amount: number) {
+  return `€${formatEuro(amount).replace(/\s*€$/, "")}`;
+}
+
+function DealCard({ pkg, lang, saved, onSave }: { pkg: SamplePackage; lang: "it" | "en"; saved: boolean; onSave: () => void }) {
   const t = PK[lang];
   const copy = pkg[lang];
   const zone = ZONES.find((z) => z.id === pkg.zone)?.[lang] ?? "";
   return (
-    <article className="pk-deal">
-      <a className="pk-deal-photo service-story-card" href={`/pacchetti/${pkg.slug}`}>
-        <img src={pkg.images[0]} alt="" />
+    <article className="ht-card" role="listitem" aria-label={shortTitle(copy.title)}>
+      <img className="ht-card-img" src={pkg.images[0]} alt="" loading="lazy" decoding="async" draggable={false} />
+      <div className="ht-card-shade" aria-hidden="true" />
+      <div className="ht-card-top">
         <span className="pk-badge">{t.example}</span>
-      </a>
-      <div className="pk-deal-body">
-        <h3>{copy.title}</h3>
-        <p className="pk-meta">{t.nights(pkg.days, pkg.nights)} · {zone}</p>
-        <p>{copy.intro}</p>
-        <p className="pk-price">{t.from} {formatEuro(pkg.priceFrom)} {t.per}</p>
-        <ArrowLink href={`/pacchetti/${pkg.slug}`}>{t.discover}</ArrowLink>
+        <button type="button" className={`ht-heart${saved ? " is-on" : ""}`} aria-pressed={saved} aria-label={lang === "it" ? `Salva ${shortTitle(copy.title)}` : `Save ${shortTitle(copy.title)}`} onClick={onSave}>
+          <HIcon name="heart" size={18} />
+        </button>
+      </div>
+      <div className="ht-card-body">
+        <h3 className="ht-card-title">{shortTitle(copy.title)}</h3>
+        <p className="ht-card-meta"><HIcon name="clock" size={16} />{t.nights(pkg.days, pkg.nights)} · {zone}</p>
+        <p className="ht-card-text">{copy.intro}</p>
+        <ul className="ht-amen">
+          {CHIPS[pkg.theme].map((chip) => (
+            <li key={chip.icon}><HIcon name={chip.icon} size={16} />{chip[lang]}</li>
+          ))}
+        </ul>
+        <div className="pk-card-foot">
+          <p className="ht-price">
+            <span className="ht-price-from">{t.from}</span>
+            <strong>{euroMark(pkg.priceFrom)}</strong>
+            <span className="ht-price-night">/ {t.per}</span>
+          </p>
+          <a className="ht-arrow" href={`/pacchetti/${pkg.slug}`} aria-label={t.discover}><HIcon name="arrowRight" size={18} /></a>
+        </div>
       </div>
     </article>
   );
