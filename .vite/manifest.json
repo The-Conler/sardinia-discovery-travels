@@ -86,7 +86,7 @@
     ]
   },
   "app/HomeView.tsx": {
-    "file": "_next/static/chunks/HomeView-CnLt0n5C.js",
+    "file": "_next/static/chunks/HomeView-ZtAtKq7-.js",
     "name": "HomeView",
     "src": "app/HomeView.tsx",
     "isDynamicEntry": true,
@@ -100,7 +100,7 @@
     ]
   },
   "app/SiteHeader.tsx": {
-    "file": "_next/static/chunks/SiteHeader-x0VU8Lfd.js",
+    "file": "_next/static/chunks/SiteHeader-P8ulsv7E.js",
     "name": "SiteHeader",
     "src": "app/SiteHeader.tsx",
     "isDynamicEntry": true,
@@ -121,7 +121,7 @@
     ]
   },
   "app/boat-tours/page.tsx": {
-    "file": "_next/static/chunks/page-ovrOtJrI.js",
+    "file": "_next/static/chunks/page-CS5RfMzb.js",
     "name": "page",
     "src": "app/boat-tours/page.tsx",
     "isDynamicEntry": true,
@@ -271,7 +271,7 @@
     ]
   },
   "node_modules/vinext/dist/shims/layout-segment-context.js": {
-    "file": "_next/static/chunks/layout-segment-context-ZbnLMXhb.js",
+    "file": "_next/static/chunks/layout-segment-context-onC3XqZs.js",
     "name": "layout-segment-context",
     "src": "node_modules/vinext/dist/shims/layout-segment-context.js",
     "isDynamicEntry": true,
@@ -282,7 +282,7 @@
     ]
   },
   "node_modules/vinext/dist/shims/script.js": {
-    "file": "_next/static/chunks/script-DDaa_WBK.js",
+    "file": "_next/static/chunks/script-COynDDgL.js",
     "name": "script",
     "src": "node_modules/vinext/dist/shims/script.js",
     "isDynamicEntry": true,
@@ -293,7 +293,7 @@
     ]
   },
   "virtual:vinext-app-browser-entry": {
-    "file": "_next/static/chunks/index-74a4OE43.js",
+    "file": "_next/static/chunks/index-BzT2iL6f.js",
     "name": "index",
     "src": "virtual:vinext-app-browser-entry",
     "isEntry": true,
