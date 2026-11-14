@@ -166,7 +166,7 @@ export function PackagesView() {
     if (smoother && el) smoother.scrollTo(el, true, "top 80px");
     else el?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
-  const search = stuck ? (
+  const stuckBar = (
     <div className={`pk-search is-stuck${filtersOpen ? " is-open" : ""}${overFooter ? " is-hidden" : ""}`}>
       <div className="pk-search-card">
         <button type="button" className="pk-filters-toggle trip-tab" aria-expanded={filtersOpen} onClick={() => setFiltersOpen((open) => !open)}>
@@ -189,52 +189,85 @@ export function PackagesView() {
         )}
       </div>
     </div>
-  ) : (
-    <div className="pk-search pk-search--hero">
-      <form className="pk-hero-bar" onSubmit={(event) => { event.preventDefault(); explorePackages(event); }}>
-        <HeroField icon="calendar" label={t.duration} value={duration} onChange={setDuration} valueLabel={duration === "all" ? t.anyLength : DURATIONS.find((d) => d.id === duration)?.[lang] ?? t.anyLength} options={[{ id: "all" as const, label: t.anyLength }, ...DURATIONS.map((d) => ({ id: d.id, label: d[lang] }))]} />
-        <HeroField icon="pin" label={t.zone} value={zone} onChange={setZone} valueLabel={zone === "all" ? t.allAreas : ZONES.find((z) => z.id === zone)?.[lang] ?? t.allAreas} options={[{ id: "all" as const, label: t.allAreas }, ...ZONES.map((z) => ({ id: z.id, label: z[lang] }))]} />
-        <HeroField icon="mountain" label={t.theme} value={theme} onChange={setTheme} valueLabel={theme === "all" ? t.allThemes : THEMES.find((th) => th.id === theme)?.[lang] ?? t.allThemes} options={[{ id: "all" as const, label: t.allThemes }, ...THEMES.map((th) => ({ id: th.id, label: th[lang] }))]} />
-        <button type="submit" className="pk-hero-search" aria-label={t.heroCta}>
-          <HIcon name="search" size={20} />
-        </button>
-      </form>
-    </div>
   );
-  const bar = stuck && typeof document !== "undefined" ? createPortal(search, document.body) : search;
+  const bar = stuck && typeof document !== "undefined" ? createPortal(stuckBar, document.body) : null;
 
   return (
     <div className="pk-page" ref={root}>
-      <section className="pk-hero pk-hero-home">
+      <section className="pk-hero pk-hero-home ht-page">
         <img src={hero} alt="" />
         <div className="pk-shade" />
         <div className="pk-hero-halo" aria-hidden="true" />
-        <div className="pk-hero-copy">
-          <p className="pk-hero-kicker">
-            <span>{t.kicker}</span>
-            <span className="pk-hero-rule" aria-hidden="true">
-              <i />
-              <svg viewBox="0 0 24 24" width="16" height="16">
-                <path d="M3 13h11l-2 3M14 13l7-5-3 8-4-3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round" />
-              </svg>
-            </span>
-          </p>
-          <h1>{t.title}</h1>
-          <p className="pk-hero-sub">{t.heroSub}</p>
-          <a className="pk-hero-cta" href="#pk-packages" onClick={explorePackages}>
-            <span>{t.heroCta}</span>
-            <span className="pk-hero-cta-go" aria-hidden="true">
-              <span className="pk-hero-cta-rail">
-                <span>→</span>
-                <span>→</span>
+        <div className="ht-hero-inner">
+          <div className="pk-hero-copy">
+            <p className="pk-hero-kicker">
+              <span>{t.kicker}</span>
+              <span className="pk-hero-rule" aria-hidden="true">
+                <i />
+                <svg viewBox="0 0 24 24" width="16" height="16">
+                  <path d="M3 13h11l-2 3M14 13l7-5-3 8-4-3" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round" />
+                </svg>
               </span>
-            </span>
-          </a>
+            </p>
+            <h1>{t.title}</h1>
+            <p className="pk-hero-sub">{t.heroSub}</p>
+            <a className="pk-hero-cta" href="#pk-packages" onClick={explorePackages}>
+              <span>{t.heroCta}</span>
+              <span className="pk-hero-cta-go" aria-hidden="true">
+                <span className="pk-hero-cta-rail">
+                  <span>→</span>
+                  <span>→</span>
+                </span>
+              </span>
+            </a>
+          </div>
+          <form className="ht-search" role="search" aria-label={t.search} onSubmit={(event) => { event.preventDefault(); explorePackages(event); }}>
+            <div className="ht-search-fields">
+              <label className="ht-sf">
+                <span className="ht-sf-label">{t.duration}</span>
+                <span className="ht-sf-box">
+                  <HIcon name="calendar" size={20} />
+                  <select value={duration} aria-label={t.duration} onChange={(event) => setDuration(event.target.value as DurationId | "all")}>
+                    <option value="all">{t.anyLength}</option>
+                    {DURATIONS.map((item) => <option key={item.id} value={item.id}>{item[lang]}</option>)}
+                  </select>
+                  <span className="ht-sf-chev"><HIcon name="chevronDown" size={18} /></span>
+                </span>
+              </label>
+              <label className="ht-sf">
+                <span className="ht-sf-label">{t.zone}</span>
+                <span className="ht-sf-box">
+                  <HIcon name="pin" size={20} />
+                  <select value={zone} aria-label={t.zone} onChange={(event) => setZone(event.target.value as ZoneId | "all")}>
+                    <option value="all">{t.allAreas}</option>
+                    {ZONES.map((item) => <option key={item.id} value={item.id}>{item[lang]}</option>)}
+                  </select>
+                  <span className="ht-sf-chev"><HIcon name="chevronDown" size={18} /></span>
+                </span>
+              </label>
+              <label className="ht-sf">
+                <span className="ht-sf-label">{t.theme}</span>
+                <span className="ht-sf-box">
+                  <HIcon name="mountain" size={20} />
+                  <select value={theme} aria-label={t.theme} onChange={(event) => setTheme(event.target.value as ThemeId | "all")}>
+                    <option value="all">{t.allThemes}</option>
+                    {THEMES.map((item) => <option key={item.id} value={item.id}>{item[lang]}</option>)}
+                  </select>
+                  <span className="ht-sf-chev"><HIcon name="chevronDown" size={18} /></span>
+                </span>
+              </label>
+            </div>
+            <div className="ht-search-foot">
+              <button type="submit" className="ht-search-btn">
+                <HIcon name="search" size={18} />
+                {t.search}
+              </button>
+            </div>
+          </form>
         </div>
       </section>
 
       <div className="pk-search-sentinel" ref={sentinel} aria-hidden="true" />
-      {stuck && <div className="pk-search-spacer" aria-hidden="true" />}
       {bar}
 
       <div className="ht-page pk-examples" data-reveal>
@@ -484,42 +517,6 @@ function PackageCard({ pkg, lang }: { pkg: SamplePackage; lang: "it" | "en" }) {
         </a>
       </div>
     </article>
-  );
-}
-
-function HeroField<T extends string>({ icon, label, value, valueLabel, options, onChange }: { icon: "calendar" | "pin" | "mountain"; label: string; value: T; valueLabel: string; options: { id: T; label: string }[]; onChange: (v: T) => void }) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!open) return;
-    const close = (event: MouseEvent) => {
-      if (!ref.current?.contains(event.target as Node)) setOpen(false);
-    };
-    document.addEventListener("mousedown", close);
-    return () => document.removeEventListener("mousedown", close);
-  }, [open]);
-  return (
-    <div className={`pk-hero-field${open ? " is-open" : ""}`} ref={ref}>
-      <button type="button" aria-expanded={open} onClick={() => setOpen((current) => !current)}>
-        <HIcon name={icon} size={23} />
-        <span>
-          <small>{label}</small>
-          <strong>{valueLabel}</strong>
-        </span>
-        <HIcon name="chevronDown" size={16} />
-      </button>
-      {open && (
-        <ul>
-          {options.map((option) => (
-            <li key={option.id}>
-              <button type="button" aria-pressed={option.id === value} onClick={() => { onChange(option.id); setOpen(false); }}>
-                {option.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
   );
 }
 
