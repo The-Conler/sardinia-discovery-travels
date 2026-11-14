@@ -153,13 +153,25 @@ export function PackagesView() {
     <div className={`pk-search${stuck ? " is-stuck" : ""}${filtersOpen ? " is-open" : ""}${stuck && overFooter ? " is-hidden" : ""}`}>
       <div className="pk-search-card">
         {stuck && (
-            <button type="button" className="pk-filters-toggle trip-tab" aria-expanded={filtersOpen} onClick={() => setFiltersOpen((open) => !open)}>
+          <button type="button" className="pk-filters-toggle trip-tab" aria-expanded={filtersOpen} onClick={() => setFiltersOpen((open) => !open)}>
             {t.filters}
           </button>
         )}
-        <Filter label={t.duration} value={duration} onChange={setDuration} options={[{ id: "all" as const, label: t.all }, ...DURATIONS.map((d) => ({ id: d.id, label: d[lang] }))]} />
-        <Filter label={t.zone} value={zone} onChange={setZone} options={[{ id: "all" as const, label: t.all }, ...ZONES.map((z) => ({ id: z.id, label: z[lang] }))]} />
-        <Filter label={t.theme} value={theme} onChange={setTheme} options={[{ id: "all" as const, label: t.all }, ...THEMES.map((th) => ({ id: th.id, label: th[lang] }))]} />
+        {stuck && !filtersOpen ? (
+          <p className="pk-filter-summary">
+            {t.duration}: {duration === "all" ? t.summaryAll.duration : DURATIONS.find((d) => d.id === duration)?.[lang]}
+            {" · "}
+            {t.zone}: {zone === "all" ? t.summaryAll.zone : ZONES.find((z) => z.id === zone)?.[lang]}
+            {" · "}
+            {t.theme}: {theme === "all" ? t.summaryAll.theme : THEMES.find((th) => th.id === theme)?.[lang]}
+          </p>
+        ) : (
+          <>
+            <Filter label={t.duration} value={duration} onChange={setDuration} options={[{ id: "all" as const, label: t.all }, ...DURATIONS.map((d) => ({ id: d.id, label: d[lang] }))]} />
+            <Filter label={t.zone} value={zone} onChange={setZone} options={[{ id: "all" as const, label: t.all }, ...ZONES.map((z) => ({ id: z.id, label: z[lang] }))]} />
+            <Filter label={t.theme} value={theme} onChange={setTheme} options={[{ id: "all" as const, label: t.all }, ...THEMES.map((th) => ({ id: th.id, label: th[lang] }))]} />
+          </>
+        )}
       </div>
     </div>
   );
@@ -201,7 +213,6 @@ export function PackagesView() {
                 </div>
               </div>
             </div>
-          </div>
           <div
             className="ht-track"
             ref={trackRef}
@@ -217,6 +228,7 @@ export function PackagesView() {
             {PACKAGES.map((p) => (
               <DealCard key={p.slug} pkg={p} lang={lang} saved={saved.has(p.slug)} onSave={() => toggleSaved(p.slug)} />
             ))}
+          </div>
           </div>
         </section>
       </div>
@@ -314,10 +326,6 @@ const CHIPS: Record<ThemeId, { icon: string; it: string; en: string }[]> = {
   ],
 };
 
-function shortTitle(title: string) {
-  return title.replace(/^(Esempio|Example):\s*/i, "");
-}
-
 function euroMark(amount: number) {
   return `€${formatEuro(amount).replace(/\s*€$/, "")}`;
 }
@@ -327,17 +335,17 @@ function DealCard({ pkg, lang, saved, onSave }: { pkg: SamplePackage; lang: "it"
   const copy = pkg[lang];
   const zone = ZONES.find((z) => z.id === pkg.zone)?.[lang] ?? "";
   return (
-    <article className="ht-card" role="listitem" aria-label={shortTitle(copy.title)}>
+    <article className="ht-card" role="listitem" aria-label={copy.title}>
       <img className="ht-card-img" src={pkg.images[0]} alt="" loading="lazy" decoding="async" draggable={false} />
       <div className="ht-card-shade" aria-hidden="true" />
       <div className="ht-card-top">
         <span className="pk-badge">{t.example}</span>
-        <button type="button" className={`ht-heart${saved ? " is-on" : ""}`} aria-pressed={saved} aria-label={lang === "it" ? `Salva ${shortTitle(copy.title)}` : `Save ${shortTitle(copy.title)}`} onClick={onSave}>
+        <button type="button" className={`ht-heart${saved ? " is-on" : ""}`} aria-pressed={saved} aria-label={lang === "it" ? `Salva ${copy.title}` : `Save ${copy.title}`} onClick={onSave}>
           <HIcon name="heart" size={18} />
         </button>
       </div>
       <div className="ht-card-body">
-        <h3 className="ht-card-title">{shortTitle(copy.title)}</h3>
+        <h3 className="ht-card-title">{copy.title}</h3>
         <p className="ht-card-meta"><HIcon name="clock" size={16} />{t.nights(pkg.days, pkg.nights)} · {zone}</p>
         <p className="ht-card-text">{copy.intro}</p>
         <ul className="ht-amen">

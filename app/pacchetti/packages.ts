@@ -90,7 +90,7 @@ export const PACKAGES: SamplePackage[] = [
       { it: "9–13 giugno 2027", en: "9–13 June 2027" },
     ],
     it: {
-      title: "Esempio: quattro giorni in Costa Smeralda",
+      title: "Quattro giorni in Costa Smeralda",
       intro: "Un viaggio di prova tra cale e isole. Il programma e il prezzo sono inventati, da sostituire con un viaggio vero.",
       days: [
         { title: "Arrivo a Olbia", text: "Trasferimento di esempio verso un paese della costa. Passeggiata serale sul porto. Nessuna prenotazione reale." },
@@ -103,7 +103,7 @@ export const PACKAGES: SamplePackage[] = [
       excluded: ["Voli e traghetti", "Pranzi e cene", "Qualsiasi extra non scritto sopra"],
     },
     en: {
-      title: "Example: four days on the Costa Smeralda",
+      title: "Four days on the Costa Smeralda",
       intro: "A sample trip of coves and islands. The plan and the price are made up, and will be replaced by a real trip.",
       days: [
         { title: "Arrival in Olbia", text: "A sample transfer to a coastal village. An evening walk on the harbour. Nothing here is a real booking." },
@@ -135,7 +135,7 @@ export const PACKAGES: SamplePackage[] = [
       { it: "2–5 ottobre 2027", en: "2–5 October 2027" },
     ],
     it: {
-      title: "Esempio: sentieri del Supramonte",
+      title: "Sentieri del Supramonte",
       intro: "Tre notti di prova tra altopiano e mare. Le tappe e il prezzo non sono un'offerta.",
       days: [
         { title: "Oliena", text: "Arrivo di esempio e cammino breve verso un belvedere. Pernottamento in paese." },
@@ -147,7 +147,7 @@ export const PACKAGES: SamplePackage[] = [
       excluded: ["Pranzi al sacco", "Noleggio auto", "Attrezzatura personale"],
     },
     en: {
-      title: "Example: Supramonte trails",
+      title: "Supramonte trails",
       intro: "Three sample nights between the plateau and the sea. The stages and the price are not an offer.",
       days: [
         { title: "Oliena", text: "A sample arrival and a short walk to a viewpoint. Overnight in the village." },
@@ -178,7 +178,7 @@ export const PACKAGES: SamplePackage[] = [
       { it: "18–20 settembre 2027", en: "18–20 September 2027" },
     ],
     it: {
-      title: "Esempio: tavola in Gallura",
+      title: "Tavola in Gallura",
       intro: "Un fine settimana di prova tra una cantina e una cucina. Prezzi e tappe sono fittizi.",
       days: [
         { title: "Cantina", text: "Arrivo di esempio e visita breve in una cantina immaginaria, con assaggio." },
@@ -189,7 +189,7 @@ export const PACKAGES: SamplePackage[] = [
       excluded: ["Cene al ristorante", "Acquisti in cantina", "Trasferimenti non indicati"],
     },
     en: {
-      title: "Example: a Gallura table",
+      title: "A Gallura table",
       intro: "A sample weekend between a winery and a kitchen. Prices and stops are fictional.",
       days: [
         { title: "Winery", text: "A sample arrival and a short visit to an imaginary winery, with a tasting." },
@@ -219,7 +219,7 @@ export const PACKAGES: SamplePackage[] = [
       { it: "4–9 ottobre 2027", en: "4–9 October 2027" },
     ],
     it: {
-      title: "Esempio: nuraghi e paesi",
+      title: "Nuraghi e paesi",
       intro: "Sei giorni di prova nell'interno. I siti e il prezzo sono solo uno schema.",
       days: [
         { title: "Ingresso nell'interno", text: "Arrivo di esempio in un paese e prima sosta a un sito nuragico." },
@@ -233,7 +233,7 @@ export const PACKAGES: SamplePackage[] = [
       excluded: ["Pranzi e cene", "Acquisti", "Voli"],
     },
     en: {
-      title: "Example: nuraghi and villages",
+      title: "Nuraghi and villages",
       intro: "Six sample days inland. The sites and the price are only a sketch.",
       days: [
         { title: "Into the interior", text: "A sample arrival in a village and a first stop at a nuragic site." },
