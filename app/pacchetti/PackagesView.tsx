@@ -45,7 +45,7 @@ export function PackagesView() {
       <header className="service-stories-header pk-head">
         <p data-reveal-02="words">✦ {t.kicker} ✦</p>
         <h1 data-reveal-02="lines">{t.title}</h1>
-        <p className="pk-lead" data-reveal-02="words">{t.intro}</p>
+        <p className="pk-lead">{t.intro}</p>
       </header>
 
       <div className="pk-filters">

@@ -57,7 +57,7 @@
 .pk-tilt { position: relative; width: min(640px, 78%); }
 .pk-tilt.is-left { margin-right: auto; margin-left: 2%; }
 .pk-tilt.is-right { margin-left: auto; margin-right: 2%; }
-.pk-tilt + .pk-tilt { margin-top: -72px; }
+.pk-tilt + .pk-tilt { margin-top: 36px; }
 .pk-photo {
   display: block;
   width: 100%;
@@ -156,7 +156,7 @@
   .pk-tilt.is-right .pk-photo:hover,
   .pk-tilt.is-left .pk-photo:focus-visible,
   .pk-tilt.is-right .pk-photo:focus-visible { transform: rotate(0deg) scale(1.02); }
-  .pk-tilt + .pk-tilt { margin-top: -28px; }
+  .pk-tilt + .pk-tilt { margin-top: 28px; }
   .pk-lists { grid-template-columns: 1fr; }
   .pk-days p { margin-left: 0; }
   .pk-hero { min-height: 70vh; }
