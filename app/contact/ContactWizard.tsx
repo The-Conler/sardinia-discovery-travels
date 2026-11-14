@@ -7,15 +7,18 @@ import { Icon } from "./icons";
 import {
   AIRPORTS, ALL_STEPS, ARRIVAL_METHODS, BOAT_STYLES, BOAT_TYPES, CAR_SEATS, CAR_SIZES, CAR_TYPES,
   CELEBRATIONS, COUNTRY_SUGGESTIONS, DURATIONS, DURATIONS_OTHER, HEARD_FROM, INTERESTS, LOCATIONS, NEEDS,
-  PLACE_SUGGESTIONS, PORTS, QUICK_TOPICS, RENTAL_CAR, REPLY_VIA, STAY_AMENITIES, STAY_BOARD, STAY_ROOMS,
-  STAY_ROOMS_COUNT, STAY_TYPES, SWIMMING, TRANSFER_ITEMS, TRANSFER_TRIPS, YES_NO,
-  activeSteps, asksPickup, emptyData, isEmail, isLargeGroup, stepValid, wantsBoat, wantsTransfer,
+  GROUP_TYPES, PLACE_SUGGESTIONS, PORTS, QUICK_TOPICS, RENTAL_CAR, REPLY_VIA, STAY_AMENITIES, STAY_BOARD, STAY_ROOMS,
+  STAY_ROOMS_COUNT, STAY_TYPES, SWIMMING, TRANSFER_ITEMS, TRANSFER_TRIPS, WINE_MULTI_COPY, YES_NO,
+  activeSteps, asksPickup, emptyData, isEmail, isLargeGroup, stepValid, wantsBoat, wantsTransfer, wantsWine,
 } from "./contactData";
 import type { ContactData, Opt, StepId } from "./contactData";
 import { labelOf } from "./contactData";
 import { submitContactRequest } from "./submit";
 import { buildReviewTiles } from "./reviewTiles";
 import { BudgetSlider } from "./BudgetSlider";
+import { packageBySlug } from "../pacchetti/packages";
+import { PK } from "../pacchetti/copy";
+import { useSiteLang } from "../siteLang";
 
 const STORAGE_KEY = "sdt-contact-request-v1";
 
@@ -177,6 +180,18 @@ function scrollToTop() {
   else window.scrollTo(0, 0);
 }
 
+function PackageChosen({ slug }: { slug: string }) {
+  const lang = useSiteLang();
+  const pkg = packageBySlug(slug);
+  if (!pkg) return null;
+  return (
+    <label className="ct-package">
+      <span>{PK[lang].chosen}</span>
+      <input readOnly value={`${pkg[lang].title} (${PK[lang].example})`} />
+    </label>
+  );
+}
+
 /* ---------- the wizard ---------- */
 
 export function ContactWizard() {
@@ -196,9 +211,15 @@ export function ContactWizard() {
   const navigated = useRef(false);
 
   const set = <K extends keyof ContactData>(k: K, v: ContactData[K]) => setData((d) => ({ ...d, [k]: v }));
-  type ListKey = "interests" | "transferItems" | "needs" | "quickTopics" | "stayAmenities";
+  type ListKey = "transferItems" | "needs" | "stayAmenities";
   const toggleIn = (k: ListKey) => (v: string) =>
     setData((d) => ({ ...d, [k]: d[k].includes(v) ? d[k].filter((x) => x !== v) : [...d[k], v] }));
+  const toggleWineList = (k: "interests" | "quickTopics") => (v: string) =>
+    setData((d) => {
+      const next = d[k].includes(v) ? d[k].filter((x) => x !== v) : [...d[k], v];
+      const draft = { ...d, [k]: next };
+      return wantsWine(draft) ? draft : { ...draft, multiWinery: false };
+    });
 
   // Restore saved progress, read ?step=N (dev preview) and detect the time zone.
   useEffect(() => {
@@ -231,6 +252,13 @@ export function ContactWizard() {
       }
     }
     if (restored.rentalCar === "yes") restored.rentalCar = "myself";
+    if (!isLargeGroup(restored)) { restored.groupType = ""; restored.groupNotes = ""; }
+    if (!wantsWine(restored)) restored.multiWinery = false;
+    const pkg = new URLSearchParams(window.location.search).get("package");
+    if (pkg && packageBySlug(pkg)) {
+      restored.packageSlug = pkg;
+      if (!restored.interests.includes("trip")) restored.interests = [...restored.interests, "trip"];
+    }
     setData(restored);
     setStep(restoredStep);
     setReady(true);
@@ -242,6 +270,12 @@ export function ContactWizard() {
     if (!ready || step === "thanks") return;
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ data, step })); } catch { /* storage full or blocked */ }
   }, [data, step, ready]);
+
+  // Group questions exist only for parties of 13 or more.
+  useEffect(() => {
+    if (!ready || isLargeGroup(data) || (!data.groupType && !data.groupNotes)) return;
+    setData((d) => (isLargeGroup(d) ? d : { ...d, groupType: "", groupNotes: "" }));
+  }, [ready, data]);
 
   // Hide the fixed bottom bar once the footer scrolls into view.
   useEffect(() => {
@@ -394,6 +428,7 @@ export function ContactWizard() {
           <div className="ct-intro-main">
             <h1 className="ct-title ct-title--xl" ref={headingRef} tabIndex={-1}>Plan your <br />Sardinia trip</h1>
             <p className="ct-sub">Answer a few questions and we can reply with everything you need in one message.</p>
+            {data.packageSlug && <PackageChosen slug={data.packageSlug} />}
             <div className="ct-intro-actions">
               <div className="ct-intro-choice">
                 <TealButton className="ct-start" onClick={startGuided}>
@@ -432,7 +467,10 @@ export function ContactWizard() {
       body = (
         <>
           {head("What are you interested in?")}
-          <MultiChoice legend="Choose all that apply" options={INTERESTS} values={data.interests} onToggle={toggleIn("interests")} layout="photos" />
+          <MultiChoice legend="Choose all that apply" options={INTERESTS} values={data.interests} onToggle={toggleWineList("interests")} layout="photos" />
+          {data.interests.includes("wine") && (
+            <Toggle label={WINE_MULTI_COPY.en.label} sub={WINE_MULTI_COPY.en.hint} on={data.multiWinery} onChange={(v) => set("multiWinery", v)} />
+          )}
           {data.interests.includes("other") && (
             <Field label="Tell us what you have in mind">
               <textarea rows={3} value={data.interestOther} onChange={(e) => set("interestOther", e.target.value)} placeholder="For example a cooking class, a hike or a wine tasting" />
@@ -544,9 +582,15 @@ export function ContactWizard() {
           )}
           {wantsBoat(data) && <Choice legend="Is everyone comfortable swimming?" options={SWIMMING} value={data.swimming} onChange={(v) => set("swimming", v)} />}
           {isLargeGroup(data) && (
-            <p className="ct-note" role="note">
-              Groups of 13 or more are planned as a tailor-made trip. Our standard experiences are for up to 12 guests.
-            </p>
+            <>
+              <p className="ct-note" role="note">
+                Groups of 13 or more are planned as a tailor-made trip. Our standard experiences are for up to 12 guests.
+              </p>
+              <Choice legend="What kind of group is this?" options={GROUP_TYPES} value={data.groupType} onChange={(v) => set("groupType", v)} layout="pills" />
+              <Field label="Notes about the group" optional hint="Anything that helps us plan for a group this size.">
+                <textarea rows={3} value={data.groupNotes} onChange={(e) => set("groupNotes", e.target.value)} placeholder="For example a school trip, or a company off-site" />
+              </Field>
+            </>
           )}
         </>
       );
@@ -676,6 +720,7 @@ export function ContactWizard() {
       body = (
         <>
           {head("Here's your trip", "Check everything looks right, then send it to us.")}
+          {data.packageSlug && <PackageChosen slug={data.packageSlug} />}
           <div className="ct-bento">
             {buildReviewTiles(data).map((t) => (
               <section className={`ct-tile${t.wide ? " ct-tile--wide" : ""}`} key={t.step} aria-label={t.title}>
@@ -702,6 +747,7 @@ export function ContactWizard() {
       body = (
         <>
           {head("Send us a quick request", "Tell us who you are and what you have in mind. We reply with everything in one message.")}
+          {data.packageSlug && <PackageChosen slug={data.packageSlug} />}
           <div className="ct-row">
             <Field label="First name"><input value={data.firstName} onChange={(e) => set("firstName", e.target.value)} autoComplete="given-name" /></Field>
             <Field label="Last name"><input value={data.lastName} onChange={(e) => set("lastName", e.target.value)} autoComplete="family-name" /></Field>
@@ -712,7 +758,10 @@ export function ContactWizard() {
           </div>
           {data.email && !isEmail(data.email) && <p className="ct-error" role="alert">Please check your email address.</p>}
           <Choice legend="How should we reply?" options={REPLY_VIA} value={data.replyVia} onChange={(v) => set("replyVia", v)} layout="pills" />
-          <MultiChoice legend="What is it about?" sub="Optional" options={QUICK_TOPICS} values={data.quickTopics} onToggle={toggleIn("quickTopics")} layout="pills" />
+          <MultiChoice legend="What is it about?" sub="Optional" options={QUICK_TOPICS} values={data.quickTopics} onToggle={toggleWineList("quickTopics")} layout="pills" />
+          {data.quickTopics.includes("wine") && (
+            <Toggle label={WINE_MULTI_COPY.en.label} sub={WINE_MULTI_COPY.en.hint} on={data.multiWinery} onChange={(v) => set("multiWinery", v)} />
+          )}
           <Field label="Rough dates" optional><input value={data.quickDates} onChange={(e) => set("quickDates", e.target.value)} placeholder="For example a week in mid June" /></Field>
           <div className="ct-steppers">
             <Stepper label="Number of people" sub="Optional" value={data.quickPeople} min={0} max={50} onChange={(n) => set("quickPeople", n)} />

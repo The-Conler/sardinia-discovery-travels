@@ -14,6 +14,7 @@ export function SiteFooter() {
                 <a href="/">Explore</a>
                 <a href="/#experiences">Experiences</a>
                 <a href="/destinations/north-sardinia">North Sardinia</a>
+                <a href="/pacchetti">Packages</a>
                 <a href="/about">About</a>
                 <a href="/contact">Contact</a>
               </nav>

@@ -96,9 +96,12 @@ img{display:block}
 /* Groups */
 .ct-group{border:0;padding:0;margin:0;min-width:0}
 .ct-legend{display:block;padding:0;margin:0 0 16px;font-size:var(--t-q);font-weight:500;line-height:1.3;color:var(--ct-cream)}
-.ct-legend:has(+.ct-legend-sub){margin-bottom:8px}
+.ct-legend:has(+.ct-legend-sub),.ct-legend:has(+.ct-multi-hint){margin-bottom:8px}
 .ct-legend em{font-style:normal;font-weight:400;color:var(--ct-muted)}
 .ct-legend-sub{margin:0 0 16px;font-size:var(--t-hint);color:var(--ct-muted)}
+.ct-multi-hint{margin:0 0 16px;font-size:var(--t-sub);line-height:1.5;color:var(--ct-muted);max-width:36ch}
+.ct-spec-groups{display:flex;flex-direction:column;gap:28px}
+.ct-spec-head{display:block;margin:0 0 12px;padding:0;font-size:13px;font-weight:600;letter-spacing:.08em;color:var(--ct-cream)}
 
 /* Pills (tags) with a slight grow-on-hover bounce */
 .ct-pills{display:flex;flex-wrap:wrap;gap:8px}
@@ -106,11 +109,62 @@ img{display:block}
 .ct-pill:hover{background:var(--ct-fill-hover);transform:scale(1.04)}
 .ct-pill:active{transform:scale(.97);transition-duration:.1s}
 .ct-pill.is-on{border-color:var(--ct-teal);background:rgba(47,127,136,.18)}
+.ct-pill.is-muted{opacity:.4}
+.ct-pill.has-desc{height:auto;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;padding:10px 20px;text-align:left}
+.ct-pill-desc{font-size:var(--t-hint);font-weight:400;line-height:1.35;color:var(--ct-muted)}
+.ct-pill:disabled{opacity:.38;cursor:not-allowed}
 .ct-pills--months{display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}
 .ct-pills--months .ct-pill{min-width:0;padding:0 8px}
 
 /* Soft, visible focus ring (no glow) */
-.ct-card:focus-visible,.ct-pill:focus-visible,.ct-toggle:focus-visible,.ct-step-btn:focus-visible,.ct-back:focus-visible,.ct-tile-edit:focus-visible,.ct-link:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,127,136,.3)}
+.ct-type-cards{display:flex;flex-direction:column;gap:12px}
+.ct-type-card{display:flex;flex-direction:column;align-items:flex-start;gap:6px;width:100%;margin:0;padding:16px 20px;border-radius:var(--ct-radius);border:1.5px solid transparent;background:var(--ct-fill);color:var(--ct-cream);font:inherit;text-align:left;cursor:pointer;transition:background .2s var(--ct-ease),border-color .2s var(--ct-ease)}
+.ct-type-card:hover{background:var(--ct-fill-hover)}
+.ct-type-card.is-on{border-color:var(--ct-teal);background:rgba(47,127,136,.14)}
+.ct-type-label{font-size:var(--t-card);font-weight:500;line-height:1.2}
+.ct-type-desc{font-size:var(--t-hint);color:var(--ct-muted);line-height:1.4}
+.ct-type-desc:empty{display:none}
+.ct-split-side{min-width:0;display:flex;flex-direction:column;gap:28px}
+.hk-viz{--hk:#8e8e93;border-radius:22px;padding:20px 20px 18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,system-ui,sans-serif}
+.hk-top{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:28px;margin:0 0 8px}
+.hk-top:not(:has(.hk-pill:not([hidden]))){min-height:0;margin:0}
+.hk-pill{display:inline-flex;align-items:center;max-width:100%;height:28px;padding:0 12px;border-radius:999px;background:color-mix(in srgb, var(--hk) 18%, transparent);color:var(--hk);font-size:13px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hk-pill[hidden]{display:none}
+.hk-step{flex:none;color:rgba(255,255,255,.42);font-size:12px;font-weight:600;letter-spacing:.01em}
+.hk-svg{width:100%;height:auto;display:block}
+.hk-line{fill:none;stroke:var(--hk);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;path-length:1;stroke-dasharray:1;stroke-dashoffset:1;animation:hk-draw 1.15s cubic-bezier(.22,1,.36,1) forwards;transition:d .7s cubic-bezier(.22,1,.36,1)}
+.hk-area{transition:d .7s cubic-bezier(.22,1,.36,1);opacity:0;animation:hk-fade .7s ease .25s forwards}
+.hk-halo,.hk-summit{transition:cx .7s cubic-bezier(.22,1,.36,1),cy .7s cubic-bezier(.22,1,.36,1)}
+@keyframes hk-draw{to{stroke-dashoffset:0}}
+@keyframes hk-fade{to{opacity:1}}
+.hk-metrics,.hk-legend{display:grid;grid-template-columns:1fr 1fr;gap:16px 12px;margin:6px 0 0;padding:0;list-style:none}
+.hk-legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:4px}
+.hk-metrics b{display:block;color:#f5f5f7;font-size:22px;font-weight:600;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums}
+.hk-metrics b.is-empty{color:rgba(255,255,255,.28);font-weight:500}
+.hk-metrics span{display:block;margin-top:5px;color:rgba(255,255,255,.42);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.hk-legend li{display:inline-flex;align-items:center;gap:8px;color:var(--ct-muted);font-size:14px}
+.hk-legend li.is-on{color:var(--ct-cream)}
+.hk-legend i,.hk-dot,.hk-badge i{width:10px;height:10px;border-radius:50%;flex:none}
+.hk-mode.is-green .hk-dot,.hk-legend .is-green i,.hk-badge.is-green i{background:#3dbe7a}
+.hk-mode.is-orange .hk-dot,.hk-legend .is-orange i,.hk-badge.is-orange i{background:#e39a3c}
+.hk-mode.is-red .hk-dot,.hk-legend .is-red i,.hk-badge.is-red i{background:#e15b4a}
+.hk-mode.is-on.is-green{border-color:#3dbe7a;background:rgba(61,190,122,.16)}
+.hk-mode.is-on.is-orange{border-color:#e39a3c;background:rgba(227,154,60,.16)}
+.hk-mode.is-on.is-red{border-color:#e15b4a;background:rgba(225,91,74,.16)}
+.hk-ind{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:0;font-size:var(--t-card);font-weight:600}
+.hk-ind--viz{margin:0 0 8px}
+.hk-badge{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:999px;background:rgba(0,0,0,.28);color:var(--ct-cream)}
+.hk-cai{display:flex;flex-direction:column;gap:8px}
+.hk-cai-card{display:flex;gap:14px;align-items:flex-start;width:100%;margin:0;padding:14px 16px;border-radius:16px;border:1.5px solid transparent;background:var(--ct-fill);color:var(--ct-cream);font:inherit;text-align:left;cursor:pointer;transition:background .2s var(--ct-ease),border-color .2s var(--ct-ease)}
+.hk-cai-card:hover{background:var(--ct-fill-hover)}
+.hk-cai-card.is-on{border-color:var(--ct-teal);background:rgba(47,127,136,.14)}
+.hk-cai-card:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,127,136,.3)}
+.hk-cai-code{flex:none;min-width:46px;font-weight:700;letter-spacing:.03em}
+.hk-cai-name{display:block;font-weight:600;line-height:1.25}
+.hk-cai-desc{display:block;margin-top:4px;color:var(--ct-muted);font-size:14px;line-height:1.4}
+.hk-src{margin:12px 0 0;font-size:13px;line-height:1.4;color:var(--ct-muted)}
+@media (prefers-reduced-motion:reduce){.hk-line,.hk-area,.hk-halo,.hk-summit{animation:none;transition:none}.hk-line{stroke-dashoffset:0}.hk-area{opacity:1}}
+.ct-card:focus-visible,.ct-pill:focus-visible,.ct-type-card:focus-visible,.ct-toggle:focus-visible,.ct-step-btn:focus-visible,.ct-back:focus-visible,.ct-tile-edit:focus-visible,.ct-link:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,127,136,.3)}
 
 /* Fields */
 .ct-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
@@ -128,6 +182,11 @@ img{display:block}
 .ct-field input:focus,.ct-field textarea:focus{outline:none;border-color:var(--ct-teal);box-shadow:0 0 0 3px rgba(47,127,136,.3)}
 .ct-field input.is-bad{border-color:rgba(242,169,154,.7)}
 .ct-error{margin:0;font-size:var(--t-hint);color:#f2a99a}
+.ct-term{display:flex;flex-direction:column;gap:8px}
+.ct-term h3{margin:0;font-size:var(--t-q);font-weight:500;color:var(--ct-cream)}
+.ct-term-ph{margin:0;padding:16px 20px;border-radius:var(--ct-radius);border:1.5px dashed rgba(248,244,238,.28);color:var(--ct-muted);font-style:italic;line-height:1.45}
+.ct-photo-spec{margin:16px 0 0;font-size:var(--t-hint);line-height:1.45;color:var(--ct-muted)}
+.ct-spec-note{margin:0;font-size:var(--t-hint);line-height:1.45;color:#ff6b6b}
 .ct-error[hidden]{display:none}
 .ct-input-ic{position:relative}
 .ct-input-ic>svg{position:absolute;left:22px;top:50%;transform:translateY(-50%);color:var(--ct-muted);pointer-events:none}
@@ -447,10 +506,14 @@ img{display:block}
 
 /* Segmented control (incluso / supplemento) */
 .ct-incl{display:flex;flex-direction:column;border-radius:var(--ct-radius);background:var(--ct-fill)}
-.ct-incl-row{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:72px;padding:12px 16px 12px 24px}
+.ct-incl-row{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px 16px;min-height:72px;padding:12px 16px 12px 24px}
 .ct-incl-row+.ct-incl-row{border-top:1px solid var(--ct-line)}
+.ct-incl-main{display:flex;align-items:center;justify-content:space-between;gap:16px;flex:1 1 100%;min-width:0}
 .ct-incl-row .ct-check{padding:0;background:transparent;border:0;align-items:center}
 .ct-incl-row .ct-check:hover{background:transparent}
+.ct-incl-price{flex:1 1 100%;max-width:360px;gap:8px;margin:0 0 4px}
+.ct-incl-price .ct-field-label{font-size:14px}
+.ct-incl-price input{height:48px;background:rgba(255,255,255,.06)}
 .ct-seg{display:inline-flex;flex:none;padding:4px;border-radius:999px;background:rgba(255,255,255,.06)}
 .ct-seg button{height:40px;padding:0 16px;border-radius:999px;border:1.5px solid transparent;background:transparent;color:var(--ct-muted);font:inherit;font-size:15px;font-weight:500;cursor:pointer;transition:background .2s var(--ct-ease),border-color .2s var(--ct-ease),color .2s var(--ct-ease)}
 .ct-seg button.is-on{border-color:var(--ct-teal);background:rgba(47,127,136,.18);color:var(--ct-cream)}
@@ -460,8 +523,8 @@ img{display:block}
 .ct-slot{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 8px 0 20px;border-radius:999px;border:1.5px solid var(--ct-teal);background:rgba(47,127,136,.18);font-size:var(--t-card);font-variant-numeric:tabular-nums}
 .ct-slot button{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:var(--ct-cream);cursor:pointer}
 .ct-slot-add{display:flex;gap:8px;align-items:center}
-.ct-slot-add input{height:48px;padding:0 16px;border-radius:999px;border:1.5px solid transparent;background:var(--ct-fill);color:var(--ct-cream);font:inherit;color-scheme:dark}
-.ct-slot-add input:focus{outline:none;border-color:var(--ct-teal)}
+.ct-slot-add input,.ct-slot-add select{height:48px;padding:0 16px;border-radius:999px;border:1.5px solid transparent;background:var(--ct-fill);color:var(--ct-cream);font:inherit;color-scheme:dark}
+.ct-slot-add input:focus,.ct-slot-add select:focus{outline:none;border-color:var(--ct-teal)}
 
 /* Price blocks */
 .ct-block{display:flex;flex-direction:column;gap:24px;padding:24px;border-radius:var(--ct-radius);background:var(--ct-fill)}
@@ -530,6 +593,7 @@ img{display:block}
   .ct-help-btn{right:16px;width:48px;padding:0;justify-content:center}
   .ct-help-btn span{display:none}
   .ct-incl-row{flex-direction:column;align-items:flex-start;padding:16px}
+  .ct-incl-price{max-width:none;width:100%}
   .ct-sections{gap:8px}
   .ct-sections li{font-size:13px}
   .ct-bar-inner{gap:8px}
@@ -1012,8 +1076,10 @@ html.is-embed .sd-header-in{justify-content:flex-end;border-bottom:0;padding-bot
 </div>
 <div class="pv-modal" id="pvModal" role="dialog" aria-modal="true" aria-labelledby="pvTitle" aria-hidden="true"></div>
 <div class="sd-toast" id="toast" role="status" aria-live="polite"></div>
-<input type="file" id="fileIn" accept="image/jpeg,image/png,image/webp" multiple hidden>
+<input type="file" id="fileIn" accept="image/jpeg,.jpg,.jpeg" multiple hidden>
+<script src="./it-money.js"></script>
 <script>
+const { formatItAmount, priceFromDigits } = ItMoney;
 /* =====================================================================
    Sardinia Discovery Travels: partner application wizard (prototype v3).
    Flow and data model follow BRIEF.md and ARCHITECTURE.md (Fase 1).
@@ -1027,7 +1093,7 @@ html.is-embed .sd-header-in{justify-content:flex-end;border-bottom:0;padding-bot
    ===================================================================== */
 const KEY = 'sdt-partner-wizard-v3';
 const YEAR = 2026;
-const MAX_PHOTOS = 10, MIN_PHOTOS = 1;
+const MAX_PHOTOS = 10, MIN_PHOTOS = 1, PHOTO_MAX_EDGE = 1920, PHOTO_QUALITY = 0.8, PHOTO_MAX_BYTES = Math.round(1.5 * 1024 * 1024);
 
 /* ---------- Line icons (Lucide-style, same set as the contact wizard) ---------- */
 const c = (cx, cy, r) => `M${cx - r} ${cy}a${r} ${r} 0 1 0 ${r * 2} 0a${r} ${r} 0 1 0 ${-r * 2} 0`;
@@ -1101,30 +1167,38 @@ const CONFIG = {
   /* Percorso A, section 7.2 of the brief. q = sector questions (section 9; Cultura and Natura use a subset). */
   sectors: [
     { code:'artigianato', letter:'A', img:'/partner-form/img/cat-artisan.jpg', icon:'amphora',
-      spec:['ceramica','coltelleria','legno','metalli','maschere','pelletteria','gioielli','tessile','altre_artigianali'],
-      types:['laboratorio_pratico','dimostrazione','visita_bottega','incontro_artigiano','esperienza_privata','percorso_piu'],
-      q:[ {k:'materials', t:'toggle'}, {k:'takehome', t:'toggle'},
-          {k:'workshop_loc', t:'pills', o:['loc_bottega','loc_cliente','loc_entrambi'], req:true},
-          {k:'live_demo', t:'toggle'}, {k:'sale', t:'toggle'} ] },
+      spec:['ceramica','coltelleria','legno','sughero','metalli','maschere','pelletteria','gioielli','tessile','altre_artigianali'],
+      types:['laboratorio_pratico','dimostrazione','visita_bottega'],
+      q:[ {k:'takehome', t:'toggle'}, {k:'can_buy', t:'toggle', def:false} ] },
     { code:'enogastronomia', letter:'B', img:'/partner-form/img/cat-wine.jpg', icon:'wine',
-      spec:['vino','formaggi','produzione_agricola','panificazione','pasticceria','cucina_tradizionale','olio','altri_alimentari'],
-      types:['degustazione','visita_produttore','laboratorio','cooking_class','pranzo_cena','esperienza_combinata'],
-      q:[ {k:'own_products', t:'toggle'},
-          {k:'tasting', t:'multi', o:['tp_vino','tp_formaggi','tp_salumi','tp_olio','tp_pane','tp_dolci','tp_miele']},
+      spec:['vino','formaggi','salumi_carni','olio','panificazione','cereali_farine','pastificio','pasticceria','miele','mirto','altri_alimentari'],
+      types:['degustazione','visita_produttore','laboratorio','pranzo_cena'],
+      q:[ {k:'tasting', t:'multi', o:['tp_vino','tp_formaggi','tp_salumi','tp_olio','tp_pane','tp_dolci','tp_miele']},
           {k:'diets', t:'multi', o:['diet_veg','diet_vegan','diet_gf','diet_lf']},
           {k:'allergens', t:'toggle'},
-          {k:'certs', t:'multi', o:['cert_bio','cert_dop','cert_doc','cert_igp','cert_none']} ] },
-    { code:'cultura', letter:'C', img:'/partner-form/img/cat-culture.jpg', icon:'landmark',
-      spec:['archeologia','storia','musei','tradizioni_popolari','patrimonio','architettura','cultura_locale'],
-      types:['visita_guidata','percorso_culturale','incontro_culturale','laboratorio','esperienza_privata'],
+          {k:'certs', t:'multi', o:['cert_bio','cert_dop','cert_doc','cert_docg','cert_igp','cert_igt','cert_none']} ] },
+    { code:'cooking_class', letter:'C', img:'/partner-form/img/cat-cooking.jpg', icon:'utensils',
+      spec:[], types:[], q:[] },
+    { code:'cultura', letter:'D', img:'/partner-form/img/cat-culture.jpg', icon:'landmark',
+      spec:['archeologia','musei','architettura','patrimonio'],
+      types:['visita_guidata','laboratorio'],
       q:[ {k:'tickets', t:'pills', o:['tk_inc','tk_extra','tk_na'], req:true},
           {k:'site_booking', t:'toggle'}, {k:'licensed_guide', t:'toggle'} ] },
-    { code:'natura', letter:'D', img:'/partner-form/img/cat-hiking.jpg', icon:'mountain',
-      spec:['trekking','escursionismo','naturalistiche','jeep','quad','buggy','4x4_altro','cavalli','asinelli','kayak','sup','snorkeling','scuba'],
+    { code:'natura', letter:'E', img:'/partner-form/img/cat-hiking.jpg', icon:'mountain',
+      spec:['trekking','ciaspolate','vie_ferrate','arrampicata','acquatrek','jeep','quad','buggy','4x4_altro','cavallo_exp','asino_exp','alpaca_exp','kayak','sup','snorkeling','scuba','rafting','citybike','ebike','mtb','barefooting','retreat','pet_therapy','pilates','yoga','meditazione','percorsi_termali','spa','natura_altro'],
+      specGroups:[
+        {h:'sg_escursionismo', o:['trekking','ciaspolate','vie_ferrate','arrampicata','acquatrek']},
+        {h:'sg_offroad', o:['jeep','quad','buggy','4x4_altro']},
+        {h:'sg_animali', o:['cavallo_exp','asino_exp','alpaca_exp']},
+        {h:'sg_watersport', o:['kayak','sup','snorkeling','scuba','rafting']},
+        {h:'sg_sport', o:['citybike','ebike','mtb']},
+        {h:'sg_benessere', o:['barefooting','retreat','pet_therapy','pilates','yoga','meditazione','percorsi_termali','spa']},
+        {h:'sg_altro', o:['natura_altro']}
+      ],
       types:['escursione_guidata','attivita_sportiva','esperienza_naturalistica','tour_privato','esperienza_gruppo'],
       q:[ {k:'distance_km', t:'num', min:0, max:100, step:.5}, {k:'elevation_m', t:'num', min:0, max:3000, step:10},
           {k:'licensed_guide', t:'toggle'}, {k:'insurance', t:'toggle'} ] },
-    { code:'mare', letter:'E', img:'/partner-form/img/cat-boat.jpg', icon:'sailboat',
+    { code:'mare', letter:'F', img:'/partner-form/img/cat-boat.jpg', icon:'sailboat',
       spec:['barca_motore','barca_vela','catamarano','attivita_acquatiche','escursioni_costiere'],
       types:['escursione_privata','escursione_condivisa','mezza_giornata','giornata_intera','esperienza_personalizzata'],
       q:[ {k:'boat_type', t:'pills', o:['bt_motore','bt_vela','bt_catamarano','bt_gommone','bt_altro'], req:true},
@@ -1135,13 +1209,13 @@ const CONFIG = {
           {k:'port', t:'text', req:true},
           {k:'fuel', t:'pills', o:['fuel_inc','fuel_extra','fuel_na']},
           {k:'onboard', t:'multi', o:['ob_snorkel','ob_lunch','ob_drinks','ob_toilet','ob_shade','ob_sup']} ] },
-    { code:'guide', letter:'F', img:'/partner-form/img/cat-guide.jpg', icon:'compass',
+    { code:'guide', letter:'G', img:'/partner-form/img/cat-guide.jpg', icon:'compass',
       spec:['guida_turistica','guida_gae','accompagnatore','guida_specializzata'],
       types:['guida_oraria','mezza_giornata','giornata_intera','tour_privato','accompagnamento_gruppi'],
       q:[ {k:'license_type', t:'pills', o:['gl_turistica','gl_gae','gl_accomp','gl_altro'], req:true},
           {k:'license_no', t:'text', req:true, tip:'tip_license'},
           {k:'areas', t:'text'}, {k:'insurance', t:'toggle'} ] },
-    { code:'trasporti', letter:'G', img:'/partner-form/img/cat-transport.jpg', icon:'bus',
+    { code:'trasporti', letter:'H', img:'/partner-form/img/cat-transport.jpg', icon:'bus',
       spec:['ncc','transfer','trasporto_gruppi','minibus','noleggio_conducente','altri_autorizzati'],
       types:['trasferimento_singolo','andata_ritorno','servizio_orario','mezza_giornata','giornata_intera','servizio_personalizzato'],
       q:[ {k:'auth_type', t:'pills', o:['ta_ncc','ta_bus','ta_altro'], req:true, tip:'tip_ncc'},
@@ -1151,7 +1225,7 @@ const CONFIG = {
           {k:'served', t:'multi', o:['sv_olb','sv_aho','sv_cag','sv_ports','sv_island']},
           {k:'child_seats', t:'toggle'} ] }
   ],
-  otherSpec: ['altre_artigianali','altri_alimentari','altri_autorizzati'],
+  otherSpec: ['altre_artigianali','altri_alimentari','altri_autorizzati','natura_altro'],
   access: ['acc_mobility','acc_families','acc_seniors','acc_pets'],
   expLangs: ['it','en','fr','de','es','nl','sc'],
   modes: [['privata','user'],['condivisa','users'],['entrambe','sliders']],
@@ -1165,7 +1239,7 @@ const CONFIG = {
   cancel: ['c24','c48','c72','c7d','c_none'],
   noshow: ['ns_full','ns_half','ns_agree'],
   weather: ['w_refund','w_resched','w_both','w_na'],
-  billing: ['bill_einv','bill_receipt','bill_agree'],
+  billing: ['bill_einv','bill_agree'],
   /* Percorso B, section 14 */
   structures: [['st_hotel','bed','ricettivo'],['st_resort','sun','ricettivo'],['st_guesthouse','home','ricettivo'],['st_bb','coffee','ricettivo'],['st_agriturismo','leaf','ricettivo'],['st_casavacanze','key','ricettivo'],
     ['st_ristorante','utensils','ristorazione'],['st_trattoria','utensils','ristorazione'],['st_catering','pot','ristorazione'],['st_chef','pot','ristorazione'],['st_altro','message','altro']],
@@ -1227,24 +1301,36 @@ en:{
   path_B:'B. Commercial agreements', path_BD:'Hotels, accommodation and restaurants with dedicated terms for our travellers.',
   path_C:'C. Services and professionals', path_CD:'Guides, escorts, transfers, NCC and mobility.',
   es_title:'Which sector does this experience belong to?', es_sub:'Pick the closest one.',
-  esp_title:'What is your speciality?', esp_sub:'Select more than one button if needed.', spec_other:'Describe it briefly',
-  et_title:'What type of service is it?', et_sub:'Select more than one button if needed.',
+  sg_escursionismo:'HIKING', sg_offroad:'OFF ROAD', sg_animali:'ANIMALS', sg_watersport:'WATERSPORTS', sg_sport:'SPORT', sg_benessere:'WELLNESS & MINDFULNESS', sg_altro:'OTHER',
+  esp_title:'What is your speciality?', esp_sub:'Select one.', esp_another:'Offer another specialty too? At the end of this form you can add a new request.', spec_other:'Describe it briefly',
+  et_title:'What type of service is it?', et_sub:'You can select more than one.', et_combined:'By selecting more than one type you will be offering a combined experience.',
+  spa_title:'Which treatments do you offer?', spa_q:'Treatments',
   g1_title:'Give it a short title', g1_sub:'Keep it simple and concrete.', exp_name:'Short title', exp_namePh:'For example Weaving workshop in Aggius', exp_desc:'Description', exp_descPh:'What guests do, see and learn, and who they meet.', desc_min:'At least {n} characters', desc_ok:'Long enough',
-  g2_title:'Where does it take place?', g2_sub:'So we can plan the logistics.', exp_comune:'Municipality', exp_loc:'Place or area', exp_meet:'Meeting point', exp_end:'End point', exp_endHint:'Leave empty if it is the same as the meeting point.',
+  g2_title:'Where does it take place?', g2_sub:'So we can plan the logistics.', exp_comune:'Municipality', exp_addr:'Full address', exp_addr_hint:'Street, number, postcode, province', exp_loc:'Place or area', exp_meet:'Meeting point', exp_end:'End point', exp_endHint:'Leave empty if it is the same as the meeting point.', meet_diff:'The meeting point is different from where the activity takes place', meet_addr:'Meeting point address', act_addr:'Activity address',
   g3_title:'Duration and group size', g3_sub:'Approximate values are fine.', dur:'Duration', parts:'Participants and age', durD:'Hours', hours:'Hours', minutes:'Minutes', minP:'Minimum participants', minPD:'Smallest group you accept (always at least 2)', maxP:'Maximum participants', maxPD:'Largest group you can host', minAge:'Minimum age', minAgeD:'0 means no limit',
   g4_title:'Languages and accessibility', g4_sub:'Who can enjoy it.', exp_langs:'Languages you run it in', access:'Accessibility', accessD:'Select what applies.',
   md_title:'Private, shared or both?', md_sub:'Private means one group only. Shared means guests from different bookings together.', md_privataD:'Only one group at a time.', md_condivisaD:'Guests from different bookings join together.', md_entrambeD:'You can run it both ways.',
-  in_title:'What does it include?', in_sub:'Tick what you offer and say whether it is included or charged as a supplement.', inc:'Included', sup:'Supplement',
-  eq_title:'Equipment', eq_sub:'Either you provide the gear, or tell us what guests must bring.', eq_provided:'You provide the technical equipment', eq_providedD:'For example tools, helmets, snorkelling masks.', eq_bring:'Guests should bring', eq_bring_note:'What guests must bring', eq_bring_notePh:'List the gear guests need to bring with them.',
-  rq_title:'Requirements and safety', rq_sub:'So we can suggest the experience to the right travellers.', difficulty:'Difficulty', prev_exp:'Previous experience required', prev_expD:'For example sailing or climbing experience.', limits:'Limitations', limitsPh:'For example not suitable during pregnancy.', safety:'Safety measures', safetyPh:'For example life jackets, first aid kit, insurance.',
+  in_title:'What does it include?', in_sub:'Tick what you offer and say whether it is included or charged as a supplement.', inc:'Included', sup:'Supplement', sup_price:'Supplement price (€)', sup_price_err:'Enter the supplement price.', sup_review:'{item}: supplement {n} €', inc_review:'{item}: included',
+  eq_title:'Equipment', eq_sub:'Either you provide the gear, or tell us what guests must bring.', eq_provided:'You provide the technical equipment', eq_providedD:'For example tools, helmets, snorkelling masks.', eq_providedD_hike:'E.g. poles, helmet, harness, snowshoes.', eq_bring:'Guests should bring', eq_bring_note:'What guests must bring', eq_bring_notePh:'List the gear guests need to bring with them.',
+  rq_title:'Requirements and safety', rq_title_art:'Requirements and details for crafts and traditions', rq_sub:'So we can suggest the experience to the right travellers.', difficulty:'Difficulty', prev_exp:'Previous experience required', prev_expD:'For example sailing or climbing experience.', prev_expD_art:'For example, weaving experience.', prev_exp_note:'The agency will contact you to ask for more details.', limits:'Limitations', limitsPh:'For example not suitable during pregnancy.', safety:'Safety measures', safetyPh:'For example life jackets, first aid kit, insurance.',
+  hk_ways:'Can the hike be done in only one way, or in more than one mode?', hk_one:'Only one way', hk_multi:'More than one mode (easy, moderate, hard)', hk_modes:'Modes',
+  hk_facile:'Easy', hk_media:'Moderate', hk_difficile:'Hard', hk_mode_n:'Mode {n} of {total}',
+  hk_cai:'CAI class', hk_cai_src:'Source: CAI – Official difficulty classification.',
+  hk_cai_t_code:'T', hk_cai_t_name:'Tourist', hk_cai_t_desc:'Clear paths, modest slopes, straightforward navigation',
+  hk_cai_e_code:'E', hk_cai_e_name:'Hiking', hk_cai_e_desc:'Varied terrain, possible steep sections, hiking experience needed',
+  hk_cai_ee_code:'EE', hk_cai_ee_name:'Expert hikers', hk_cai_ee_desc:'Rough, unstable or exposed terrain, possible rocky passages',
+  hk_cai_eea_code:'EEA', hk_cai_eea_name:'Experts with equipment', hk_cai_eea_desc:'Via ferrata and routes that require specific protective equipment',
+  hk_km:'Distance (km)', hk_elev:'Elevation gain (m)', hk_dur:'Duration', hk_alt:'Maximum altitude (m)', hk_ml_km:'Distance', hk_ml_elev:'Elevation', hk_ml_dur:'Duration', hk_ml_alt:'Altitude',
+  hk_car:'Are car transfers planned?', hk_car_from:'From where to where', hk_car_dur:'How long', hk_car_kind:'Route type',
+  hk_ck_paved:'Paved road', hk_ck_dirt:'Dirt track', hk_ck_offroad:'Off road', hk_ck_exposed:'Exposed',
   sq_title:'A few questions on {s}', sq_sub:'Specific to your sector.',
   av_title:'When is it available?', av_sub:'Indicative availability, no booking calendar.', period:'Period', months:'Months', weekdays:'Days of the week',
   sl_title:'Times and booking notice', sl_sub:'When it usually runs and how much notice you need.', bands:'Time of day', slots:'Start times', slot_add:'Add', slot_remove:'Remove {x}', notice:'Minimum notice', manual:'Manual confirmation', manualD:'You confirm each booking request before it is final.',
-  pr_title:'Price for the agency', pr_sub:'Indicative. Prices are discussed during the evaluation.', pr_mode:'How do you price it?', pr_agency:'Cost for the agency: state how much you wish to receive to deliver the service. It is not necessarily the price that will be offered to the traveller.',
-  pr_priv:'Private experience', pr_shared:'Shared experience', pr_single:'Price', pr_base:'Base price', pr_incl:'People included', pr_inclD:'Covered by the base price', pr_extra:'Supplement per extra person', pr_min:'Minimum price',
-  cd_title:'Terms and conditions', cd_sub:'Your usual terms. They can be discussed later.', cancel:'Free cancellation up to', penalties:'Penalties after that', penaltiesPh:'For example 50% up to 24 hours before.', noshow:'No show', weather:'Bad weather', exclusive:'Open to discussing commercial exclusivity', exclusiveD:'Only if it makes sense for both sides. Not binding.', billing:'Invoicing preference',
+  pr_title:'Price for the agency', pr_sub:'Indicative. Prices are discussed during the evaluation.', pr_vat:'The price is to be understood as net and inclusive of VAT.', pr_mode:'How do you price it?', pr_agency:'Cost for the agency: state how much you wish to receive to deliver the service. It is not necessarily the price that will be offered to the traveller.',
+  pr_priv_short:'Private', pr_shared_short:'Shared', pr_art_persona:'Price per person', pr_art_min:'Minimum 2 participants', pr_priv:'Private experience', pr_shared:'Shared experience', pr_single:'Price', pr_base:'Base price', pr_incl:'People included', pr_inclD:'Covered by the base price', pr_extra:'Supplement per extra person', pr_min:'Minimum price', pr_minD:'The reduced price reserved for the agency.',
+  cd_title:'Terms and conditions', cd_sub:'Sardinia Discovery Travels’ terms. You accept them; you do not set them.', term_pay:'Payment', term_cancel:'Cancellation', term_other:'Other conditions', term_ph:'Agency terms text to be inserted', term_accept:'I accept the terms and conditions of Sardinia Discovery Travels', exclusive:'Open to discussing commercial exclusivity', exclusiveD:'Only if it makes sense for both sides. Not binding.', billing:'Invoicing preference',
   ph_title:'Add some photos', ph_sub:'At least 1, ideally 3 or more. The first one is the cover.',
-  p_drop:'Drag your photos here', p_dropD:'JPG, PNG or WEBP, up to 10 photos.', p_browse:'Choose photos', p_demo:'No photos at hand?', p_demoBtn:'Use sample photos (demo)',
+  p_drop:'Drag your photos here', p_spec:'JPG format. Up to 10 photos. Each photo is compressed (long side up to 1920 px, JPEG quality 0.8) and stays within 1.5 MB.', p_dropD:'JPG format. Up to 10 photos.', p_browse:'Choose photos', p_demo:'No photos at hand?', p_demoBtn:'Use sample photos (demo)',
   p_cover:'Cover', p_setCover:'Make cover', p_remove:'Remove photo', p_add:'Add more', p_count:'{n} of 10', p_ready:'Ready', p_need:'Add at least {n}',
   mo_title:'Would you like to add another experience?', mo_sub:'Each experience is evaluated on its own. Your contact and organisation details stay the same.', mo_add:'Add another experience', mo_addD:'Start a new experience form.', mo_list:'Your experiences', mo_untitled:'Untitled experience',
   ct_title:'What type of business is it?', ct_sub:'Choose the type of structure.',
@@ -1264,7 +1350,7 @@ en:{
   ty_p3:'Submitting the application does not mean automatic acceptance into our partner network.',
   m_title:'Progress saved', m_sub:'Your answers are saved on this device. Open this page again to continue.', m_ok:'Continue editing', cancelBtn:'Cancel',
   del_title:'Delete this experience?', del_sub:'"{x}" and its photos will be removed from this application.', del_ok:'Delete',
-  t_restored:'Welcome back. Your progress was restored.', t_quota:'Your photos are too large to save on this device. Your other answers are saved.', t_max:'You can add up to 10 photos.', t_dup:'Your application has already been sent.',
+  t_restored:'Welcome back. Your progress was restored.', t_quota:'Your photos are too large to save on this device. Your other answers are saved.', t_max:'You can add up to 10 photos.', t_photo:'A photo is still over 1.5 MB after compression and was not added.', t_type:'Only JPG photos can be added.', t_dup:'Your application has already been sent.',
   tip_vat:'Partita IVA: the 11-digit VAT number of the business.', tip_cf:'Codice fiscale: 11 digits for organisations, 16 characters for individuals.', tip_runts:'Registro Unico Nazionale del Terzo Settore: the national register of non-profit organisations.', tip_albo:'The professional register you are enrolled in, if any.',
   tip_cin:'Codice Identificativo Nazionale: the national code assigned to accommodation in Italy.', tip_noshow:'A guest who does not show up and does not cancel.', tip_excl:'Working only with us for this experience or in an area. Only discussed, never automatic.',
   tip_agency:'Enter how much you wish to receive to provide the service. This is not necessarily the price that will be offered to the traveller.', tip_manual:'You receive a request and confirm availability before the booking is final.', tip_notice:'How long before the start you need to receive a booking.',
@@ -1277,14 +1363,16 @@ en:{
   o_assoc_cult:'Cultural association', o_aps:'APS', o_ets:'ETS', o_odv:'ODV', o_pro_loco:'Pro Loco', o_assoc_altro:'Other',
   o_coop_lavoro:'Worker cooperative', o_coop_sociale:'Social cooperative', o_coop_agricola:'Agricultural cooperative', o_coop_servizi:'Service cooperative', o_coop_altro:'Other',
   o_artigianato:'Crafts and traditions', o_enogastronomia:'Food and wine', o_cultura:'Culture and territory', o_natura:'Nature and adventure', o_mare:'Sea and sailing', o_guide:'Guides and escorts', o_trasporti:'Transport and mobility',
-  h_artigianato:'Workshops, demonstrations, studios', h_enogastronomia:'Tastings, producers, cooking', h_cultura:'Archaeology, history, traditions', h_natura:'Trekking, outdoor, rural life', h_mare:'Boats, sailing, snorkelling', h_guide:'Tourist and nature guides', h_trasporti:'Transfers, NCC, group transport',
-  o_tessitura:'Weaving', o_ceramica:'Ceramics', o_coltelleria:'Knife making', o_legno:'Woodwork', o_metalli:'Metalwork', o_maschere:'Traditional masks', o_campanacci:'Cowbells', o_pelletteria:'Leatherwork', o_gioielli:'Jewellery', o_tessile:'Textile crafts', o_altre_artigianali:'Other crafts',
-  o_laboratorio_pratico:'Hands-on workshop', o_dimostrazione:'Demonstration', o_visita_bottega:'Workshop visit', o_incontro_artigiano:'Meet the artisan', o_esperienza_privata:'Private experience', o_percorso_piu:'Route with several activities',
-  o_vino:'Wine', o_formaggi:'Cheese', o_produzione_agricola:'Farm produce', o_panificazione:'Bread making', o_pasticceria:'Pastry', o_cucina_tradizionale:'Traditional cooking', o_olio:'Olive oil', o_altri_alimentari:'Other food products',
+  h_artigianato:'Workshops, demonstrations, studios', h_enogastronomia:'Tastings, producers, cooking', h_cooking_class:'Cooking courses and hands-on lessons', h_cultura:'Archaeological sites, museums, architecture, heritage', h_natura:'Trekking, outdoor, rural life', h_mare:'Boats, sailing, snorkelling', h_guide:'Tourist and nature guides', h_trasporti:'Transfers, NCC, group transport',
+  o_tessitura:'Weaving', o_ceramica:'Ceramics', o_coltelleria:'Knife making', o_legno:'Woodwork', o_sughero:'Cork', o_metalli:'Metalwork', o_maschere:'Traditional masks', o_campanacci:'Cowbells', o_pelletteria:'Leatherwork', o_gioielli:'Jewellery', o_tessile:'Textile art', o_altre_artigianali:'Other crafts',
+  o_laboratorio_pratico:'Hands-on workshop', o_dimostrazione:'Demonstration', o_visita_bottega:'Workshop visit', o_esperienza_privata:'Private experience', o_percorso_piu:'Route with several activities',
+  td_laboratorio_pratico:'An experience in which the visitor takes an active part in making a craft product.', td_dimostrazione:'An experience in which the visitor watches an artisan while a product is being made.', td_visita_bottega:'An experience in which the visitor discovers the craft products on display and can buy them.',
+  o_vino:'Wine', o_formaggi:'Cheese', o_salumi_carni:'Cured meats and meats', o_olio:'Olive oil', o_panificazione:'Bread making', o_cereali_farine:'Grains and flours', o_pastificio:'Pasta maker', o_pasticceria:'Pastry', o_miele:'Honey', o_mirto:'Myrtle liqueur (mirto)', o_altri_alimentari:'Other food products',
   o_degustazione:'Tasting', o_visita_produttore:'Producer visit', o_laboratorio:'Workshop', o_cooking_class:'Cooking class', o_pranzo_cena:'Experiential lunch or dinner', o_esperienza_combinata:'Combined experience',
-  o_archeologia:'Archaeology', o_storia:'History', o_musei:'Museums', o_tradizioni_popolari:'Folk traditions', o_patrimonio:'Cultural heritage', o_architettura:'Architecture', o_cultura_locale:'Local culture',
+  o_archeologia:'Archaeological site', o_storia:'History', o_musei:'Museums', o_tradizioni_popolari:'Folk traditions', o_patrimonio:'Cultural heritage', o_architettura:'Architecture', o_cultura_locale:'Local culture',
+  sd_archeologia:'Giants\' tombs, nuraghi, mines, Roman remains, baths, menhirs, dolmens.', sd_musei:'Artistic, historical, archaeological, naturalistic, cultural.', sd_architettura:'Churches, cathedrals, historic palaces, squares, botanical gardens.', sd_patrimonio:'Canto a tenore, domus de janas, UNESCO, Nino di Gallura\'s house, Villa Asquer.',
   o_visita_guidata:'Guided visit', o_percorso_culturale:'Cultural route', o_incontro_culturale:'Cultural encounter',
-  o_trekking:'Trekking', o_escursionismo:'Hiking', o_naturalistiche:'Nature experiences', o_turismo_rurale:'Rural tourism', o_sport_outdoor:'Outdoor sports', o_montagna:'Mountain activities', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Buggy', o_4x4_altro:'Other 4x4', o_cavalli:'Horses', o_asinelli:'Donkeys', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkelling', o_scuba:'Scuba diving',
+  o_trekking:'Trekking', o_ciaspolate:'Snowshoeing', o_vie_ferrate:'Via ferrata', o_arrampicata:'Climbing', o_acquatrek:'Aquatrekking', o_escursionismo:'Hiking', o_naturalistiche:'Nature experiences', o_turismo_rurale:'Rural tourism', o_sport_outdoor:'Outdoor sports', o_montagna:'Mountain activities', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Baggy', o_4x4_altro:'Other', o_cavallo_exp:'Horse riding experience', o_asino_exp:'Donkey experience', o_alpaca_exp:'Alpaca experience', o_cavalli:'Horses', o_asinelli:'Donkeys', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkelling', o_scuba:'Scuba diving', o_rafting:'Rafting', o_citybike:'CityBike', o_ebike:'E-bike', o_mtb:'Mountain bike', o_barefooting:'Barefooting', o_retreat:'Retreat', o_pet_therapy:'Pet Therapy', o_pilates:'Pilates', o_yoga:'Yoga', o_meditazione:'Meditation', o_percorsi_termali:'Thermal circuits', o_spa:'SPA', o_spa_massage:'Massages', o_spa_aroma:'Aromatherapy', o_spa_mud:'Mud therapy', o_natura_altro:'Other',
   o_escursione_guidata:'Guided excursion', o_attivita_sportiva:'Sports activity', o_esperienza_naturalistica:'Nature experience', o_tour_privato:'Private tour', o_esperienza_gruppo:'Group experience',
   o_barca_motore:'Motor boat', o_barca_vela:'Sailing boat', o_catamarano:'Catamaran', o_snorkeling:'Snorkelling', o_attivita_acquatiche:'Water activities', o_escursioni_costiere:'Coastal excursions',
   o_escursione_privata:'Private excursion', o_escursione_condivisa:'Shared excursion', o_mezza_giornata:'Half day', o_giornata_intera:'Full day', o_esperienza_personalizzata:'Tailor-made experience',
@@ -1318,7 +1406,8 @@ en:{
   o_loc_bottega:'In my workshop', o_loc_cliente:'At the guest’s location', o_loc_entrambi:'Both',
   o_tp_vino:'Wine', o_tp_formaggi:'Cheese', o_tp_salumi:'Cured meats', o_tp_olio:'Olive oil', o_tp_pane:'Bread', o_tp_dolci:'Sweets', o_tp_miele:'Honey',
   o_diet_veg:'Vegetarian', o_diet_vegan:'Vegan', o_diet_gf:'Gluten free', o_diet_lf:'Lactose free',
-  o_cert_bio:'Organic', o_cert_dop:'DOP', o_cert_doc:'DOC', o_cert_igp:'IGP', o_cert_none:'None',
+  o_cert_bio:'Organic', o_cert_dop:'DOP', o_cert_doc:'DOC', o_cert_docg:'DOCG', o_cert_igp:'IGP', o_cert_igt:'IGT', o_cert_none:'None',
+  o_menu_carta:'À la carte', o_menu_fisso:'Set menu', o_menu_mare:'Seafood', o_menu_terra:'Land', o_menu_misto:'Mixed',
   o_tk_inc:'Tickets included', o_tk_extra:'Tickets as supplement', o_tk_na:'No tickets needed',
   o_bt_motore:'Motor boat', o_bt_vela:'Sailing boat', o_bt_catamarano:'Catamaran', o_bt_gommone:'RIB', o_bt_altro:'Other',
   o_lic_entro12:'Licence within 12 miles', o_lic_oltre12:'Licence beyond 12 miles', o_lic_prof:'Professional title',
@@ -1329,8 +1418,8 @@ en:{
   o_vh_auto:'Car', o_vh_van:'Van', o_vh_minibus:'Minibus', o_vh_bus:'Coach',
   o_sv_olb:'Olbia airport', o_sv_aho:'Alghero airport', o_sv_cag:'Cagliari airport', o_sv_ports:'Ferry ports', o_sv_island:'Whole island',
   /* Sector questions */
-  q_materials:'Materials included', q_takehome:'Guests take home what they make', q_workshop_loc:'Where it takes place', q_live_demo:'Live demonstration of the technique', q_sale:'Products for sale on site',
-  q_own_products:'Your own products', q_tasting:'The tasting includes', q_diets:'Dietary options', q_allergens:'Allergens managed on request', q_certs:'Certifications',
+  q_takehome:'Guests take home what they make', q_workshop_loc:'Where it takes place', q_live_demo:'Live demonstration of the technique', q_sale:'Products for sale on site', q_can_buy:'Can guests buy the products?', yn_yes:'Yes', yn_no:'No',
+  q_own_products:'Your own products', q_tasting:'The tasting also includes', q_diets:'Dietary options', q_allergens:'Allergens managed on request', q_certs:'Certifications', q_menu_kind:'What type of menu do you offer?', q_menu_offer:'What kind of proposal do you offer?',
   q_tickets:'Entry tickets', q_site_booking:'You handle bookings at the sites', q_licensed_guide:'Led by a licensed guide', q_distance_km:'Distance (km)', q_elevation_m:'Elevation gain (m)', q_insurance:'Liability insurance in place',
   q_boat_type:'Boat type', q_boat_length:'Boat length (m)', q_boat_capacity:'Maximum passengers', q_skipper:'Skipper included', q_skipper_license:'Skipper qualification', q_port:'Departure port', q_fuel:'Fuel', q_onboard:'On board',
   q_license_type:'Qualification', q_license_no:'Licence or badge number', q_areas:'Areas you cover',
@@ -1382,24 +1471,36 @@ it:{
   path_B:'B. Convenzioni', path_BD:'Hotel, strutture ricettive e ristoranti con condizioni dedicate ai nostri viaggiatori.',
   path_C:'C. Servizi e figure professionali', path_CD:'Guide, accompagnatori, transfer, NCC e mobilità.',
   es_title:'In quale settore rientra questa esperienza?', es_sub:'Scegli il più vicino.',
-  esp_title:'Qual è la tua specializzazione?', esp_sub:'Seleziona più di un tasto.', spec_other:'Descrivila brevemente',
-  et_title:'Che tipo di servizio è?', et_sub:'Seleziona più di un tasto.',
+  sg_escursionismo:'ESCURSIONISMO', sg_offroad:'OFF ROAD', sg_animali:'ANIMALI', sg_watersport:'WATERSPORT', sg_sport:'SPORT', sg_benessere:'BENESSERE E MINDFULNESS', sg_altro:'ALTRO',
+  esp_title:'Qual è la tua specializzazione?', esp_sub:'Seleziona un solo tasto.', esp_another:'Offri anche un’altra specialità? Alla fine di questo modulo potrai aggiungere una nuova richiesta.', spec_other:'Descrivila brevemente',
+  et_title:'Che tipo di servizio è?', et_sub:'Seleziona più di un tasto.', et_combined:'Selezionando più tipologie proporrai un’esperienza combinata.',
+  spa_title:'Quali trattamenti offri?', spa_q:'Trattamenti',
   g1_title:'Dai un breve titolo', g1_sub:'Semplice e concreto.', exp_name:'Breve titolo', exp_namePh:'Per esempio Laboratorio di tessitura ad Aggius', exp_desc:'Descrizione', exp_descPh:'Cosa fanno, vedono e imparano gli ospiti, e chi incontrano.', desc_min:'Almeno {n} caratteri', desc_ok:'Lunghezza sufficiente',
-  g2_title:'Dove si svolge?', g2_sub:'Ci serve per organizzare la logistica.', exp_comune:'Comune', exp_loc:'Località', exp_meet:'Punto di incontro', exp_end:'Luogo di conclusione', exp_endHint:'Lascia vuoto se coincide con il punto di incontro.',
+  g2_title:'Dove si svolge?', g2_sub:'Ci serve per organizzare la logistica.', exp_comune:'Comune', exp_addr:'Indirizzo completo', exp_addr_hint:'Via, numero, CAP, provincia', exp_loc:'Località', exp_meet:'Punto di incontro', exp_end:'Luogo di conclusione', exp_endHint:'Lascia vuoto se coincide con il punto di incontro.', meet_diff:'Il punto di incontro è diverso dal luogo dell’attività', meet_addr:'Indirizzo del punto di incontro', act_addr:'Indirizzo del luogo dell’attività',
   g3_title:'Durata e partecipanti', g3_sub:'Vanno bene valori indicativi.', dur:'Durata', parts:'Partecipanti ed età', durD:'Ore', hours:'Ore', minutes:'Minuti', minP:'Partecipanti minimi', minPD:'Il gruppo più piccolo che accetti (sempre almeno 2)', maxP:'Partecipanti massimi', maxPD:'Il gruppo più grande che puoi ospitare', minAge:'Età minima', minAgeD:'0 significa nessun limite',
   g4_title:'Lingue e accessibilità', g4_sub:'Chi può partecipare.', exp_langs:'Lingue in cui la proponi', access:'Accessibilità', accessD:'Seleziona ciò che vale.',
   md_title:'Privata, condivisa o entrambe?', md_sub:'Privata significa un solo gruppo. Condivisa significa ospiti di prenotazioni diverse insieme.', md_privataD:'Un solo gruppo alla volta.', md_condivisaD:'Ospiti di prenotazioni diverse insieme.', md_entrambeD:'Puoi proporla in entrambi i modi.',
-  in_title:'Cosa include?', in_sub:'Spunta ciò che offri e indica se è incluso o a supplemento.', inc:'Incluso', sup:'Supplemento',
-  eq_title:'Attrezzatura', eq_sub:'O fornisci tu l’attrezzatura, oppure indica cosa devono portare gli ospiti.', eq_provided:'Fornisci l’attrezzatura tecnica', eq_providedD:'Per esempio attrezzi, caschi, maschere da snorkeling.', eq_bring:'Gli ospiti devono portare', eq_bring_note:'Cosa devono portare gli ospiti', eq_bring_notePh:'Elenca l’attrezzatura che gli ospiti devono portare.',
-  rq_title:'Requisiti e sicurezza', rq_sub:'Così possiamo proporla ai viaggiatori giusti.', difficulty:'Difficoltà', prev_exp:'Serve esperienza pregressa', prev_expD:'Per esempio esperienza di vela o arrampicata.', limits:'Limitazioni', limitsPh:'Per esempio non adatta in gravidanza.', safety:'Misure di sicurezza', safetyPh:'Per esempio giubbotti salvagente, kit di primo soccorso, assicurazione.',
+  in_title:'Cosa include?', in_sub:'Spunta ciò che offri e indica se è incluso o a supplemento.', inc:'Incluso', sup:'Supplemento', sup_price:'Prezzo supplemento (€)', sup_price_err:'Indica il prezzo del supplemento.', sup_review:'{item}: supplemento {n} €', inc_review:'{item}: incluso',
+  eq_title:'Attrezzatura', eq_sub:'O fornisci tu l’attrezzatura, oppure indica cosa devono portare gli ospiti.', eq_provided:'Fornisci l’attrezzatura tecnica', eq_providedD:'Per esempio attrezzi, caschi, maschere da snorkeling.', eq_providedD_hike:'Es. bastoncini, caschetto, imbrago, ciaspole.', eq_bring:'Gli ospiti devono portare', eq_bring_note:'Cosa devono portare gli ospiti', eq_bring_notePh:'Elenca l’attrezzatura che gli ospiti devono portare.',
+  rq_title:'Requisiti e sicurezza', rq_title_art:'Requisiti e specifiche su artigianato e tradizioni', rq_sub:'Così possiamo proporla ai viaggiatori giusti.', difficulty:'Difficoltà', prev_exp:'Serve esperienza pregressa', prev_expD:'Per esempio esperienza di vela o arrampicata.', prev_expD_art:'Per esempio esperienza di tessitura.', prev_exp_note:'L’agenzia ti contatterà per chiederti maggiori informazioni.', limits:'Limitazioni', limitsPh:'Per esempio non adatta in gravidanza.', safety:'Misure di sicurezza', safetyPh:'Per esempio giubbotti salvagente, kit di primo soccorso, assicurazione.',
+  hk_ways:'L’escursione si può fare in un solo modo o in più modalità?', hk_one:'Un solo modo', hk_multi:'Più modalità (facile, media, difficile)', hk_modes:'Modalità',
+  hk_facile:'Facile', hk_media:'Media', hk_difficile:'Difficile', hk_mode_n:'Modalità {n} di {total}',
+  hk_cai:'Classe CAI', hk_cai_src:'Fonte: CAI – Classificazione ufficiale delle difficoltà.',
+  hk_cai_t_code:'T', hk_cai_t_name:'Turistico', hk_cai_t_desc:'Sentieri evidenti, pendenze modeste, orientamento semplice',
+  hk_cai_e_code:'E', hk_cai_e_name:'Escursionistico', hk_cai_e_desc:'Terreni variabili, possibili tratti ripidi, necessaria esperienza escursionistica',
+  hk_cai_ee_code:'EE', hk_cai_ee_name:'Escursionisti esperti', hk_cai_ee_desc:'Terreni impervi, instabili o esposti, possibili passaggi rocciosi',
+  hk_cai_eea_code:'EEA', hk_cai_eea_name:'Esperti con attrezzatura', hk_cai_eea_desc:'Vie ferrate e percorsi che richiedono specifici dispositivi di protezione',
+  hk_km:'Distanza (km)', hk_elev:'Dislivello (m)', hk_dur:'Durata', hk_alt:'Altitudine massima (m)', hk_ml_km:'Distanza', hk_ml_elev:'Dislivello', hk_ml_dur:'Durata', hk_ml_alt:'Altitudine',
+  hk_car:'Sono previsti spostamenti in auto?', hk_car_from:'Da dove a dove', hk_car_dur:'Quanto dura', hk_car_kind:'Tipo di percorso',
+  hk_ck_paved:'Strada asfaltata', hk_ck_dirt:'Sterrato', hk_ck_offroad:'Off road', hk_ck_exposed:'Esposto',
   sq_title:'Qualche domanda su {s}', sq_sub:'Specifiche del tuo settore.',
   av_title:'Quando è disponibile?', av_sub:'Disponibilità indicativa, nessun calendario di prenotazione.', period:'Periodo', months:'Mesi', weekdays:'Giorni della settimana',
   sl_title:'Orari e preavviso', sl_sub:'Quando si svolge di solito e quanto preavviso ti serve.', bands:'Fascia oraria', slots:'Orari di partenza', slot_add:'Aggiungi', slot_remove:'Rimuovi {x}', notice:'Preavviso minimo', manual:'Conferma manuale', manualD:'Confermi ogni richiesta prima che la prenotazione sia definitiva.',
-  pr_title:'Prezzo per l’agenzia', pr_sub:'Indicativo. I prezzi si discutono in fase di valutazione.', pr_mode:'Come la prezzi?', pr_agency:'Costo per l’agenzia: Indica quanto desideri ricevere per erogare il servizio. Non è necessariamente il prezzo che verrà proposto al viaggiatore.',
-  pr_priv:'Esperienza privata', pr_shared:'Esperienza condivisa', pr_single:'Prezzo', pr_base:'Prezzo base', pr_incl:'Persone incluse', pr_inclD:'Coperte dal prezzo base', pr_extra:'Supplemento per persona extra', pr_min:'Prezzo minimo',
-  cd_title:'Termini e condizioni', cd_sub:'Le tue condizioni abituali. Se ne può parlare in seguito.', cancel:'Cancellazione gratuita fino a', penalties:'Penali successive', penaltiesPh:'Per esempio 50% fino a 24 ore prima.', noshow:'Mancata presentazione', weather:'Maltempo', exclusive:'Disponibile a valutare un’esclusiva commerciale', exclusiveD:'Solo se ha senso per entrambi. Non vincolante.', billing:'Preferenza di fatturazione',
+  pr_title:'Prezzo per l’agenzia', pr_sub:'Indicativo. I prezzi si discutono in fase di valutazione.', pr_vat:'Il prezzo deve essere inteso al netto e comprensivo di IVA.', pr_mode:'Come la prezzi?', pr_agency:'Costo per l’agenzia: Indica quanto desideri ricevere per erogare il servizio. Non è necessariamente il prezzo che verrà proposto al viaggiatore.',
+  pr_priv_short:'Privata', pr_shared_short:'Condivisa', pr_art_persona:'Prezzo a persona', pr_art_min:'Minimo 2 partecipanti', pr_priv:'Esperienza privata', pr_shared:'Esperienza condivisa', pr_single:'Prezzo', pr_base:'Prezzo base', pr_incl:'Persone incluse', pr_inclD:'Coperte dal prezzo base', pr_extra:'Supplemento per persona extra', pr_min:'Prezzo minimo', pr_minD:'Il prezzo ridotto riservato all’agenzia.',
+  cd_title:'Termini e condizioni', cd_sub:'Condizioni di Sardinia Discovery Travels. Le sottoscrivi, non le stabilisci.', term_pay:'Pagamento', term_cancel:'Cancellazione', term_other:'Altre condizioni', term_ph:'Testo dei termini dell’agenzia da inserire', term_accept:'Accetto i termini e le condizioni di Sardinia Discovery Travels', exclusive:'Disponibile a valutare un’esclusiva commerciale', exclusiveD:'Solo se ha senso per entrambi. Non vincolante.', billing:'Preferenza di fatturazione',
   ph_title:'Aggiungi qualche foto', ph_sub:'Almeno 1, idealmente 3 o più. La prima è la copertina.',
-  p_drop:'Trascina qui le tue foto', p_dropD:'JPG, PNG o WEBP, fino a 10 foto.', p_browse:'Scegli le foto', p_demo:'Non hai foto a portata di mano?', p_demoBtn:'Usa foto di esempio (demo)',
+  p_drop:'Trascina qui le tue foto', p_spec:'Formato JPG. Massimo 10 foto. Ogni foto viene compressa (lato lungo fino a 1920 px, qualità JPEG 0,8) e non supera 1,5 MB.', p_dropD:'Formato JPG. Massimo 10 foto.', p_browse:'Scegli le foto', p_demo:'Non hai foto a portata di mano?', p_demoBtn:'Usa foto di esempio (demo)',
   p_cover:'Copertina', p_setCover:'Imposta come copertina', p_remove:'Rimuovi foto', p_add:'Aggiungi altre', p_count:'{n} di 10', p_ready:'Pronto', p_need:'Aggiungine almeno {n}',
   mo_title:'Vuoi aggiungere un’altra esperienza?', mo_sub:'Ogni esperienza viene valutata singolarmente. I dati di referente e organizzazione restano gli stessi.', mo_add:'Aggiungi un’altra esperienza', mo_addD:'Apri una nuova scheda esperienza.', mo_list:'Le tue esperienze', mo_untitled:'Esperienza senza titolo',
   ct_title:'Che tipo di attività è?', ct_sub:'Scegli la tipologia di struttura.',
@@ -1419,7 +1520,7 @@ it:{
   ty_p3:'L’invio della candidatura non comporta l’accettazione automatica nella nostra rete di partner.',
   m_title:'Progressi salvati', m_sub:'Le tue risposte sono salvate su questo dispositivo. Riapri questa pagina per continuare.', m_ok:'Continua a modificare', cancelBtn:'Annulla',
   del_title:'Eliminare questa esperienza?', del_sub:'"{x}" e le sue foto verranno rimosse da questa candidatura.', del_ok:'Elimina',
-  t_restored:'Bentornato. I tuoi progressi sono stati ripristinati.', t_quota:'Le foto sono troppo pesanti per essere salvate su questo dispositivo. Le altre risposte sono salvate.', t_max:'Puoi aggiungere fino a 10 foto.', t_dup:'La candidatura è già stata inviata.',
+  t_restored:'Bentornato. I tuoi progressi sono stati ripristinati.', t_quota:'Le foto sono troppo pesanti per essere salvate su questo dispositivo. Le altre risposte sono salvate.', t_max:'Puoi aggiungere fino a 10 foto.', t_photo:'Una foto supera 1,5 MB anche dopo la compressione e non è stata aggiunta.', t_type:'Si possono aggiungere solo foto JPG.', t_dup:'La candidatura è già stata inviata.',
   tip_vat:'Il numero di Partita IVA dell’attività, 11 cifre.', tip_cf:'Codice fiscale: 11 cifre per le organizzazioni, 16 caratteri per le persone fisiche.', tip_runts:'Registro Unico Nazionale del Terzo Settore, il registro nazionale degli enti non profit.', tip_albo:'L’albo professionale a cui sei iscritto, se previsto.',
   tip_cin:'Codice Identificativo Nazionale assegnato alle strutture ricettive in Italia.', tip_noshow:'Un ospite che non si presenta e non disdice.', tip_excl:'Lavorare solo con noi per questa esperienza o in un’area. Solo da valutare, mai automatica.',
   tip_agency:'Indica quanto desideri ricevere per erogare il servizio. Non è necessariamente il prezzo che verrà proposto al viaggiatore.', tip_manual:'Ricevi una richiesta e confermi la disponibilità prima che la prenotazione sia definitiva.', tip_notice:'Con quanto anticipo ti serve ricevere una prenotazione.',
@@ -1431,14 +1532,16 @@ it:{
   o_assoc_cult:'Associazione culturale', o_aps:'APS', o_ets:'ETS', o_odv:'ODV', o_pro_loco:'Pro Loco', o_assoc_altro:'Altro',
   o_coop_lavoro:'Cooperativa di lavoro', o_coop_sociale:'Cooperativa sociale', o_coop_agricola:'Cooperativa agricola', o_coop_servizi:'Cooperativa di servizi', o_coop_altro:'Altro',
   o_artigianato:'Artigianato e tradizioni', o_enogastronomia:'Enogastronomia', o_cultura:'Cultura e territorio', o_natura:'Natura e avventura', o_mare:'Mare e nautica', o_guide:'Guide e accompagnatori', o_trasporti:'Trasporti e mobilità',
-  h_artigianato:'Laboratori, dimostrazioni, botteghe', h_enogastronomia:'Degustazioni, produttori, cucina', h_cultura:'Archeologia, storia, tradizioni', h_natura:'Trekking, outdoor, vita rurale', h_mare:'Barche, vela, snorkeling', h_guide:'Guide turistiche e ambientali', h_trasporti:'Transfer, NCC, trasporto gruppi',
-  o_tessitura:'Tessitura', o_ceramica:'Ceramica', o_coltelleria:'Coltelleria', o_legno:'Lavorazione del legno', o_metalli:'Lavorazione dei metalli', o_maschere:'Maschere tradizionali', o_campanacci:'Campanacci', o_pelletteria:'Pelletteria', o_gioielli:'Gioielli', o_tessile:'Artigianato tessile', o_altre_artigianali:'Altre attività artigianali',
-  o_laboratorio_pratico:'Laboratorio pratico', o_dimostrazione:'Dimostrazione', o_visita_bottega:'Visita in bottega', o_incontro_artigiano:'Incontro con l’artigiano', o_esperienza_privata:'Esperienza privata', o_percorso_piu:'Percorso con più attività',
-  o_vino:'Vino', o_formaggi:'Formaggi', o_produzione_agricola:'Produzione agricola', o_panificazione:'Panificazione', o_pasticceria:'Pasticceria', o_cucina_tradizionale:'Cucina tradizionale', o_olio:'Olio', o_altri_alimentari:'Altri prodotti alimentari',
+  h_artigianato:'Laboratori, dimostrazioni, botteghe', h_enogastronomia:'Degustazioni, produttori, cucina', h_cooking_class:'Corsi di cucina e lezioni pratiche', h_cultura:'Siti archeologici, musei, architettura, patrimonio', h_natura:'Trekking, outdoor, vita rurale', h_mare:'Barche, vela, snorkeling', h_guide:'Guide turistiche e ambientali', h_trasporti:'Transfer, NCC, trasporto gruppi',
+  o_tessitura:'Tessitura', o_ceramica:'Ceramica', o_coltelleria:'Coltelleria', o_legno:'Lavorazione del legno', o_sughero:'Sughero', o_metalli:'Lavorazione dei metalli', o_maschere:'Maschere tradizionali', o_campanacci:'Campanacci', o_pelletteria:'Pelletteria', o_gioielli:'Gioielli', o_tessile:'Arte tessile', o_altre_artigianali:'Altre attività artigianali',
+  o_laboratorio_pratico:'Laboratorio pratico', o_dimostrazione:'Dimostrazione', o_visita_bottega:'Visita in bottega', o_esperienza_privata:'Esperienza privata', o_percorso_piu:'Percorso con più attività',
+  td_laboratorio_pratico:'Esperienza in cui il visitatore partecipa attivamente alla creazione di un prodotto artigianale.', td_dimostrazione:'Esperienza in cui il visitatore osserva un artigiano durante la lavorazione di un prodotto.', td_visita_bottega:'Esperienza in cui il visitatore scopre e può acquistare i prodotti artigianali esposti.',
+  o_vino:'Vino', o_formaggi:'Formaggi', o_salumi_carni:'Salumi e carni', o_olio:'Olio', o_panificazione:'Panificazione', o_cereali_farine:'Cereali e farine', o_pastificio:'Pastificio', o_pasticceria:'Pasticceria', o_miele:'Miele', o_mirto:'Mirto', o_altri_alimentari:'Altri prodotti alimentari',
   o_degustazione:'Degustazione', o_visita_produttore:'Visita al produttore', o_laboratorio:'Laboratorio', o_cooking_class:'Cooking class', o_pranzo_cena:'Pranzo o cena esperienziale', o_esperienza_combinata:'Esperienza combinata',
-  o_archeologia:'Archeologia', o_storia:'Storia', o_musei:'Musei', o_tradizioni_popolari:'Tradizioni popolari', o_patrimonio:'Patrimonio culturale', o_architettura:'Architettura', o_cultura_locale:'Cultura locale',
+  o_archeologia:'Sito archeologico', o_storia:'Storia', o_musei:'Musei', o_tradizioni_popolari:'Tradizioni popolari', o_patrimonio:'Patrimonio culturale', o_architettura:'Architettura', o_cultura_locale:'Cultura locale',
+  sd_archeologia:'Tombe dei giganti, nuraghe, miniere, resti romani, terme, menhir, dolmen.', sd_musei:'Artistici, storici, archeologici, naturalistici, culturali.', sd_architettura:'Chiese, cattedrali, palazzi storici, piazze, orti botanici.', sd_patrimonio:'Canto a tenore, domus de janas, UNESCO, casa di Nino di Gallura, Villa Asquer.',
   o_visita_guidata:'Visita guidata', o_percorso_culturale:'Percorso culturale', o_incontro_culturale:'Incontro culturale',
-  o_trekking:'Trekking', o_escursionismo:'Escursionismo', o_naturalistiche:'Esperienze naturalistiche', o_turismo_rurale:'Turismo rurale', o_sport_outdoor:'Sport outdoor', o_montagna:'Attività in montagna', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Buggy', o_4x4_altro:'Altro 4x4', o_cavalli:'Cavalli', o_asinelli:'Asinelli', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkeling', o_scuba:'Scuba diving',
+  o_trekking:'Trekking', o_ciaspolate:'Ciaspolate', o_vie_ferrate:'Vie ferrate', o_arrampicata:'Arrampicata', o_acquatrek:'Acquatrek', o_escursionismo:'Escursionismo', o_naturalistiche:'Esperienze naturalistiche', o_turismo_rurale:'Turismo rurale', o_sport_outdoor:'Sport outdoor', o_montagna:'Attività in montagna', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Baggy', o_4x4_altro:'Altro', o_cavallo_exp:'Esperienza a cavallo', o_asino_exp:'Esperienza con l’asino', o_alpaca_exp:'Esperienza con alpaca', o_cavalli:'Cavalli', o_asinelli:'Asinelli', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkeling', o_scuba:'Scuba diving', o_rafting:'Rafting', o_citybike:'CityBike', o_ebike:'E-bike', o_mtb:'Mountain bike', o_barefooting:'Barefooting', o_retreat:'Retreat', o_pet_therapy:'Pet Therapy', o_pilates:'Pilates', o_yoga:'Yoga', o_meditazione:'Meditazione', o_percorsi_termali:'Percorsi termali', o_spa:'SPA', o_spa_massage:'Massaggi', o_spa_aroma:'Aromaterapia', o_spa_mud:'Fangoterapia', o_natura_altro:'Altro',
   o_escursione_guidata:'Escursione guidata', o_attivita_sportiva:'Attività sportiva', o_esperienza_naturalistica:'Esperienza naturalistica', o_tour_privato:'Tour privato', o_esperienza_gruppo:'Esperienza di gruppo',
   o_barca_motore:'Barca a motore', o_barca_vela:'Barca a vela', o_catamarano:'Catamarano', o_snorkeling:'Snorkeling', o_attivita_acquatiche:'Attività acquatiche', o_escursioni_costiere:'Escursioni costiere',
   o_escursione_privata:'Escursione privata', o_escursione_condivisa:'Escursione condivisa', o_mezza_giornata:'Mezza giornata', o_giornata_intera:'Giornata intera', o_esperienza_personalizzata:'Esperienza personalizzata',
@@ -1472,7 +1575,8 @@ it:{
   o_loc_bottega:'Nella mia bottega', o_loc_cliente:'Presso il cliente', o_loc_entrambi:'Entrambi',
   o_tp_vino:'Vino', o_tp_formaggi:'Formaggi', o_tp_salumi:'Salumi', o_tp_olio:'Olio', o_tp_pane:'Pane', o_tp_dolci:'Dolci', o_tp_miele:'Miele',
   o_diet_veg:'Vegetariana', o_diet_vegan:'Vegana', o_diet_gf:'Senza glutine', o_diet_lf:'Senza lattosio',
-  o_cert_bio:'Biologico', o_cert_dop:'DOP', o_cert_doc:'DOC', o_cert_igp:'IGP', o_cert_none:'Nessuna',
+  o_cert_bio:'Biologico', o_cert_dop:'DOP', o_cert_doc:'DOC', o_cert_docg:'DOCG', o_cert_igp:'IGP', o_cert_igt:'IGT', o_cert_none:'Nessuna',
+  o_menu_carta:'Carta', o_menu_fisso:'Menu fisso', o_menu_mare:'Mare', o_menu_terra:'Terra', o_menu_misto:'Misto',
   o_tk_inc:'Biglietti inclusi', o_tk_extra:'Biglietti a supplemento', o_tk_na:'Nessun biglietto necessario',
   o_bt_motore:'Barca a motore', o_bt_vela:'Barca a vela', o_bt_catamarano:'Catamarano', o_bt_gommone:'Gommone', o_bt_altro:'Altro',
   o_lic_entro12:'Patente entro 12 miglia', o_lic_oltre12:'Patente oltre 12 miglia', o_lic_prof:'Titolo professionale',
@@ -1482,8 +1586,8 @@ it:{
   o_ta_ncc:'Licenza NCC', o_ta_bus:'Autorizzazione autobus', o_ta_altro:'Altra autorizzazione',
   o_vh_auto:'Auto', o_vh_van:'Van', o_vh_minibus:'Minibus', o_vh_bus:'Pullman',
   o_sv_olb:'Aeroporto di Olbia', o_sv_aho:'Aeroporto di Alghero', o_sv_cag:'Aeroporto di Cagliari', o_sv_ports:'Porti traghetti', o_sv_island:'Tutta l’isola',
-  q_materials:'Materiali inclusi', q_takehome:'Gli ospiti portano a casa ciò che realizzano', q_workshop_loc:'Dove si svolge', q_live_demo:'Dimostrazione dal vivo della tecnica', q_sale:'Prodotti in vendita sul posto',
-  q_own_products:'Prodotti di tua produzione', q_tasting:'La degustazione comprende', q_diets:'Opzioni alimentari', q_allergens:'Allergeni gestiti su richiesta', q_certs:'Certificazioni',
+  q_takehome:'Gli ospiti portano a casa ciò che realizzano', q_workshop_loc:'Dove si svolge', q_live_demo:'Dimostrazione dal vivo della tecnica', q_sale:'Prodotti in vendita sul posto', q_can_buy:'È possibile acquistare i prodotti?', yn_yes:'Sì', yn_no:'No',
+  q_own_products:'Prodotti di tua produzione', q_tasting:'La degustazione comprende (anche)', q_diets:'Opzioni alimentari', q_allergens:'Allergeni gestiti su richiesta', q_certs:'Certificazioni', q_menu_kind:'Che tipologia di menu offri?', q_menu_offer:'Che tipologia di proposta?',
   q_tickets:'Biglietti di ingresso', q_site_booking:'Gestisci tu le prenotazioni ai siti', q_licensed_guide:'Condotta da una guida abilitata', q_distance_km:'Distanza (km)', q_elevation_m:'Dislivello (m)', q_insurance:'Assicurazione RC attiva',
   q_boat_type:'Tipo di imbarcazione', q_boat_length:'Lunghezza (m)', q_boat_capacity:'Passeggeri massimi', q_skipper:'Skipper incluso', q_skipper_license:'Titolo dello skipper', q_port:'Porto di partenza', q_fuel:'Carburante', q_onboard:'A bordo',
   q_license_type:'Abilitazione', q_license_no:'Numero di licenza o tesserino', q_areas:'Zone in cui operi',
@@ -1507,13 +1611,13 @@ const MONTHS = { en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct'
    ===================================================================== */
 const newExp = () => ({
   sector:'', spec:[], specOther:'', type:[],
-  name:'', desc:'', comune:'', localita:'', meet:'', end:'',
+  name:'', desc:'', comune:'', address:'', localita:'', meet:'', end:'', meetDifferent:false, meetAddress:'', activityAddress:'',
   durH:2, durM:0, min:2, max:8, minAge:0, langs:[], access:[],
   mode:'', incl:{}, equipProvided:false, bring:[], bringNote:'',
-  difficulty:'', prevExp:false, limits:'', safety:'', sq:{},
-  period:'', months:[], days:[], bands:[], slots:[], notice:'', manual:true,
+  difficulty:'', prevExp:false, limits:'', safety:'', sq:{}, spaTreatments:[],
+  period:'', months:[], days:[], bands:[], slots:[], notice:'', manual:false,
   priceMode:'', price:{ priv:{base:'',incl:1,extra:'',min:''}, shared:{base:'',incl:1,extra:'',min:''} },
-  cancel:'', penalties:'', noshow:'', weather:'', exclusive:false, billing:'', photos:[]
+  cancel:'', penalties:'', noshow:'', weather:'', exclusive:false, billing:'', termsAccepted:false, termsAcceptedAt:'', photos:[]
 });
 const newConv = () => ({
   type:'', stars:'', units:'', beds:'', cin:'', services:[], opening:'', months:[], groups:false,
@@ -1542,8 +1646,12 @@ function load(){
       consents:{...d.consents, ...s.consents},
       exps:(s.exps||[]).map(e=>{
       const base={...newExp(), ...e, price:{priv:{...newExp().price.priv, ...(e.price||{}).priv}, shared:{...newExp().price.shared, ...(e.price||{}).shared}}};
-      if(!Array.isArray(base.spec)) base.spec = base.spec ? [base.spec] : [];
+      if(Array.isArray(base.spec)) base.spec = base.spec.find(x => !base.sector || (SECTOR[base.sector]?.spec || []).includes(x)) || '';
+      else if(base.spec == null) base.spec = '';
       if(!Array.isArray(base.type)) base.type = base.type ? [base.type] : [];
+      const allowed = new Set(SECTOR[base.sector]?.types || []);
+      base.type = base.type.filter(x => allowed.has(x));
+      if(base.sector !== 'natura') base.difficulty = '';
       if(base.min < 2) base.min = 2;
       if(base.bringNote == null) base.bringNote = '';
       base.durM = 0;
@@ -1601,7 +1709,8 @@ const tip = k => k ? `<span class="ct-tip" tabindex="0" role="note" aria-label="
 const opt = s => ` <em>(${t('optional')})</em>`;
 const head = (title, sub, count, light) => `<div class="ct-head"><p class="ct-count">${count||''}</p><h1 class="ct-title${light?' ct-title--light':''}" tabindex="-1">${title}</h1>${sub?`<p class="ct-sub">${sub}</p>`:''}</div>`;
 const split = (h, body) => `<div class="ct-split">${h}<div class="ct-split-body">${body}</div></div>`;
-const group = (legend, inner, {req=true, sub='', tip:tk=''}={}) => `<fieldset class="ct-group"><legend class="ct-legend">${legend}${req?'':opt()}${tip(tk)}</legend>${sub?`<p class="ct-legend-sub">${sub}</p>`:''}${inner}</fieldset>`;
+const splitSide = (h, side, body) => `<div class="ct-split ct-split--side"><div class="ct-split-side">${h}${side}</div><div class="ct-split-body">${body}</div></div>`;
+const group = (legend, inner, {req=true, sub='', tip:tk='', multi=false}={}) => `<fieldset class="ct-group"><legend class="ct-legend">${legend}${req?'':opt()}${tip(tk)}</legend>${multi?`<p class="ct-multi-hint">${esc(t('et_sub'))}</p>`:''}${sub?`<p class="ct-legend-sub">${sub}</p>`:''}${inner}</fieldset>`;
 
 function inp(p, label, {type='text', req=true, hint='', ph='', tk='', ac='off', extra='', area=false, max=''}={}){
   const v = get(p) ?? '';
@@ -1621,15 +1730,56 @@ function sel(p, label, codes, {req=true, lab=o}={}){
     <select id="${fid(p)}" data-bind="${p}">${codes.map(c=>{const [val,txt]=Array.isArray(c)?c:[c,lab(c)]; return `<option value="${esc(val)}"${val===v?' selected':''}>${esc(txt)}</option>`;}).join('')}</select></label>`;
 }
 function money(p, label, {req=true, hint=''}={}){
+  const raw = get(p);
+  const shown = raw === '' || raw == null ? '' : formatItAmount(raw);
   return `<label class="ct-field"><span class="ct-field-label"><span>${label}${req?'':opt()}</span></span>${hint?`<span class="ct-field-hint">${hint}</span>`:''}
-    <span class="ct-money"><span>€</span><input id="${fid(p)}" data-bind="${p}" type="number" min="0" step="1" inputmode="decimal" value="${esc(get(p))}"></span></label>`;
+    <span class="ct-money"><span>€</span><input id="${fid(p)}" data-cash="${p}" type="text" inputmode="numeric" autocomplete="off" value="${esc(shown)}"></span></label>`;
 }
 /* Single or multi choice pills */
+/* Artisan service types: a card per option, with a description slot (empty until copy is supplied). */
+function specCards(p, codes){
+  const v = get(p);
+  return `<div class="ct-type-cards" role="radiogroup">${codes.map(c=>{
+    const on = v===c;
+    const desc = t('sd_'+c);
+    return `<button type="button" class="ct-type-card${on?' is-on':''}" role="radio" aria-checked="${on}" data-action="pick" data-p="${p}" data-v="${esc(c)}">
+      <span class="ct-type-label">${esc(o(c))}</span>
+      <span class="ct-type-desc">${desc ? esc(desc) : ''}</span>
+    </button>`;
+  }).join('')}</div>`;
+}
+function typeCards(p, codes){
+  const v = get(p) || [];
+  return `<div class="ct-type-cards" role="group">${codes.map(c=>{
+    const on = v.includes(c);
+    const desc = t('td_'+c);
+    return `<button type="button" class="ct-type-card${on?' is-on':''}" role="checkbox" aria-checked="${on}" data-action="tog" data-p="${p}" data-v="${esc(c)}">
+      <span class="ct-type-label">${esc(o(c))}</span>
+      <span class="ct-type-desc">${desc ? esc(desc) : ''}</span>
+    </button>`;
+  }).join('')}</div>`;
+}
+function halfHours(){ return Array.from({length:48}, (_,i)=>`${String(Math.floor(i/2)).padStart(2,'0')}:${i%2?'30':'00'}`); }
+function bandPills(i, e){
+  const full = e.bands.includes('band_full');
+  return `<div class="ct-pills" role="group">${CONFIG.bands.map(c=>{
+    const on = e.bands.includes(c), muted = full && c !== 'band_full';
+    return `<button type="button" class="ct-pill${on?' is-on':''}${muted?' is-muted':''}" role="checkbox" aria-checked="${on}" data-action="band" data-i="${i}" data-v="${c}">${esc(o(c))}</button>`;
+  }).join('')}</div>`;
+}
+function slotPicker(i, e){
+  const have = new Set(e.slots);
+  const opts = halfHours().map(hm=>`<option value="${hm}"${have.has(hm)?' disabled':''}>${hm}</option>`).join('');
+  return `<div class="ct-slots">${e.slots.map((s,k)=>`<span class="ct-slot">${esc(s)}<button type="button" data-action="slotdel" data-i="${i}" data-v="${k}" aria-label="${esc(t('slot_remove',{x:s}))}">${ic('x',14,2)}</button></span>`).join('')}
+    <span class="ct-slot-add"><select id="slotIn" data-i="${i}" aria-label="${esc(t('slots'))}">${opts}</select><button type="button" class="ct-back" data-action="slotadd" data-i="${i}">${ic('plus',16,1.8)} ${t('slot_add')}</button></span></div>`;
+}
+function specDesc(c){ const k = 'sd_'+c; return I18N[S.lang]?.[k] ?? I18N.en[k] ?? ''; }
 function pills(p, codes, {multi=false, lab=o, cls=''}={}){
   const v = get(p);
   return `<div class="ct-pills ${cls}" role="${multi?'group':'radiogroup'}">${codes.map(c=>{
     const on = multi ? (v||[]).includes(c) : v===c;
-    return `<button type="button" class="ct-pill${on?' is-on':''}" role="${multi?'checkbox':'radio'}" aria-checked="${on}" data-action="${multi?'tog':'pick'}" data-p="${p}" data-v="${esc(c)}">${esc(lab(c))}</button>`;}).join('')}</div>`;
+    const desc = specDesc(c);
+    return `<button type="button" class="ct-pill${on?' is-on':''}${desc?' has-desc':''}" role="${multi?'checkbox':'radio'}" aria-checked="${on}" data-action="${multi?'tog':'pick'}" data-p="${p}" data-v="${esc(c)}"><span>${esc(lab(c))}</span>${desc?`<span class="ct-pill-desc">${esc(desc)}</span>`:''}</button>`;}).join('')}</div>`;
 }
 /* Icon tiles (roles, legal forms, structures, modes) */
 function opts(p, items, {multi=false, sub=null, cls=''}={}){
@@ -1749,7 +1899,7 @@ VW.org_contacts = () => split(head(t('oc_title'), t('oc_sub'), sec('org')), `
 
 /* ---------- Step 03 Collaborazione ---------- */
 VW.collab = () => split(head(t('cb_title'), t('cb_sub'), sec('collab'), true),
-  photoCards('paths', [
+  `<p class="ct-multi-hint">${esc(t('et_sub'))}</p>` + photoCards('paths', [
     {v:'A', img:'/partner-form/img/cat-artisan.jpg', icon:'compass', label:t('path_A'), hint:t('path_AD')},
     {v:'B', img:'/partner-form/img/path-b.jpg', icon:'handshake', label:t('path_B'), hint:t('path_BD')},
     {v:'C', img:'/partner-form/img/cat-guide.jpg', icon:'briefcase', label:t('path_C'), hint:t('path_CD')}
@@ -1785,7 +1935,26 @@ const OK = {
 const E = i => S.exps[i];
 const P = (i, f) => `exps.${i}.${f}`;
 const ecount = (i, extra) => t('exp_n',{n:i+1}) + (extra ? `: ${extra}` : '');
-const sectorQs = e => (SECTOR[e.sector]?.q || []).filter(q => !q.if || e.sq[q.if[0]] === q.if[1]);
+const sectorQs = e => {
+  let qs = [...(SECTOR[e.sector]?.q || [])];
+  if(e.sector === 'enogastronomia'){
+    if(lunchOnly(e)) qs = qs.filter(q => q.k !== 'tasting' && q.k !== 'certs');
+    if(hasLunch(e)){
+      const at = qs.findIndex(q => q.k === 'diets');
+      const i = at < 0 ? qs.length : at;
+      qs = [...qs.slice(0, i), ...MEAL_QS, ...qs.slice(i)];
+    }
+  }
+  return qs.filter(q => q.k !== 'tickets' && (!q.if || e.sq[q.if[0]] === q.if[1]));
+};
+const hasTicketPage = e => (SECTOR[e.sector]?.q || []).some(q => q.k === 'tickets');
+const ticketsChosen = e => { const m = inclMode(e, 'inc_tickets'); return m === 'inc' || m === 'sup'; };
+const hasLunch = e => e.sector === 'enogastronomia' && typeList(e).includes('pranzo_cena');
+const lunchOnly = e => hasLunch(e) && typeList(e).length === 1;
+const MEAL_QS = [
+  {k:'menu_kind', t:'pills', o:['menu_carta','menu_fisso'], req:true},
+  {k:'menu_offer', t:'pills', o:['menu_mare','menu_terra','menu_misto'], req:true},
+];
 const blocks = e => e.mode==='entrambe' ? ['priv','shared'] : e.mode==='condivisa' ? ['shared'] : ['priv'];
 
 const sectorsForPaths = () => {
@@ -1798,85 +1967,374 @@ const sectorsForPaths = () => {
     return true;
   });
 };
-const specList = e => Array.isArray(e.spec) ? e.spec : (e.spec ? [e.spec] : []);
+const hasSpec = e => (SECTOR[e.sector]?.spec || []).length > 0;
+const hasType = e => (SECTOR[e.sector]?.types || []).length > 0;
+const specList = e => { const raw = Array.isArray(e.spec) ? e.spec : (e.spec ? [e.spec] : []); const allowed = e.sector ? (SECTOR[e.sector]?.spec || []) : null; const one = allowed ? raw.find(x => allowed.includes(x)) : raw[0]; return one ? [one] : []; };
 const typeList = e => Array.isArray(e.type) ? e.type : (e.type ? [e.type] : []);
-const artisanTypesFor = e => {
-  let types = [...(SECTOR[e.sector]?.types || [])];
-  if (e.sector === 'artigianato' && specList(e).includes('coltelleria')) {
-    types = types.filter(x => x !== 'incontro_artigiano' && x !== 'esperienza_privata');
+const allowedTypes = e => [...(SECTOR[e.sector]?.types || [])];
+const TASTE_OF = { vino:'tp_vino', formaggi:'tp_formaggi', salumi_carni:'tp_salumi', olio:'tp_olio', panificazione:'tp_pane', pasticceria:'tp_dolci', miele:'tp_miele' };
+function qOpts(e, q){
+  if(q.k === 'tasting' && e.sector === 'enogastronomia'){
+    const hide = TASTE_OF[specList(e)[0]];
+    return hide ? q.o.filter(x => x !== hide) : q.o;
   }
-  return types;
+  return q.o || [];
+}
+function typeNote(e){ return typeList(e).length > 1 ? `<p class="ct-spec-note">${esc(t('et_combined'))}</p>` : ''; }
+function placeFields(i){
+  const e = E(i);
+  if(e.sector === 'mare') return `
+    <div class="ct-row">${town(P(i,'comune'), t('exp_comune'))}${inp(P(i,'localita'), t('exp_loc'), {req:false})}</div>
+    ${inp(P(i,'meet'), t('exp_meet'))}
+    ${inp(P(i,'end'), t('exp_end'), {req:false, hint:t('exp_endHint')})}`;
+  return `
+    <div class="ct-row">${town(P(i,'comune'), t('exp_comune'))}${inp(P(i,'address'), t('exp_addr'), {ph:t('exp_addr_hint')})}</div>
+    ${check(P(i,'meetDifferent'), esc(t('meet_diff')))}
+    ${e.meetDifferent ? `${inp(P(i,'meetAddress'), t('meet_addr'), {ph:t('exp_addr_hint')})}${inp(P(i,'activityAddress'), t('act_addr'), {ph:t('exp_addr_hint')})}` : ''}`;
+}
+const placeOk = e => {
+  if(e.sector === 'mare') return filled(e.comune) && filled(e.meet, 3);
+  if(!filled(e.comune) || !filled(e.address, 3)) return false;
+  return !e.meetDifferent || (filled(e.meetAddress, 3) && filled(e.activityAddress, 3));
 };
+const sectorLabel = e => (e.sector && SECTOR[e.sector]) ? `${SECTOR[e.sector].letter}. ${o(e.sector)}` : (e.sector ? o(e.sector) : '');
+const showsDifficulty = e => e.sector === 'natura' && !isHike(e);
+const HIKE_SPECS = ['trekking','ciaspolate','vie_ferrate','arrampicata','acquatrek'];
+const isHike = e => e?.sector === 'natura' && HIKE_SPECS.includes(specList(e)[0]);
+const isSpa = e => e?.sector === 'natura' && specList(e)[0] === 'spa';
+const SPA_TREATS = ['spa_massage','spa_aroma','spa_mud'];
+const priceModesFor = e => isHike(e) ? CONFIG.priceModes.filter(m => m !== 'pm_ora' && m !== 'pm_esperienza') : CONFIG.priceModes;
+const ARTISAN_OMIT_INCLUDES = ['inc_tasting','inc_meal','inc_drinks'];
+const ENO_OMIT_INCLUDES = ['inc_materials','inc_tickets','inc_equipment','inc_insurance','inc_meal','inc_drinks'];
+const CULTURA_OMIT_INCLUDES = ['inc_materials','inc_tasting','inc_meal','inc_drinks','inc_equipment'];
+const includesFor = e => CONFIG.includes.filter(c => {
+  if(e?.sector === 'artigianato' && ARTISAN_OMIT_INCLUDES.includes(c)) return false;
+  if(e?.sector === 'cultura' && CULTURA_OMIT_INCLUDES.includes(c)) return false;
+  if(e?.sector === 'enogastronomia'){
+    if(ENO_OMIT_INCLUDES.includes(c)) return false;
+    /* Degustazione is already the service type, so it is not listed again. */
+    if(c === 'inc_tasting' && typeList(e).includes('degustazione')) return false;
+  }
+  if(isHike(e) && c === 'inc_materials') return false;
+  return true;
+});
+function inclMode(e, c){ const v = e.incl?.[c]; if(!v) return ''; return typeof v === 'string' ? v : (v.mode || ''); }
+function inclPrice(e, c){ const v = e.incl?.[c]; if(!v || typeof v !== 'object') return ''; return v.price ?? ''; }
+/* Cash-register formatting lives in ./it-money.js (formatItAmount, priceFromDigits). */
+function normalizeIncl(e){
+  if(!e.incl || typeof e.incl !== 'object' || Array.isArray(e.incl)) e.incl = {};
+  const allowed = e.sector ? new Set(includesFor(e)) : null;
+  for(const c of Object.keys(e.incl)){
+    if(allowed && !allowed.has(c)){ delete e.incl[c]; continue; }
+    const v = e.incl[c];
+    if(v === 'inc' || v === 'sup') e.incl[c] = { mode:v, price:'' };
+    else if(v && (v.mode === 'inc' || v.mode === 'sup')) e.incl[c] = { mode:v.mode, price: v.mode === 'sup' ? (Number.isFinite(Number(v.price)) && v.price !== '' ? Math.round(Number(v.price)*100)/100 : '') : '' };
+    else delete e.incl[c];
+  }
+}
+const HIKE_MODES = ['facile','media','difficile'];
+const CAI_CODES = ['t','e','ee','eea'];
+const CAR_KINDS = ['paved','dirt','offroad','exposed'];
+const HIKE_TONE = {facile:'green', media:'orange', difficile:'red'};
+/* CAI class wins over the mode. E and EE must not share a colour, and EEA is red. */
+const HK_COLOR = {t:'#30D158', e:'#34C759', ee:'#FF9F0A', eea:'#FF453A', facile:'#30D158', media:'#FF9F0A', difficile:'#FF453A', sand:'#8E8E93'};
+function hikeTone(mode, cai){ if(cai && HK_COLOR[cai]) return cai; if(mode && HK_COLOR[mode]) return mode; return 'sand'; }
+function ensureHike(e){
+  const prev = e.hike && typeof e.hike === 'object' ? e.hike : {};
+  const profiles = {};
+  for(const k of ['solo', ...HIKE_MODES]){
+    const p = (prev.profiles && prev.profiles[k]) || {};
+    profiles[k] = { cai:CAI_CODES.includes(p.cai)?p.cai:'', km:p.km??'', elev:p.elev??'', dur:p.dur??'', alt:p.alt??'' };
+  }
+  const ways = prev.ways === 'one' || prev.ways === 'multi' ? prev.ways : '';
+  e.hike = {
+    ways, modes: ways === 'multi' ? HIKE_MODES.filter(m => (prev.modes||[]).includes(m)) : [], profiles,
+    car: prev.car === 'yes' || prev.car === 'no' ? prev.car : '', carFrom: prev.carFrom || '', carDur: prev.carDur || '',
+    carKind: CAR_KINDS.filter(k => (prev.carKind||[]).includes(k))
+  };
+  return e.hike;
+}
+function hikeKeys(e){
+  const h = e?.hike; if(!h) return [];
+  if(h.ways === 'one') return ['solo'];
+  if(h.ways === 'multi') return HIKE_MODES.filter(m => (h.modes||[]).includes(m));
+  return [];
+}
+const hikeInlineKey = e => { const k = hikeKeys(e); return k.length === 1 ? k[0] : ''; };
+const hikeSeq = e => { const k = hikeKeys(e); return k.length >= 2 ? k : []; };
+function profileOk(p){ return !!p && CAI_CODES.includes(p.cai) && pos(p.km) && pos(p.elev) && filled(p.dur, 1) && pos(p.alt); }
+function carOk(h){ if(!h || h.car === 'no') return !!h && h.car === 'no'; if(h.car !== 'yes') return false; return filled(h.carFrom, 2) && filled(h.carDur, 1) && h.carKind.length > 0; }
+function hikePageOk(e, n){
+  if(!isHike(e)) return false;
+  const keys = hikeSeq(e), key = keys[n];
+  if(!key || !profileOk(e.hike?.profiles?.[key])) return false;
+  return n < keys.length - 1 || carOk(e.hike);
+}
+function hikeReqOk(e){
+  const h = ensureHike(e);
+  if(h.ways !== 'one' && h.ways !== 'multi') return false;
+  if(h.ways === 'multi' && !h.modes.length) return false;
+  const key = hikeInlineKey(e);
+  return key ? profileOk(h.profiles[key]) && carOk(h) : true;
+}
+function hkFormat(n, max=0){
+  const loc = S.lang === 'it' ? 'it-IT' : 'en-GB';
+  return new Intl.NumberFormat(loc, { maximumFractionDigits: max, minimumFractionDigits: 0, useGrouping: true }).format(n);
+}
+function hkMetric(p, k){
+  const v = p?.[k];
+  if(v === '' || v == null) return { text:'–', empty:true };
+  if(k === 'dur') return { text:String(v), empty:false };
+  const n = Number(String(v).replace(',', '.'));
+  if(!Number.isFinite(n)) return { text:String(v), empty:false };
+  if(k === 'km') return { text: hkFormat(n, 1) + ' km', empty:false };
+  if(k === 'elev') return { text: '+' + hkFormat(n) + ' m', empty:false };
+  return { text: hkFormat(n) + ' m', empty:false };
+}
+function hikeAxis(p){
+  const alt = Number(p?.alt), elev = Number(p?.elev);
+  if(alt > 0 && elev > 0){ const lo = Math.max(0, Math.round(alt - elev)); return [hkFormat(alt), hkFormat(Math.round((alt + lo) / 2)), hkFormat(lo)]; }
+  if(alt > 0) return [hkFormat(alt), hkFormat(Math.round(alt / 2)), '0'];
+  if(elev > 0) return ['+' + hkFormat(elev), '+' + hkFormat(Math.round(elev / 2)), '0'];
+  return ['', '', ''];
+}
+function profileYs(p){
+  const elev = Number(p?.elev)||0, alt = Number(p?.alt)||0, km = Number(p?.km)||0, n = 24;
+  const gain = elev || (alt ? Math.min(alt, Math.max(80, alt * 0.22)) : 0);
+  const amp = gain ? Math.max(26, Math.min(84, 18 + gain / 11)) : 14;
+  const peakAt = km > 0 && elev ? Math.max(0.38, Math.min(0.74, 0.4 + elev / (km * 800))) : 0.62;
+  const ys = [];
+  for(let i = 0; i < n; i++){
+    const t = i / (n - 1);
+    const y = t <= peakAt ? Math.pow(t / peakAt, 1.28) : Math.pow(1 - (t - peakAt) / (1 - peakAt), 0.7) * 0.9;
+    const wobble = Math.sin(t * 17.4 + km * 0.13) * 0.05 + Math.sin(t * 8.1 + elev * 0.002) * 0.035 + Math.sin(t * 29 + alt * 0.001) * 0.02;
+    let h = y;
+    if(i !== 0 && i !== n - 1 && Math.abs(t - peakAt) > 0.05) h += wobble;
+    ys.push(Math.max(0.04, Math.min(1, h)) * amp);
+  }
+  ys[0] = amp * 0.05; ys[n - 1] = amp * 0.1;
+  const pi = Math.round(peakAt * (n - 1)); ys[pi] = amp;
+  return { ys, peak: pi };
+}
+function smoothPath(pts){
+  let d = `M${pts[0].x} ${pts[0].y}`;
+  for(let i = 0; i < pts.length - 1; i++){
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    const c1x = (p1.x + (p2.x - p0.x) / 6).toFixed(1), c1y = (p1.y + (p2.y - p0.y) / 6).toFixed(1);
+    const c2x = (p2.x - (p3.x - p1.x) / 6).toFixed(1), c2y = (p2.y - (p3.y - p1.y) / 6).toFixed(1);
+    d += `C${c1x} ${c1y} ${c2x} ${c2y} ${p2.x} ${p2.y}`;
+  }
+  return d;
+}
+function hikeGeometry(p){
+  const { ys, peak } = profileYs(p || {});
+  const L = 36, R = 8, base = 108, step = (320 - L - R) / (ys.length - 1);
+  const pts = ys.map((h, i) => ({ x:+(L + i * step).toFixed(1), y:+(base - h).toFixed(1) }));
+  const line = smoothPath(pts);
+  return { line, area:`${line}L${pts.at(-1).x} ${base}L${pts[0].x} ${base}Z`, peak:pts[peak], axis:hikeAxis(p) };
+}
+function hikeSvg(p){
+  const g = hikeGeometry(p);
+  const ax = g.axis.map((txt, i) => `<text id="hkAx${i}" x="0" y="${[34, 72, 111][i]}">${esc(txt)}</text>`).join('');
+  return `<svg viewBox="0 0 320 124" class="hk-svg" aria-hidden="true"><defs>
+      <linearGradient id="hkAreaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--hk)" stop-opacity="0.35"/><stop offset="1" stop-color="var(--hk)" stop-opacity="0"/></linearGradient>
+    </defs>
+    <g class="hk-grid" stroke="rgba(255,255,255,.14)" stroke-width=".6" vector-effect="non-scaling-stroke">
+      <line x1="36" y1="28" x2="312" y2="28"/><line x1="36" y1="68" x2="312" y2="68"/><line x1="36" y1="108" x2="312" y2="108" stroke="rgba(255,255,255,.22)"/>
+    </g>
+    <g fill="rgba(255,255,255,.38)" font-size="9" font-family="-apple-system,BlinkMacSystemFont,SF Pro Text,Inter,system-ui,sans-serif">${ax}</g>
+    <path class="hk-area" d="${g.area}" style="d:path('${g.area}')" fill="url(#hkAreaGrad)"/>
+    <path class="hk-line" pathLength="1" d="${g.line}" style="d:path('${g.line}')"/>
+    <circle class="hk-halo" cx="${g.peak.x}" cy="${g.peak.y}" r="8" fill="var(--hk)" opacity=".22"/>
+    <circle class="hk-summit" cx="${g.peak.x}" cy="${g.peak.y}" r="3.25" fill="var(--hk)"/>
+  </svg>`;
+}
+function hikePill(mode, cai){
+  if(cai && HK_COLOR[cai] && cai !== 'sand') return `${t('hk_cai_'+cai+'_code')} · ${t('hk_cai_'+cai+'_name')}`;
+  if(HIKE_MODES.includes(mode)) return t('hk_'+mode);
+  return '';
+}
+function applyHikeTone(root, mode, cai){
+  const tone = hikeTone(mode, cai);
+  root.style.setProperty('--hk', HK_COLOR[tone]);
+  root.dataset.tone = tone;
+}
+function hikeMetrics(profile){
+  return `<ul class="hk-metrics">${['km','elev','dur','alt'].map(k=>{
+    const m = hkMetric(profile, k);
+    return `<li><b class="${m.empty?'is-empty':''}" data-spec="${k}">${esc(m.text)}</b><span>${esc(t('hk_ml_'+k))}</span></li>`;
+  }).join('')}</ul>`;
+}
+function hikeVizHtml(i, key, profile, mode, step){
+  const overview = key === 'overview';
+  const toneMode = overview ? '' : (mode === 'solo' ? '' : mode);
+  const tone = overview ? 'sand' : hikeTone(toneMode, profile?.cai);
+  const pill = overview ? '' : hikePill(toneMode, profile?.cai);
+  const modes = E(i).hike?.modes || [];
+  return `<div class="hk-viz" id="hkViz" data-i="${i}" data-key="${esc(key)}" data-tone="${tone}" style="--hk:${HK_COLOR[tone]}">
+    <div class="hk-top">${pill?`<span class="hk-pill">${esc(pill)}</span>`:'<span class="hk-pill" hidden></span>'}${step?`<span class="hk-step">${esc(t('hk_mode_n',{n:step.n,total:step.total}))}</span>`:''}</div>
+    <div class="hk-scene">${hikeSvg(overview ? {} : profile)}</div>
+    ${overview ? `<ul class="hk-legend">${HIKE_MODES.map(m=>`<li class="${modes.includes(m)?'is-on':''}"><i style="background:${HK_COLOR[m]}"></i>${esc(t('hk_'+m))}</li>`).join('')}</ul>` : ''}
+    ${hikeMetrics(overview ? {} : profile)}
+  </div>`;
+}
+function paintHikeViz(){
+  const root = document.getElementById('hkViz');
+  if(!root || root.dataset.key === 'overview') return;
+  const e = S.exps[+root.dataset.i], key = root.dataset.key, p = e?.hike?.profiles?.[key]; if(!p) return;
+  const mode = key === 'solo' ? '' : key;
+  applyHikeTone(root, mode, p.cai);
+  const g = hikeGeometry(p);
+  const line = root.querySelector('.hk-line'), area = root.querySelector('.hk-area');
+  if(line){ line.setAttribute('d', g.line); line.style.d = `path('${g.line}')`; }
+  if(area){ area.setAttribute('d', g.area); area.style.d = `path('${g.area}')`; }
+  root.querySelectorAll('.hk-halo,.hk-summit').forEach(el => { el.setAttribute('cx', g.peak.x); el.setAttribute('cy', g.peak.y); });
+  g.axis.forEach((txt, i) => { const el = root.querySelector('#hkAx'+i); if(el) el.textContent = txt; });
+  ['km','elev','dur','alt'].forEach(k => { const el = root.querySelector('[data-spec="'+k+'"]'); if(!el) return; const m = hkMetric(p, k); el.textContent = m.text; el.classList.toggle('is-empty', m.empty); });
+  const pill = root.querySelector('.hk-pill');
+  if(pill){ const label = hikePill(mode, p.cai); pill.hidden = !label; pill.textContent = label || ''; }
+}
+function modePills(i){
+  const modes = E(i).hike?.modes || [];
+  return `<div class="ct-pills" role="group">${HIKE_MODES.map(c=>{
+    const on = modes.includes(c);
+    return `<button type="button" class="ct-pill hk-mode is-${HIKE_TONE[c]}${on?' is-on':''}" role="checkbox" aria-checked="${on}" data-action="tog" data-p="${P(i,'hike.modes')}" data-v="${c}"><i class="hk-dot" aria-hidden="true"></i><span>${esc(t('hk_'+c))}</span></button>`;
+  }).join('')}</div>`;
+}
+function caiCards(p){
+  const v = get(p);
+  return `<div class="hk-cai" role="radiogroup">${CAI_CODES.map(c=>{
+    const on = v === c;
+    return `<button type="button" class="hk-cai-card${on?' is-on':''}" role="radio" aria-checked="${on}" data-action="pick" data-p="${p}" data-v="${c}"><span class="hk-cai-code">${esc(t('hk_cai_'+c+'_code'))}</span><span class="hk-cai-text"><span class="hk-cai-name">${esc(t('hk_cai_'+c+'_name'))}</span><span class="hk-cai-desc">${esc(t('hk_cai_'+c+'_desc'))}</span></span></button>`;
+  }).join('')}</div>`;
+}
+function hikeDetailBlock(i, key){
+  const base = P(i, 'hike.profiles.'+key);
+  return `${group(t('hk_cai'), `${caiCards(base+'.cai')}<p class="hk-src">${esc(t('hk_cai_src'))}</p>`)}
+    <div class="ct-row">${inp(base+'.km', t('hk_km'), {type:'number'})}${inp(base+'.elev', t('hk_elev'), {type:'number'})}</div>
+    <div class="ct-row">${inp(base+'.dur', t('hk_dur'))}${inp(base+'.alt', t('hk_alt'), {type:'number'})}</div>`;
+}
+function hikeCarFields(i){
+  const h = E(i).hike;
+  return `${group(t('hk_car'), pills(P(i,'hike.car'), ['yes','no'], {lab:c=>t(c==='yes'?'yn_yes':'yn_no')}))}
+    ${h.car==='yes' ? `<div class="ct-row">${inp(P(i,'hike.carFrom'), t('hk_car_from'))}${inp(P(i,'hike.carDur'), t('hk_car_dur'))}</div>${group(t('hk_car_kind'), pills(P(i,'hike.carKind'), CAR_KINDS, {multi:true, lab:c=>t('hk_ck_'+c)}), {multi:true})}` : ''}`;
+}
+function hikeIndicator(step){
+  return `<p class="hk-ind"><span class="hk-badge is-${HIKE_TONE[step.mode]}"><i></i>${esc(t('hk_'+step.mode))}</span><span>${esc(t('hk_mode_n',{n:step.n,total:step.total}))}</span></p>`;
+}
+function hikeReqs(i){
+  const e = E(i), h = ensureHike(e), key = hikeInlineKey(e);
+  const profile = key ? h.profiles[key] : null;
+  const mode = key && key !== 'solo' ? key : 'solo';
+  return splitSide(head(t('rq_title'), t('rq_sub'), ecount(i)), hikeVizHtml(i, key || 'overview', profile, mode, null), `
+    ${group(t('hk_ways'), pills(P(i,'hike.ways'), ['one','multi'], {lab:c=>t('hk_'+c)}))}
+    ${h.ways==='multi' ? group(t('hk_modes'), modePills(i), {multi:true}) : ''}
+    ${key ? `${hikeDetailBlock(i, key)}${hikeCarFields(i)}` : ''}`);
+}
+function hikeDetailScreen(i, n){
+  const e = E(i); ensureHike(e);
+  const keys = hikeSeq(e), key = keys[n];
+  if(!key) return split(head(t('rq_title'), '', ecount(i)), '');
+  const step = {n:n+1, total:keys.length, mode:key};
+  return splitSide(head(t('rq_title'), t('hk_mode_n',{n:step.n,total:step.total}), ecount(i)), hikeVizHtml(i, key, e.hike.profiles[key], key, step), `
+    ${hikeIndicator(step)}
+    ${hikeDetailBlock(i, key)}
+    ${n === keys.length-1 ? hikeCarFields(i) : ''}`);
+}
+function hikePayload(e){
+  const h = ensureHike(e), profiles = {};
+  for(const k of hikeKeys(e)){ const p = h.profiles[k]; profiles[k] = { cai:p.cai, distanceKm:p.km, elevationM:p.elev, duration:p.dur, altitudeMaxM:p.alt }; }
+  const out = { ways:h.ways, modes:h.ways==='multi' ? h.modes.slice() : [], profiles, car:h.car };
+  if(h.car==='yes'){ out.carFrom = h.carFrom; out.carDuration = h.carDur; out.carKind = h.carKind.slice(); }
+  return out;
+}
 const EV = {
   sector: i => split(head(t('es_title'), t('es_sub'), ecount(i), true),
     photoCards(P(i,'sector'), sectorsForPaths().map(s=>({v:s.code, img:s.img, icon:s.icon, label:`${s.letter}. ${o(s.code)}`, hint:t('h_'+s.code)})))),
-  /* Artisan specialization comes first so knife-only exclusions are known before type selection. */
-  type: i => { const e=E(i); const types = e.sector==='artigianato' ? artisanTypesFor(e) : SECTOR[e.sector].types; return split(head(t('et_title'), t('et_sub'), ecount(i, o(e.sector))), pills(P(i,'type'), types, {multi:true})); },
-  spec: i => { const e=E(i), s=SECTOR[e.sector]; const specs = specList(e); return split(head(t('esp_title'), t('esp_sub'), ecount(i, o(e.sector))), `
-    ${pills(P(i,'spec'), s.spec, {multi:true})}
+  type: i => { const e=E(i); const codes = allowedTypes(e);
+    const choices = e.sector === 'artigianato' ? typeCards(P(i,'type'), codes) : pills(P(i,'type'), codes, {multi:true});
+    return split(head(t('et_title'), t('et_sub'), ecount(i, o(e.sector))), `<div class="ct-stack" style="gap:16px">${choices}${typeNote(e)}</div>`); },
+  spec: i => { const e=E(i), s=SECTOR[e.sector]; const specs = specList(e);
+    const choices = s.specGroups
+      ? `<div class="ct-spec-groups">${s.specGroups.map(g=>`<fieldset class="ct-group"><legend class="ct-spec-head">${esc(t(g.h))}</legend>${pills(P(i,'spec'), g.o)}</fieldset>`).join('')}</div>`
+      : (e.sector === 'cultura' ? specCards(P(i,'spec'), s.spec) : pills(P(i,'spec'), s.spec));
+    return split(head(t('esp_title'), t('esp_sub'), ecount(i, o(e.sector))), `
+    <div class="ct-stack" style="gap:16px">${choices}
+    ${specs.length ? `<p class="ct-spec-note">${esc(t('esp_another'))}</p>` : ''}</div>
     ${specs.some(x => CONFIG.otherSpec.includes(x)) ? inp(P(i,'specOther'), t('spec_other')) : ''}`); },
+  spa: i => split(head(t('spa_title'), '', ecount(i)),
+    group(t('spa_q'), pills(P(i,'spaTreatments'), SPA_TREATS, {multi:true}), {multi:true})),
   g1: i => { const e=E(i); return split(head(t('g1_title'), t('g1_sub'), ecount(i)), `
     ${inp(P(i,'name'), t('exp_name'), {ph:t('exp_namePh'), max:80})}
     <label class="ct-field"><span class="ct-field-label"><span>${t('exp_desc')}</span></span>
       <textarea id="${fid(P(i,'desc'))}" data-bind="${P(i,'desc')}" rows="7" maxlength="${DESC_MAX}" placeholder="${esc(t('exp_descPh'))}">${esc(e.desc)}</textarea>
       <span class="ct-field-hint" id="cnt-desc" data-for="${P(i,'desc')}"></span></label>`); },
-  g2: i => split(head(t('g2_title'), t('g2_sub'), ecount(i)), `
-    <div class="ct-row">${town(P(i,'comune'), t('exp_comune'))}${inp(P(i,'localita'), t('exp_loc'), {req:false})}</div>
-    ${inp(P(i,'meet'), t('exp_meet'))}
-    ${inp(P(i,'end'), t('exp_end'), {req:false, hint:t('exp_endHint')})}`),
+  g2: i => split(head(t('g2_title'), t('g2_sub'), ecount(i)), placeFields(i)),
   g3: i => { const e=E(i); if(e.min < 2) e.min = 2; return split(head(t('g3_title'), t('g3_sub'), ecount(i)), `
     ${group(t('dur'), `<div class="ct-steppers">${stepper(P(i,'durH'), t('hours'), t('durD'), 1, 12)}</div>`)}
     ${group(t('parts'), `<div class="ct-steppers">${stepper(P(i,'min'), t('minP'), t('minPD'), 2, e.max)}${stepper(P(i,'max'), t('maxP'), t('maxPD'), Math.max(2, e.min), 200)}${stepper(P(i,'minAge'), t('minAge'), t('minAgeD'), 0, 18)}</div>`)}`); },
   g4: i => split(head(t('g4_title'), t('g4_sub'), ecount(i)), `
-    ${group(t('exp_langs'), pills(P(i,'langs'), CONFIG.expLangs, {multi:true}))}
-    ${group(t('access'), pills(P(i,'access'), CONFIG.access, {multi:true}), {req:false, sub:t('accessD')})}`),
+    ${group(t('exp_langs'), pills(P(i,'langs'), CONFIG.expLangs, {multi:true}), {multi:true})}
+    ${group(t('access'), pills(P(i,'access'), CONFIG.access, {multi:true}), {req:false, multi:true, sub:t('accessD')})}`),
   mode: i => split(head(t('md_title'), t('md_sub'), ecount(i)), opts(P(i,'mode'), CONFIG.modes, {sub:c=>t('md_'+c+'D')})),
-  incl: i => { const e=E(i); return split(head(t('in_title'), t('in_sub'), ecount(i)), `
-    <div class="ct-incl">${CONFIG.includes.map(c=>{ const v=e.incl[c]; return `
-      <div class="ct-incl-row"><label class="ct-check${v?' is-on':''}"><input type="checkbox" data-incl="${c}" data-i="${i}" ${v?'checked':''}><span class="ct-check-box" aria-hidden="true">${ic('check',14,2.4)}</span><span>${esc(o(c))}</span></label>
-        ${v?`<span class="ct-seg" role="radiogroup" aria-label="${esc(o(c))}">${['inc','sup'].map(x=>`<button type="button" role="radio" aria-checked="${v===x}" class="${v===x?'is-on':''}" data-action="inclset" data-i="${i}" data-c="${c}" data-v="${x}">${t(x)}</button>`).join('')}</span>`:''}</div>`;}).join('')}</div>`); },
+  incl: i => { const e=E(i); normalizeIncl(e); return split(head(t('in_title'), t('in_sub'), ecount(i)), `
+    <p class="ct-multi-hint">${esc(t('et_sub'))}</p>
+    <div class="ct-incl">${includesFor(e).map(c=>{ const mode=inclMode(e,c); const price=inclPrice(e,c); const bad=mode==='sup' && !pos(price); return `
+      <div class="ct-incl-row"><div class="ct-incl-main"><label class="ct-check${mode?' is-on':''}"><input type="checkbox" data-incl="${c}" data-i="${i}" ${mode?'checked':''}><span class="ct-check-box" aria-hidden="true">${ic('check',14,2.4)}</span><span>${esc(o(c))}</span></label>
+        ${mode?`<span class="ct-seg" role="radiogroup" aria-label="${esc(o(c))}">${['inc','sup'].map(x=>`<button type="button" role="radio" aria-checked="${mode===x}" class="${mode===x?'is-on':''}" data-action="inclset" data-i="${i}" data-c="${c}" data-v="${x}">${t(x)}</button>`).join('')}</span>`:''}</div>
+        ${mode==='sup'?`<label class="ct-field ct-incl-price"><span class="ct-field-label"><span>${t('sup_price')}</span></span>
+          <span class="ct-money"><span>€</span><input id="${fid(P(i,'incl.'+c+'.price'))}" data-cash="${P(i,'incl.'+c+'.price')}" type="text" inputmode="numeric" autocomplete="off" value="${esc(formatItAmount(price))}" class="${bad?'is-bad':''}" aria-invalid="${bad}"></span>
+          <span class="ct-error" ${bad?'':'hidden'}>${t('sup_price_err')}</span></label>`:''}</div>`;}).join('')}</div>`); },
   equip: i => { const e=E(i); return split(head(t('eq_title'), t('eq_sub'), ecount(i)), `
-    ${toggle(P(i,'equipProvided'), t('eq_provided'), t('eq_providedD'))}
+    ${toggle(P(i,'equipProvided'), t('eq_provided'), t(isHike(e) ? 'eq_providedD_hike' : 'eq_providedD'))}
     ${e.equipProvided ? '' : inp(P(i,'bringNote'), t('eq_bring_note'), {area:'short', ph:t('eq_bring_notePh')})}`); },
-  reqs: i => { const e=E(i); const showDiff = e.sector !== 'artigianato'; return split(head(t('rq_title'), t('rq_sub'), ecount(i)), `
-    ${showDiff ? group(t('difficulty'), pills(P(i,'difficulty'), CONFIG.difficulty)) : ''}
-    ${toggle(P(i,'prevExp'), t('prev_exp'), t('prev_expD'))}
-    ${inp(P(i,'limits'), t('limits'), {req:false, area:'short', ph:t('limitsPh')})}
-    ${inp(P(i,'safety'), t('safety'), {req:false, area:'short', ph:t('safetyPh')})}`); },
+  reqs: i => { const e=E(i); const artisan = e.sector === 'artigianato'; if(!showsDifficulty(e)) e.difficulty = ''; if(artisan){ e.limits = ''; e.safety = ''; e.localita = ''; e.meet = ''; e.end = ''; return split(head(t('rq_title_art'), t('rq_sub'), ecount(i)), `
+    <div class="ct-stack" style="gap:16px">${placeFields(i)}${toggle(P(i,'prevExp'), t('prev_exp'), t('prev_expD_art'))}${note(t('prev_exp_note'))}</div>
+    ${sectorQs(e).map(q=>qField(i,q)).join('')}`); }
+    if(isHike(e)) return hikeReqs(i);
+    return split(head(t('rq_title'), t('rq_sub'), ecount(i)), `
+    ${showsDifficulty(e) ? group(t('difficulty'), pills(P(i,'difficulty'), CONFIG.difficulty)) : ''}
+    ${e.sector === 'enogastronomia' ? '' : toggle(P(i,'prevExp'), t('prev_exp'), t('prev_expD'))}${inp(P(i,'limits'), t('limits'), {req:false, area:'short', ph:t('limitsPh')})}${inp(P(i,'safety'), t('safety'), {req:false, area:'short', ph:t('safetyPh')})}`); },
   sq: i => { const e=E(i); return split(head(t('sq_title',{s:o(e.sector).toLowerCase()}), t('sq_sub'), ecount(i, o(e.sector))),
     `<div class="ct-stack" style="gap:32px">${sectorQs(e).map(q=>qField(i,q)).join('')}</div>`); },
   avail: i => { const e=E(i); const M=MONTHS[S.lang]; return split(head(t('av_title'), t('av_sub'), ecount(i)), `
     ${group(t('period'), pills(P(i,'period'), CONFIG.opening))}
-    ${group(t('months'), `<div class="ct-pills ct-pills--months">${M.map((m,k)=>{const on=e.months.includes(k); return `<button type="button" class="ct-pill${on?' is-on':''}" role="checkbox" aria-checked="${on}" data-action="togn" data-p="${P(i,'months')}" data-v="${k}">${m}</button>`;}).join('')}</div>`)}
-    ${group(t('weekdays'), pills(P(i,'days'), CONFIG.weekdays, {multi:true}))}`); },
+    ${group(t('months'), `<div class="ct-pills ct-pills--months">${M.map((m,k)=>{const on=e.months.includes(k); return `<button type="button" class="ct-pill${on?' is-on':''}" role="checkbox" aria-checked="${on}" data-action="togn" data-p="${P(i,'months')}" data-v="${k}">${m}</button>`;}).join('')}</div>`, {multi:true})}
+    ${group(t('weekdays'), pills(P(i,'days'), CONFIG.weekdays, {multi:true}), {multi:true})}`); },
   slots: i => { const e=E(i); return split(head(t('sl_title'), t('sl_sub'), ecount(i)), `
-    ${group(t('bands'), pills(P(i,'bands'), CONFIG.bands, {multi:true}))}
-    ${group(t('slots'), `<div class="ct-slots">${e.slots.map((s,k)=>`<span class="ct-slot">${esc(s)}<button type="button" data-action="slotdel" data-i="${i}" data-v="${k}" aria-label="${esc(t('slot_remove',{x:s}))}">${ic('x',14,2)}</button></span>`).join('')}
-      <span class="ct-slot-add"><input type="time" id="slotIn" data-i="${i}" step="900" aria-label="${esc(t('slots'))}"><button type="button" class="ct-back" data-action="slotadd" data-i="${i}">${ic('plus',16,1.8)} ${t('slot_add')}</button></span></div>`, {req:false, tip:'tip_slots'})}
-    ${group(t('notice'), pills(P(i,'notice'), CONFIG.notice), {tip:'tip_notice'})}
-    ${toggle(P(i,'manual'), t('manual'), t('manualD'), 'tip_manual')}`); },
-  price: i => { const e=E(i); const bl=blocks(e); return split(head(t('pr_title'), t('pr_sub'), ecount(i)), `
-    ${note(`<b>${t('pr_agency').split(':')[0]}:</b>${t('pr_agency').split(':').slice(1).join(':')}`, 'info')}
-    ${group(t('pr_mode'), pills(P(i,'priceMode'), CONFIG.priceModes), {tip:'tip_agency'})}
+    ${group(t('bands'), bandPills(i, e), {multi:true})}
+    ${group(t('slots'), slotPicker(i, e), {req:false, tip:'tip_slots'})}
+    ${group(t('notice'), pills(P(i,'notice'), CONFIG.notice), {tip:'tip_notice'})}`); },
+  price: i => { const e=E(i); const bl=blocks(e); const vat = note(t('pr_vat'), 'info');
+    if(e.sector === 'artigianato'){
+      e.priceMode = 'pm_persona';
+      for(const b of ['priv','shared']){ e.price[b].extra = ''; e.price[b].incl = 1; }
+      return split(head(t('pr_title'), t('pr_sub'), ecount(i)), `${vat}
+      ${bl.map(b=>`<div class="ct-block">
+        <h3 class="ct-block-title">${t(b==='priv'?'pr_priv_short':'pr_shared_short')}</h3>
+        ${money(P(i,`price.${b}.base`), t('pr_art_persona'), {hint:t('pr_art_min')})}
+      </div>`).join('')}`);
+    }
+    return split(head(t('pr_title'), t('pr_sub'), ecount(i)), `${vat}
+    ${group(t('pr_mode'), pills(P(i,'priceMode'), priceModesFor(e)))}
     ${bl.map(b=>`<div class="ct-block">${bl.length>1||e.mode?`<h3 class="ct-block-title">${t(bl.length>1?(b==='priv'?'pr_priv':'pr_shared'):'pr_single')}</h3>`:''}
-      <div class="ct-row">${money(P(i,`price.${b}.base`), t('pr_base'))}${money(P(i,`price.${b}.min`), t('pr_min'), {req:false})}</div>
+      <div class="ct-row">${money(P(i,`price.${b}.base`), t('pr_base'))}${money(P(i,`price.${b}.min`), t('pr_min'), {req:false, hint:t('pr_minD')})}</div>
       <div class="ct-steppers">${stepper(P(i,`price.${b}.incl`), t('pr_incl'), t('pr_inclD'), 1, 200)}</div>
       ${money(P(i,`price.${b}.extra`), t('pr_extra'), {req:false})}</div>`).join('')}`); },
-  cond: i => split(head(t('cd_title'), t('cd_sub'), ecount(i)), `
-    ${group(t('cancel'), pills(P(i,'cancel'), CONFIG.cancel))}
-    ${inp(P(i,'penalties'), t('penalties'), {req:false, ph:t('penaltiesPh')})}
-    ${group(t('noshow'), pills(P(i,'noshow'), CONFIG.noshow), {tip:'tip_noshow'})}
-    ${group(t('weather'), pills(P(i,'weather'), CONFIG.weather))}
+  cond: i => { const e=E(i); if(e.billing==='bill_receipt') e.billing=''; return split(head(t('cd_title'), t('cd_sub'), ecount(i)), `
+    <div class="ct-terms">${['term_pay','term_cancel','term_other'].map(k=>`<section class="ct-term"><h3>${t(k)}</h3><p class="ct-term-ph">${t('term_ph')}</p></section>`).join('')}</div>
+    ${check(P(i,'termsAccepted'), t('term_accept'))}
     ${toggle(P(i,'exclusive'), t('exclusive'), t('exclusiveD'), 'tip_excl')}
-    ${group(t('billing'), pills(P(i,'billing'), CONFIG.billing))}`),
+    ${group(t('billing'), pills(P(i,'billing'), CONFIG.billing))}`); },
   photos: i => split(head(t('ph_title'), t('ph_sub'), ecount(i)), uploader(i))
 };
 function qField(i, q){
+  const e = E(i);
   const p = P(i, 'sq.'+q.k), L = t('q_'+q.k);
   switch(q.t){
     case 'toggle': return toggle(p, L, '', q.tip);
-    case 'pills': return group(L, pills(p, q.o), {req:!!q.req, tip:q.tip});
-    case 'multi': return group(L, pills(p, q.o, {multi:true}), {req:!!q.req, tip:q.tip});
+    case 'pills': return group(L, pills(p, qOpts(e, q)), {req:!!q.req, tip:q.tip});
+    case 'multi': return group(L, pills(p, qOpts(e, q), {multi:true}), {req:!!q.req, tip:q.tip, multi:true});
     case 'num': return inp(p, L, {type:'number', req:!!q.req, tk:q.tip});
     case 'stepper': return `<div class="ct-steppers">${stepper(p, L, '', q.min, q.max)}</div>`;
     default: return inp(p, L, {req:!!q.req, tk:q.tip});
@@ -1891,21 +2349,22 @@ function qOk(e, q){
 }
 const EOK = {
   sector: e => !!e.sector,
-  spec: e => { const sp = specList(e); return sp.length > 0 && (!sp.some(x => CONFIG.otherSpec.includes(x)) || filled(e.specOther,3)); },
-  type: e => typeList(e).length > 0 && typeList(e).every(x => artisanTypesFor(e).includes(x)),
+  spec: e => !hasSpec(e) || (specList(e).length > 0 && (!specList(e).some(x => CONFIG.otherSpec.includes(x)) || filled(e.specOther,3))),
+  spa: e => !isSpa(e) || (Array.isArray(e.spaTreatments) && e.spaTreatments.length > 0 && e.spaTreatments.every(x => SPA_TREATS.includes(x))),
+  type: e => isHike(e) || !hasType(e) || (typeList(e).length > 0 && typeList(e).every(x => allowedTypes(e).includes(x))),
   g1: e => filled(e.name,3) && e.desc.trim().length >= DESC_MIN,
-  g2: e => filled(e.comune) && filled(e.meet,3),
+  g2: e => placeOk(e),
   g3: e => e.durH > 0 && e.min >= 2 && e.max >= e.min,
   g4: e => e.langs.length > 0,
   mode: e => !!e.mode,
-  incl: () => true,
-  equip: e => e.equipProvided || filled(e.bringNote, 3),
-  reqs: e => e.sector === 'artigianato' ? true : !!e.difficulty,
+  incl: e => includesFor(e).every(c => inclMode(e,c) !== 'sup' || pos(inclPrice(e,c))),
+  equip: e => e.sector === 'artigianato' ? true : (e.equipProvided || filled(e.bringNote, 3)),
+  reqs: e => e.sector === 'artigianato' ? placeOk(e) : isHike(e) ? hikeReqOk(e) : (showsDifficulty(e) ? !!e.difficulty : true),
   sq: e => sectorQs(e).every(q => qOk(e,q)),
   avail: e => !!e.period && e.months.length > 0 && e.days.length > 0,
   slots: e => e.bands.length > 0 && !!e.notice,
-  price: e => !!e.priceMode && blocks(e).every(b => pos(e.price[b].base) && e.price[b].incl >= 1),
-  cond: e => !!(e.cancel && e.noshow && e.weather && e.billing),
+  price: e => e.sector === 'artigianato' ? blocks(e).every(b => pos(e.price[b].base)) : (!!e.priceMode && blocks(e).every(b => pos(e.price[b].base) && e.price[b].incl >= 1)),
+  cond: e => !!e.termsAccepted && !!e.billing && e.billing !== 'bill_receipt',
   photos: e => e.photos.length >= MIN_PHOTOS
 };
 const EXP_SCREENS = Object.keys(EV);
@@ -1931,32 +2390,33 @@ VW.conv_details = () => { const g = cgroup(), c = S.conv; let body = '';
     ${group(t('stars'), pills('conv.stars', CONFIG.stars))}
     <div class="ct-row">${inp('conv.units', t('units'), {type:'number', hint:t('unitsD')})}${inp('conv.beds', t('beds'), {type:'number', req:false, hint:t('bedsD')})}</div>
     ${inp('conv.cin', t('cin'), {req:false, tk:'tip_cin', extra:'style="text-transform:uppercase"'})}
-    ${group(t('services'), pills('conv.services', CONFIG.hotelServices, {multi:true}), {req:false})}
+    ${group(t('services'), pills('conv.services', CONFIG.hotelServices, {multi:true}), {req:false, multi:true})}
     ${group(t('opening'), pills('conv.opening', CONFIG.opening))}
     ${toggle('conv.groups', t('groups'), t('groupsD'))}`;
   else if(g==='ristorazione' && isSeated()) body = `
-    ${group(t('cuisine'), pills('conv.cuisine', CONFIG.cuisine, {multi:true}))}
+    ${group(t('cuisine'), pills('conv.cuisine', CONFIG.cuisine, {multi:true}), {multi:true})}
     <div class="ct-row">${inp('conv.seatsIn', t('seats_in'), {type:'number', hint:t('seats_inD')})}${inp('conv.seatsOut', t('seats_out'), {type:'number', req:false, hint:t('seats_outD')})}</div>
     ${inp('conv.groupMax', t('group_max'), {type:'number', req:false, hint:t('group_maxD')})}
     ${toggle('conv.groupMenu', t('group_menu'), t('group_menuD'))}
-    ${group(t('diets_r'), pills('conv.diets', ['diet_veg','diet_vegan','diet_gf','diet_lf'], {multi:true}), {req:false})}
+    ${group(t('diets_r'), pills('conv.diets', ['diet_veg','diet_vegan','diet_gf','diet_lf'], {multi:true}), {req:false, multi:true})}
     ${group(t('closing'), pills('conv.closing', CONFIG.weekdays), {req:false})}
     ${group(t('opening'), pills('conv.opening', CONFIG.opening))}`;
   else if(g==='ristorazione') body = `
-    ${group(t('cuisine'), pills('conv.cuisine', CONFIG.cuisine, {multi:true}))}
+    ${group(t('cuisine'), pills('conv.cuisine', CONFIG.cuisine, {multi:true}), {multi:true})}
     ${inp('conv.maxGuests', t('max_guests'), {type:'number', hint:t('max_guestsD')})}
     ${inp('conv.area', t('area_served'), {req:false})}
-    ${group(t('diets_r'), pills('conv.diets', ['diet_veg','diet_vegan','diet_gf','diet_lf'], {multi:true}), {req:false})}`;
+    ${group(t('diets_r'), pills('conv.diets', ['diet_veg','diet_vegan','diet_gf','diet_lf'], {multi:true}), {req:false, multi:true})}`;
   else body = `
     ${inp('conv.otherDesc', t('other_desc'), {area:true, ph:t('other_descPh'), max:800})}
     ${inp('conv.area', t('area_served'), {req:false})}`;
   return split(head(t('cdt_title_'+g), t('cdt_sub'), `${t('conv_h')}: ${o(c.type)}`), body);
 };
 VW.conv_interest = () => split(head(t('ci_title'), t('ci_sub'), t('conv_h')), `
+  <p class="ct-multi-hint">${esc(t('et_sub'))}</p>
   ${opts('conv.interests', CONFIG.interests.map(k=>[k,'handshake']), {multi:true, cls:'ct-opts--2'})}
   ${note(t('b_note'),'shield')}`);
 VW.conv_ops = () => split(head(t('co_title'), t('co_sub'), t('conv_h')), `
-  ${group(t('channels'), pills('conv.channels', CONFIG.channels, {multi:true}))}
+  ${group(t('channels'), pills('conv.channels', CONFIG.channels, {multi:true}), {multi:true})}
   ${group(t('response'), pills('conv.response', CONFIG.response))}
   ${toggle('conv.sameBooking', t('same_book'), t('same_bookD'))}
   ${S.conv.sameBooking ? '' : `<div class="ct-row">${inp('conv.bookName', t('book_name'))}${inp('conv.bookEmail', t('book_email'), {type:'email'})}</div>`}
@@ -1986,18 +2446,54 @@ function screens(){
   ['org_ident','org_address','org_contacts'].forEach(k=>add(k,'org',VW[k],OK[k]));
   add('collab','collab',VW.collab,OK.collab);
   if(S.paths.includes('A') || S.paths.includes('C')){
-    S.exps.forEach((e,i)=>(e.sector === 'artigianato'
-      ? ['sector','spec','type',...EXP_SCREENS.filter(k=>!['sector','spec','type'].includes(k))]
-      : EXP_SCREENS).forEach(k=>{
+    S.exps.forEach(e => {
+      e.spec = specList(e)[0] || '';
+      if(!CONFIG.otherSpec.includes(e.spec)) e.specOther = '';
+      if(!e.sector){ normalizeIncl(e); return; }
+      e.manual = false;
+      e.type = typeList(e).filter(x => allowedTypes(e).includes(x));
+      if(isHike(e)){ e.type = []; if(e.priceMode === 'pm_ora' || e.priceMode === 'pm_esperienza') e.priceMode = ''; ensureHike(e); }
+      else delete e.hike;
+      e.spaTreatments = isSpa(e) ? (e.spaTreatments||[]).filter(x => SPA_TREATS.includes(x)) : [];
+      if(!showsDifficulty(e)) e.difficulty = '';
+      if(e.sector === 'artigianato'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; e.limits = ''; e.safety = ''; e.localita = ''; e.meet = ''; e.end = ''; e.priceMode = 'pm_persona'; for(const b of ['priv','shared']){ e.price[b].extra = ''; e.price[b].incl = 1; } e.sq = e.sq || {}; delete e.sq.materials; delete e.sq.workshop_loc; delete e.sq.live_demo; delete e.sq.sale; if(e.sq.can_buy == null) e.sq.can_buy = false; if(e.sq.takehome == null) e.sq.takehome = false; }
+      if(e.sector === 'enogastronomia' || e.sector === 'cooking_class' || e.sector === 'cultura'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; }
+      if(hasTicketPage(e)){
+        e.sq = e.sq || {};
+        if(ticketsChosen(e)) e.sq.tickets = inclMode(e, 'inc_tickets') === 'sup' ? 'tk_extra' : 'tk_inc';
+        else { for(const q of (SECTOR[e.sector].q || [])) delete e.sq[q.k]; }
+      }
+      if(e.sector === 'enogastronomia'){ e.prevExp = false; e.limits = ''; e.safety = ''; e.difficulty = ''; e.sq = e.sq || {}; const hide = TASTE_OF[specList(e)[0]]; if(hide && Array.isArray(e.sq.tasting)) e.sq.tasting = e.sq.tasting.filter(x => x !== hide); if(lunchOnly(e)){ delete e.sq.tasting; delete e.sq.certs; } if(!hasLunch(e)){ delete e.sq.menu_kind; delete e.sq.menu_offer; } }
+      if(e.sector !== 'mare'){ e.localita = ''; e.meet = ''; e.end = ''; if(!e.meetDifferent){ e.meetAddress = ''; e.activityAddress = ''; } }
+      normalizeIncl(e);
+      if(e.billing === 'bill_receipt') e.billing = '';
+      { const ok = new Set(halfHours()); e.slots = (e.slots||[]).filter(s => ok.has(s)); }
+    });
+    S.exps.forEach((e,i)=>{
+      /* Price comes immediately after Privata / Condivisa / Entrambe. Artigianato still skips location, equipment and the sector-question page. */
+      const order = e.sector === 'artigianato'
+        ? ['sector','spec','type','g1','g3','g4','mode','price','incl','reqs','avail','slots','cond','photos']
+        : ['sector','spec','type','g1','g2','g3','g4','mode','price','incl','equip','reqs','sq','avail','slots','cond','photos'];
+      if(hasTicketPage(e)){ const at = order.indexOf('incl'); if(at >= 0){ order.splice(order.indexOf('sq'), 1); order.splice(at + 1, 0, 'sq'); } }
+      if(isSpa(e)){ const at = order.indexOf('spec'); if(at >= 0) order.splice(at + 1, 0, 'spa'); }
+      order.forEach(k=>{
       if(k!=='sector' && !e.sector) return;            /* taxonomy first */
       if(['spec','type'].includes(k) && !e.sector) return;
-      /* Other sectors retain type-first; artisans need specialization before type. */
-      if(e.sector === 'artigianato'){
-        if(k==='type' && !specList(e).length) return;
-      } else if(k==='spec' && !typeList(e).length) return;
-      if(k==='sq' && !(SECTOR[e.sector]?.q||[]).length) return;
+      /* Specialization comes before service type, except a sector that has neither list. */
+      if(k==='spec' && !hasSpec(e)) return;
+      if(k==='type' && !hasType(e)) return;
+      if(k==='type' && isHike(e)) return;
+      if(k==='spa' && !isSpa(e)) return;
+      if(k==='type' && hasSpec(e) && !specList(e).length) return;
+      if(k==='sq' && (e.sector === 'artigianato' || !(SECTOR[e.sector]?.q||[]).length)) return;
+      if(k==='sq' && hasTicketPage(e) && !ticketsChosen(e)) return;
+      if(k==='g2' && e.sector === 'artigianato') return;
+      if(k==='equip' && (e.sector === 'artigianato' || e.sector === 'enogastronomia' || e.sector === 'cooking_class' || e.sector === 'cultura')) return;
+      if(k==='reqs' && e.sector === 'enogastronomia') return;
       add(`e${i}_${k}`, 'prop', () => EV[k](i), () => !!S.exps[i] && EOK[k](S.exps[i]));
-    }));
+      if(k==='reqs' && isHike(e)) hikeSeq(e).forEach((_, n) => add(`e${i}_hk${n}`, 'prop', () => hikeDetailScreen(i, n), () => hikePageOk(S.exps[i], n)));
+      });
+    });
     add('exp_more','prop',VW.exp_more,()=>S.exps.length>0);
   }
   if(S.paths.includes('B')) ['conv_type','conv_details','conv_interest','conv_ops'].forEach(k=>{ if(k!=='conv_type' && !S.conv.type) return; add(k,'prop',VW[k],OK[k]); });
@@ -2012,15 +2508,19 @@ const incomplete = () => screens().filter(s=>s.sec && s.id!=='review' && !s.ok()
    REVIEW (bento) and CONFIRMATION
    ===================================================================== */
 const TKEY = {ref_name:'rn',ref_role:'rr',ref_contact:'rc',ref_lang:'rl',ref_auth:'ra',org_form:'of',org_extra:'oe',org_ident:'oi',org_address:'oa',org_contacts:'oc',collab:'cb',conv_type:'ct',conv_interest:'ci',conv_ops:'co',exp_more:'mo',
-  sector:'es',spec:'esp',type:'et',g1:'g1',g2:'g2',g3:'g3',g4:'g4',mode:'md',incl:'in',equip:'eq',reqs:'rq',sq:'sq',avail:'av',slots:'sl',price:'pr',cond:'cd',photos:'ph'};
+  sector:'es',spec:'esp',spa:'spa',type:'et',g1:'g1',g2:'g2',g3:'g3',g4:'g4',mode:'md',incl:'in',equip:'eq',reqs:'rq',sq:'sq',avail:'av',slots:'sl',price:'pr',cond:'cd',photos:'ph'};
 function screenLabel(id){
   const m = id.match(/^e(\d+)_(\w+)$/);
-  if(m){ const e=S.exps[+m[1]]; return `${t('exp_n',{n:+m[1]+1})}: ${t(TKEY[m[2]]+'_title',{s:o(e?.sector||'').toLowerCase()})}`; }
+  if(m){ const e=S.exps[+m[1]];
+    const hk = m[2].match(/^hk(\d+)$/);
+    if(hk && e){ const n = +hk[1], keys = hikeSeq(e), mode = keys[n]; const title = mode ? `${t('hk_mode_n',{n:n+1,total:keys.length})} · ${t('hk_'+mode)}` : t('rq_title'); return `${t('exp_n',{n:+m[1]+1})}: ${title}`; }
+    const title = m[2]==='reqs' && e?.sector==='artigianato' ? t('rq_title_art') : t(TKEY[m[2]]+'_title',{s:o(e?.sector||'').toLowerCase()}); return `${t('exp_n',{n:+m[1]+1})}: ${title}`; }
   if(id==='conv_details') return t('cdt_title_'+cgroup());
   return t(TKEY[id]+'_title');
 }
-const fmtMoney = v => v==='' || v==null ? '' : `€ ${Number(v).toLocaleString(S.lang==='it'?'it-IT':'en-GB')}`;
+const fmtMoney = v => v==='' || v==null || !Number.isFinite(Number(v)) ? '' : `€ ${formatItAmount(v)}`;
 function priceLine(e){
+  if(e.sector === 'artigianato') return blocks(e).map(b=>`${t(b==='priv'?'pr_priv_short':'pr_shared_short')}: ${fmtMoney(e.price[b].base)} ${t('pr_art_persona').toLowerCase()}`).join('<br>');
   if(!e.priceMode) return '';
   return blocks(e).map(b=>{ const p=e.price[b]; const lab = blocks(e).length>1 ? t(b==='priv'?'pr_priv':'pr_shared')+': ' : '';
     return `${lab}${fmtMoney(p.base)} ${o(e.priceMode).toLowerCase()}${p.incl>1?`, ${p.incl} ${t('pr_incl').toLowerCase()}`:''}${p.extra?`, +${fmtMoney(p.extra)}`:''}`; }).join('<br>');
@@ -2050,6 +2550,47 @@ const rvEdit = (go, label) => `<button type="button" class="ct-tile-edit" data-a
 const rvTop = (icon, label, acts) => `<div class="rv-top"><span class="ct-tile-badge rv-badge">${ic(icon,18,1.7)}</span><span class="rv-label">${label}</span><span class="rv-acts">${acts}</span></div>`;
 const rvDl = rows => { const r = rows.filter(([,v])=>v); return r.length ? `<dl class="rv-dl">${r.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>` : ''; };
 const rvFacts = (rows, cls='') => `<ul class="rv-facts ${cls}">${rows.map(([icon,k,v])=>`<li>${ic(icon,18,1.6)}<span><small>${k}</small><b>${v||'-'}</b></span></li>`).join('')}</ul>`;
+function supplAmount(v){ return formatItAmount(v); }
+function placeFacts(e){
+  if(e.sector === 'mare') return [['pin', t('exp_comune'), esc([e.comune, e.localita].filter(Boolean).join(', '))]];
+  const rows = [['pin', t('exp_comune'), esc(e.comune)], ['pin', t('exp_addr'), esc(e.address||'')]];
+  if(e.meetDifferent) rows.push(['pin', t('meet_addr'), esc(e.meetAddress||'')], ['pin', t('act_addr'), esc(e.activityAddress||'')]);
+  return rows;
+}
+function spaFacts(e){
+  if(!isSpa(e) || !(e.spaTreatments||[]).length) return '';
+  return `<ul class="ct-tile-list"><li>${esc(t('spa_q'))}: <b>${esc(e.spaTreatments.map(o).join(', '))}</b></li></ul>`;
+}
+function hikeFacts(e){
+  if(!isHike(e) || !e.hike) return '';
+  const h = e.hike, rows = [];
+  if(h.ways) rows.push(`<li>${esc(t('hk_ways'))}: <b>${esc(t(h.ways==='one'?'hk_one':'hk_multi'))}</b></li>`);
+  for(const k of hikeKeys(e)){
+    const p = h.profiles?.[k]; if(!p) continue;
+    const name = k==='solo' ? t('hk_one') : t('hk_'+k);
+    const bits = [p.cai ? `${t('hk_cai_'+p.cai+'_code')} ${t('hk_cai_'+p.cai+'_name')}` : '', p.km ? `${p.km} km` : '', p.elev ? `${p.elev} m` : '', p.dur || '', p.alt ? `${p.alt} m` : ''].filter(Boolean);
+    if(bits.length) rows.push(`<li>${esc(name)}: <b>${esc(bits.join(' · '))}</b></li>`);
+  }
+  if(h.car==='yes' || h.car==='no'){
+    const extra = h.car==='yes' ? [h.carFrom, h.carDur, (h.carKind||[]).map(c=>t('hk_ck_'+c)).join(', ')].filter(Boolean).join(' · ') : '';
+    rows.push(`<li>${esc(t('hk_car'))}: <b>${esc(h.car==='yes'?t('yn_yes'):t('yn_no'))}${extra ? ` · ${esc(extra)}` : ''}</b></li>`);
+  }
+  return rows.length ? `<ul class="ct-tile-list">${rows.join('')}</ul>` : '';
+}
+function mealFacts(e){
+  if(!hasLunch(e)) return '';
+  const rows = ['menu_kind','menu_offer'].map(k => e.sq?.[k] ? `<li>${esc(t('q_'+k))}: <b>${esc(o(e.sq[k]))}</b></li>` : '').join('');
+  return rows ? `<ul class="ct-tile-list">${rows}</ul>` : '';
+}
+function inclReview(e){
+  const rows = includesFor(e).flatMap(c => {
+    const mode = inclMode(e, c);
+    if(mode === 'sup' && pos(inclPrice(e, c))) return [t('sup_review', {item:o(c), n:supplAmount(inclPrice(e, c))})];
+    if(mode === 'inc') return [t('inc_review', {item:o(c)})];
+    return [];
+  });
+  return rows.length ? `<ul class="ct-tile-list">${rows.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>` : '';
+}
 function monthsText(e){
   if(e.months.length===12) return o('op_year');
   const M = MONTHS[S.lang], runs=[]; for(const x of e.months){ const r=runs[runs.length-1]; if(r && x===r[1]+1) r[1]=x; else runs.push([x,x]); }
@@ -2066,14 +2607,19 @@ function expTiles(){
   <section class="rv-tile rv-exp" aria-label="${esc(t('exp_n',{n:i+1}))}" data-exp="${i}">
     ${rvTop(SECTOR[e.sector]?.icon||'compass', `${tabs?t('r_expTitle'):t('exp_n',{n:i+1})}${tabs}`, `${rvEdit(`e${i}_g1`)}<button type="button" class="ct-tile-edit ct-tile-del" data-action="delexp" data-v="${i}" aria-label="${esc(t('r_delete'))}: ${esc(e.name||t('mo_untitled'))}">${ic('trash',16,1.8)}</button>`)}
     <h2 class="rv-name">${esc(e.name||t('mo_untitled'))}</h2>
-    ${chips([e.sector?o(e.sector):'', spec, typeLab].filter(Boolean))}
+    ${chips([sectorLabel(e), spec, typeLab].filter(Boolean))}
     ${e.desc?`<p class="rv-desc"><span>${esc(e.desc)}</span></p>`:''}
-    ${rvFacts([['pin',t('exp_comune'),esc([e.comune,e.localita].filter(Boolean).join(', '))],['sliders',t('mode_l'),e.mode?o(e.mode):''],['clock',t('dur'),durLine(e)],['tag',t('pr_title'),priceLine(e)],['users',t('parts'),`${e.min} - ${e.max}${e.minAge?`, ${e.minAge}+`:''}`]],'rv-facts--3')}
+    ${inclReview(e)}
+    ${mealFacts(e)}
+    ${spaFacts(e)}
+    ${hikeFacts(e)}
+    ${e.sector==='artigianato' ? `<ul class="ct-tile-list"><li>${esc(t('prev_exp'))}: <b>${esc(t(e.prevExp ? 'yn_yes' : 'yn_no'))}</b></li><li>${esc(t('q_takehome'))}: <b>${esc(t(e.sq?.takehome ? 'yn_yes' : 'yn_no'))}</b></li><li>${esc(t('q_can_buy'))}: <b>${esc(t(e.sq?.can_buy ? 'yn_yes' : 'yn_no'))}</b></li></ul>` : ''}
+    ${rvFacts([...placeFacts(e),['sliders',t('mode_l'),e.mode?o(e.mode):''],['clock',t('dur'),durLine(e)],['tag',t('pr_title'),priceLine(e)],['users',t('parts'),`${e.min} - ${e.max}${e.minAge?`, ${e.minAge}+`:''}`]],'rv-facts--3')}
   </section>
   <section class="rv-tile" aria-label="${esc(t('r_cond'))}">
     ${rvTop('file', t('r_cond'), rvEdit(`e${i}_cond`))}
     <h2 class="rv-name">${esc(e.name||t('mo_untitled'))}</h2>
-    ${rvFacts([['clock',t('r_notice'),e.notice?o(e.notice):''],['calendar',t('r_avail'),esc([monthsText(e), e.days.map(o).join(' ')].filter(Boolean).join(', '))],['users',t('r_noshow'),e.noshow?o(e.noshow):''],['file',t('r_payment'),e.billing?o(e.billing):''],['info',t('r_cancel'),esc([e.cancel?o(e.cancel):'', e.penalties].filter(Boolean).join('. '))]],'rv-facts--rows')}
+    ${rvFacts([['clock',t('r_notice'),e.notice?o(e.notice):''],['calendar',t('r_avail'),esc([monthsText(e), e.days.map(o).join(' ')].filter(Boolean).join(', '))],['file',t('r_payment'),e.billing?o(e.billing):''],['check',t('term_accept'),e.termsAccepted?t('yn_yes'):''],['handshake',t('exclusive'),e.exclusive?t('yn_yes'):t('yn_no')]],'rv-facts--rows')}
   </section>
   ${previewTile(i)}`;
 }
@@ -2161,14 +2707,14 @@ const cardIc = k => `<svg class="north-hot-icon" viewBox="0 0 24 24" width="16" 
 function cardData(e){
   const specs = specList(e); const typesArr = typeList(e);
   const spec = specs.map(x => CONFIG.otherSpec.includes(x) && e.specOther ? e.specOther : o(x)).filter(Boolean).join(', ');
-  const perk = PERK_ORDER.find(c => e.incl[c]==='inc');
+  const perk = PERK_ORDER.find(c => inclMode(e, c)==='inc');
   const bases = blocks(e).map(b=>Number(e.price[b].base)).filter(n=>n>0);
   return {
     image: e.photos[0]?.src || '',
-    category: e.sector ? o(e.sector) : '',
+    category: sectorLabel(e),
     type: [spec, typesArr.map(o).filter(Boolean).join(', ')].filter(Boolean).join(' · '),
     title: (e.name||'').trim(),
-    amount: CARD_SHOW_PARTNER_PRICE && bases.length ? `€${Math.min(...bases).toLocaleString(S.lang==='it'?'it-IT':'en-GB')}` : '',
+    amount: CARD_SHOW_PARTNER_PRICE && bases.length ? `€ ${formatItAmount(Math.min(...bases))}` : '',
     unit: e.priceMode ? o(e.priceMode).toLowerCase() : '',
     max: e.max,
     perk: perk ? t('pv_'+perk) : '', perkIcon: PERK_KIND[perk] || 'gear'
@@ -2231,20 +2777,21 @@ function durText(e){
 const addMin = (hhmm, min) => { const [h,m] = hhmm.split(':').map(Number); const x = (h*60+m+min) % 1440; return `${String(Math.floor(x/60)).padStart(2,'0')}:${String(x%60).padStart(2,'0')}`; };
 function detailData(e){
   const d = cardData(e), mins = (+e.durH||0)*60 + (+e.durM||0), first = e.slots[0] || '';
-  const place = [e.meet, e.localita, e.comune].map(x=>(x||'').trim()).filter(Boolean);
+  const meetLine = e.sector === 'mare' ? (e.meet||'') : (e.meetDifferent ? (e.meetAddress||'') : (e.address||''));
+  const endLine = e.sector === 'mare' ? ((e.end||'').trim() || (e.meet||'').trim()) : ((e.meetDifferent ? e.activityAddress : e.address)||'').trim();
+  const place = (e.sector === 'mare' ? [e.meet, e.localita, e.comune] : [meetLine, e.comune]).map(x=>(x||'').trim()).filter(Boolean);
   const itin = [];
-  if(e.meet || first) itin.push({time:first, title:t('pv_d_meet'), text:place.join(', ')});
-  if(itin.length && mins) itin.push({time:first ? addMin(first, mins) : '', title:t('pv_d_end'), text:(e.end||'').trim() || (e.meet||'').trim()});
-  const cancelTxt = e.cancel ? (e.cancel==='c_none' ? o('c_none') : t('pv_d_cancelFree',{x:o(e.cancel)})) : '';
+  if(e.meet || e.address || e.meetAddress || first) itin.push({time:first, title:t('pv_d_meet'), text:place.join(', ')});
+  if(itin.length && mins) itin.push({time:first ? addMin(first, mins) : '', title:t('pv_d_end'), text:endLine});
   return { ...d,
     gallery: e.photos.map(p=>p.src), summary: (e.desc||'').trim(), duration: durText(e),
     times: e.slots.length ? e.slots.join(' · ') : e.bands.map(o).join(' · '),
-    itin, included: CONFIG.includes.filter(c=>e.incl[c]==='inc').map(o),
-    departure: [e.meet, e.comune].map(x=>(x||'').trim()).filter(Boolean).join(', '),
+    itin, included: includesFor(e).filter(c=>inclMode(e, c)==='inc').map(o),
+    departure: [meetLine, e.comune].map(x=>(x||'').trim()).filter(Boolean).join(', '),
     langs: andList(e.langs.map(o)),
     confirmation: t(e.manual ? 'pv_d_confManual' : 'pv_d_confInstant'),
-    cancellation: [cancelTxt, (e.penalties||'').trim()].filter(Boolean).join('. '),
-    terms: [e.cancel && e.cancel!=='c_none' ? t('pv_d_termCancel',{x:o(e.cancel)}) : '', e.manual ? '' : t('pv_d_termInstant')].filter(Boolean)
+    cancellation: '',
+    terms: [e.termsAccepted ? t('term_accept') : ''].filter(Boolean)
   };
 }
 function expDetail(e){
@@ -2453,9 +3000,10 @@ function buildPayload(){
     contact: {...S.contact, phone_e164: S.contact.prefix + digits(S.contact.phone)},
     organization: {...S.org, vat: S.org.vat.replace(/\s/g,''), cf: S.org.cf.replace(/\s/g,'').toUpperCase(), manual_review: S.org.form==='altra_forma'},
     collaboration: { experiences: hasA, agreement: hasB },
-    experiences: hasA ? S.exps.map((e,i)=>({ position:i+1, ...e, prices: Object.fromEntries(blocks(e).map(b=>[b, e.price[b]])), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) })) : [],
+    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); const row = { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>{ const p={...e.price[b]}; if(e.sector==='artigianato'){ delete p.extra; p.incl = 1; p.min = ''; } return [b, p]; })), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; delete row.manual; delete row.cancel; delete row.penalties; delete row.noshow; delete row.weather; if(row.billing==='bill_receipt') row.billing=''; if(e.sector === 'artigianato'){ row.priceMode = 'pm_persona'; delete row.equipProvided; delete row.bringNote; delete row.bring; delete row.limits; delete row.safety; delete row.localita; delete row.meet; delete row.end; if(row.sq){ delete row.sq.materials; delete row.sq.workshop_loc; delete row.sq.live_demo; delete row.sq.sale; } } if(e.sector === 'mare'){ delete row.address; delete row.meetAddress; delete row.activityAddress; delete row.meetDifferent; } else { delete row.localita; delete row.meet; delete row.end; if(!e.meetDifferent){ delete row.meetAddress; delete row.activityAddress; } } if(e.sector === 'enogastronomia'){ delete row.limits; delete row.safety; delete row.prevExp; delete row.difficulty; } if(e.sector === 'cultura'){ delete row.equipProvided; delete row.bringNote; delete row.bring; } if(!isSpa(e)) delete row.spaTreatments; if(isHike(e)) row.hike = hikePayload(e); else delete row.hike; return row; }) : [],
     agreement: hasB ? {...S.conv, group: cgroup()} : null,
     consents: {...S.consents, at: new Date().toISOString()},
+    /* TODO(backend): when termsAccepted is true, generate the SDT partner contract PDF from the accepted terms and store it with termsAcceptedAt. This preview has no backend and does not create a PDF. */
     help_requests: S.help,
     submitted_at: new Date().toISOString()
   };
@@ -2485,10 +3033,11 @@ function submit(){
 const expIndex = () => { const m = S.pos.match(/^e(\d+)_/); return m ? +m[1] : -1; };
 function uploader(i){
   const ph = S.exps[i].photos, n = ph.length;
+  const spec = `<p class="ct-photo-spec">${t('p_spec')}</p>`;
   const demo = n < 3 ? `<div class="ct-demo">${t('p_demo')} <button type="button" class="ct-link" data-action="sample">${ic('imagePlus',16,1.8)}${t('p_demoBtn')}</button></div>` : '';
   if(!n) return `<div class="ct-drop" data-drop>
       <span class="ct-drop-badge">${ic('imagePlus',28,1.6)}</span><h3>${t('p_drop')}</h3><p>${t('p_dropD')}</p>
-      <button type="button" class="ct-back" data-action="browse">${t('p_browse')}</button></div>${demo}`;
+      <button type="button" class="ct-back" data-action="browse">${t('p_browse')}</button></div>${spec}${demo}`;
   return `<div class="ct-up-status"><strong>${n>=MIN_PHOTOS?ic('check',18,2)+t('p_ready'):t('p_need',{n:MIN_PHOTOS})}</strong>
       <span style="display:inline-flex;align-items:center;gap:16px">${t('p_count',{n})}<span class="ct-meter">${[0,1,2].map(k=>`<i class="${k<n?'is-on':''}"></i>`).join('')}</span></span></div>
     <div class="ct-ups" data-drop>
@@ -2497,22 +3046,29 @@ function uploader(i){
         <div class="ct-up-acts">${k>0?`<button type="button" data-action="cover" data-v="${k}">${ic('star',14,1.8)}${t('p_setCover')}</button>`:''}
           <button type="button" class="is-x" data-action="remove" data-v="${k}" aria-label="${esc(t('p_remove'))}">${ic('x',16,1.8)}</button></div></div>`).join('')}
       ${n<MAX_PHOTOS?`<button type="button" class="ct-up-add" data-action="browse">${ic('plus',24,1.6)}${t('p_add')}</button>`:''}
-    </div>${demo}`;
+    </div>${spec}${demo}`;
 }
-function downscale(file){
+function jpegBytes(dataUrl){ const i = dataUrl.indexOf(','); return Math.ceil((dataUrl.length - i - 1) * 3 / 4); }
+function compressJpeg(file){
   return new Promise(res=>{ const r = new FileReader();
     r.onload = () => { const img = new Image();
-      img.onload = () => { const m=1400, k=Math.min(1, m/Math.max(img.width,img.height)), cv=document.createElement('canvas');
-        cv.width=Math.round(img.width*k); cv.height=Math.round(img.height*k); cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height); res(cv.toDataURL('image/jpeg',.82)); };
-      img.onerror = () => res(r.result); img.src = r.result; };
-    r.readAsDataURL(file); });
+      img.onload = () => { const k=Math.min(1, PHOTO_MAX_EDGE/Math.max(img.width,img.height)), cv=document.createElement('canvas');
+        cv.width=Math.max(1, Math.round(img.width*k)); cv.height=Math.max(1, Math.round(img.height*k));
+        cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+        let q = PHOTO_QUALITY;
+        const finish = () => { const src = cv.toDataURL('image/jpeg', q); if(jpegBytes(src) > PHOTO_MAX_BYTES && q > 0.5){ q = Math.round((q-0.1)*10)/10; return finish(); }
+          res(jpegBytes(src) > PHOTO_MAX_BYTES ? null : {src, name:String(file.name||'photo').replace(/\.\w+$/i,'')+'.jpg'}); };
+        finish(); };
+      img.onerror = () => res(null); img.src = r.result; };
+    r.onerror = () => res(null); r.readAsDataURL(file); });
 }
 async function addFiles(files){
   const i = expIndex(); if(i<0) return; const ph = S.exps[i].photos;
-  const imgs = [...files].filter(f=>/^image\/(jpeg|png|webp)$/.test(f.type));
+  const imgs = [...files].filter(f => f.type === 'image/jpeg' || /\.jpe?g$/i.test(f.name||''));
+  if(imgs.length < files.length) toast(t('t_type'));
   const room = MAX_PHOTOS - ph.length; if(imgs.length > room) toast(t('t_max'));
-  /* SERVER DRAFT: production uploads each file to the draft bucket through a signed URL here. */
-  for(const f of imgs.slice(0, room)) ph.push({src: await downscale(f), name: f.name});
+  /* SERVER DRAFT: production uploads each compressed JPEG to the draft bucket through a signed URL here. */
+  for(const f of imgs.slice(0, room)){ const pic = await compressJpeg(f); if(!pic){ toast(t('t_photo')); continue; } ph.push(pic); }
   save(); render();
 }
 
@@ -2605,7 +3161,7 @@ function renderPanel(){
       <span class="ct-opt-ic">${ic(icon,26,1.5)}</span><span class="ct-opt-text"><span class="ct-opt-label">${t('help_'+m)}</span><span class="ct-opt-sub">${t('help_'+m+'D')}</span></span></button>`).join('')}</div>`;
   else { const list = H.mode==='free' ? CONFIG.helpFree : CONFIG.helpPaid;
     body = `<div class="ct-stack"><h2 id="panelTitle">${t('help_'+H.mode)}</h2><p>${t('help_'+H.mode+'D')}</p></div>
-    ${group(t('help_topics'), `<div class="ct-pills">${list.map(c=>{const on=H.topics.includes(c); return `<button type="button" class="ct-pill${on?' is-on':''}" role="checkbox" aria-checked="${on}" data-action="helptopic" data-v="${c}">${o(c)}</button>`;}).join('')}</div>`)}
+    ${group(t('help_topics'), `<div class="ct-pills">${list.map(c=>{const on=H.topics.includes(c); return `<button type="button" class="ct-pill${on?' is-on':''}" role="checkbox" aria-checked="${on}" data-action="helptopic" data-v="${c}">${o(c)}</button>`;}).join('')}</div>`, {multi:true})}
     <label class="ct-field"><span class="ct-field-label"><span>${t('help_msg')}${H.mode==='paid'?opt():''}</span></span><textarea class="is-short" data-hbind="msg" rows="4" placeholder="${esc(t('help_msgPh'))}">${esc(H.msg)}</textarea></label>
     <label class="ct-field"><span class="ct-field-label"><span>${t('help_email')}</span></span><input type="email" data-hbind="email" value="${esc(H.email)}" inputmode="email"></label>
     ${H.mode==='paid'?note(t('help_paidNote'),'info'):''}
@@ -2636,7 +3192,9 @@ function afterPick(p, prev){
     if(m[2]==='sector' && prev!==e.sector){ e.spec=[]; e.specOther=''; e.type=[]; e.sq={}; e.difficulty='';
       (SECTOR[e.sector].q||[]).forEach(q=>{ if(q.def!==undefined) e.sq[q.k]=q.def; else if(q.t==='multi') e.sq[q.k]=[]; else if(q.t==='stepper') e.sq[q.k]=0; }); }
     if(m[2]==='spec'){ const sp=specList(e); if(!sp.some(x=>CONFIG.otherSpec.includes(x))) e.specOther='';
-      e.type = typeList(e).filter(x => artisanTypesFor(e).includes(x)); } }
+      e.type = typeList(e).filter(x => allowedTypes(e).includes(x));
+      if(e.sector==='enogastronomia' && Array.isArray(e.sq?.tasting)){ const hide=TASTE_OF[sp[0]]; if(hide) e.sq.tasting = e.sq.tasting.filter(x => x!==hide); } }
+    if(!showsDifficulty(e)) e.difficulty = ''; }
   const pm = p.match(/^exps\.(\d+)\.period$/);
   if(pm && get(p)==='op_year') S.exps[+pm[1]].months = [...Array(12).keys()];
 }
@@ -2644,7 +3202,7 @@ const rerender = () => { save(); render(); };
 const ACT = {
   next, back,
   uilang: el => { S.lang = el.dataset.v; rerender(); },
-  pick: el => { const p=el.dataset.p, prev=get(p); set(p, el.dataset.v); afterPick(p, prev); rerender(); },
+  pick: el => { const p=el.dataset.p, prev=get(p); const off=/\.spec$/.test(p) && prev===el.dataset.v; set(p, off ? '' : el.dataset.v); afterPick(p, prev); rerender(); },
   tog: el => { const p=el.dataset.p, v=el.dataset.v, a=get(p)||[]; const k=a.indexOf(v); k<0?a.push(v):a.splice(k,1); set(p,a); afterPick(p, a);
     if(p==='paths' && (v==='A'||v==='C') && (a.includes('A')||a.includes('C')) && !S.exps.length) S.exps.push(newExp());
     rerender(); },
@@ -2653,8 +3211,9 @@ const ACT = {
     if(p==='org.useContact' && S.org.useContact){ S.org.email = S.contact.email; S.org.phone = `${S.contact.prefix} ${S.contact.phone}`.trim(); }
     rerender(); },
   step: el => { const p=el.dataset.p; set(p, Math.max(+el.dataset.min, Math.min(+el.dataset.max, (Number(get(p))||0) + (+el.dataset.d)))); rerender(); },
-  inclset: el => { S.exps[+el.dataset.i].incl[el.dataset.c] = el.dataset.v; rerender(); },
-  slotadd: el => { const inp=$('slotIn'), v=inp?.value; if(!v) return inp?.focus(); const a=S.exps[+el.dataset.i].slots; if(!a.includes(v)){ a.push(v); a.sort(); } rerender(); $('slotIn')?.focus(); },
+  inclset: el => { const e=S.exps[+el.dataset.i], c=el.dataset.c; e.incl[c] = { mode:el.dataset.v, price: el.dataset.v==='sup' ? inclPrice(e,c) : '' }; rerender(); },
+  band: el => { const e=S.exps[+el.dataset.i], v=el.dataset.v; if(v==='band_full') e.bands = e.bands.includes('band_full') ? [] : ['band_full']; else { e.bands = e.bands.filter(x=>x!=='band_full'); const k=e.bands.indexOf(v); k<0 ? e.bands.push(v) : e.bands.splice(k,1); } rerender(); },
+  slotadd: el => { const inp=$('slotIn'), v=inp?.value; if(!v || !halfHours().includes(v)) return inp?.focus(); const a=S.exps[+el.dataset.i].slots; if(!a.includes(v)){ a.push(v); a.sort(); } rerender(); },
   slotdel: el => { S.exps[+el.dataset.i].slots.splice(+el.dataset.v,1); rerender(); },
   rvexp: el => { RV.exp = el.dataset.v==='conv' ? 'conv' : +el.dataset.v; render(); },
   goto: el => { if(el.dataset.ret) S.ret = true; go(el.dataset.v, 'f'); },
@@ -2695,10 +3254,27 @@ document.addEventListener('mousedown', e => { if(e.target.closest('.ct-sugg')) e
 function onField(e){
   const el = e.target;
   if(el.dataset.hbind){ H[el.dataset.hbind] = el.value; const b=$('helpSend'); if(b) b.disabled = !helpOk(); return; }
-  if(el.dataset.incl){ const inc=S.exps[+el.dataset.i].incl; if(el.checked) inc[el.dataset.incl]='inc'; else delete inc[el.dataset.incl]; return rerender(); }
+  if(el.dataset.incl){ const inc=S.exps[+el.dataset.i].incl, c=el.dataset.incl; if(el.checked) inc[c]={mode:'inc', price:''}; else delete inc[c]; return rerender(); }
+  if(el.dataset.cash){
+    const amount = priceFromDigits(el.value);
+    set(el.dataset.cash, amount);
+    const shown = amount === '' ? '' : formatItAmount(amount);
+    if(el.value !== shown){ el.value = shown; const end = shown.length; try{ el.setSelectionRange(end, end); }catch(_){} }
+    const row = el.closest('.ct-incl-price');
+    if(row){
+      const bad = !pos(amount);
+      el.classList.toggle('is-bad', bad); el.setAttribute('aria-invalid', String(bad));
+      const err = row.querySelector('.ct-error'); if(err) err.hidden = !bad;
+    }
+    save(); updateNav(); return;
+  }
   const p = el.dataset.bind; if(!p) return;
   set(p, el.type==='checkbox' ? el.checked : el.value);
+  if(/\.hike\.profiles\.[^.]+\.(km|elev|dur|alt)$/.test(p)) paintHikeViz();
+  if(/\.termsAccepted$/.test(p)){ const m=p.match(/^exps\.(\d+)\.termsAccepted$/); if(m) S.exps[+m[1]].termsAcceptedAt = el.checked ? new Date().toISOString() : ''; }
+  if(/\.incl\.[^.]+\.price$/.test(p)){ const bad=!pos(el.value); el.classList.toggle('is-bad', bad); el.setAttribute('aria-invalid', String(bad)); const err=el.closest('.ct-incl-price')?.querySelector('.ct-error'); if(err) err.hidden=!bad; }
   if(el.type==='checkbox') el.closest('.ct-check')?.classList.toggle('is-on', el.checked);
+  if(/\.meetDifferent$/.test(p)){ save(); render(); return; }
   if(el.dataset.sugg){ hl=-1; showSugg(el); }
   const fix = (id, ok) => { const x=$(id); if(x && ok) x.hidden = true; };
   if(p==='contact.email') fix('err-email', emailOk(el.value));
@@ -2787,20 +3363,31 @@ if(DEV_FILL) (function(){
     const txt = () => EXP_TXT[e.sector] || EXP_TXT.artigianato;
     switch(k){
       case 'sector': { const prev = e.sector; e.sector = e.sector || PRE.sector || 'artigianato'; afterPick(`exps.${i}.sector`, prev); break; }
-      case 'spec': { const sp = SECTOR[e.sector].spec; if(!specList(e).length) e.spec = [sp.find(x=>!CONFIG.otherSpec.includes(x)) || sp[0]];
+      case 'spec': { const sp = SECTOR[e.sector].spec || []; if(sp.length && !specList(e).length) e.spec = sp.find(x=>!CONFIG.otherSpec.includes(x)) || sp[0];
         if(specList(e).some(x=>CONFIG.otherSpec.includes(x)) && !filled(e.specOther,3)) e.specOther = L('Specialità di prova','Test specialty'); break; }
-      case 'type': if(!typeList(e).length) e.type = [SECTOR[e.sector].types[0]]; break;
+      case 'type': if(!isHike(e) && allowedTypes(e).length && !typeList(e).length) e.type = [allowedTypes(e)[0]]; break;
       case 'g1': e.name = L(txt()[0], txt()[1]);
         e.desc = L('Esperienza di prova creata con il riempimento automatico: gli ospiti incontrano il partner, seguono una breve introduzione e partecipano all\'attività in un piccolo gruppo.',
                    'Test experience created by the auto fill: guests meet the partner, follow a short introduction and take part in the activity in a small group.'); break;
-      case 'g2': e.comune = txt()[2]; e.localita = L('Centro','Town centre'); e.meet = L('Piazza principale, punto di incontro di prova','Main square, test meeting point'); break;
+      case 'g2': e.comune = txt()[2];
+        if(e.sector === 'mare'){ e.localita = L('Centro','Town centre'); e.meet = L('Piazza principale, punto di incontro di prova','Main square, test meeting point'); }
+        else { if(!filled(e.address,3)) e.address = L('Via Roma 12','12 Via Roma'); e.localita = ''; e.meet = ''; e.end = ''; }
+        break;
       case 'g3': e.durH = e.sector==='mare' ? 4 : 2; e.durM = 0; e.min = 2; e.max = 8; e.minAge = 6; break;
       case 'g4': if(!e.langs.length) e.langs = ['it','en']; if(!e.access.length) e.access = ['acc_families']; break;
       case 'mode': if(!e.mode) e.mode = CONFIG.modes[0][0]; break;
-      case 'incl': if(!Object.keys(e.incl).length) e.incl = {inc_guide:'inc', inc_materials:'inc', ...({enogastronomia:{inc_tasting:'inc'}, mare:{inc_drinks:'inc', inc_equipment:'inc'}, natura:{inc_equipment:'inc'}}[e.sector]||{})}; break;
+      case 'incl': if(!Object.keys(e.incl).length){
+        const extra = e.sector === 'enogastronomia'
+          ? (typeList(e).includes('degustazione') ? {} : {inc_tasting:'inc'})
+          : e.sector === 'cultura'
+            ? {}
+            : {inc_materials:'inc', ...({mare:{inc_drinks:'inc', inc_equipment:'inc'}, natura:{inc_equipment:'inc'}}[e.sector]||{})};
+        e.incl = {inc_guide:'inc', ...extra};
+        normalizeIncl(e);
+      } break;
       case 'equip': e.equipProvided = true; e.bringNote=''; break;
-      case 'reqs': if(!e.difficulty) e.difficulty = CONFIG.difficulty[0]; break;
-      case 'sq': (SECTOR[e.sector].q||[]).forEach(q=>{
+      case 'reqs': if(e.sector==='artigianato'){ if(!e.comune) e.comune = txt()[2]; if(!filled(e.address,3)) e.address = L('Via Roma 12','12 Via Roma'); } if(isHike(e)){ const h = ensureHike(e); if(!h.ways) h.ways = 'one'; const key = hikeInlineKey(e); if(key){ const p = h.profiles[key]; if(!p.cai) p.cai = 'e'; if(!pos(p.km)) p.km = '8'; if(!pos(p.elev)) p.elev = '420'; if(!filled(p.dur,1)) p.dur = '3 h'; if(!pos(p.alt)) p.alt = '900'; if(!h.car) h.car = 'no'; } } else if(showsDifficulty(e)){ if(!e.difficulty) e.difficulty = CONFIG.difficulty[0]; } else e.difficulty = ''; break;
+      case 'sq': sectorQs(e).forEach(q=>{
         const v = e.sq[q.k];
         if(q.t==='toggle'){ if(v===undefined) e.sq[q.k] = q.def ?? true; }
         else if(q.t==='pills'){ if(!v) e.sq[q.k] = q.o[0]; }
@@ -2815,7 +3402,7 @@ if(DEV_FILL) (function(){
         if(!e.notice) e.notice = 'n48'; break;
       case 'price': if(!e.priceMode) e.priceMode = CONFIG.priceModes[0];
         blocks(e).forEach(b=>{ const p = e.price[b]; if(!pos(p.base)) p.base = b==='priv' ? '120' : '60'; if(!(p.incl>=1)) p.incl = 1; }); break;
-      case 'cond': e.cancel = e.cancel || 'c48'; e.noshow = e.noshow || 'ns_full'; e.weather = e.weather || 'w_resched'; e.billing = e.billing || 'bill_einv'; break;
+      case 'cond': e.termsAccepted = true; if(!e.termsAcceptedAt) e.termsAcceptedAt = new Date().toISOString(); if(!e.billing || e.billing==='bill_receipt') e.billing = 'bill_einv'; break;
       case 'photos': { let n = 0; const si = SECTOR[e.sector]?.img; if(si && !e.photos.length) e.photos.push({src:si, name:si.split('/').pop(), sample:true}); while(e.photos.length < 3){ const src = SAMPLE_PHOTOS[(e.photos.length+i+n) % SAMPLE_PHOTOS.length]; e.photos.push({src, name:src.split('/').pop(), sample:true}); n++; } break; }
     }
   }
@@ -2839,7 +3426,9 @@ if(DEV_FILL) (function(){
   function fillCurrent(){
     const id = S.pos, C = S.contact, G = S.org;
     const m = id.match(/^e(\d+)_(\w+)$/);
-    if(m) fillExp(m[2], +m[1]);
+    const hm = id.match(/^e(\d+)_hk(\d+)$/);
+    if(hm){ const e = S.exps[+hm[1]]; if(e){ const keys = hikeSeq(e), key = keys[+hm[2]]; if(key){ const p = ensureHike(e).profiles[key]; if(!p.cai) p.cai = 'e'; if(!pos(p.km)) p.km = '8'; if(!pos(p.elev)) p.elev = '420'; if(!filled(p.dur,1)) p.dur = '3 h'; if(!pos(p.alt)) p.alt = '900'; if(+hm[2] === keys.length-1 && !e.hike.car) e.hike.car = 'no'; } } }
+    else if(m) fillExp(m[2], +m[1]);
     else if(/^conv_/.test(id)) fillConv(id);
     else switch(id){
       case 'ref_name': C.first = 'Mario'; C.last = 'Rossi Test'; break;

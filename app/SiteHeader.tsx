@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLanguageMenu } from "./useLanguageMenu";
+import { readSiteLang, writeSiteLang } from "./siteLang";
 import { createPortal } from "react-dom";
 import type { CSSProperties } from "react";
 
@@ -72,6 +73,14 @@ export function SiteHeader() {
   const closeTimer = useRef<number | null>(null);
   const switchTimer = useRef<number | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    const code = readSiteLang();
+    const found = languages.find((language) => language.code === code);
+    if (found) setSelectedLanguage(found);
+    const q = new URLSearchParams(window.location.search).get("lang");
+    if (q === "it" || q === "en") writeSiteLang(q);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -229,6 +238,9 @@ export function SiteHeader() {
           </a>
 
           <div className="nav-links">
+            <a className="nav-link nav-link-static" href="/pacchetti">
+              {selectedLanguage.code === "it" ? "Pacchetti" : "Packages"}
+            </a>
             <NavButton label="Explore" active={activeDropdown === "explore"} onOpen={() => openDropdown("explore")} />
             <NavButton label="Experiences" active={activeDropdown === "experiences"} onOpen={() => openDropdown("experiences")} />
             <NavButton label="Destinations" active={activeDropdown === "destinations"} onOpen={() => openDropdown("destinations")} />
@@ -273,6 +285,7 @@ export function SiteHeader() {
                     role="menuitem"
                     onClick={() => {
                       setSelectedLanguage(language);
+                      writeSiteLang(language.code);
                       setIsLanguageOpen(false);
                       languageMenu.focusButton();
                     }}
@@ -407,6 +420,7 @@ export function SiteHeader() {
             <nav className="site-menu-links" aria-label="Expanded navigation">
               {(
                 [
+                  { label: selectedLanguage.code === "it" ? "Pacchetti" : "Packages", href: "/pacchetti" },
                   { label: "Home", href: "/" },
                   { label: "Explore", href: "/#explore" },
                   { label: "Experiences", href: "/#experiences" },

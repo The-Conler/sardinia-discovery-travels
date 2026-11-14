@@ -10,6 +10,8 @@ export type ContactData = {
   quickPeople: number;
   interests: string[];
   interestOther: string;
+  /** Optional, only when the Wine Tour interest is selected. */
+  multiWinery: boolean;
   boatLocation: string;
   boatType: string;
   boatDuration: string;
@@ -29,6 +31,9 @@ export type ContactData = {
   children: number;
   childAges: string[];
   infants: number;
+  /** Set when adults + children + infants is 13 or more. */
+  groupType: string;
+  groupNotes: string;
   swimming: string;
   arrivalMethod: string;
   airport: string;
@@ -63,32 +68,56 @@ export type ContactData = {
   timeZone: string;
   replyVia: string;
   heardFrom: string;
+  /** Slug of a sample or real package opened from /pacchetti. Empty when none. */
+  packageSlug: string;
 };
 
 export const emptyData: ContactData = {
   mode: "guided", quickTopics: [], quickDates: "", quickPeople: 0,
-  interests: [], interestOther: "",
+  interests: [], interestOther: "", multiWinery: false,
   boatLocation: "", boatType: "", boatDuration: "", boatStyle: "",
   transferFrom: "", transferTo: "", transferTrip: "", transferBags: 0, transferItems: [],
   tripArrival: "", tripDeparture: "", activityDate1: "", activityDate2: "", datesFlexible: false, datesNote: "",
-  adults: 2, children: 0, childAges: [], infants: 0, swimming: "",
+  adults: 2, children: 0, childAges: [], infants: 0, groupType: "", groupNotes: "", swimming: "",
   arrivalMethod: "", airport: "", flightNumber: "", port: "", arrivalDate: "", arrivalTime: "", rentalCar: "", rentalCarType: "", rentalCarSeats: "", rentalCarSize: "", pickup: "",
   stayArea: "", stayAddress: "", stayNotBooked: false,
   stayType: "", stayRoom: "", stayRoomsCount: "", stayBoard: "", stayRequest: "", stayAmenities: [],
   needs: [], celebration: "", needsDetail: "", budget: "", message: "",
   firstName: "", lastName: "", email: "", phone: "", country: "", timeZone: "", replyVia: "", heardFrom: "",
+  packageSlug: "",
 };
 
 export const INTERESTS: Opt[] = [
   { value: "boat", label: "Boat tour", icon: "sailboat", hint: "A day on the water", image: "/contact/card-boat.webp" },
+  { value: "wine", label: "Wine tour", icon: "wine", hint: "Tastings at local wineries", image: "/destinations/north/ns-wine.webp" },
   { value: "transfer", label: "Private transfer", icon: "car", hint: "Airport, port or hotel rides", image: "/contact/card-transfer.webp" },
   { value: "trip", label: "Destination / multi-day trip", icon: "map", hint: "Several days around the island", image: "/contact/card-trip.webp" },
   { value: "other", label: "Something else", icon: "message", hint: "Tell us what you'd like", image: "/contact/card-other.webp" },
 ];
 
+/**
+ * Optional Wine Tour checkbox. The form itself is English.
+ * it and nl match the languages in the site header.
+ */
+export const WINE_MULTI_COPY = {
+  en: {
+    label: "I'd like to visit more than one winery",
+    hint: "The tour operator will suggest the best combination of nearby wineries.",
+  },
+  it: {
+    label: "Voglio visitare più cantine",
+    hint: "Il tour operator ti proporrà la combinazione di cantine vicine più adatta.",
+  },
+  nl: {
+    label: "Ik wil graag meer dan één wijnhuis bezoeken",
+    hint: "De touroperator stelt de beste combinatie van wijnhuizen in de buurt voor.",
+  },
+} as const;
+
 /** Topics for the quick request (same values as INTERESTS, shorter labels). */
 export const QUICK_TOPICS: Opt[] = [
   { value: "boat", label: "Boat tour", icon: "sailboat" },
+  { value: "wine", label: "Wine tour", icon: "wine" },
   { value: "transfer", label: "Private transfer", icon: "car" },
   { value: "trip", label: "Multi-day trip", icon: "map" },
   { value: "other", label: "Something else", icon: "message" },
@@ -240,6 +269,15 @@ export const DURATIONS_OTHER: Opt[] = DURATIONS.filter((o) => o.value !== "half"
 export const guestTotal = (d: ContactData) => d.adults + d.children + d.infants;
 export const isLargeGroup = (d: ContactData) => guestTotal(d) >= 13;
 
+/** Shown only when the party is 13 or more. Labels stay in the form's English. */
+export const GROUP_TYPES: Opt[] = [
+  { value: "family", label: "Family or friends" },
+  { value: "company", label: "Company" },
+  { value: "school", label: "School" },
+  { value: "association", label: "Association" },
+  { value: "other", label: "Other" },
+];
+
 export const YES_NO_UNSURE: Opt[] = [
   { value: "yes", label: "Yes" },
   { value: "no", label: "No" },
@@ -301,6 +339,7 @@ export const ALL_STEPS: StepId[] = [
 ];
 
 export const wantsBoat = (d: ContactData) => d.interests.includes("boat");
+export const wantsWine = (d: ContactData) => d.interests.includes("wine") || d.quickTopics.includes("wine");
 export const wantsTransfer = (d: ContactData) => d.interests.includes("transfer");
 /** The pickup question is pointless when the only thing asked for is a transfer. */
 export const asksPickup = (d: ContactData) => !(d.interests.length === 1 && wantsTransfer(d));
@@ -335,7 +374,7 @@ export function stepValid(step: StepId, d: ContactData): boolean {
       return d.datesFlexible ? haveDates || filled(d.datesNote) : haveDates;
     }
     case "guests":
-      return d.adults >= 1 && d.childAges.length === d.children && d.childAges.every(filled) && (!wantsBoat(d) || !!d.swimming);
+      return d.adults >= 1 && d.childAges.length === d.children && d.childAges.every(filled) && (!wantsBoat(d) || !!d.swimming) && (!isLargeGroup(d) || !!d.groupType);
     case "arrival": {
       if (!d.arrivalMethod) return false;
       if (d.arrivalMethod === "plane" && !d.airport) return false;

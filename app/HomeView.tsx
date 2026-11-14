@@ -10,6 +10,7 @@ import { GoogleReviews } from "./GoogleReviews";
 import { CinematicHero } from "./CinematicHero";
 import { FloatingActions } from "./FloatingActions";
 import { textReveal02 } from "./textReveal02";
+import { readSiteLang, writeSiteLang } from "./siteLang";
 
 declare global {
   interface Window {
@@ -226,6 +227,12 @@ export function HomeView() {
   const serviceRailRef = useRef<HTMLDivElement | null>(null);
   const serviceRailReturnTimer = useRef<number | null>(null);
   const isServiceRailHeld = useRef(false);
+
+  useEffect(() => {
+    const code = readSiteLang();
+    const found = languages.find((language) => language.code === code);
+    if (found) setSelectedLanguage(found);
+  }, []);
 
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
@@ -640,6 +647,9 @@ export function HomeView() {
             </a>
 
             <div className="nav-links">
+              <a className="nav-link nav-link-static" href="/pacchetti">
+                {selectedLanguage.code === "it" ? "Pacchetti" : "Packages"}
+              </a>
               <NavButton
                 label="Explore"
                 active={activeDropdown === "explore"}
@@ -698,6 +708,7 @@ export function HomeView() {
                       role="menuitem"
                       onClick={() => {
                         setSelectedLanguage(language);
+                        writeSiteLang(language.code);
                       setIsLanguageOpen(false);
                       languageMenu.focusButton();
                       }}
@@ -858,6 +869,7 @@ export function HomeView() {
               <nav className="site-menu-links" aria-label="Expanded navigation">
                 {(
                   [
+                    { label: selectedLanguage.code === "it" ? "Pacchetti" : "Packages", href: "/pacchetti" },
                     { label: "Home", href: "#" },
                     { label: "Explore", href: "#explore" },
                     { label: "Experiences", href: "#experiences" },
