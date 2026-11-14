@@ -15,17 +15,18 @@
     "file": "_next/static/css/MosaicReveal.BsB7YxNW.css",
     "src": "_MosaicReveal.BsB7YxNW.css"
   },
-  "_TourCard-CRjj0vYV.js": {
-    "file": "_next/static/chunks/TourCard-CRjj0vYV.js",
+  "_TourCard-BUHJW9fP.js": {
+    "file": "_next/static/chunks/TourCard-BUHJW9fP.js",
     "name": "TourCard",
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_ui-Cqr926ib.js",
+      "_icons-BM21lPx3.js",
+      "_ui-Bjn1ZHDQ.js",
       "_framework-BgSIrAUN.js"
     ]
   },
-  "_copy-BfrHA2HM.js": {
-    "file": "_next/static/chunks/copy-BfrHA2HM.js",
+  "_copy-DZgsu1DK.js": {
+    "file": "_next/static/chunks/copy-DZgsu1DK.js",
     "name": "copy"
   },
   "_framework-BgSIrAUN.js": {
@@ -33,6 +34,13 @@
     "name": "framework",
     "imports": [
       "_rolldown-runtime-C60lm6uB.js"
+    ]
+  },
+  "_icons-BM21lPx3.js": {
+    "file": "_next/static/chunks/icons-BM21lPx3.js",
+    "name": "icons",
+    "imports": [
+      "_framework-BgSIrAUN.js"
     ]
   },
   "_rolldown-runtime-C60lm6uB.js": {
@@ -51,10 +59,11 @@
     "file": "_next/static/chunks/siteZoom-DBTy2P6x.js",
     "name": "siteZoom"
   },
-  "_ui-Cqr926ib.js": {
-    "file": "_next/static/chunks/ui-Cqr926ib.js",
+  "_ui-Bjn1ZHDQ.js": {
+    "file": "_next/static/chunks/ui-Bjn1ZHDQ.js",
     "name": "ui",
     "imports": [
+      "_icons-BM21lPx3.js",
       "_framework-BgSIrAUN.js"
     ]
   },
@@ -126,13 +135,13 @@
     ]
   },
   "app/contact/ContactWizard.tsx": {
-    "file": "_next/static/chunks/ContactWizard-nPhiMZRE.js",
+    "file": "_next/static/chunks/ContactWizard-DSZU0va4.js",
     "name": "ContactWizard",
     "src": "app/contact/ContactWizard.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_copy-BfrHA2HM.js",
+      "_copy-DZgsu1DK.js",
       "_siteLang-BMzs4Hgp.js",
       "_framework-BgSIrAUN.js"
     ]
@@ -169,66 +178,70 @@
     ]
   },
   "app/hotels/HotelsView.tsx": {
-    "file": "_next/static/chunks/HotelsView-Yfu30IJy.js",
+    "file": "_next/static/chunks/HotelsView-DiVzgvef.js",
     "name": "HotelsView",
     "src": "app/hotels/HotelsView.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_ui-Cqr926ib.js",
+      "_icons-BM21lPx3.js",
+      "_ui-Bjn1ZHDQ.js",
       "_framework-BgSIrAUN.js"
     ]
   },
   "app/off-road/OffRoadView.tsx": {
-    "file": "_next/static/chunks/OffRoadView-DFdRgIAS.js",
+    "file": "_next/static/chunks/OffRoadView-BcIn8eaf.js",
     "name": "OffRoadView",
     "src": "app/off-road/OffRoadView.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_ui-Cqr926ib.js",
-      "_TourCard-CRjj0vYV.js",
+      "_icons-BM21lPx3.js",
+      "_ui-Bjn1ZHDQ.js",
+      "_TourCard-BUHJW9fP.js",
       "_framework-BgSIrAUN.js"
     ]
   },
   "app/off-road/TourDetail.tsx": {
-    "file": "_next/static/chunks/TourDetail-DK3AvIYA.js",
+    "file": "_next/static/chunks/TourDetail-DfB04cHZ.js",
     "name": "TourDetail",
     "src": "app/off-road/TourDetail.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_ui-Cqr926ib.js",
-      "_TourCard-CRjj0vYV.js",
+      "_icons-BM21lPx3.js",
+      "_ui-Bjn1ZHDQ.js",
+      "_TourCard-BUHJW9fP.js",
       "_framework-BgSIrAUN.js"
     ]
   },
   "app/pacchetti/PackageDetail.tsx": {
-    "file": "_next/static/chunks/PackageDetail-CD_gttzT.js",
+    "file": "_next/static/chunks/PackageDetail-1xW0SALp.js",
     "name": "PackageDetail",
     "src": "app/pacchetti/PackageDetail.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_copy-BfrHA2HM.js",
+      "_copy-DZgsu1DK.js",
       "_siteLang-BMzs4Hgp.js",
       "_framework-BgSIrAUN.js"
     ]
   },
   "app/pacchetti/PackagesView.tsx": {
-    "file": "_next/static/chunks/PackagesView-DZAsu7n9.js",
+    "file": "_next/static/chunks/PackagesView-BsXZqS5P.js",
     "name": "PackagesView",
     "src": "app/pacchetti/PackagesView.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_copy-BfrHA2HM.js",
+      "_icons-BM21lPx3.js",
+      "_copy-DZgsu1DK.js",
       "_siteLang-BMzs4Hgp.js",
       "_framework-BgSIrAUN.js"
     ]
   },
   "app/private-transfers/TransferBooking.tsx": {
-    "file": "_next/static/chunks/TransferBooking-lf5nOBSN.js",
+    "file": "_next/static/chunks/TransferBooking-CEq4i67H.js",
     "name": "TransferBooking",
     "src": "app/private-transfers/TransferBooking.tsx",
     "isDynamicEntry": true,
@@ -238,7 +251,7 @@
     ]
   },
   "app/private-transfers/TransferFaq.tsx": {
-    "file": "_next/static/chunks/TransferFaq-CAG56CZK.js",
+    "file": "_next/static/chunks/TransferFaq-B_764v0s.js",
     "name": "TransferFaq",
     "src": "app/private-transfers/TransferFaq.tsx",
     "isDynamicEntry": true,
@@ -248,7 +261,7 @@
     ]
   },
   "app/private-transfers/TransferHowItWorks.tsx": {
-    "file": "_next/static/chunks/TransferHowItWorks-DcrS_MU3.js",
+    "file": "_next/static/chunks/TransferHowItWorks-D04hnNUp.js",
     "name": "TransferHowItWorks",
     "src": "app/private-transfers/TransferHowItWorks.tsx",
     "isDynamicEntry": true,
@@ -258,7 +271,7 @@
     ]
   },
   "node_modules/vinext/dist/shims/layout-segment-context.js": {
-    "file": "_next/static/chunks/layout-segment-context-4ITfWs8y.js",
+    "file": "_next/static/chunks/layout-segment-context-ZbnLMXhb.js",
     "name": "layout-segment-context",
     "src": "node_modules/vinext/dist/shims/layout-segment-context.js",
     "isDynamicEntry": true,
@@ -269,7 +282,7 @@
     ]
   },
   "node_modules/vinext/dist/shims/script.js": {
-    "file": "_next/static/chunks/script-Y5GzqlKd.js",
+    "file": "_next/static/chunks/script-DDaa_WBK.js",
     "name": "script",
     "src": "node_modules/vinext/dist/shims/script.js",
     "isDynamicEntry": true,
@@ -280,7 +293,7 @@
     ]
   },
   "virtual:vinext-app-browser-entry": {
-    "file": "_next/static/chunks/index-DaFON81Q.js",
+    "file": "_next/static/chunks/index-74a4OE43.js",
     "name": "index",
     "src": "virtual:vinext-app-browser-entry",
     "isEntry": true,
