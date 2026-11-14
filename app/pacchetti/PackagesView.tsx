@@ -319,7 +319,7 @@ export function PackagesView() {
         <div className="pk-reco-inner">
           <div className="ht-head">
             <div>
-              <p className="ht-kicker">{t.examples}</p>
+              <p className="ht-kicker">{t.nav}</p>
               <h2 className="ht-title">{t.recoTitle}</h2>
             </div>
           </div>
