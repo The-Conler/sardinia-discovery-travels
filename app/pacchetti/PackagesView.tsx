@@ -366,7 +366,12 @@ function DealCard({ pkg, lang, saved, onSave }: { pkg: SamplePackage; lang: "it"
             <strong>{euroMark(pkg.priceFrom)}</strong>
             <span className="ht-price-night">/ {t.per}</span>
           </p>
-          <a className="ht-arrow" href={`/pacchetti/${pkg.slug}`} aria-label={t.discover}><HIcon name="arrowRight" size={14} /></a>
+          <a className="ht-arrow pk-card-go" href={`/pacchetti/${pkg.slug}`} aria-label={t.discover}>
+            <span className="pk-card-go-rail">
+              <span><HIcon name="arrowRight" size={14} /></span>
+              <span><HIcon name="arrowRight" size={14} /></span>
+            </span>
+          </a>
         </div>
       </div>
     </article>

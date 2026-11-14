@@ -383,10 +383,45 @@
 }
 .pk-examples .pk-card-foot .ht-price { margin: 0; min-width: 0; }
 .pk-examples .pk-card-foot .ht-arrow {
+  position: relative;
+  overflow: hidden;
   width: calc(28 * var(--pu));
   height: calc(28 * var(--pu));
   text-decoration: none;
   flex: none;
+  transition:
+    background 0.5s cubic-bezier(0.165, 0.84, 0.44, 1),
+    color 0.5s cubic-bezier(0.165, 0.84, 0.44, 1),
+    border-color 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+/* Same motion as button-02: the arrow leaves to the right and the next one
+   enters from the left while the circle fills. */
+.pk-card-go-rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 200%;
+  height: 100%;
+  transform: translateX(-50%);
+  transition: transform 0.45s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.pk-card-go-rail > span {
+  display: grid;
+  flex: 0 0 50%;
+  place-items: center;
+}
+.pk-examples .ht-card:hover .pk-card-go-rail,
+.pk-examples .pk-card-foot .ht-arrow:hover .pk-card-go-rail,
+.pk-examples .pk-card-foot .ht-arrow:focus-visible .pk-card-go-rail {
+  transform: translateX(0);
+}
+.pk-examples .ht-card:hover .pk-card-foot .ht-arrow,
+.pk-examples .pk-card-foot .ht-arrow:hover,
+.pk-examples .pk-card-foot .ht-arrow:focus-visible {
+  background: #f8f4ee;
+  color: #1d1d1f;
+  border-color: #f8f4ee;
 }
 .pk-examples .ht-card:hover {
   z-index: 3;
@@ -398,6 +433,14 @@
 @media (prefers-reduced-motion: reduce) {
   .pk-examples .ht-card { transition: none; }
   .pk-examples .ht-card:hover { transform: none; }
+  .pk-card-go-rail,
+  .pk-examples .ht-card:hover .pk-card-go-rail,
+  .pk-examples .pk-card-foot .ht-arrow:hover .pk-card-go-rail,
+  .pk-examples .pk-card-foot .ht-arrow:focus-visible .pk-card-go-rail {
+    transform: translateX(-50%);
+    transition: none;
+  }
+  .pk-examples .pk-card-foot .ht-arrow { transition: none; }
 }
 @media (max-width: 860px) {
   .pk-examples .ht-title { font-size: 30px; }
