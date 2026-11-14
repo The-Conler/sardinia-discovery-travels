@@ -15,17 +15,17 @@
     "file": "_next/static/css/MosaicReveal.BsB7YxNW.css",
     "src": "_MosaicReveal.BsB7YxNW.css"
   },
-  "_TourCard-buesZRKX.js": {
-    "file": "_next/static/chunks/TourCard-buesZRKX.js",
+  "_TourCard-CRjj0vYV.js": {
+    "file": "_next/static/chunks/TourCard-CRjj0vYV.js",
     "name": "TourCard",
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_ui-B7NS1N3M.js",
+      "_ui-Cqr926ib.js",
       "_framework-BgSIrAUN.js"
     ]
   },
-  "_copy-CT3R50VR.js": {
-    "file": "_next/static/chunks/copy-CT3R50VR.js",
+  "_copy-C8VJGd6J.js": {
+    "file": "_next/static/chunks/copy-C8VJGd6J.js",
     "name": "copy"
   },
   "_framework-BgSIrAUN.js": {
@@ -39,8 +39,8 @@
     "file": "_next/static/chunks/rolldown-runtime-C60lm6uB.js",
     "name": "rolldown-runtime"
   },
-  "_siteLang-DQVD5EKP.js": {
-    "file": "_next/static/chunks/siteLang-DQVD5EKP.js",
+  "_siteLang-BMzs4Hgp.js": {
+    "file": "_next/static/chunks/siteLang-BMzs4Hgp.js",
     "name": "siteLang",
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
@@ -51,12 +51,8 @@
     "file": "_next/static/chunks/siteZoom-DBTy2P6x.js",
     "name": "siteZoom"
   },
-  "_textReveal02-B38lTOnM.js": {
-    "file": "_next/static/chunks/textReveal02-B38lTOnM.js",
-    "name": "textReveal02"
-  },
-  "_ui-B7NS1N3M.js": {
-    "file": "_next/static/chunks/ui-B7NS1N3M.js",
+  "_ui-Cqr926ib.js": {
+    "file": "_next/static/chunks/ui-Cqr926ib.js",
     "name": "ui",
     "imports": [
       "_framework-BgSIrAUN.js"
@@ -81,7 +77,7 @@
     ]
   },
   "app/HomeView.tsx": {
-    "file": "_next/static/chunks/HomeView-B3BrSnaT.js",
+    "file": "_next/static/chunks/HomeView-CnLt0n5C.js",
     "name": "HomeView",
     "src": "app/HomeView.tsx",
     "isDynamicEntry": true,
@@ -89,26 +85,25 @@
       "_rolldown-runtime-C60lm6uB.js",
       "app/FloatingActions.tsx",
       "_MosaicReveal-BD7Dd91N.js",
-      "_siteLang-DQVD5EKP.js",
-      "_textReveal02-B38lTOnM.js",
+      "_siteLang-BMzs4Hgp.js",
       "_useLanguageMenu-CMG2uwpI.js",
       "_framework-BgSIrAUN.js"
     ]
   },
   "app/SiteHeader.tsx": {
-    "file": "_next/static/chunks/SiteHeader-w8p4vuGk.js",
+    "file": "_next/static/chunks/SiteHeader-x0VU8Lfd.js",
     "name": "SiteHeader",
     "src": "app/SiteHeader.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_siteLang-DQVD5EKP.js",
+      "_siteLang-BMzs4Hgp.js",
       "_useLanguageMenu-CMG2uwpI.js",
       "_framework-BgSIrAUN.js"
     ]
   },
   "app/about/AboutView.tsx": {
-    "file": "_next/static/chunks/AboutView-Qn-N8McZ.js",
+    "file": "_next/static/chunks/AboutView-CXSMEbRm.js",
     "name": "AboutView",
     "src": "app/about/AboutView.tsx",
     "isDynamicEntry": true,
@@ -117,7 +112,7 @@
     ]
   },
   "app/boat-tours/page.tsx": {
-    "file": "_next/static/chunks/page-DfMZw39X.js",
+    "file": "_next/static/chunks/page-ovrOtJrI.js",
     "name": "page",
     "src": "app/boat-tours/page.tsx",
     "isDynamicEntry": true,
@@ -131,19 +126,19 @@
     ]
   },
   "app/contact/ContactWizard.tsx": {
-    "file": "_next/static/chunks/ContactWizard-DBjKrUYO.js",
+    "file": "_next/static/chunks/ContactWizard-DpRK3OPF.js",
     "name": "ContactWizard",
     "src": "app/contact/ContactWizard.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_copy-CT3R50VR.js",
-      "_siteLang-DQVD5EKP.js",
+      "_copy-C8VJGd6J.js",
+      "_siteLang-BMzs4Hgp.js",
       "_framework-BgSIrAUN.js"
     ]
   },
   "app/destinations/north-sardinia/BookingSteps.tsx": {
-    "file": "_next/static/chunks/BookingSteps-DJUVop-P.js",
+    "file": "_next/static/chunks/BookingSteps-B3TzVAwV.js",
     "name": "BookingSteps",
     "src": "app/destinations/north-sardinia/BookingSteps.tsx",
     "isDynamicEntry": true,
@@ -153,7 +148,7 @@
     ]
   },
   "app/destinations/north-sardinia/ExperienceBrowser.tsx": {
-    "file": "_next/static/chunks/ExperienceBrowser-DjhOh6ag.js",
+    "file": "_next/static/chunks/ExperienceBrowser-BJMMPRV3.js",
     "name": "ExperienceBrowser",
     "src": "app/destinations/north-sardinia/ExperienceBrowser.tsx",
     "isDynamicEntry": true,
@@ -164,7 +159,7 @@
     ]
   },
   "app/destinations/north-sardinia/NorthDestinations.tsx": {
-    "file": "_next/static/chunks/NorthDestinations-CpFcO-Ti.js",
+    "file": "_next/static/chunks/NorthDestinations-BQwTjaTc.js",
     "name": "NorthDestinations",
     "src": "app/destinations/north-sardinia/NorthDestinations.tsx",
     "isDynamicEntry": true,
@@ -174,68 +169,66 @@
     ]
   },
   "app/hotels/HotelsView.tsx": {
-    "file": "_next/static/chunks/HotelsView-B3YwUnFf.js",
+    "file": "_next/static/chunks/HotelsView-Yfu30IJy.js",
     "name": "HotelsView",
     "src": "app/hotels/HotelsView.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_ui-B7NS1N3M.js",
+      "_ui-Cqr926ib.js",
       "_framework-BgSIrAUN.js"
     ]
   },
   "app/off-road/OffRoadView.tsx": {
-    "file": "_next/static/chunks/OffRoadView-DHrKAro3.js",
+    "file": "_next/static/chunks/OffRoadView-DFdRgIAS.js",
     "name": "OffRoadView",
     "src": "app/off-road/OffRoadView.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_ui-B7NS1N3M.js",
-      "_TourCard-buesZRKX.js",
+      "_ui-Cqr926ib.js",
+      "_TourCard-CRjj0vYV.js",
       "_framework-BgSIrAUN.js"
     ]
   },
   "app/off-road/TourDetail.tsx": {
-    "file": "_next/static/chunks/TourDetail-C1tcjmw7.js",
+    "file": "_next/static/chunks/TourDetail-DK3AvIYA.js",
     "name": "TourDetail",
     "src": "app/off-road/TourDetail.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_ui-B7NS1N3M.js",
-      "_TourCard-buesZRKX.js",
+      "_ui-Cqr926ib.js",
+      "_TourCard-CRjj0vYV.js",
       "_framework-BgSIrAUN.js"
     ]
   },
   "app/pacchetti/PackageDetail.tsx": {
-    "file": "_next/static/chunks/PackageDetail-J0FdeqhH.js",
+    "file": "_next/static/chunks/PackageDetail-BFde3Vyq.js",
     "name": "PackageDetail",
     "src": "app/pacchetti/PackageDetail.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_copy-CT3R50VR.js",
-      "_siteLang-DQVD5EKP.js",
-      "_textReveal02-B38lTOnM.js",
+      "_copy-C8VJGd6J.js",
+      "_siteLang-BMzs4Hgp.js",
       "_framework-BgSIrAUN.js"
     ]
   },
   "app/pacchetti/PackagesView.tsx": {
-    "file": "_next/static/chunks/PackagesView-CTN4-_ej.js",
+    "file": "_next/static/chunks/PackagesView-DzUjQC5D.js",
     "name": "PackagesView",
     "src": "app/pacchetti/PackagesView.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_rolldown-runtime-C60lm6uB.js",
-      "_copy-CT3R50VR.js",
-      "_siteLang-DQVD5EKP.js",
-      "_textReveal02-B38lTOnM.js",
+      "_copy-C8VJGd6J.js",
+      "_siteLang-BMzs4Hgp.js",
       "_framework-BgSIrAUN.js"
     ]
   },
   "app/private-transfers/TransferBooking.tsx": {
-    "file": "_next/static/chunks/TransferBooking-CEq4i67H.js",
+    "file": "_next/static/chunks/TransferBooking-lf5nOBSN.js",
     "name": "TransferBooking",
     "src": "app/private-transfers/TransferBooking.tsx",
     "isDynamicEntry": true,
@@ -245,7 +238,7 @@
     ]
   },
   "app/private-transfers/TransferFaq.tsx": {
-    "file": "_next/static/chunks/TransferFaq-B_764v0s.js",
+    "file": "_next/static/chunks/TransferFaq-CAG56CZK.js",
     "name": "TransferFaq",
     "src": "app/private-transfers/TransferFaq.tsx",
     "isDynamicEntry": true,
@@ -255,7 +248,7 @@
     ]
   },
   "app/private-transfers/TransferHowItWorks.tsx": {
-    "file": "_next/static/chunks/TransferHowItWorks-D04hnNUp.js",
+    "file": "_next/static/chunks/TransferHowItWorks-DcrS_MU3.js",
     "name": "TransferHowItWorks",
     "src": "app/private-transfers/TransferHowItWorks.tsx",
     "isDynamicEntry": true,
@@ -265,7 +258,7 @@
     ]
   },
   "node_modules/vinext/dist/shims/layout-segment-context.js": {
-    "file": "_next/static/chunks/layout-segment-context-DjB9TuLr.js",
+    "file": "_next/static/chunks/layout-segment-context-DGt8Y238.js",
     "name": "layout-segment-context",
     "src": "node_modules/vinext/dist/shims/layout-segment-context.js",
     "isDynamicEntry": true,
@@ -276,7 +269,7 @@
     ]
   },
   "node_modules/vinext/dist/shims/script.js": {
-    "file": "_next/static/chunks/script-BMF9kwca.js",
+    "file": "_next/static/chunks/script-BAQp8B6T.js",
     "name": "script",
     "src": "node_modules/vinext/dist/shims/script.js",
     "isDynamicEntry": true,
@@ -287,7 +280,7 @@
     ]
   },
   "virtual:vinext-app-browser-entry": {
-    "file": "_next/static/chunks/index-DOlgBNcn.js",
+    "file": "_next/static/chunks/index-Df09pcga.js",
     "name": "index",
     "src": "virtual:vinext-app-browser-entry",
     "isEntry": true,
