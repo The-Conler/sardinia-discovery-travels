@@ -62,9 +62,11 @@ export function durationBand(nights: number): DurationId {
   return "long";
 }
 
-/** Italian grouping and a comma for cents, in both languages. Example amounts only. */
+/** Thousands use a dot and cents a comma: 1.250,00 €. Example amounts only. */
 export function formatEuro(amount: number) {
-  return new Intl.NumberFormat("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount) + " €";
+  const [whole, cents] = amount.toFixed(2).split(".");
+  const grouped = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return `${grouped},${cents} €`;
 }
 
 /* EXAMPLE packages. None of these trips or prices are for sale. */

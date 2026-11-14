@@ -35,20 +35,21 @@
   background: rgba(255, 255, 255, 0.05); color: var(--pk-cream); font: inherit; font-size: 14px; cursor: pointer;
 }
 .pk-chip.is-on { border-color: var(--pk-teal); background: rgba(47, 127, 136, 0.22); }
-.pk-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.pk-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 22px; align-items: stretch; }
 .pk-card { display: flex; flex-direction: column; height: 100%; color: inherit; text-decoration: none; border-radius: 20px; overflow: hidden; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--pk-line); }
-.pk-card-photo { position: relative; display: block; aspect-ratio: 16 / 10; }
-.pk-card-photo img, .pk-gallery-main, .pk-thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pk-card-photo { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; }
+.pk-card-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.pk-gallery-main, .pk-thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .pk-badge {
   position: absolute; top: 14px; left: 14px; height: 28px; padding: 0 10px; display: inline-flex; align-items: center;
   border-radius: 999px; background: rgba(31, 29, 28, 0.86); color: var(--pk-cream); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
 }
 .pk-badge--inline { position: static; }
-.pk-card-body { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px 18px; }
+.pk-card-body { display: flex; flex-direction: column; gap: 6px; flex: 1; padding: 16px 18px 18px; }
 .pk-card-theme { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pk-muted); }
-.pk-card-title { font-family: var(--font-display-serif), Georgia, serif; font-size: 26px; line-height: 1.15; }
+.pk-card-title { font-family: var(--font-display-serif), Georgia, serif; font-size: 26px; line-height: 1.15; min-height: 2.3em; }
 .pk-card-meta { color: var(--pk-muted); font-size: 15px; }
-.pk-card-price { margin-top: 4px; font-size: 16px; }
+.pk-card-price { margin-top: auto; padding-top: 8px; font-size: 16px; }
 .pk-empty { color: var(--pk-muted); }
 .pk-detail-head { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
 .pk-gallery { margin: 28px 0; }
@@ -72,9 +73,15 @@
   background: var(--pk-teal); color: #f8f4ee; text-decoration: none; font-weight: 600;
 }
 .pk-cta:hover { background: #36909a; }
+@media (min-width: 700px) {
+  .pk-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1100px) {
+  .pk-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
 @media (max-width: 800px) {
   .pk-page, .pk-detail { padding-top: 120px; }
-  .pk-grid, .pk-lists { grid-template-columns: 1fr; }
+  .pk-lists { grid-template-columns: 1fr; }
   .pk-days p { margin-left: 0; }
   .pk-gallery-main { height: 240px; }
 }
