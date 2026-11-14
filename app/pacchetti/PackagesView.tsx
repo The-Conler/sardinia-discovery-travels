@@ -25,6 +25,9 @@ export function PackagesView() {
   const lang = useSiteLang();
   const t = PK[lang];
   const root = useRef<HTMLDivElement>(null);
+  const sentinel = useRef<HTMLDivElement>(null);
+  const [stuck, setStuck] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [duration, setDuration] = useState<DurationId | "all">("all");
   const [zone, setZone] = useState<ZoneId | "all">("all");
   const [theme, setTheme] = useState<ThemeId | "all">("all");
@@ -47,10 +50,22 @@ export function PackagesView() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) entry.target.classList.add("is-in");
       });
-    }, { threshold: 0.2 });
+    }, { rootMargin: "0px 0px 30% 0px", threshold: 0 });
     nodes.forEach((node) => io.observe(node));
     return () => io.disconnect();
   }, [list, lang]);
+
+  useEffect(() => {
+    const el = sentinel.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => {
+      const next = !entry.isIntersecting;
+      setStuck(next);
+      if (!next) setFiltersOpen(false);
+    }, { rootMargin: "-72px 0px 0px 0px", threshold: 0 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   function pickZone(id: ZoneId) {
     setZone(id);
@@ -75,8 +90,14 @@ export function PackagesView() {
         </div>
       </section>
 
-      <div className="pk-search">
+      <div className="pk-search-sentinel" ref={sentinel} aria-hidden="true" />
+      <div className={`pk-search${stuck ? " is-stuck" : ""}${filtersOpen ? " is-open" : ""}`}>
         <div className="pk-search-card">
+          {stuck && (
+            <button type="button" className="pk-filters-toggle" aria-expanded={filtersOpen} onClick={() => setFiltersOpen((open) => !open)}>
+              {t.filters}
+            </button>
+          )}
           <Filter label={t.duration} value={duration} onChange={setDuration} options={[{ id: "all" as const, label: t.all }, ...DURATIONS.map((d) => ({ id: d.id, label: d[lang] }))]} />
           <Filter label={t.zone} value={zone} onChange={setZone} options={[{ id: "all" as const, label: t.all }, ...ZONES.map((z) => ({ id: z.id, label: z[lang] }))]} />
           <Filter label={t.theme} value={theme} onChange={setTheme} options={[{ id: "all" as const, label: t.all }, ...THEMES.map((th) => ({ id: th.id, label: th[lang] }))]} />
