@@ -146,12 +146,6 @@ export function PackagesView() {
           ))}
         </div>
       </section>
-
-      <section className="pk-close" data-reveal>
-        <h2>{t.closing}</h2>
-        <p>{t.closingText}</p>
-        <SiteButton href={`/contact?lang=${lang}`}>{t.closingCta}</SiteButton>
-      </section>
     </div>
   );
 }
