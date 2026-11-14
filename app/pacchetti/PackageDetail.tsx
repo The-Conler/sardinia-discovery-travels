@@ -5,7 +5,6 @@ import { PK } from "./copy";
 import { THEMES, ZONES, formatEuro } from "./packages";
 import type { SamplePackage } from "./packages";
 import { useSiteLang } from "../siteLang";
-import { textReveal02 } from "../textReveal02";
 
 export function PackageDetail({ pkg }: { pkg: SamplePackage }) {
   const lang = useSiteLang();
@@ -14,28 +13,42 @@ export function PackageDetail({ pkg }: { pkg: SamplePackage }) {
   const root = useRef<HTMLElement>(null);
   const [photo, setPhoto] = useState(0);
   const [open, setOpen] = useState(0);
+  const [bar, setBar] = useState(false);
   const theme = THEMES.find((th) => th.id === pkg.theme)?.[lang] ?? "";
   const zone = ZONES.find((z) => z.id === pkg.zone)?.[lang] ?? "";
+  const contact = `/contact?package=${pkg.slug}&lang=${lang}`;
 
   useEffect(() => {
-    if (root.current) textReveal02(root.current);
-  }, [lang, pkg.slug]);
+    const hero = root.current?.querySelector(".pk-dhero");
+    if (!hero) return;
+    const io = new IntersectionObserver(([entry]) => setBar(!entry.isIntersecting), { threshold: 0.2 });
+    io.observe(hero);
+    return () => io.disconnect();
+  }, [pkg.slug]);
 
   return (
     <article className="pk-detail" ref={root}>
-      <header className="pk-hero">
+      <header className="pk-dhero">
         <img src={pkg.images[photo]} alt="" />
-        <div className="service-card-overlay" />
+        <div className="pk-shade" />
         <div className="pk-hero-copy">
           <p className="pk-kicker">✦ {t.kicker} ✦</p>
           <h1>{copy.title}</h1>
-          <span className="pk-badge pk-badge--inline">{t.example}</span>
-          <p className="pk-hero-meta">{t.nights(pkg.days, pkg.nights)} · {zone} · {theme}</p>
+          <span className="pk-badge">{t.example}</span>
+          <p className="pk-facts">{t.nights(pkg.days, pkg.nights)} · {zone} · {theme}</p>
         </div>
       </header>
 
-      <div className="pk-detail-body">
+      <div className="pk-dbody">
         <p className="pk-lead">{copy.intro}</p>
+
+        <ul className="pk-tiles">
+          <li><span>{t.duration}</span><strong>{t.nights(pkg.days, pkg.nights)}</strong></li>
+          <li><span>{t.zone}</span><strong>{zone}</strong></li>
+          <li><span>{t.theme}</span><strong>{theme}</strong></li>
+          <li><span>{t.from}</span><strong>{formatEuro(pkg.priceFrom)}</strong></li>
+        </ul>
+
         <div className="pk-thumbs" role="group" aria-label={t.gallery}>
           {pkg.images.map((src, i) => (
             <button key={src} type="button" className={i === photo ? "is-on" : ""} aria-pressed={i === photo} onClick={() => setPhoto(i)}>
@@ -52,6 +65,7 @@ export function PackageDetail({ pkg }: { pkg: SamplePackage }) {
                 <button type="button" aria-expanded={on} onClick={() => setOpen(on ? -1 : i)}>
                   <span>{t.day(i + 1)}</span>
                   <strong>{day.title}</strong>
+                  <i aria-hidden="true">{on ? "–" : "+"}</i>
                 </button>
                 {on && <p>{day.text}</p>}
               </li>
@@ -75,11 +89,15 @@ export function PackageDetail({ pkg }: { pkg: SamplePackage }) {
           <ul>{pkg.dates.map((d) => <li key={d.en}>{d[lang]}</li>)}</ul>
           <p className="pk-price">{t.from} {formatEuro(pkg.priceFrom)} {t.per}</p>
           <p className="pk-note">{t.priceNote}</p>
-          <a className="button-02 pk-cta" href={`/contact?package=${pkg.slug}&lang=${lang}`}>
-            <span className="inner">{t.request}</span>
-            <span className="circle" aria-hidden="true"><span>→</span></span>
-          </a>
         </section>
+      </div>
+
+      <div className={`pk-buybar${bar ? " is-on" : ""}`}>
+        <div>
+          <strong>{copy.title}</strong>
+          <span>{t.from} {formatEuro(pkg.priceFrom)} {t.per}</span>
+        </div>
+        <a className="pk-pill" href={contact}>{t.request}</a>
       </div>
     </article>
   );
