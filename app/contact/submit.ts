@@ -6,6 +6,7 @@ import {
   asksPickup, isLargeGroup, labelOf, labelsOf, wantsBoat, wantsTransfer, wantsWine,
 } from "./contactData";
 import type { ContactData, StepId } from "./contactData";
+import { packageLabel } from "../pacchetti/packages";
 
 export type ReviewSection = { step: StepId; title: string; rows: [string, string][] };
 
@@ -22,6 +23,7 @@ export function buildReviewSections(d: ContactData): ReviewSection[] {
   const rows = (pairs: [string, string][]) => pairs.filter(([, v]) => v && v.trim() !== "");
 
   out.push({ step: "interests", title: "Interested in", rows: rows([
+    ["Chosen package", packageLabel(d.packageSlug)],
     ["Interests", labelsOf(INTERESTS, d.interests)],
     ["Details", d.interests.includes("other") ? d.interestOther : ""],
     ["More than one winery", wantsWine(d) && d.interests.includes("wine") ? (d.multiWinery ? "Yes" : "No") : ""],
@@ -135,6 +137,7 @@ export function buildSummaryText(d: ContactData, sentAt = new Date()): string {
       ["Phone / WhatsApp", d.phone.trim()],
       ["Preferred reply", labelOf(REPLY_VIA, d.replyVia)],
       ["Time zone", d.timeZone],
+      ["Chosen package", packageLabel(d.packageSlug)],
       ["About", labelsOf(QUICK_TOPICS, d.quickTopics)],
       ["More than one winery", d.quickTopics.includes("wine") ? (d.multiWinery ? "Yes" : "No") : ""],
       ["Rough dates", d.quickDates.trim()],

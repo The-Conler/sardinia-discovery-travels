@@ -16,6 +16,9 @@ import { labelOf } from "./contactData";
 import { submitContactRequest } from "./submit";
 import { buildReviewTiles } from "./reviewTiles";
 import { BudgetSlider } from "./BudgetSlider";
+import { packageBySlug } from "../pacchetti/packages";
+import { PK } from "../pacchetti/copy";
+import { useSiteLang } from "../siteLang";
 
 const STORAGE_KEY = "sdt-contact-request-v1";
 
@@ -177,6 +180,18 @@ function scrollToTop() {
   else window.scrollTo(0, 0);
 }
 
+function PackageChosen({ slug }: { slug: string }) {
+  const lang = useSiteLang();
+  const pkg = packageBySlug(slug);
+  if (!pkg) return null;
+  return (
+    <label className="ct-package">
+      <span>{PK[lang].chosen}</span>
+      <input readOnly value={`${pkg[lang].title} (${PK[lang].example})`} />
+    </label>
+  );
+}
+
 /* ---------- the wizard ---------- */
 
 export function ContactWizard() {
@@ -239,6 +254,11 @@ export function ContactWizard() {
     if (restored.rentalCar === "yes") restored.rentalCar = "myself";
     if (!isLargeGroup(restored)) { restored.groupType = ""; restored.groupNotes = ""; }
     if (!wantsWine(restored)) restored.multiWinery = false;
+    const pkg = new URLSearchParams(window.location.search).get("package");
+    if (pkg && packageBySlug(pkg)) {
+      restored.packageSlug = pkg;
+      if (!restored.interests.includes("trip")) restored.interests = [...restored.interests, "trip"];
+    }
     setData(restored);
     setStep(restoredStep);
     setReady(true);
@@ -408,6 +428,7 @@ export function ContactWizard() {
           <div className="ct-intro-main">
             <h1 className="ct-title ct-title--xl" ref={headingRef} tabIndex={-1}>Plan your <br />Sardinia trip</h1>
             <p className="ct-sub">Answer a few questions and we can reply with everything you need in one message.</p>
+            {data.packageSlug && <PackageChosen slug={data.packageSlug} />}
             <div className="ct-intro-actions">
               <div className="ct-intro-choice">
                 <TealButton className="ct-start" onClick={startGuided}>
@@ -699,6 +720,7 @@ export function ContactWizard() {
       body = (
         <>
           {head("Here's your trip", "Check everything looks right, then send it to us.")}
+          {data.packageSlug && <PackageChosen slug={data.packageSlug} />}
           <div className="ct-bento">
             {buildReviewTiles(data).map((t) => (
               <section className={`ct-tile${t.wide ? " ct-tile--wide" : ""}`} key={t.step} aria-label={t.title}>
@@ -725,6 +747,7 @@ export function ContactWizard() {
       body = (
         <>
           {head("Send us a quick request", "Tell us who you are and what you have in mind. We reply with everything in one message.")}
+          {data.packageSlug && <PackageChosen slug={data.packageSlug} />}
           <div className="ct-row">
             <Field label="First name"><input value={data.firstName} onChange={(e) => set("firstName", e.target.value)} autoComplete="given-name" /></Field>
             <Field label="Last name"><input value={data.lastName} onChange={(e) => set("lastName", e.target.value)} autoComplete="family-name" /></Field>

@@ -68,6 +68,8 @@ export type ContactData = {
   timeZone: string;
   replyVia: string;
   heardFrom: string;
+  /** Slug of a sample or real package opened from /pacchetti. Empty when none. */
+  packageSlug: string;
 };
 
 export const emptyData: ContactData = {
@@ -82,6 +84,7 @@ export const emptyData: ContactData = {
   stayType: "", stayRoom: "", stayRoomsCount: "", stayBoard: "", stayRequest: "", stayAmenities: [],
   needs: [], celebration: "", needsDetail: "", budget: "", message: "",
   firstName: "", lastName: "", email: "", phone: "", country: "", timeZone: "", replyVia: "", heardFrom: "",
+  packageSlug: "",
 };
 
 export const INTERESTS: Opt[] = [
