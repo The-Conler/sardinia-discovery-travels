@@ -513,6 +513,12 @@
   .pk-buybar strong { display: block; font-size: 15px; }
   .pk-buybar span { color: var(--muted); font-size: 14px; }
   .pk-hero, .pk-dhero { min-height: calc(70 * var(--vh)); }
-  .pk-search.is-stuck { top: 72px; width: 100%; }
+  .pk-search.is-stuck {
+    top: 80px;
+    width: 100%;
+    height: auto;
+    padding: 8px 12px;
+  }
+  .pk-search.is-stuck .pk-filter-summary { font-size: 13px; }
   .pk-block, #pk-packages { scroll-margin-top: 140px; }
 }
