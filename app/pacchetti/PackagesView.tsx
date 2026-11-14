@@ -9,18 +9,23 @@ import type { DurationId, SamplePackage, ThemeId, ZoneId } from "./packages";
 import { useSiteLang } from "../siteLang";
 import { HIcon } from "../hotels/icons";
 
-const ZONE_CARD: Record<ZoneId, { src: string; focus: string; glow?: boolean; icon: "waves" | "arch" | "mountains" | "nuraghe" }> = {
-  nord: { src: "/destinations/north/nd-costa-smeralda.webp", focus: "center 34%", icon: "waves" },
-  sud: { src: "/destinations/south-sardinia.png", focus: "center 42%", glow: true, icon: "arch" },
-  est: { src: "/off-road/hero-supramonte-track.webp", focus: "center 40%", icon: "mountains" },
-  ovest: { src: "/destinations/west-sardinia.png", focus: "center 48%", icon: "waves" },
-  interno: { src: "/destinations/interlands.png", focus: "center 30%", glow: true, icon: "nuraghe" },
+const ZONE_CARD: Record<ZoneId, { src: string; focus: string; icon: "waves" | "arch" | "mountains" | "cliff" | "nuraghe"; shape: string }> = {
+  nord: { src: "/destinations/north/nd-costa-smeralda.webp", focus: "center 34%", icon: "waves", shape: "M18 108C8 62 62 18 108 64c28 28 8 78-28 74-22-2-48-6-62-30z" },
+  sud: { src: "/destinations/south-sardinia.png", focus: "center 42%", icon: "arch", shape: "M118 28c48-8 78 48 42 92-28 34-86 18-98-22-8-28 18-62 56-70z" },
+  est: { src: "/off-road/hero-supramonte-track.webp", focus: "center 40%", icon: "mountains", shape: "M12 96C28 42 96 16 146 72c28 32-6 86-58 78C42 142-2 128 12 96z" },
+  ovest: { src: "/destinations/west-sardinia.png", focus: "center 48%", icon: "cliff", shape: "M46 36c52-28 118 8 102 68-14 48-92 62-124 18C8 90 14 52 46 36z" },
+  interno: { src: "/destinations/interlands.png", focus: "center 30%", icon: "nuraghe", shape: "M86 22c52 8 74 62 40 104-32 40-96 8-104-40-6-34 22-72 64-64z" },
 };
 
-function zoneFrom(id: ZoneId) {
-  const prices = PACKAGES.filter((p) => p.zone === id).map((p) => p.priceFrom);
-  return prices.length ? Math.min(...prices) : null;
-}
+/* Destination one-liners already on the site. English only; the Italian
+   packages view uses the same sentences because no Italian version exists. */
+const ZONE_LINE: Record<ZoneId, string> = {
+  nord: "Granite coastlines, refined towns, and luminous bays.",
+  sud: "Soft beaches, ancient routes, and sun-warmed villages.",
+  est: "Blue coves, mountain trails, and dramatic sea roads.",
+  ovest: "Wild cliffs, surf horizons, and untouched shores.",
+  interno: "Mountain villages, vineyards, and slow inland rituals.",
+};
 
 export function PackagesView() {
   const lang = useSiteLang();
@@ -189,9 +194,9 @@ export function PackagesView() {
       <form className="pk-hero-bar" onSubmit={(event) => { event.preventDefault(); explorePackages(event); }}>
         <HeroField icon="calendar" label={t.duration} value={duration} onChange={setDuration} valueLabel={duration === "all" ? t.anyLength : DURATIONS.find((d) => d.id === duration)?.[lang] ?? t.anyLength} options={[{ id: "all" as const, label: t.anyLength }, ...DURATIONS.map((d) => ({ id: d.id, label: d[lang] }))]} />
         <HeroField icon="pin" label={t.zone} value={zone} onChange={setZone} valueLabel={zone === "all" ? t.allAreas : ZONES.find((z) => z.id === zone)?.[lang] ?? t.allAreas} options={[{ id: "all" as const, label: t.allAreas }, ...ZONES.map((z) => ({ id: z.id, label: z[lang] }))]} />
-        <HeroField icon="compass" label={t.theme} value={theme} onChange={setTheme} valueLabel={theme === "all" ? t.allThemes : THEMES.find((th) => th.id === theme)?.[lang] ?? t.allThemes} options={[{ id: "all" as const, label: t.allThemes }, ...THEMES.map((th) => ({ id: th.id, label: th[lang] }))]} />
+        <HeroField icon="mountain" label={t.theme} value={theme} onChange={setTheme} valueLabel={theme === "all" ? t.allThemes : THEMES.find((th) => th.id === theme)?.[lang] ?? t.allThemes} options={[{ id: "all" as const, label: t.allThemes }, ...THEMES.map((th) => ({ id: th.id, label: th[lang] }))]} />
         <button type="submit" className="pk-hero-search" aria-label={t.heroCta}>
-          <HIcon name="search" size={18} />
+          <HIcon name="search" size={20} />
         </button>
       </form>
     </div>
@@ -202,8 +207,8 @@ export function PackagesView() {
     <div className="pk-page" ref={root}>
       <section className="pk-hero pk-hero-home">
         <img src={hero} alt="" />
-        <div className="pk-hero-halo" aria-hidden="true" />
         <div className="pk-shade" />
+        <div className="pk-hero-halo" aria-hidden="true" />
         <div className="pk-hero-copy">
           <p className="pk-hero-kicker">
             <span>{t.kicker}</span>
@@ -278,19 +283,32 @@ export function PackagesView() {
           <div className="pk-areas-track" role="list">
             {ZONES.map((z) => {
               const card = ZONE_CARD[z.id];
-              const from = zoneFrom(z.id);
               return (
                 <button key={z.id} type="button" className={`pk-area pk-area--${z.id}${zone === z.id ? " is-on" : ""}`} role="listitem" onClick={() => pickZone(z.id)}>
-                  <span className={`pk-area-photo${card.glow ? " has-glow" : ""}`}>
+                  <span className="pk-area-photo">
                     <img src={card.src} alt="" style={{ objectPosition: card.focus }} />
                   </span>
-                  <svg className="pk-area-wave" viewBox="0 0 300 56" preserveAspectRatio="none" aria-hidden="true">
-                    <path d="M0 36C34 10 62 48 104 26 146 4 176 46 220 24 258 6 280 32 300 20V56H0Z" />
+                  <svg className="pk-area-shape" viewBox="0 0 200 160" aria-hidden="true">
+                    <defs>
+                      <linearGradient id={`pk-tint-${z.id}`} x1="0" y1="1" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#f3e6d0" stopOpacity="0.2" />
+                        <stop offset="72%" stopColor="#f3e6d0" stopOpacity="0" />
+                      </linearGradient>
+                      <radialGradient id={`pk-mask-${z.id}`} cx="50%" cy="55%" r="55%">
+                        <stop offset="55%" stopColor="#fff" />
+                        <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+                      </radialGradient>
+                      <mask id={`pk-soft-${z.id}`}>
+                        <rect width="200" height="160" fill={`url(#pk-mask-${z.id})`} />
+                      </mask>
+                    </defs>
+                    <path d={card.shape} fill={`url(#pk-tint-${z.id})`} mask={`url(#pk-soft-${z.id})`} />
                   </svg>
+                  <span className="pk-area-shade" aria-hidden="true" />
                   <span className="pk-area-body">
                     <ZoneIcon name={card.icon} />
                     <strong>{z[lang]}</strong>
-                    {from != null && <em>{t.from} {formatEuro(from)}</em>}
+                    <em>{ZONE_LINE[z.id]}</em>
                     <span className="pk-area-go" aria-hidden="true">
                       <span className="pk-area-go-rail">
                         <span><HIcon name="arrowRight" size={14} /></span>
@@ -378,7 +396,7 @@ const CARD_FOCUS: Record<string, string> = {
   "esempio-nuraghi": "center 30%",
 };
 
-function ZoneIcon({ name }: { name: "waves" | "arch" | "mountains" | "nuraghe" }) {
+function ZoneIcon({ name }: { name: "waves" | "arch" | "mountains" | "cliff" | "nuraghe" }) {
   const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.4, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   return (
     <svg className="pk-area-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -390,6 +408,12 @@ function ZoneIcon({ name }: { name: "waves" | "arch" | "mountains" | "nuraghe" }
       )}
       {name === "arch" && <path d="M4 20V11a8 8 0 0 1 16 0v9M4 20h16" {...common} />}
       {name === "mountains" && <path d="M3 19 9 8l4 6 2.5-3.5L21 19H3z" {...common} />}
+      {name === "cliff" && (
+        <>
+          <path d="M14 17 18 6l3 2v9" {...common} />
+          <path d="M3 17c1.2 1 2.2 1.4 3.4 1.4C8.6 18.4 8.6 16.4 11 16.4s2.4 2 4.6 2" {...common} />
+        </>
+      )}
       {name === "nuraghe" && (
         <>
           <path d="M7 20V12a5 5 0 0 1 10 0v8M6 20h12" {...common} />
@@ -463,7 +487,7 @@ function PackageCard({ pkg, lang }: { pkg: SamplePackage; lang: "it" | "en" }) {
   );
 }
 
-function HeroField<T extends string>({ icon, label, value, valueLabel, options, onChange }: { icon: "calendar" | "pin" | "compass"; label: string; value: T; valueLabel: string; options: { id: T; label: string }[]; onChange: (v: T) => void }) {
+function HeroField<T extends string>({ icon, label, value, valueLabel, options, onChange }: { icon: "calendar" | "pin" | "mountain"; label: string; value: T; valueLabel: string; options: { id: T; label: string }[]; onChange: (v: T) => void }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -477,7 +501,7 @@ function HeroField<T extends string>({ icon, label, value, valueLabel, options, 
   return (
     <div className={`pk-hero-field${open ? " is-open" : ""}`} ref={ref}>
       <button type="button" aria-expanded={open} onClick={() => setOpen((current) => !current)}>
-        <HIcon name={icon} size={18} />
+        <HIcon name={icon} size={23} />
         <span>
           <small>{label}</small>
           <strong>{valueLabel}</strong>
