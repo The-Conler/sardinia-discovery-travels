@@ -647,6 +647,9 @@ export function HomeView() {
             </a>
 
             <div className="nav-links">
+              <a className="nav-link nav-link-static" href="/pacchetti">
+                {selectedLanguage.code === "it" ? "Pacchetti" : "Packages"}
+              </a>
               <NavButton
                 label="Explore"
                 active={activeDropdown === "explore"}
@@ -662,9 +665,6 @@ export function HomeView() {
                 active={activeDropdown === "destinations"}
                 onOpen={() => openDropdown("destinations")}
               />
-              <a className="nav-link nav-link-static" href="/pacchetti">
-                {selectedLanguage.code === "it" ? "Pacchetti" : "Packages"}
-              </a>
               <a className="nav-link nav-link-static" href="/about">
                 About
               </a>
@@ -869,10 +869,10 @@ export function HomeView() {
               <nav className="site-menu-links" aria-label="Expanded navigation">
                 {(
                   [
+                    { label: selectedLanguage.code === "it" ? "Pacchetti" : "Packages", href: "/pacchetti" },
                     { label: "Home", href: "#" },
                     { label: "Explore", href: "#explore" },
                     { label: "Experiences", href: "#experiences" },
-                    { label: selectedLanguage.code === "it" ? "Pacchetti" : "Packages", href: "/pacchetti" },
                     { label: "About", href: "/about" },
                     { label: "Contact", href: "/contact" },
                     { label: "Partner", href: `/partner?lang=${selectedLanguage.code === "it" ? "it" : "en"}` },
