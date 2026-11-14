@@ -252,13 +252,13 @@ export function PackagesView() {
         </div>
       </section>
 
-      <section className="pk-block" id="pk-packages" data-reveal>
+      <section className="pk-block ht-page pk-reco" id="pk-packages" data-reveal>
         <h2>{t.recommended}</h2>
-        {list.length === 0 ? <p className="pk-empty">{t.empty}</p> : (
-          <div className="pk-grid">
-            {list.map((p) => <PackageCard key={p.slug} pkg={p} lang={lang} />)}
+        <div className="pk-reco-inner">
+          <div className="pk-reco-track" role="list">
+            {(list.length >= 4 ? list : PACKAGES).map((p) => <PackageCard key={p.slug} pkg={p} lang={lang} />)}
           </div>
-        )}
+        </div>
       </section>
 
       <section className="pk-block pk-block--lift" data-reveal>
@@ -273,33 +273,6 @@ export function PackagesView() {
         </div>
       </section>
     </div>
-  );
-}
-
-function SiteButton({ href, children }: { href: string; children: string }) {
-  return (
-    <a className="button-02 button-02--teal" href={href}>
-      <span className="inner">{children}</span>
-      <span className="circle" aria-hidden="true"><span>→</span></span>
-    </a>
-  );
-}
-
-function ArrowLink({ href, children }: { href: string; children: string }) {
-  return (
-    <a className="arrow_link white" href={href}>
-      <span>
-        {children}
-        <svg xmlns="http://www.w3.org/2000/svg" width="50.987" height="14.208" viewBox="0 0 50.987 14.208" aria-hidden="true">
-          <g transform="translate(-1143 -7586.331)">
-            <g transform="translate(1164.072 7575.435)">
-              <path d="M7.5,18H57.073" transform="translate(-28.573)" fill="none" stroke="#fff" strokeLinejoin="round" strokeWidth="2" />
-              <path d="M18,7.5l6.4,6.4-6.4,6.4" transform="translate(4.103 4.103)" fill="none" stroke="#fff" strokeWidth="2" />
-            </g>
-          </g>
-        </svg>
-      </span>
-    </a>
   );
 }
 
@@ -381,24 +354,29 @@ function DealCard({ pkg, lang, saved, onSave }: { pkg: SamplePackage; lang: "it"
 function PackageCard({ pkg, lang }: { pkg: SamplePackage; lang: "it" | "en" }) {
   const t = PK[lang];
   const copy = pkg[lang];
-  const zone = ZONES.find((z) => z.id === pkg.zone)?.[lang] ?? "";
-  const theme = THEMES.find((th) => th.id === pkg.theme)?.[lang] ?? "";
   return (
-    <article className="pk-card">
-      <a className="pk-card-photo service-story-card" href={`/pacchetti/${pkg.slug}`}>
-        <img src={pkg.images[0]} alt="" />
-        <span className="pk-badge">{t.example}</span>
-        <span className="pk-nights">{t.nights(pkg.days, pkg.nights)}</span>
-      </a>
-      <div className="pk-card-body">
-        <h3>{copy.title}</h3>
-        <p className="pk-meta">{zone} · {theme}</p>
-        <p className="pk-price">{t.from} {formatEuro(pkg.priceFrom)}</p>
-        <p className="pk-per">{t.per}</p>
-        <div className="pk-actions">
-          <SiteButton href={`/pacchetti/${pkg.slug}`}>{t.discover}</SiteButton>
-          <ArrowLink href={`/contact?package=${pkg.slug}&lang=${lang}`}>{t.request}</ArrowLink>
-        </div>
+    <article className="pk-ticket" role="listitem">
+      <img src={pkg.images[0]} alt="" style={{ objectPosition: CARD_FOCUS[pkg.slug] ?? "center" }} />
+      <div className="pk-ticket-shade" aria-hidden="true" />
+      <span className="pk-badge">{t.example}</span>
+      <h3>{copy.title}</h3>
+      <div className="pk-ticket-lower">
+        <p className="pk-ticket-meta">{t.nights(pkg.days, pkg.nights)} · {t.from}</p>
+        <p className="pk-ticket-price">{euroMark(pkg.priceFrom)}</p>
+        <p className="pk-ticket-per">{t.per}</p>
+        <a className="arrow_link pk-ticket-cta" href={`/pacchetti/${pkg.slug}`}>
+          <span>
+            {t.discover}
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="10" viewBox="0 0 50.987 14.208" aria-hidden="true">
+              <g transform="translate(-1143 -7586.331)">
+                <g transform="translate(1164.072 7575.435)">
+                  <path d="M7.5,18H57.073" transform="translate(-28.573)" fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="2" />
+                  <path d="M18,7.5l6.4,6.4-6.4,6.4" transform="translate(4.103 4.103)" fill="none" stroke="currentColor" strokeWidth="2" />
+                </g>
+              </g>
+            </svg>
+          </span>
+        </a>
       </div>
     </article>
   );
