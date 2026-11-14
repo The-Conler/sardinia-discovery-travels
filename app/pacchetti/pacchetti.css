@@ -597,9 +597,13 @@
   grid-auto-flow: column;
   grid-auto-columns: calc((100% - 3 * 22 * var(--pu)) / 4);
   gap: calc(22 * var(--pu));
+  box-sizing: content-box;
   width: 100%;
+  margin-inline: calc(-16 * var(--pu));
+  padding: calc(18 * var(--pu)) calc(16 * var(--pu));
   overflow-x: hidden;
   scroll-snap-type: x mandatory;
+  scroll-padding-inline: calc(16 * var(--pu));
   scrollbar-width: none;
 }
 .pk-reco-track::-webkit-scrollbar { display: none; }
@@ -612,6 +616,8 @@
   background: #1c1a18;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
   scroll-snap-align: start;
+  transform-origin: center center;
+  transition: transform 0.35s ease;
   -webkit-mask-image:
     radial-gradient(circle at left 55%, transparent var(--notch), #000 calc(var(--notch) + 0.6px)),
     radial-gradient(circle at right 55%, transparent var(--notch), #000 calc(var(--notch) + 0.6px));
@@ -625,6 +631,7 @@
   mask-repeat: no-repeat;
   mask-size: 100% 100%;
 }
+.pk-ticket:hover { z-index: 3; transform: scale(1.03); }
 .pk-ticket img {
   position: absolute;
   inset: 0;
@@ -632,12 +639,9 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.35s ease, filter 0.35s ease;
+  transition: filter 0.35s ease;
 }
-.pk-ticket:hover img {
-  transform: scale(1.04);
-  filter: brightness(1.08);
-}
+.pk-ticket:hover img { filter: brightness(1.08); }
 .pk-ticket-shade {
   position: absolute;
   inset: 0;
@@ -744,6 +748,7 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .pk-ticket, .pk-ticket:hover { transition: none; transform: none; }
   .pk-ticket img,
   .pk-ticket:hover img,
   .pk-ticket-arrow,
