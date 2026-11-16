@@ -1321,7 +1321,8 @@ en:{
   or_drv_title:'Who drives', or_drv_provider:'The vehicle is driven by the provider / guide', or_drv_client:'The vehicle is driven by the client (self-drive)',
   or_exp:'Experience required', or_exp_none:'No specific experience', or_exp_prev:'Previous experience', or_exp_adv:'Advanced experience',
   sc_title:'Dive profile', sc_depth:'Dive depth', sc_pressure:'Pressure', sc_bed:'Seabed type',
-  sp_unit:'Unit', sp_unit_hint:'Half day 2-4 hours, full day 5-8 hours',
+  sp_unit:'Unit', sp_u_ora:'Per hour', sp_u_mezza:'Half day (2-4 hours)', sp_u_full:'Full day (5-8 hours)',
+  sp_hand:'Handover', o_hand_checkin:'Self check-in', o_hand_staff:'Handover with staff', o_hand_guided:'Guided',
   bg_move:'01 Movement and body awareness', bg_mind:'02 Mindfulness and relaxation', bg_treat:'03 Treatments and physical wellbeing', bg_retreat:'04 Retreats and holistic experiences',
   esp_title:'What is your speciality?', esp_sub:'Select one.', esp_another:'Offer another specialty too? At the end of this form you can add a new request.', spec_other:'Describe it briefly',
   et_title:'What type of service is it?', et_sub:'You can select more than one.', et_combined:'By selecting more than one type you will be offering a combined experience.',
@@ -1500,7 +1501,8 @@ it:{
   or_drv_title:'Chi guida', or_drv_provider:'Il veicolo viene guidato dal fornitore / guida', or_drv_client:'Il veicolo viene guidato dal cliente (guida autonoma)',
   or_exp:'Esperienza richiesta', or_exp_none:'Nessuna esperienza specifica', or_exp_prev:'Precedente esperienza', or_exp_adv:'Esperienza avanzata',
   sc_title:'Profilo di immersione', sc_depth:'Profondità di immersione', sc_pressure:'Pressione', sc_bed:'Tipologia di fondale',
-  sp_unit:'Unità', sp_unit_hint:'mezza giornata 2-4 ore, full day 5-8 ore',
+  sp_unit:'Unità', sp_u_ora:'All’ora', sp_u_mezza:'Mezza giornata (2-4 ore)', sp_u_full:'Giornata intera (5-8 ore)',
+  sp_hand:'Consegna', o_hand_checkin:'Self check-in', o_hand_staff:'Consegna con personale', o_hand_guided:'Guidato',
   bg_move:'01 Movimento & consapevolezza corporea', bg_mind:'02 Mindfulness & rilassamento', bg_treat:'03 Trattamenti & benessere fisico', bg_retreat:'04 Ritiri & esperienze olistiche',
   esp_title:'Qual è la tua specializzazione?', esp_sub:'Seleziona un solo tasto.', esp_another:'Offri anche un’altra specialità? Alla fine di questo modulo potrai aggiungere una nuova richiesta.', spec_other:'Descrivila brevemente',
   et_title:'Che tipo di servizio è?', et_sub:'Seleziona più di un tasto.', et_combined:'Selezionando più tipologie proporrai un’esperienza combinata.',
@@ -1646,7 +1648,7 @@ const newExp = () => ({
   mode:'', incl:{}, equipProvided:false, bring:[], bringNote:'',
   difficulty:'', prevExp:false, limits:'', safety:'', sq:{}, spaTreatments:[],
   period:'', months:[], days:[], bands:[], slots:[], notice:'', manual:false,
-  priceMode:'', priceUnit:'', price:{ priv:{base:'',incl:1,extra:'',min:''}, shared:{base:'',incl:1,extra:'',min:''} },
+  priceMode:'', priceUnit:'', handover:'', price:{ priv:{base:'',incl:1,extra:'',min:''}, shared:{base:'',incl:1,extra:'',min:''} },
   cancel:'', penalties:'', noshow:'', weather:'', exclusive:false, billing:'', termsAccepted:false, termsAcceptedAt:'', photos:[]
 });
 const newConv = () => ({
@@ -2414,10 +2416,13 @@ const EV = {
   g3: i => { const e=E(i); if(e.min < 2) e.min = 2; return split(head(t('g3_title'), t('g3_sub'), ecount(i)), `
     ${group(t('dur'), `<div class="ct-steppers">${stepper(P(i,'durH'), t('hours'), t('durD'), 1, 12)}</div>`)}
     ${group(t('parts'), `<div class="ct-steppers">${stepper(P(i,'min'), t('minP'), t('minPD'), 2, e.max)}${stepper(P(i,'max'), t('maxP'), t('maxPD'), Math.max(2, e.min), 200)}${stepper(P(i,'minAge'), t('minAge'), t('minAgeD'), 0, 18)}</div>`)}`); },
-  g4: i => { const e=E(i); const access = isSportRental(e) ? [...CONFIG.access, 'acc_checkin', 'acc_consegna'] : CONFIG.access;
+  g4: i => { const e=E(i);
+    if(isSportRental(e)) return split(head(t('g4_title'), t('g4_sub'), ecount(i)), `
+    ${group(t('exp_langs'), pills(P(i,'langs'), CONFIG.expLangs, {multi:true}), {multi:true})}
+    ${group(t('sp_hand'), pills(P(i,'handover'), ['hand_checkin','hand_staff','hand_guided']))}`);
     return split(head(t('g4_title'), t('g4_sub'), ecount(i)), `
     ${group(t('exp_langs'), pills(P(i,'langs'), CONFIG.expLangs, {multi:true}), {multi:true})}
-    ${group(t('access'), pills(P(i,'access'), access, {multi:true}), {req:false, multi:true, sub:t('accessD')})}`); },
+    ${group(t('access'), pills(P(i,'access'), CONFIG.access, {multi:true}), {req:false, multi:true, sub:t('accessD')})}`); },
   mode: i => split(head(t('md_title'), t('md_sub'), ecount(i)), opts(P(i,'mode'), CONFIG.modes, {sub:c=>t('md_'+c+'D')})),
   incl: i => { const e=E(i); normalizeIncl(e); return split(head(t('in_title'), t('in_sub'), ecount(i)), `
     <p class="ct-multi-hint">${esc(t('et_sub'))}</p>
@@ -2458,7 +2463,7 @@ const EV = {
         ${money(P(i,`price.${b}.base`), t('pr_art_persona'), {hint:t('pr_art_min')})}
       </div>`).join('')}`);
     }
-    const unit = isSportRental(e) ? `${group(t('sp_unit'), pills(P(i,'priceUnit'), ['pm_ora','pm_mezza','pm_giornata']))}<p class="ct-field-hint">${esc(t('sp_unit_hint'))}</p>` : '';
+    const unit = isSportRental(e) ? group(t('sp_unit'), pills(P(i,'priceUnit'), ['u_ora','u_mezza','u_full'], {lab:c=>t('sp_'+c)})) : '';
     return split(head(t('pr_title'), t('pr_sub'), ecount(i)), `${vat}
     ${group(t('pr_mode'), pills(P(i,'priceMode'), priceModesFor(e)))}
     ${unit}
@@ -2504,7 +2509,7 @@ const EOK = {
   g1: e => filled(e.name,3) && e.desc.trim().length >= DESC_MIN,
   g2: e => placeOk(e),
   g3: e => e.durH > 0 && e.min >= 2 && e.max >= e.min,
-  g4: e => e.langs.length > 0,
+  g4: e => e.langs.length > 0 && (!isSportRental(e) || !!e.handover),
   mode: e => !!e.mode,
   incl: e => includesFor(e).every(c => inclMode(e,c) !== 'sup' || pos(inclPrice(e,c))),
   equip: e => e.sector === 'artigianato' ? true : (e.equipProvided || filled(e.bringNote, 3)),
@@ -2629,9 +2634,9 @@ function screens(){
         : isSportRental(e)
         ? ['sector','spec','type','g2','price','g4','avail','slots','photos']
         : e.sector === 'natura'
-        ? ['sector','spec','g1','g2','g3','g4','mode','slots','price','incl','equip','reqs','scuba','sq','avail','cond','photos']
+        ? ['sector','spec','g1','g2','g4','g3','mode','slots','price','incl','equip','reqs','scuba','sq','avail','cond','photos']
         : e.sector === 'sport'
-        ? ['sector','spec','type','g1','g2','g3','g4','mode','slots','price','incl','equip','reqs','avail','cond','photos']
+        ? ['sector','spec','type','g1','g2','g3','g4','mode','slots','price','incl','equip','avail','cond','photos']
         : (e.sector === 'benessere' || e.sector === 'altro')
         ? ['sector','spec','g1','g2','g3','g4','mode','price','incl','equip','reqs','avail','slots','cond','photos']
         : ['sector','spec','type','g1','g2','g3','g4','mode','price','incl','equip','reqs','sq','avail','slots','cond','photos'];
