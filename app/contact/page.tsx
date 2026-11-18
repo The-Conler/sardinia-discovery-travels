@@ -8,7 +8,7 @@ import { ContactForm } from "./ContactForm";
 export const metadata: Metadata = pageMeta({
   title: "Contact | Sardinia Discovery Travels",
   description:
-    "Tell us what you'd like to do in Sardinia, when you're coming and who's in your group. We reply with everything in one message.",
+    "Book an appointment or send a note to Sardinia Discovery Travels.",
   path: "/contact",
 });
 
