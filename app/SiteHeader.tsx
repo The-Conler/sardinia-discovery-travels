@@ -256,6 +256,9 @@ export function SiteHeader() {
             >
               <span className="menu-trigger-label"><span className="menu-trigger-roll"><span>Partner</span><span aria-hidden="true">Partner</span></span></span>
             </a>
+            <a className="partner-pill" href="/contact">
+              <span className="menu-trigger-label"><span className="menu-trigger-roll"><span>{selectedLanguage.code === "it" ? "Prenota un appuntamento" : "Book an appointment"}</span><span aria-hidden="true">{selectedLanguage.code === "it" ? "Prenota un appuntamento" : "Book an appointment"}</span></span></span>
+            </a>
             <div
               ref={languageMenu.ref}
               className={`language-switcher ${isLanguageOpen ? "is-open" : ""}`}
@@ -427,13 +430,14 @@ export function SiteHeader() {
                   { label: "About", href: "/about" },
                   { label: "Contact", href: "/contact" },
                   { label: "Partner", href: `/partner?lang=${selectedLanguage.code === "it" ? "it" : "en"}` },
+                  { label: selectedLanguage.code === "it" ? "Prenota un appuntamento" : "Book an appointment", href: "/contact", pill: true },
                 ] as const
               ).map((item, index) => (
                 <a
                   href={item.href}
                   key={item.label}
                   data-drawer-item=""
-                    className={item.label === "Partner" ? "site-menu-link-partner" : undefined}
+                    className={item.label === "Partner" || ("pill" in item && item.pill) ? "site-menu-link-partner" : undefined}
                     style={{ "--item-index": index } as CSSProperties}
                   onClick={closeSiteMenu}
                 >

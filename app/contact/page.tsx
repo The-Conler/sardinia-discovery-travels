@@ -3,7 +3,7 @@ import { pageMeta } from "../seo";
 import { SiteHeader } from "../SiteHeader";
 import { SiteFooter } from "../SiteFooter";
 import "./contact.css";
-import { ContactWizard } from "./ContactWizard";
+import { ContactForm } from "./ContactForm";
 
 export const metadata: Metadata = pageMeta({
   title: "Contact | Sardinia Discovery Travels",
@@ -18,7 +18,7 @@ export default function ContactPage() {
       <SiteHeader />
       <div id="smooth-wrapper"><div id="smooth-content">
         <main className="ct-page">
-          <ContactWizard />
+          <ContactForm />
         </main>
         <SiteFooter />
       </div></div>

@@ -95,6 +95,7 @@
 .ct-field-label em{font-style:normal;font-weight:400;color:var(--ct-muted)}
 .ct-field-hint{margin-top:-8px;font-size:var(--t-hint);color:var(--ct-muted)}
 .ct-field input,.ct-field select{height:60px}
+.ct-field input[type=file]{height:auto;min-height:60px;padding:16px 24px}
 .ct-field input,.ct-field select,.ct-field textarea{width:100%;box-sizing:border-box;padding:0 24px;border-radius:var(--ct-radius);border:1.5px solid transparent;background:var(--ct-fill);color:var(--ct-cream);font:inherit;font-size:var(--t-field);color-scheme:dark;transition:border-color .2s var(--ct-ease),background .2s var(--ct-ease),box-shadow .2s var(--ct-ease)}
 .ct-field textarea{min-height:144px;padding:16px 24px;line-height:1.5;resize:vertical}
 .ct-field input::placeholder,.ct-field textarea::placeholder{color:rgba(248,244,238,.38)}
