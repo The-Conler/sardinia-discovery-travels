@@ -1797,6 +1797,10 @@ body:has(.site-menu-overlay.is-open) .floating-actions {
 }
 
 .trip-field-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
   min-height: 42px;
   padding: 0 14px;
   color: rgba(248, 244, 238, 0.76);
@@ -1813,6 +1817,12 @@ body:has(.site-menu-overlay.is-open) .floating-actions {
     transform 320ms var(--ease-luxury);
 }
 
+.trip-field-option small { font-size: 12px; font-weight: 500; color: rgba(248, 244, 238, 0.62); }
+.trip-wine { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; padding: 12px 14px; border-radius: 18px; background: rgba(31, 29, 28, 0.45); }
+.trip-wine p { margin: 0; font-size: 14px; line-height: 1.4; }
+.trip-wine label { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+.trip-wine strong, .trip-wine small { display: block; }
+.trip-wine small { font-size: 12px; color: rgba(248, 244, 238, 0.7); }
 .trip-field-option:hover,
 .trip-field-option:focus-visible,
 .trip-field-option.is-selected {

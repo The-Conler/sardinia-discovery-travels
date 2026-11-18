@@ -8,7 +8,7 @@ import {
   AIRPORTS, ALL_STEPS, ARRIVAL_METHODS, BOAT_STYLES, BOAT_TYPES, CAR_SEATS, CAR_SIZES, CAR_TYPES,
   CELEBRATIONS, COUNTRY_SUGGESTIONS, DURATIONS, DURATIONS_OTHER, HEARD_FROM, INTERESTS, LOCATIONS, NEEDS,
   GROUP_TYPES, PLACE_SUGGESTIONS, PORTS, QUICK_TOPICS, RENTAL_CAR, REPLY_VIA, STAY_AMENITIES, STAY_BOARD, STAY_ROOMS,
-  STAY_ROOMS_COUNT, STAY_TYPES, SWIMMING, TRANSFER_ITEMS, TRANSFER_TRIPS, WINE_MULTI_COPY, YES_NO,
+  STAY_ROOMS_COUNT, STAY_TYPES, SWIMMING, TRANSFER_ITEMS, TRANSFER_TRIPS, WINE_CARD_COPY, WINE_MULTI_COPY, YES_NO,
   activeSteps, asksPickup, emptyData, isEmail, isLargeGroup, stepValid, wantsBoat, wantsTransfer, wantsWine,
 } from "./contactData";
 import type { ContactData, Opt, StepId } from "./contactData";
@@ -180,6 +180,15 @@ function scrollToTop() {
   else window.scrollTo(0, 0);
 }
 
+function showWine(opt: Opt, lang: string): Opt {
+  if (opt.value !== "wine") return opt;
+  const copy = WINE_CARD_COPY[lang === "it" ? "it" : "en"];
+  return { ...opt, label: copy.label, hint: opt.hint ? copy.hint : undefined };
+}
+function wineName(value: string, lang: string) {
+  return value === "wine" ? WINE_CARD_COPY[lang === "it" ? "it" : "en"].label : "";
+}
+
 function PackageChosen({ slug }: { slug: string }) {
   const lang = useSiteLang();
   const pkg = packageBySlug(slug);
@@ -195,6 +204,7 @@ function PackageChosen({ slug }: { slug: string }) {
 /* ---------- the wizard ---------- */
 
 export function ContactWizard() {
+  const lang = useSiteLang();
   const [data, setData] = useState<ContactData>(emptyData);
   const [step, setStep] = useState<StepId>("intro");
   const [editing, setEditing] = useState(false);
@@ -467,7 +477,7 @@ export function ContactWizard() {
       body = (
         <>
           {head("What are you interested in?")}
-          <MultiChoice legend="Choose all that apply" options={INTERESTS} values={data.interests} onToggle={toggleWineList("interests")} layout="photos" />
+          <MultiChoice legend="Choose all that apply" options={INTERESTS.map((opt) => showWine(opt, lang))} values={data.interests} onToggle={toggleWineList("interests")} layout="photos" />
           {data.interests.includes("wine") && (
             <Toggle label={WINE_MULTI_COPY.en.label} sub={WINE_MULTI_COPY.en.hint} on={data.multiWinery} onChange={(v) => set("multiWinery", v)} />
           )}
@@ -758,7 +768,7 @@ export function ContactWizard() {
           </div>
           {data.email && !isEmail(data.email) && <p className="ct-error" role="alert">Please check your email address.</p>}
           <Choice legend="How should we reply?" options={REPLY_VIA} value={data.replyVia} onChange={(v) => set("replyVia", v)} layout="pills" />
-          <MultiChoice legend="What is it about?" sub="Optional" options={QUICK_TOPICS} values={data.quickTopics} onToggle={toggleWineList("quickTopics")} layout="pills" />
+          <MultiChoice legend="What is it about?" sub="Optional" options={QUICK_TOPICS.map((opt) => showWine(opt, lang))} values={data.quickTopics} onToggle={toggleWineList("quickTopics")} layout="pills" />
           {data.quickTopics.includes("wine") && (
             <Toggle label={WINE_MULTI_COPY.en.label} sub={WINE_MULTI_COPY.en.hint} on={data.multiWinery} onChange={(v) => set("multiWinery", v)} />
           )}
@@ -783,14 +793,14 @@ export function ContactWizard() {
         const fullName = [firstNameOnly(sd.firstName), last.charAt(0).toLocaleUpperCase() + last.slice(1)].filter(Boolean).join(" ");
         if (fullName) rows.push({ icon: "user", label: "Name", value: fullName });
         if (sd.mode === "quick") {
-          const topics = sd.quickTopics.map((v) => labelOf(QUICK_TOPICS, v));
+          const topics = sd.quickTopics.map((v) => wineName(v, lang) || labelOf(QUICK_TOPICS, v));
           if (topics.length) rows.push({ icon: "compass", label: "About", value: topics.join(", ") });
           if (cleanText(sd.quickDates)) rows.push({ icon: "calendar", label: "Dates", value: cleanText(sd.quickDates) });
           if (sd.quickPeople > 0) rows.push({ icon: "users", label: "Group", value: `${sd.quickPeople} ${sd.quickPeople === 1 ? "person" : "people"}` });
         } else {
           const tiles = buildReviewTiles(sd);
           const pick = (id: StepId) => tiles.find((t) => t.step === id)?.headline ?? "";
-          const what = sd.interests.map((v) => labelOf(INTERESTS, v));
+          const what = sd.interests.map((v) => wineName(v, lang) || labelOf(INTERESTS, v));
           if (what.length) rows.push({ icon: "compass", label: "Interested in", value: what.join(", ") });
           if (pick("dates")) rows.push({ icon: "calendar", label: "Dates", value: pick("dates") });
           if (pick("guests")) rows.push({ icon: "users", label: "Group", value: pick("guests") });

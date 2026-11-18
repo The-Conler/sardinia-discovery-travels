@@ -89,7 +89,7 @@ export const emptyData: ContactData = {
 
 export const INTERESTS: Opt[] = [
   { value: "boat", label: "Boat tour", icon: "sailboat", hint: "A day on the water", image: "/contact/card-boat.webp" },
-  { value: "wine", label: "Wine tour", icon: "wine", hint: "Tastings at local wineries", image: "/destinations/north/ns-wine.webp" },
+  { value: "wine", label: "Food & Wine Experiences", icon: "wine", hint: "Cooking class, wine tours, cheese tasting", image: "/destinations/north/ns-wine.webp" },
   { value: "transfer", label: "Private transfer", icon: "car", hint: "Airport, port or hotel rides", image: "/contact/card-transfer.webp" },
   { value: "trip", label: "Destination / multi-day trip", icon: "map", hint: "Several days around the island", image: "/contact/card-trip.webp" },
   { value: "other", label: "Something else", icon: "message", hint: "Tell us what you'd like", image: "/contact/card-other.webp" },
@@ -99,6 +99,11 @@ export const INTERESTS: Opt[] = [
  * Optional Wine Tour checkbox. The form itself is English.
  * it and nl match the languages in the site header.
  */
+export const WINE_CARD_COPY = {
+  en: { label: "Food & Wine Experiences", hint: "Cooking class, wine tours, cheese tasting" },
+  it: { label: "Esperienze Food & Wine", hint: "Cooking class, wine tour, degustazione di formaggi" },
+} as const;
+
 export const WINE_MULTI_COPY = {
   en: {
     label: "I'd like to visit more than one winery",
@@ -117,7 +122,7 @@ export const WINE_MULTI_COPY = {
 /** Topics for the quick request (same values as INTERESTS, shorter labels). */
 export const QUICK_TOPICS: Opt[] = [
   { value: "boat", label: "Boat tour", icon: "sailboat" },
-  { value: "wine", label: "Wine tour", icon: "wine" },
+  { value: "wine", label: "Food & Wine Experiences", icon: "wine" },
   { value: "transfer", label: "Private transfer", icon: "car" },
   { value: "trip", label: "Multi-day trip", icon: "map" },
   { value: "other", label: "Something else", icon: "message" },

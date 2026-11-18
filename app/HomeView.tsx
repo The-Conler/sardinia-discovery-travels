@@ -11,6 +11,7 @@ import { CinematicHero } from "./CinematicHero";
 import { FloatingActions } from "./FloatingActions";
 import { textReveal02 } from "./textReveal02";
 import { readSiteLang, writeSiteLang } from "./siteLang";
+import { WINE_CARD_COPY, WINE_MULTI_COPY } from "./contact/contactData";
 
 declare global {
   interface Window {
@@ -180,11 +181,26 @@ const tripFinderFields = [
   { key: "travel", label: "Budget" },
 ] as const;
 
-const tripTypeOptions: Record<string, string[]> = {
-  Experiences: ["Boat tour", "Cooking class", "Off road", "Escursioni", "Blue zone"],
-  Tours: ["Tailor made tour", "Private transfer", "Food experience", "Island route"],
-  Stays: ["Boutique hotel", "Sea-view retreat", "Countryside stay", "Luxury villa"],
+const tripTypeOptions: Record<string, { value: string }[]> = {
+  Experiences: [
+    { value: "Boat tour" },
+    { value: "Cooking class" },
+    { value: "wine" },
+    { value: "Off road" },
+    { value: "Escursioni" },
+    { value: "Blue zone" },
+  ],
+  Tours: ["Tailor made tour", "Private transfer", "Food experience", "Island route"].map((value) => ({ value })),
+  Stays: ["Boutique hotel", "Sea-view retreat", "Countryside stay", "Luxury villa"].map((value) => ({ value })),
 };
+
+function tripTypeLabel(value: string, code: string) {
+  if (value === "wine") return WINE_CARD_COPY[code === "it" ? "it" : "en"].label;
+  return value;
+}
+function wineHint(code: string) {
+  return WINE_CARD_COPY[code === "it" ? "it" : "en"].hint;
+}
 
 const tripFieldOptions: Record<Exclude<TripFieldKey, "type">, string[]> = {
   where: [
@@ -214,10 +230,11 @@ export function HomeView() {
   const [menuMounted, setMenuMounted] = useState(false);
   const [menuOrigin, setMenuOrigin] = useState<CSSProperties>({});
   const [activeTripTab, setActiveTripTab] = useState(tripFinderTabs[0]);
+  const [multiWinery, setMultiWinery] = useState(false);
   const [openTripField, setOpenTripField] = useState<TripFieldKey | null>(null);
   const [tripSelections, setTripSelections] = useState<Record<TripFieldKey, string>>({
     where: "Sardinia area",
-    type: tripTypeOptions[tripFinderTabs[0]][0],
+    type: tripTypeOptions[tripFinderTabs[0]][0].value,
     when: "Flexible dates",
     travel: "€0 to €900",
   });
@@ -944,7 +961,7 @@ export function HomeView() {
                     setOpenTripField(null);
                     setTripSelections((current) => ({
                       ...current,
-                      type: tripTypeOptions[tab][0],
+                      type: tripTypeOptions[tab][0].value,
                     }));
                   }}
                   role="tab"
@@ -976,7 +993,7 @@ export function HomeView() {
                     <span className="trip-field-copy">
                       <span className="trip-field-label">{field.label}</span>
                       <span className="trip-field-value">
-                        {tripSelections[field.key]}
+                        {field.key === "type" ? tripTypeLabel(tripSelections.type, selectedLanguage.code) : tripSelections[field.key]}
                       </span>
                     </span>
                     <span className="trip-field-chevron" aria-hidden="true" />
@@ -984,24 +1001,29 @@ export function HomeView() {
 
                   <div className="trip-field-menu">
                     {(field.key === "type"
-                      ? tripTypeOptions[activeTripTab]
-                      : tripFieldOptions[field.key]
+                      ? tripTypeOptions[activeTripTab].map((item) => ({
+                          value: item.value,
+                          label: tripTypeLabel(item.value, selectedLanguage.code),
+                          hint: item.value === "wine" ? wineHint(selectedLanguage.code) : "",
+                        }))
+                      : tripFieldOptions[field.key].map((option) => ({ value: option, label: option, hint: "" }))
                     ).map((option) => (
                       <button
                         className={`trip-field-option ${
-                          tripSelections[field.key] === option ? "is-selected" : ""
+                          tripSelections[field.key] === option.value ? "is-selected" : ""
                         }`}
-                        key={option}
+                        key={option.value}
                         onClick={() => {
                           setTripSelections((current) => ({
                             ...current,
-                            [field.key]: option,
+                            [field.key]: option.value,
                           }));
                           setOpenTripField(null);
                         }}
                         type="button"
                       >
-                        {option}
+                        <span>{option.label}</span>
+                        {option.hint ? <small>{option.hint}</small> : null}
                       </button>
                     ))}
                   </div>
@@ -1013,6 +1035,18 @@ export function HomeView() {
                 <span className="trip-search-chevron" aria-hidden="true" />
               </button>
             </div>
+            {tripSelections.type === "wine" && (
+              <div className="trip-wine">
+                <p>{wineHint(selectedLanguage.code)}</p>
+                <label>
+                  <input type="checkbox" checked={multiWinery} onChange={(event) => setMultiWinery(event.target.checked)} />
+                  <span>
+                    <strong>{WINE_MULTI_COPY[selectedLanguage.code === "nl" ? "nl" : selectedLanguage.code === "it" ? "it" : "en"].label}</strong>
+                    <small>{WINE_MULTI_COPY[selectedLanguage.code === "nl" ? "nl" : selectedLanguage.code === "it" ? "it" : "en"].hint}</small>
+                  </span>
+                </label>
+              </div>
+            )}
           </div>
         </div>
           </section>
