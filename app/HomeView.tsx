@@ -46,6 +46,11 @@ const exploreItems = [
     image: "/explore/blue-zone.png",
   },
   {
+    title: "food expierences",
+    description: "Traditional flavors, shared tables, and local stories.",
+    image: "/explore/food-expierences.png",
+  },
+  {
     title: "Tailor Made Tours",
     description: "Custom routes designed around your pace and interests.",
     image: "/explore/tailor-made-tours.png",
@@ -54,11 +59,6 @@ const exploreItems = [
     title: "private transfer",
     description: "Smooth private rides across the island.",
     image: "/explore/private-transfer.png",
-  },
-  {
-    title: "food expierences",
-    description: "Traditional flavors, shared tables, and local stories.",
-    image: "/explore/food-expierences.png",
   },
 ];
 
@@ -647,6 +647,11 @@ export function HomeView() {
             </a>
 
             <div className="nav-links">
+              <NavButton
+                label="Experiences"
+                active={activeDropdown === "experiences"}
+                onOpen={() => openDropdown("experiences")}
+              />
               <a className="nav-link nav-link-static" href="/pacchetti">
                 {selectedLanguage.code === "it" ? "Pacchetti" : "Packages"}
               </a>
@@ -654,11 +659,6 @@ export function HomeView() {
                 label="Explore"
                 active={activeDropdown === "explore"}
                 onOpen={() => openDropdown("explore")}
-              />
-              <NavButton
-                label="Experiences"
-                active={activeDropdown === "experiences"}
-                onOpen={() => openDropdown("experiences")}
               />
               <NavButton
                 label="Destinations"
@@ -869,10 +869,10 @@ export function HomeView() {
               <nav className="site-menu-links" aria-label="Expanded navigation">
                 {(
                   [
+                    { label: "Experiences", href: "#experiences" },
                     { label: selectedLanguage.code === "it" ? "Pacchetti" : "Packages", href: "/pacchetti" },
                     { label: "Home", href: "#" },
                     { label: "Explore", href: "#explore" },
-                    { label: "Experiences", href: "#experiences" },
                     { label: "About", href: "/about" },
                     { label: "Contact", href: "/contact" },
                     { label: "Partner", href: `/partner?lang=${selectedLanguage.code === "it" ? "it" : "en"}` },
