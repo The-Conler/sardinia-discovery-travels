@@ -105,6 +105,7 @@
 .ct-field select option{background:#1f1d1c;color:#fff}
 .ct-error{margin:0;font-size:var(--t-hint);color:#f2a99a}
 .ct-note{margin:0;padding:14px 16px;border-radius:14px;background:rgba(47,127,136,.14);border:1px solid rgba(47,127,136,.35);font-size:var(--t-hint);line-height:1.45;color:var(--ct-cream)}
+.ct-note a{color:var(--ct-cream);font-weight:600;text-underline-offset:3px}
 
 /* Steppers: one soft panel with divided rows */
 .ct-steppers{display:flex;flex-direction:column;border-radius:var(--ct-radius);background:var(--ct-fill)}
