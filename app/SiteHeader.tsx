@@ -11,8 +11,8 @@ import type { CSSProperties } from "react";
 // they navigate to the homepage sections from sub-pages.
 
 const exploreItems = [
-  { title: "blue zone", description: "Culture, longevity, and authentic local living.", image: "/explore/blue-zone.png" },
-  { title: "food expierences", description: "Traditional flavors, shared tables, and local stories.", image: "/explore/food-expierences.png" },
+  { title: "Blue Zone", description: "Culture, longevity, and authentic local living.", image: "/explore/blue-zone.png" },
+  { title: "Food & Wine", description: "Traditional flavors, shared tables, and local stories.", image: "/explore/food-expierences.png" },
   { title: "Tailor Made Tours", description: "Custom routes designed around your pace and interests.", image: "/explore/tailor-made-tours.png" },
   { title: "private transfer", description: "Smooth private rides across the island.", image: "/explore/private-transfer.png" },
 ];

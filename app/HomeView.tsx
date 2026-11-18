@@ -41,12 +41,12 @@ declare global {
 
 const exploreItems = [
   {
-    title: "blue zone",
+    title: "Blue Zone",
     description: "Culture, longevity, and authentic local living.",
     image: "/explore/blue-zone.png",
   },
   {
-    title: "food expierences",
+    title: "Food & Wine",
     description: "Traditional flavors, shared tables, and local stories.",
     image: "/explore/food-expierences.png",
   },
