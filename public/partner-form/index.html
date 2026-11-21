@@ -2861,7 +2861,7 @@ const MARE_ANIM = {
   catamarano: [{ name:'Catamarano_Radar_Scanner', type:'spin', speed:65, axis:'y' }],
   yacht: [{ name:'Yacht_Radar_Scanner', type:'spin', speed:65, axis:'y' }]
 };
-const PRE = { spin:true, theta:-0.9, phi:1.18, radius:8, home:null, target:null, drag:null, raf:0, last:0, type:'', token:0, parts:[], THREE:null, renderer:null, scene:null, camera:null, model:null, view:null };
+const PRE = { spin:true, theta:2.35, phi:1.15, radius:8, home:null, target:null, drag:null, raf:0, last:0, type:'', token:0, parts:[], THREE:null, renderer:null, scene:null, camera:null, model:null, view:null };
 function mareWebGL(){ try{ const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'))); }catch(e){ return false; } }
 function mareHudSync(){
   document.querySelectorAll('[data-mare-hud]').forEach(b => {
@@ -2885,63 +2885,13 @@ function mareDotMap(THREE){
   PRE.dotMap = tex;
   return tex;
 }
-function mareSurfaceDots(THREE, geometry, spacing){
-  const pos = geometry.attributes && geometry.attributes.position;
-  if(!pos || !pos.count) return null;
-  geometry.computeBoundingBox();
-  const bb = geometry.boundingBox;
-  const ext = [bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z];
-  const order = [0, 1, 2].sort((a, b) => ext[b] - ext[a]);
-  const out = [];
-  const seen = new Set();
-  const keep = (x, y, z, key) => { if(seen.has(key)) return; seen.add(key); out.push(x, y, z); };
-  if(ext[order[1]] < spacing * 1.25){
-    const L = order[0];
-    const n = Math.max(2, Math.round(ext[L] / spacing));
-    const c = [(bb.min.x + bb.max.x) / 2, (bb.min.y + bb.max.y) / 2, (bb.min.z + bb.max.z) / 2];
-    const mn = [bb.min.x, bb.min.y, bb.min.z], mx = [bb.max.x, bb.max.y, bb.max.z];
-    for(let i = 0; i <= n; i++){
-      const p = c.slice();
-      p[L] = mn[L] + (mx[L] - mn[L]) * (i / n);
-      keep(p[0], p[1], p[2], 'L' + i);
-    }
-  }else{
-    const index = geometry.index;
-    const triCount = index ? index.count / 3 : pos.count / 3;
-    const axes = [[order[0], order[1], 'A']];
-    if(ext[order[2]] > spacing * 2) axes.push([order[0], order[2], 'B']);
-    const va = [0, 0, 0], vb = [0, 0, 0], vc = [0, 0, 0];
-    const read = (i, d) => { d[0] = pos.getX(i); d[1] = pos.getY(i); d[2] = pos.getZ(i); };
-    for(let t = 0; t < triCount; t++){
-      const ia = index ? index.getX(t * 3) : t * 3;
-      const ib = index ? index.getX(t * 3 + 1) : t * 3 + 1;
-      const ic = index ? index.getX(t * 3 + 2) : t * 3 + 2;
-      read(ia, va); read(ib, vb); read(ic, vc);
-      for(const [A, B, tag] of axes){
-        const aA = va[A], aB = va[B], bA = vb[A], bB = vb[B], cA = vc[A], cB = vc[B];
-        const denom = (bA - aA) * (cB - aB) - (cA - aA) * (bB - aB);
-        if(Math.abs(denom) < 1e-10) continue;
-        const minA = Math.min(aA, bA, cA), maxA = Math.max(aA, bA, cA);
-        const minB = Math.min(aB, bB, cB), maxB = Math.max(aB, bB, cB);
-        for(let i = Math.ceil(minA / spacing - 1e-6); i <= Math.floor(maxA / spacing + 1e-6); i++){
-          for(let j = Math.ceil(minB / spacing - 1e-6); j <= Math.floor(maxB / spacing + 1e-6); j++){
-            const pA = i * spacing, pB = j * spacing;
-            const u = ((pA - aA) * (cB - aB) - (cA - aA) * (pB - aB)) / denom;
-            const v = ((bA - aA) * (pB - aB) - (pA - aA) * (bB - aB)) / denom;
-            if(u < -1e-3 || v < -1e-3 || u + v > 1 + 1e-3) continue;
-            const w = 1 - u - v;
-            keep(va[0] * w + vb[0] * u + vc[0] * v, va[1] * w + vb[1] * u + vc[1] * v, va[2] * w + vb[2] * u + vc[2] * v, tag + i + ',' + j);
-          }
-        }
-      }
-    }
-  }
-  if(!out.length) return null;
+function mareCloud(THREE, coords, spacing, bright){
+  if(!coords.length) return null;
   const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.Float32BufferAttribute(out, 3));
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(coords, 3));
   const mat = new THREE.PointsMaterial({
-    color: 0x19e6e0,
-    size: spacing * 0.95,
+    color: bright ? 0x5ef6ee : 0x19e6e0,
+    size: spacing * (bright ? 1.05 : 0.62),
     map: mareDotMap(THREE),
     transparent: true,
     blending: THREE.AdditiveBlending,
@@ -2949,8 +2899,142 @@ function mareSurfaceDots(THREE, geometry, spacing){
     sizeAttenuation: true
   });
   const pts = new THREE.Points(geo, mat);
-  pts.renderOrder = 2;
+  pts.renderOrder = bright ? 3 : 2;
   return pts;
+}
+function mareSurfaceDots(THREE, geometry, spacing){
+  const pos = geometry.attributes && geometry.attributes.position;
+  if(!pos || !pos.count) return null;
+  geometry.computeBoundingBox();
+  const bb = geometry.boundingBox;
+  const ext = [bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z];
+  const order = [0, 1, 2].sort((a, b) => ext[b] - ext[a]);
+  const sheet = ext[order[2]] < ext[order[0]] * 0.18 && ext[order[1]] > spacing * 3;
+  const step = sheet ? spacing * 0.55 : spacing;
+  const fill = [], edge = [];
+  const seen = new Set();
+  const keep = (bucket, x, y, z, key) => { if(seen.has(key)) return; seen.add(key); bucket.push(x, y, z); };
+  const index = geometry.index;
+  const triCount = index ? index.count / 3 : pos.count / 3;
+  const va = [0, 0, 0], vb = [0, 0, 0], vc = [0, 0, 0];
+  const read = (i, d) => { d[0] = pos.getX(i); d[1] = pos.getY(i); d[2] = pos.getZ(i); };
+  if(ext[order[1]] < step * 1.35){
+    const L = order[0];
+    const n = Math.max(2, Math.round(ext[L] / step));
+    const c = [(bb.min.x + bb.max.x) / 2, (bb.min.y + bb.max.y) / 2, (bb.min.z + bb.max.z) / 2];
+    const mn = [bb.min.x, bb.min.y, bb.min.z], mx = [bb.max.x, bb.max.y, bb.max.z];
+    for(let i = 0; i <= n; i++){
+      const p = c.slice();
+      p[L] = mn[L] + (mx[L] - mn[L]) * (i / n);
+      keep(edge, p[0], p[1], p[2], 'L' + i);
+    }
+  }else{
+    const used = new Set();
+    const axes = [[order[0], order[1], 'A']];
+    if(ext[order[2]] > step * 2) axes.push([order[0], order[2], 'B']);
+    for(let t = 0; t < triCount; t++){
+      const ids = [index ? index.getX(t * 3) : t * 3, index ? index.getX(t * 3 + 1) : t * 3 + 1, index ? index.getX(t * 3 + 2) : t * 3 + 2];
+      read(ids[0], va); read(ids[1], vb); read(ids[2], vc);
+      for(let e = 0; e < 3; e++){
+        const ia = ids[e], ib = ids[(e + 1) % 3];
+        const ek = ia < ib ? ia + ':' + ib : ib + ':' + ia;
+        if(used.has(ek)) continue;
+        used.add(ek);
+        const A = e === 0 ? va : e === 1 ? vb : vc;
+        const B = e === 0 ? vb : e === 1 ? vc : va;
+        const len = Math.hypot(B[0] - A[0], B[1] - A[1], B[2] - A[2]);
+        const n = Math.max(1, Math.round(len / step));
+        for(let i = 0; i <= n; i++){
+          const u = i / n;
+          const ex = A[0] + (B[0] - A[0]) * u, ey = A[1] + (B[1] - A[1]) * u, ez = A[2] + (B[2] - A[2]) * u;
+          const cell = Math.max(step, 1e-4);
+          keep(edge, ex, ey, ez, 'G' + Math.round(ex / cell) + ',' + Math.round(ey / cell) + ',' + Math.round(ez / cell));
+        }
+      }
+      for(const [A, B, tag] of axes){
+        const aA = va[A], aB = va[B], bA = vb[A], bB = vb[B], cA = vc[A], cB = vc[B];
+        const denom = (bA - aA) * (cB - aB) - (cA - aA) * (bB - aB);
+        if(Math.abs(denom) < 1e-10) continue;
+        const minA = Math.min(aA, bA, cA), maxA = Math.max(aA, bA, cA);
+        const minB = Math.min(aB, bB, cB), maxB = Math.max(aB, bB, cB);
+        for(let i = Math.ceil(minA / step - 1e-6); i <= Math.floor(maxA / step + 1e-6); i++){
+          for(let j = Math.ceil(minB / step - 1e-6); j <= Math.floor(maxB / step + 1e-6); j++){
+            const pA = i * step, pB = j * step;
+            const u = ((pA - aA) * (cB - aB) - (cA - aA) * (pB - aB)) / denom;
+            const v = ((bA - aA) * (pB - aB) - (pA - aA) * (bB - aB)) / denom;
+            if(u < -1e-3 || v < -1e-3 || u + v > 1 + 1e-3) continue;
+            const w = 1 - u - v;
+            keep(fill, va[0] * w + vb[0] * u + vc[0] * v, va[1] * w + vb[1] * u + vc[1] * v, va[2] * w + vb[2] * u + vc[2] * v, tag + i + ',' + j);
+          }
+        }
+      }
+    }
+  }
+  const g = new THREE.Group();
+  const a = mareCloud(THREE, fill, step, false), b = mareCloud(THREE, edge, step, true);
+  if(a) g.add(a);
+  if(b) g.add(b);
+  return g.children.length ? g : null;
+}
+function mareSegment(THREE, parent, ax, ay, az, bx, by, bz, spacing, bright){
+  const len = Math.hypot(bx - ax, by - ay, bz - az);
+  const n = Math.max(2, Math.round(len / spacing));
+  const coords = [];
+  for(let i = 0; i <= n; i++){
+    const u = i / n;
+    coords.push(ax + (bx - ax) * u, ay + (by - ay) * u, az + (bz - az) * u);
+  }
+  const pts = mareCloud(THREE, coords, spacing, bright !== false);
+  if(pts) parent.add(pts);
+}
+function mareTriDots(THREE, parent, A, B, C, spacing){
+  const ab = Math.hypot(B[0] - A[0], B[1] - A[1], B[2] - A[2]);
+  const ac = Math.hypot(C[0] - A[0], C[1] - A[1], C[2] - A[2]);
+  const steps = Math.max(6, Math.round(Math.max(ab, ac) / spacing));
+  const fill = [], edge = [];
+  for(let i = 0; i <= steps; i++){
+    for(let j = 0; j <= steps - i; j++){
+      const u = i / steps, v = j / steps, w = 1 - u - v;
+      const x = A[0] * w + B[0] * u + C[0] * v;
+      const y = A[1] * w + B[1] * u + C[1] * v;
+      const z = A[2] * w + B[2] * u + C[2] * v;
+      (i === 0 || j === 0 || i + j === steps ? edge : fill).push(x, y, z);
+    }
+  }
+  const a = mareCloud(THREE, fill, spacing, false), b = mareCloud(THREE, edge, spacing, true);
+  if(a) parent.add(a);
+  if(b) parent.add(b);
+}
+function mareDress(THREE, model, type){
+  if(type !== 'catamarano' || model.userData.mareDress) return;
+  model.userData.mareDress = true;
+  const box = new THREE.Box3().setFromObject(model);
+  const size = box.getSize(new THREE.Vector3());
+  const spacing = Math.max(size.x, size.y, size.z, 1) / 28;
+  const g = new THREE.Group();
+  g.name = 'Catamaran_Rig';
+  const head = [0, 14.4, -1];
+  const foot = [0, 4.15, -1];
+  const clew = [0, 4.15, 4.6];
+  const bow = [0, 2.15, -6.15];
+  mareSegment(THREE, g, foot[0], foot[1], foot[2], head[0], head[1], head[2], spacing * 0.72, true);
+  mareSegment(THREE, g, foot[0], foot[1], foot[2], clew[0], clew[1], clew[2], spacing * 0.72, true);
+  mareTriDots(THREE, g, head, foot, clew, spacing * 0.62);
+  mareTriDots(THREE, g, head, foot, bow, spacing * 0.7);
+  mareSegment(THREE, g, head[0], head[1], head[2], bow[0], bow[1], bow[2], spacing * 0.7, true);
+  mareSegment(THREE, g, head[0], head[1], head[2], 0, 3.3, 5.9, spacing * 0.7, true);
+  mareSegment(THREE, g, head[0], head[1], head[2], -3.15, 1.7, 0.2, spacing * 0.7, true);
+  mareSegment(THREE, g, head[0], head[1], head[2], 3.15, 1.7, 0.2, spacing * 0.7, true);
+  [-2.55, 2.55].forEach(x => {
+    [[-1.6, -0.55], [0.15, 1.2], [1.9, 2.95]].forEach(([z0, z1]) => {
+      const y0 = 2.25, y1 = 3.25;
+      mareSegment(THREE, g, x, y0, z0, x, y1, z0, spacing * 0.45, true);
+      mareSegment(THREE, g, x, y1, z0, x, y1, z1, spacing * 0.45, true);
+      mareSegment(THREE, g, x, y1, z1, x, y0, z1, spacing * 0.45, true);
+      mareSegment(THREE, g, x, y0, z1, x, y0, z0, spacing * 0.45, true);
+    });
+  });
+  model.add(g);
 }
 function mareStyle(THREE, root){
   root.updateMatrixWorld(true);
@@ -3062,12 +3146,19 @@ function mareFrame(THREE){
   const size = box.getSize(new THREE.Vector3());
   const center = box.getCenter(new THREE.Vector3());
   PRE.target = center;
-  const span = Math.max(size.x, size.y, size.z, 1);
-  PRE.radius = (span * 0.5) / Math.tan(THREE.MathUtils.degToRad(16)) * 0.86;
-  PRE.theta = -0.9; PRE.phi = 1.18;
+  const view = PRE.view;
+  const w = view && view.clientWidth ? view.clientWidth : 640;
+  const h = view && view.clientHeight ? view.clientHeight : 420;
+  const aspect = w / Math.max(h, 1);
+  PRE.camera.aspect = aspect;
+  const vFov = THREE.MathUtils.degToRad(PRE.camera.fov);
+  const hFov = 2 * Math.atan(Math.tan(vFov / 2) * aspect);
+  const radius = 0.5 * Math.hypot(size.x, size.y, size.z);
+  PRE.radius = Math.max(radius / Math.sin(vFov / 2), radius / Math.sin(hFov / 2)) * 1.38;
+  PRE.theta = 2.35; PRE.phi = 1.15;
   PRE.home = { theta:PRE.theta, phi:PRE.phi, radius:PRE.radius };
-  PRE.camera.near = Math.max(0.05, span / 400);
-  PRE.camera.far = Math.max(200, span * 30);
+  PRE.camera.near = Math.max(0.05, radius / 80);
+  PRE.camera.far = Math.max(200, PRE.radius * 8);
   PRE.camera.updateProjectionMatrix();
 }
 function mareCam(){
@@ -3146,6 +3237,7 @@ async function mountMarePreview(){
     PRE.model = model;
     PRE.scene.add(model);
     model.traverse(obj => { if(obj.name === 'Mapping_Rig') obj.visible = false; });
+    mareDress(THREE, model, type);
     mareBind(model, type);
     mareFrame(THREE);
     const roots = { barca_motore:'Motore', barca_vela:'Vela', catamarano:'Catamarano', yacht:'Yacht' };
