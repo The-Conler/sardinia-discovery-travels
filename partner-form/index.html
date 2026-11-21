@@ -39,7 +39,7 @@ svg{display:block;flex:none}
 img{display:block}
 [hidden]{display:none!important}
 
-.ct-page,.ct-bar,.sd-header,.sd-modal,.ct-help-btn{
+.ct-page,.ct-bar,.sd-header,.sd-modal,.ct-help-btn,.bt-float{
   --ct-gutter:clamp(32px,5.5vw,110px);
   --ct-cream:#f8f4ee;
   --ct-muted:#b9b1a7;
@@ -58,7 +58,7 @@ img{display:block}
   --t-hint:15px;
   --t-field:17px;
 }
-@media (max-width:860px){.ct-page,.ct-bar,.sd-header,.sd-modal,.ct-help-btn{--ct-gutter:16px}}
+@media (max-width:860px){.ct-page,.ct-bar,.sd-header,.sd-modal,.ct-help-btn,.bt-float{--ct-gutter:16px}}
 @media (max-width:640px){.ct-page,.ct-bar,.sd-header,.sd-modal{--t-title:34px;--t-title-xl:44px;--t-display:38px;--t-sub:17px;--t-q:18px;--t-card:16px}}
 
 /* ---------- Site header (stand-in for the real site header) ---------- */
@@ -612,6 +612,27 @@ img{display:block}
 .ct-help-btn:hover{background:rgba(72,68,66,.75);transform:scale(1.04)}
 .ct-help-btn:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,127,136,.3)}
 .ct-help-btn.is-low{bottom:calc(24px + env(safe-area-inset-bottom))}
+.bt-float{position:fixed;left:var(--ct-gutter);bottom:calc(104px + env(safe-area-inset-bottom));z-index:1001;display:inline-flex;align-items:center;gap:14px;height:52px;margin:0;padding:0 6px 0 22px;border:0;border-radius:999px;background:#141211;color:#f8f4ee;font:inherit;font-size:13px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.28);transition:transform .35s var(--ease-bounce)}
+.bt-float[hidden]{display:none}
+.bt-float:hover{transform:scale(1.04)}
+.bt-float:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,127,136,.3)}
+.bt-float.is-low{bottom:calc(24px + env(safe-area-inset-bottom))}
+.bt-float-ico{display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:50%;background:#f8f4ee;color:#141211}
+.bt-sheet{position:fixed;top:16px;right:16px;bottom:16px;z-index:2200;width:min(440px,calc(100vw - 32px));display:flex;flex-direction:column;gap:8px;padding:28px;overflow:auto;border-radius:24px;background:#24211f;border:1px solid rgba(255,255,255,.12);color:#f8f4ee;transform:translateX(calc(100% + 32px));transition:transform .45s var(--ease-luxury)}
+.bt-sheet.is-open{transform:none}
+.bt-sheet[aria-hidden="true"]{pointer-events:none}
+.bt-sheet-top{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.bt-sheet h2{margin:0;font-size:28px;font-weight:500;letter-spacing:-.015em}
+.bt-sheet-exp{margin:18px 0 0;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#b9b1a7}
+.bt-boat{display:flex;flex-direction:column;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1)}
+.bt-boat h3{margin:0;font-size:18px;font-weight:600}
+.bt-boat .bt-kind{margin:0;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#8fd0d4}
+.bt-dl{display:grid;gap:10px;margin:0}
+.bt-dl div{display:flex;flex-direction:column;gap:2px}
+.bt-dl dt{font-size:12px;color:#b9b1a7}
+.bt-dl dd{margin:0;font-size:15px}
+@media (max-width:860px){.bt-float{left:16px}}
+@media (prefers-reduced-motion:reduce){.bt-float,.bt-sheet{transition:none}.bt-float:hover{transform:none}}
 .ct-scrim{position:fixed;inset:0;z-index:2100;background:rgba(14,12,11,.42);opacity:0;pointer-events:none;transition:opacity .3s var(--ct-ease)}
 .ct-scrim.is-open{opacity:1;pointer-events:auto}
 .ct-panel{position:fixed;top:16px;right:16px;bottom:16px;z-index:2200;width:min(520px,calc(100vw - 32px));display:flex;flex-direction:column;gap:24px;padding:32px;overflow:auto;border-radius:var(--ct-radius);background:rgba(36,33,31,.78);border:1px solid rgba(255,255,255,.12);-webkit-backdrop-filter:blur(24px) saturate(1.1);backdrop-filter:blur(24px) saturate(1.1);color:var(--ct-cream);transform:translateX(calc(100% + 32px));transition:transform .45s var(--ease-luxury);--ct-cream:#f8f4ee;--ct-muted:#b9b1a7;--ct-teal:#2f7f88;--ct-fill:rgba(255,255,255,.06);--ct-fill-hover:rgba(255,255,255,.1);--ct-line:rgba(255,255,255,.1);--ct-radius:20px;--ct-ease:cubic-bezier(.25,.1,.25,1);--t-q:18px;--t-card:16px;--t-hint:14px;--t-field:16px}
@@ -1116,6 +1137,7 @@ html.is-embed .sd-header-in{justify-content:flex-end;border-bottom:0;padding-bot
 </div>
 
 <button type="button" class="ct-help-btn" id="helpBtn" data-action="helpopen" aria-haspopup="dialog"></button>
+<button type="button" class="bt-float" id="boatFloat" data-action="boatsopen" hidden aria-haspopup="dialog" aria-controls="boatSheet" aria-expanded="false"><span class="bt-float-label"></span><span class="bt-float-ico" aria-hidden="true"></span></button>
 
 <div class="ct-bar is-hidden" id="bar">
   <div class="ct-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="prog"></span></div>
@@ -1130,6 +1152,8 @@ html.is-embed .sd-header-in{justify-content:flex-end;border-bottom:0;padding-bot
 <aside class="ct-panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle" aria-hidden="true"></aside>
 <div class="ct-scrim" id="fleetScrim" data-action="fleetclose" hidden></div>
 <aside class="ct-panel" id="fleetPanel" role="dialog" aria-modal="true" aria-labelledby="fleetTitle" aria-hidden="true"></aside>
+<div class="ct-scrim" id="boatScrim" data-action="boatsclose" hidden></div>
+<aside class="bt-sheet" id="boatSheet" role="dialog" aria-modal="true" aria-labelledby="boatSheetTitle" aria-hidden="true"></aside>
 
 <div class="sd-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
   <div class="sd-modal-box">
@@ -3381,6 +3405,51 @@ function mareDetailOk(e, n){
   return true;
 }
 const FLEET = { open:false };
+const BOATS = { open:false };
+function mareAddedBoats(){
+  const out = [];
+  S.exps.forEach((e, i) => {
+    if(e?.sector !== 'mare') return;
+    (e.mare?.fleet || []).forEach((b, k) => {
+      if(b && (MARE_BOATS.includes(b.type) || String(b.name || '').trim())) out.push({ i, k, b });
+    });
+  });
+  return out;
+}
+function renderBoatSheet(){
+  const panel = $('boatSheet'), scrim = $('boatScrim'), btn = $('boatFloat');
+  const boats = mareAddedBoats();
+  if(!boats.length) BOATS.open = false;
+  btn.hidden = !boats.length;
+  btn.querySelector('.bt-float-label').textContent = t('bt_myboats');
+  btn.querySelector('.bt-float-ico').innerHTML = ic('sailboat', 18, 1.8);
+  btn.setAttribute('aria-label', t('bt_myboats'));
+  btn.setAttribute('aria-expanded', BOATS.open ? 'true' : 'false');
+  if(!BOATS.open){
+    panel.classList.remove('is-open');
+    panel.setAttribute('aria-hidden', 'true');
+    scrim.classList.remove('is-open');
+    scrim.hidden = true;
+    return;
+  }
+  const multi = new Set(boats.map(x => x.i)).size > 1;
+  let last = -1;
+  const cards = boats.map(({ i, k, b }) => {
+    const head = multi && i !== last ? `<p class="bt-sheet-exp">${esc(t('exp_n', { n:i + 1 }))}</p>` : '';
+    last = i;
+    const rows = [
+      ['bt_make', b.brand], ['bt_len', b.length], ['bt_wid', b.width], ['bt_cap', b.cap],
+      ['bt_sell', b.sell], ['bt_crew', b.crew], ['bt_home', b.home], ['bt_gear', b.gear]
+    ].filter(([, v]) => String(v ?? '').trim()).map(([key, v]) => `<div><dt>${esc(t(key))}</dt><dd>${esc(String(v).trim())}</dd></div>`).join('');
+    const kind = MARE_BOATS.includes(b.type) ? `<p class="bt-kind">${esc(o(b.type))}</p>` : '';
+    return `${head}<article class="bt-boat"><h3>${esc(b.name || t('bt_boat_n', { n:k + 1 }))}</h3>${kind}${rows ? `<dl class="bt-dl">${rows}</dl>` : ''}</article>`;
+  }).join('');
+  panel.innerHTML = `<div class="bt-sheet-top"><h2 id="boatSheetTitle">${esc(t('bt_myboats'))}</h2><button type="button" class="ct-x" data-action="boatsclose" aria-label="${esc(t('bt_close'))}">${ic('x', 18, 1.8)}</button></div>${cards}`;
+  panel.classList.add('is-open');
+  panel.setAttribute('aria-hidden', 'false');
+  scrim.classList.add('is-open');
+  scrim.hidden = false;
+}
 function mareHere(){
   const m = String(S.pos || '').match(/^e(\d+)_btlink(\d+)$/);
   return m ? { i:+m[1], n:+m[2] } : null;
@@ -4223,6 +4292,7 @@ function render(dir){
   const fleetBtn = $('fleetBtn'); fleetBtn.hidden = !mareOn; fleetBtn.textContent = t('bt_myboats');
   if(FLEET.open && !mareOn) FLEET.open = false;
   renderFleet();
+  renderBoatSheet();
   $('helpBtn').innerHTML = `${ic('help',20,1.8)}<span>${t('help_btn')}</span>`; $('helpBtn').setAttribute('aria-label', t('help_btn'));
   $('mCancel').textContent = t('cancelBtn');
   updateCounters(); updateNav(); fitReview(); fitChoices();
@@ -4234,6 +4304,7 @@ function updateNav(){
   const show = s.sec !== null;
   bar.classList.toggle('is-hidden', !show); bar.dataset.s = s.id; bar.setAttribute('aria-hidden', !show);
   $('helpBtn').classList.toggle('is-low', !show);
+  $('boatFloat').classList.toggle('is-low', !show);
   const inputs = L.filter(x=>x.sec), at = inputs.findIndex(x=>x.id===s.id);
   const p = show ? Math.round((at+1)/inputs.length*100) : 0;
   $('prog').style.width = p+'%'; bar.querySelector('.ct-progress').setAttribute('aria-valuenow', p);
@@ -4488,8 +4559,10 @@ const ACT = {
   mareportadd: el => { const m = ensureMare(S.exps[+el.dataset.i]); const area = el.dataset.area; const at = m.ops.findLastIndex(o => o.area === area); const op = blankMareOp({ area }); if(at < 0) m.ops.push(op); else m.ops.splice(at + 1, 0, op); m.focus = area; rerender(); },
   mareportdel: el => { const m = ensureMare(S.exps[+el.dataset.i]); m.ops.splice(+el.dataset.n, 1); rerender(); },
   marelink: el => { const m = ensureMare(S.exps[+el.dataset.i]); const op = m.ops[+el.dataset.n]; const boat = m.fleet.find(b => b.id === el.dataset.id); if(!op || !boat || !mareSamePort(boat.home, op.port)) return; const id = boat.id; const k = op.boatIds.indexOf(id); if(k < 0) op.boatIds.push(id); else op.boatIds.splice(k, 1); rerender(); },
-  fleetopen: () => { FLEET.open = true; if(typeof H !== 'undefined' && H.open) helpClose(); renderFleet(); },
+  fleetopen: () => { FLEET.open = true; if(typeof H !== 'undefined' && H.open) helpClose(); if(BOATS.open){ BOATS.open = false; renderBoatSheet(); } renderFleet(); },
   fleetclose: () => { FLEET.open = false; renderFleet(); },
+  boatsopen: () => { BOATS.open = true; if(typeof H !== 'undefined' && H.open) helpClose(); if(FLEET.open){ FLEET.open = false; renderFleet(); } renderBoatSheet(); $('boatSheet').querySelector('.ct-x')?.focus({ preventScroll:true }); },
+  boatsclose: () => { BOATS.open = false; renderBoatSheet(); $('boatFloat').focus({ preventScroll:true }); },
   fleetadd: el => { const m = ensureMare(S.exps[+el.dataset.i]); const type = MARE_BOATS.includes(el.dataset.type) ? el.dataset.type : ''; m.fleet.push(blankMareBoat({ type })); if(type){ m.openCats = [type]; m.yachtOpen = false; } rerender(); },
   mareopen: el => { const m = ensureMare(S.exps[+el.dataset.i]); const v = el.dataset.v; if(!MARE_BOATS.includes(v)) return; m.openCats = [v]; m.yachtOpen = false; rerender(); },
   mareyacht: el => { const m = ensureMare(S.exps[+el.dataset.i]); m.yachtOpen = true; m.openCats = []; rerender(); },
@@ -4622,7 +4695,7 @@ document.addEventListener('keydown', e => {
     if((e.key==='ArrowDown'||e.key==='ArrowUp') && items.length){ e.preventDefault(); hl=(hl+(e.key==='ArrowDown'?1:-1)+items.length)%items.length; items.forEach((b,k)=>b.classList.toggle('is-hl',k===hl)); return; }
     if(e.key==='Enter' && hl>=0 && items[hl]){ e.preventDefault(); ACT.sugg(items[hl]); return; }
   }
-  if(e.key==='Escape'){ if(pvClose()) return; if(H.open) return helpClose(); ACT.closemodal(); }
+  if(e.key==='Escape'){ if(pvClose()) return; if(BOATS.open) return ACT.boatsclose(); if(H.open) return helpClose(); ACT.closemodal(); }
   if(e.key==='Enter' && el.id==='slotIn'){ e.preventDefault(); ACT.slotadd(el); return; }
   if(e.key==='Enter' && el.tagName==='INPUT' && el.type!=='checkbox' && !el.dataset.hbind && !el.closest('#panel')){ e.preventDefault(); next(); }
 });
