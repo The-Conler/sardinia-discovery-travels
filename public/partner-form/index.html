@@ -1388,7 +1388,7 @@ en:{
   bt_dur_title:'How long does it last?', bt_tour_n:'Tour {n} of {total}',
   o_yacht:'Yacht',
   bt_spec_title:'Boat details', bt_len:'Length (m)', bt_wid:'Width (m)', bt_brand:'Make', bt_boat_n:'Boat {n}',
-  bt_price_title:'How do you price it?', bt_period:'Reference period: April–November',
+  bt_price_title:'How do you price it?', bt_period:'Reference period: April – October',
   bt_unit:'Price unit', bt_unit_persona:'Per person', bt_unit_gruppo:'Per group/boat',
   bt_fleet_title:'Which boats do you have available?', bt_fleet_sub:'Register each boat once. You will reuse it on every tour.',
   bt_myboats:'My boats', bt_boat_name:'Name or internal code', bt_make:'Make and model', bt_cap:'Maximum capacity', bt_sell:'Sellable capacity, if any', bt_crew:'Crew members', bt_home:'Home port', bt_gear:'Permanent equipment on board',
@@ -1403,7 +1403,7 @@ en:{
   bt_filter:'Filter by category', bt_filter_all:'All',
   bt_link_sup:'Supplement, if any',
   bt_inherit:'Every boat linked to this tour uses these times. There is no separate time for each boat.',
-  bt_season_low:'Low season', bt_season_low_m:'April / October / November', bt_season_mid:'Mid season', bt_season_mid_m:'May / September', bt_season_high:'High season', bt_season_high_m:'June / July / August',
+  bt_season_low:'Low season', bt_season_low_m:'April / October', bt_season_mid:'Mid season', bt_season_mid_m:'May / September', bt_season_high:'High season', bt_season_high_m:'June / July / August',
   bt_agency:'Agency price', bt_net:'Private net price',
   bt_allweek:'Available every day of the week?',
   bt_inc_skipper:'Skipper and crew', bt_inc_gear:'Equipment (masks, fins)', bt_inc_games:'Water games', bt_game_sup:'SUP', bt_game_scooter:'Underwater scooter', bt_game_altro:'Other', bt_inc_aperitivo:'Aperitif', bt_inc_lunch:'Lunch', bt_inc_beverage:'Beverage', bt_inc_transport:'Transport', bt_inc_fuel:'Fuel', bt_inc_tickets:'Extra tickets (entries, environmental taxes, and similar)',
@@ -1613,7 +1613,7 @@ it:{
   bt_dur_title:'Quanto dura', bt_tour_n:'Tour {n} di {total}',
   o_yacht:'Yacht',
   bt_spec_title:'Specifiche sulla barca', bt_len:'Lunghezza (m)', bt_wid:'Larghezza (m)', bt_brand:'Marca', bt_boat_n:'Imbarcazione {n}',
-  bt_price_title:'Come la prezzi?', bt_period:'Periodo di riferimento: aprile–novembre',
+  bt_price_title:'Come la prezzi?', bt_period:'Periodo di riferimento: Aprile – ottobre',
   bt_unit:'Unità del prezzo', bt_unit_persona:'Per persona', bt_unit_gruppo:'Per gruppo/imbarcazione',
   bt_fleet_title:'Quali barche hai a disposizione?', bt_fleet_sub:'Registra ogni imbarcazione una sola volta. La riusi su più tour.',
   bt_myboats:'Le mie barche', bt_boat_name:'Nome o codice identificativo interno', bt_make:'Marca e modello', bt_cap:'Capienza massima', bt_sell:'Capienza massima vendibile, eventuale', bt_crew:'Numero dei componenti dell’equipaggio', bt_home:'Porto abituale', bt_gear:'Dotazioni permanenti disponibili',
@@ -1628,7 +1628,7 @@ it:{
   bt_filter:'Filtra per categoria', bt_filter_all:'Tutte',
   bt_link_sup:'Supplemento, eventuale',
   bt_inherit:'Tutte le barche associate usano questi orari. Non c’è una durata diversa per ciascuna barca.',
-  bt_season_low:'Bassa stagione', bt_season_low_m:'Aprile / ottobre / novembre', bt_season_mid:'Media stagione', bt_season_mid_m:'Maggio / settembre', bt_season_high:'Alta stagione', bt_season_high_m:'Giugno / luglio / agosto',
+  bt_season_low:'Bassa stagione', bt_season_low_m:'Aprile / ottobre', bt_season_mid:'Media stagione', bt_season_mid_m:'Maggio / settembre', bt_season_high:'Alta stagione', bt_season_high_m:'Giugno / luglio / agosto',
   bt_agency:'Prezzo per agenzia', bt_net:'Prezzo netto privata',
   bt_allweek:'Disponibile tutti i giorni della settimana?',
   bt_inc_skipper:'Skipper e equipaggio', bt_inc_gear:'Attrezzatura (maschere, pinne)', bt_inc_games:'Giochi acquatici', bt_game_sup:'SUP', bt_game_scooter:'Scooter subacqueo', bt_game_altro:'Altro', bt_inc_aperitivo:'Aperitivo', bt_inc_lunch:'Pranzo', bt_inc_beverage:'Beverage', bt_inc_transport:'Trasporto', bt_inc_fuel:'Carburante', bt_inc_tickets:'Biglietti extra (ingressi, tasse ambientali, ecc.)',
@@ -2793,11 +2793,12 @@ function mapsLink(p){
 function boatWire(boat){
   const type = typeof boat === 'string' ? boat : boat?.type;
   const hull = type === 'catamarano'
-    ? '<path d="M22 72 L48 58 L58 66 L32 80 Z"/><path d="M22 72 V88 L48 102 L58 86 V66"/><path d="M48 58 V74"/><path d="M92 66 L118 52 L128 60 L102 74 Z"/><path d="M92 66 V82 L118 96 L128 80 V60"/><path d="M118 52 V66"/><path d="M48 70 L102 62 L110 70 L56 78 Z"/><path d="M56 78 V86 L110 78 V70"/>'
+    ? '<path d="M18 70 L44 56 L54 64 L28 78 Z"/><path d="M18 70 V90 L44 106 L54 86 V64"/><path d="M44 56 V72"/><path d="M96 64 L122 50 L132 58 L106 72 Z"/><path d="M96 64 V84 L122 100 L132 80 V58"/><path d="M122 50 V66"/><path d="M46 66 L104 58 L112 68 L54 76 Z"/><path d="M54 76 V84 L112 76 V68"/><path d="M70 58 L86 50 L98 58 L82 66 Z"/><path d="M86 50 V42 L98 50 V58"/>'
     : type === 'barca_vela'
-    ? '<path d="M24 84 L76 60 L126 76 L116 90 L46 106 Z"/><path d="M24 84 V98 L46 116 L116 100 V90"/><path d="M76 60 V74"/><path d="M72 92 V30"/><path d="M72 38 L112 78 H72"/><path d="M72 48 L40 78 H72"/>'
-    : '<path d="M22 78 L74 54 L130 72 L120 86 L42 104 Z"/><path d="M22 78 V94 L42 114 L120 98 V86"/><path d="M74 54 V70"/><path d="M56 72 L90 56 L116 68 L82 84 Z"/><path d="M90 56 V46 L116 58 V68"/><path d="M82 84 V92 L116 76 V68"/>';
-  return `<span class="bt-wire" aria-hidden="true"><svg viewBox="0 0 150 128"><g fill="none" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round">${hull}<path d="M16 118 H136" stroke-dasharray="3 3"/></g></svg></span>`;
+    ? '<path d="M28 92 L70 74 L118 86 L108 98 L42 112 Z"/><path d="M28 92 V104 L42 120 L108 108 V98"/><path d="M70 74 V88"/><path d="M74 96 V16"/><path d="M74 22 L118 78 H74"/><path d="M74 36 L36 86 H74"/>'
+    : '<path d="M16 82 L62 52 L136 70 L124 88 L36 110 Z"/><path d="M16 82 V100 L36 122 L124 102 V88"/><path d="M62 52 V68"/><path d="M48 74 L78 58 L108 70 L78 86 Z"/><path d="M78 58 V44 L108 56 V70"/><path d="M78 86 V96 L108 80 V70"/><path d="M86 44 L98 40 L108 48"/>';
+  const kind = type === 'catamarano' ? 'catamarano' : (type === 'barca_vela' ? 'vela' : 'motore');
+  return `<span class="bt-wire bt-wire-${kind}" aria-hidden="true"><svg viewBox="0 0 150 128"><g fill="none" stroke="currentColor" stroke-width="1.45" stroke-linejoin="round">${hull}<path d="M12 124 H140" stroke-dasharray="3 3"/></g></svg></span>`;
 }
 function mareBoatOkFields(b){
   return filled(b.name, 2) && MARE_BOATS.includes(b.type) && filled(b.brand, 2) && pos(b.length) && pos(b.width) && mareCap(b) >= 2 && pos(b.crew) && filled(b.home, 2) && (b.sell === '' || b.sell == null || (pos(b.sell) && Number(b.sell) <= mareCap(b)));
