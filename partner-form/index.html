@@ -69,6 +69,9 @@ img{display:block}
 .bt-map{width:100%;height:460px;display:block;border-radius:20px;background:rgba(255,255,255,.03)}
 .bt-pick{display:block;width:100%;text-align:left;padding:12px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:inherit;cursor:pointer}
 .bt-pick.is-on{border-color:#8fd0d4;background:rgba(47,127,136,.22)}
+.bt-cat{display:flex;justify-content:space-between;gap:12px;width:100%;text-align:left;padding:14px 16px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:inherit;cursor:pointer}
+.bt-cat.is-on{border-color:#8fd0d4}
+.bt-cat b{font-weight:600}
 .bt-boatcard strong,.bt-boatcard p{display:block}
 .bt-land{fill:rgba(248,244,238,.08);stroke:rgba(248,244,238,.35);stroke-width:1.4}
 .bt-zone{cursor:pointer;fill:rgba(47,127,136,.16);stroke:rgba(143,208,212,.7);stroke-width:1.4}
@@ -1392,6 +1395,10 @@ en:{
   bt_op_title:'Operating tour', bt_link_title:'Which of your boats are available for this tour?', bt_link_sub:'Pick one or more boats from your fleet.',
   bt_compat:'Compatible', bt_st_done:'completed', bt_st_work:'in progress', bt_st_new:'not started',
   bt_modes:'How do you run it with this boat?', bt_mode_both:'Both', bt_linked:'Linked tours', bt_use_here:'Select for this tour', bt_cap_short:'Capacity', bt_close:'Close',
+  bt_kind:'Internal type', bt_k_gommone:'Gommone', bt_k_motoscafo:'Motoscafo', bt_k_sport:'Sport', bt_k_luxury:'Luxury', bt_k_altro:'Other', bt_kind_other:'Describe the type',
+  bt_filter:'Filter by category', bt_filter_all:'All',
+  bt_custom:'Custom management by the agency', bt_link_sup:'Supplement, if any',
+  bt_inherit:'Every boat linked to this tour uses these times. There is no separate time for each boat.',
   bt_season_low:'Low season', bt_season_low_m:'April / October / November', bt_season_mid:'Mid season', bt_season_mid_m:'May / September', bt_season_high:'High season', bt_season_high_m:'June / July / August',
   bt_agency:'Agency price', bt_net:'Private net price',
   bt_allweek:'Available every day of the week?',
@@ -1612,6 +1619,10 @@ it:{
   bt_op_title:'Tour operativo', bt_link_title:'Quali delle tue imbarcazioni sono disponibili per questo tour?', bt_link_sub:'Seleziona una o più barche già registrate.',
   bt_compat:'Compatibile', bt_st_done:'completato', bt_st_work:'in compilazione', bt_st_new:'da iniziare',
   bt_modes:'Come la proponi con questa barca?', bt_mode_both:'Entrambe', bt_linked:'Tour collegati', bt_use_here:'Seleziona per questo tour', bt_cap_short:'Capienza', bt_close:'Chiudi',
+  bt_kind:'Tipologia interna', bt_k_gommone:'Gommone', bt_k_motoscafo:'Motoscafo', bt_k_sport:'Sport', bt_k_luxury:'Luxury', bt_k_altro:'Altro', bt_kind_other:'Descrivi la tipologia',
+  bt_filter:'Filtra per categoria', bt_filter_all:'Tutte',
+  bt_custom:'Gestione personalizzata dell’agenzia', bt_link_sup:'Supplemento, eventuale',
+  bt_inherit:'Tutte le barche associate usano questi orari. Non c’è una durata diversa per ciascuna barca.',
   bt_season_low:'Bassa stagione', bt_season_low_m:'Aprile / ottobre / novembre', bt_season_mid:'Media stagione', bt_season_mid_m:'Maggio / settembre', bt_season_high:'Alta stagione', bt_season_high_m:'Giugno / luglio / agosto',
   bt_agency:'Prezzo per agenzia', bt_net:'Prezzo netto privata',
   bt_allweek:'Disponibile tutti i giorni della settimana?',
@@ -2641,16 +2652,36 @@ function scubaShow(hit){
 }
 const MARE_AREAS = ['corsica','maddalena','asinara','tavolara','alghero','baunei','carloforte','cagliari','villasimius','altro'];
 const MARE_BOATS = ['barca_motore','barca_vela','catamarano','yacht'];
+const MARE_KINDS = { barca_motore:['gommone','motoscafo'], barca_vela:[], catamarano:['sport','luxury'], yacht:[] };
+const MARE_PORT_GEO = [['porto rafael','Nord','Est'],['santa maria navarrese','Centro','Est'],['golfo aranci','Nord','Est'],['san teodoro','Nord','Est'],['santa teresa','Nord','Est'],['porto torres','Nord','Ovest'],['la maddalena','Nord','Est'],['cannigione','Nord','Est'],['palau','Nord','Est'],['olbia','Nord','Est'],['alghero','Nord','Ovest'],['stintino','Nord','Ovest'],['castelsardo','Nord','Ovest'],['bosa','Nord','Ovest'],['cala gonone','Centro','Est'],['arbatax','Centro','Est'],['tortoli','Centro','Est'],['orosei','Centro','Est'],['baunei','Centro','Est'],['villasimius','Sud','Est'],['carloforte','Sud','Ovest'],['portoscuso','Sud','Ovest'],['teulada','Sud','Ovest'],['cagliari','Sud',''],['bonifacio','','']];
 const MARE_BANDS = ['full','half','sunset'];
 const MARE_BRING = ['cream','cream_dry','towels','hat','shoes','glasses','swimsuit','packed'];
 const MARE_AREA_KIND = { corsica:'area', maddalena:'area', asinara:'area', baunei:'area' };
 const MARE_ANCHOR = { corsica:[96,78], maddalena:[452,112], asinara:[168,92], baunei:[438,348], tavolara:[468,176], alghero:[186,214], carloforte:[156,552], cagliari:[318,628], villasimius:[408,598], altro:[300,440] };
 let mareSeq = 1;
 function mareBoatId(){ return 'b' + Date.now().toString(36) + (mareSeq++); }
-function blankMareSide(s){ s = s || {}; return { unit: s.unit === 'persona' || s.unit === 'gruppo' ? s.unit : '', low:s.low ?? '', mid:s.mid ?? '', high:s.high ?? '', min:Math.max(2, Number(s.min)||2), max:Math.max(2, Number(s.max)||8), minAge:s.minAge ?? 0 }; }
+function blankMareSide(s){ s = s || {}; return { unit: s.unit === 'persona' || s.unit === 'gruppo' ? s.unit : '', low:s.low ?? '', mid:s.mid ?? '', high:s.high ?? '', extra:s.extra ?? '', min:Math.max(2, Number(s.min)||2), max:Math.max(2, Number(s.max)||8), minAge:s.minAge ?? 0 }; }
+function mareKindOk(b){ const presets = MARE_KINDS[b.type] || []; if(!presets.length) return true; if(presets.includes(b.kindPick)) return true; return b.kindPick === 'altro' && filled(b.kind, 2); }
 function blankMareBoat(src){
   src = src || {};
-  return { id: src.id || mareBoatId(), name: src.name || '', type: MARE_BOATS.includes(src.type) ? src.type : '', brand: src.brand || '', length: src.length ?? '', width: src.width ?? '', cap: src.cap ?? '', sell: src.sell ?? '', crew: src.crew ?? '', home: src.home || '', gear: src.gear || '' };
+  const type = MARE_BOATS.includes(src.type) ? src.type : '';
+  const presets = MARE_KINDS[type] || [];
+  let kindPick = presets.includes(src.kindPick) || src.kindPick === 'altro' ? src.kindPick : (presets.includes(src.kind) ? src.kind : (src.kind ? 'altro' : ''));
+  let kind = kindPick && kindPick !== 'altro' ? kindPick : (src.kind && src.kind !== 'altro' ? src.kind : '');
+  if(!presets.length){ kindPick = ''; kind = src.kind || ''; }
+  return { id: src.id || mareBoatId(), name: src.name || '', type, kindPick, kind, brand: src.brand || '', length: src.length ?? '', width: src.width ?? '', cap: src.cap ?? '', sell: src.sell ?? '', crew: src.crew ?? '', home: src.home || '', gear: src.gear || '' };
+}
+function mareGeo(port){
+  const q = String(port || '').trim().toLowerCase();
+  const hit = q ? MARE_PORT_GEO.find(([name]) => q.includes(name)) : null;
+  if(!hit) return { macroarea:'', versante:'', zone:'' };
+  const zone = hit[1] && hit[2] ? hit[1] + '-' + hit[2] : (hit[1] || '');
+  return { macroarea: hit[1], versante: hit[2], zone };
+}
+function mareKindLabel(b){
+  if(!b) return '';
+  if(b.kindPick && b.kindPick !== 'altro') return t('bt_k_' + b.kindPick);
+  return b.kind || '';
 }
 function blankMareFood(src){
   src = src || {};
@@ -2686,7 +2717,8 @@ function blankMareOp(src){
     stopsWhere: src.stopsPlan === 'yes' ? (src.stopsWhere || '') : '',
     food: blankMareFood(src.food),
     boatIds: Array.isArray(src.boatIds) ? src.boatIds.slice() : [],
-    offer: src.offer && typeof src.offer === 'object' ? src.offer : {}
+    offer: src.offer && typeof src.offer === 'object' ? src.offer : {},
+    geo: mareGeo(src.port)
   };
 }
 function mareCap(boat){ const n = Number(boat?.cap); return n >= 2 ? n : 0; }
@@ -2698,11 +2730,12 @@ function ensureMare(e){
   if(e?.sector !== 'mare'){ if(e) delete e.mare; return null; }
   const prev = e.mare && typeof e.mare === 'object' ? e.mare : {};
   const areas = (prev.areas || []).filter(a => MARE_AREAS.includes(a));
-  const fleet = (Array.isArray(prev.fleet) && prev.fleet.length ? prev.fleet : [{}]).map(blankMareBoat);
+  const fleet = (Array.isArray(prev.fleet) ? prev.fleet : []).map(blankMareBoat);
   const ids = new Set(fleet.map(b => b.id));
   let ops = (Array.isArray(prev.ops) ? prev.ops : []).filter(o => areas.includes(o.area)).map(blankMareOp);
   for(const a of areas){ if(!ops.some(o => o.area === a)) ops.push(blankMareOp({ area:a })); }
   ops = ops.map(op => {
+    op.geo = mareGeo(op.port);
     op.boatIds = op.boatIds.filter(id => ids.has(id));
     const offer = {};
     for(const id of op.boatIds){
@@ -2734,7 +2767,9 @@ function ensureMare(e){
   };
   const focus = areas.includes(prev.focus) ? prev.focus : (areas[0] || '');
   const hi = Number.isInteger(prev.hi) && prev.hi >= 0 && prev.hi < ops.length ? prev.hi : 0;
-  e.mare = { areas, areaOther: prev.areaOther || '', focus, hi, fleet, ops, incl, bring, games:{ on:!!gsrc.on, items:{ sup:gameItem('sup'), scooter:gameItem('scooter'), altro:gameItem('altro') } }, tickets:{ on:!!tk.on, price:tk.price ?? '', method: tk.method === 'cash' || tk.method === 'pos' ? tk.method : '' } };
+  const openCats = (prev.openCats || []).filter(c => MARE_BOATS.includes(c));
+  const linkFilter = MARE_BOATS.includes(prev.linkFilter) ? prev.linkFilter : '';
+  e.mare = { areas, areaOther: prev.areaOther || '', focus, hi, openCats, linkFilter, fleet, ops, incl, bring, games:{ on:!!gsrc.on, items:{ sup:gameItem('sup'), scooter:gameItem('scooter'), altro:gameItem('altro') } }, tickets:{ on:!!tk.on, price:tk.price ?? '', method: tk.method === 'cash' || tk.method === 'pos' ? tk.method : '' } };
   e.spec = '';
   e.type = [];
   return e.mare;
@@ -2752,8 +2787,12 @@ function mareOpRef(e, n){
 function mapsLink(p){
   return `<p class="bt-maps"><a href="#" data-action="maps" data-p="${p}">${esc(t('bt_maps'))}</a></p>`;
 }
-function boatWire(type){
-  const hull = type === 'catamarano'
+function boatWire(boat){
+  const type = typeof boat === 'string' ? boat : boat?.type;
+  const kind = String(typeof boat === 'string' ? '' : (boat?.kindPick === 'gommone' ? 'gommone' : boat?.kind || '')).toLowerCase();
+  const hull = kind === 'gommone'
+    ? '<path d="M18 78 C28 58 48 58 58 78 C48 98 28 98 18 78 Z M82 78 C92 58 112 58 122 78 C112 98 92 98 82 78 Z"/><path d="M58 78 H82 M34 70 H48 M96 70 H110"/>'
+    : type === 'catamarano'
     ? '<path d="M16 74 L42 74 L36 104 L22 104 Z M78 74 L104 74 L98 104 L84 104 Z"/><path d="M42 66 H78 M36 86 H84"/>'
     : type === 'yacht'
     ? '<path d="M14 98 L30 70 H112 L126 98 Z"/><path d="M42 70 V46 H100 V70 M54 46 V30 H88 V46 M54 30 H88"/>'
@@ -2763,24 +2802,35 @@ function boatWire(type){
   return `<svg class="bt-wire" viewBox="0 0 140 120" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5">${hull}<path d="M8 110 H132" stroke-dasharray="3 3"/></g></svg>`;
 }
 function mareBoatOkFields(b){
-  return filled(b.name, 2) && MARE_BOATS.includes(b.type) && filled(b.brand, 2) && pos(b.length) && pos(b.width) && mareCap(b) >= 2 && pos(b.crew) && filled(b.home, 2) && (b.sell === '' || b.sell == null || (pos(b.sell) && Number(b.sell) <= mareCap(b)));
+  return filled(b.name, 2) && MARE_BOATS.includes(b.type) && mareKindOk(b) && filled(b.brand, 2) && pos(b.length) && pos(b.width) && mareCap(b) >= 2 && pos(b.crew) && filled(b.home, 2) && (b.sell === '' || b.sell == null || (pos(b.sell) && Number(b.sell) <= mareCap(b)));
 }
-function mareFleetScreen(i){
-  const m = ensureMare(E(i));
-  const card = (b, k) => `<section class="ct-block"><h3 class="ct-block-title">${esc(t('bt_boat_n', { n:k + 1 }))}${b.type ? ' · ' + esc(o(b.type)) : ''}</h3>
-    ${inp(P(i, `mare.fleet.${k}.name`), t('bt_boat_name'))}
-    ${group(t('bt_boat_title'), pills(P(i, `mare.fleet.${k}.type`), MARE_BOATS, { lab:o }))}
+function mareKindField(i, k, b){
+  const presets = MARE_KINDS[b.type] || [];
+  if(!b.type) return '';
+  if(!presets.length) return inp(P(i, `mare.fleet.${k}.kind`), t('bt_kind'), {req:false});
+  return `${group(t('bt_kind'), pills(P(i, `mare.fleet.${k}.kindPick`), presets.concat(['altro']), { lab:c => t('bt_k_' + c) }))}
+    ${b.kindPick === 'altro' ? inp(P(i, `mare.fleet.${k}.kind`), t('bt_kind_other')) : ''}`;
+}
+function mareBoatFields(i, k, b){
+  return `${inp(P(i, `mare.fleet.${k}.name`), t('bt_boat_name'))}
+    ${mareKindField(i, k, b)}
     ${b.type === 'yacht' ? note(t('bn_agency'), 'info') : ''}
     ${inp(P(i, `mare.fleet.${k}.brand`), t('bt_make'))}
     <div class="ct-row">${inp(P(i, `mare.fleet.${k}.length`), t('bt_len'), {type:'number'})}${inp(P(i, `mare.fleet.${k}.width`), t('bt_wid'), {type:'number'})}</div>
     <div class="ct-row">${inp(P(i, `mare.fleet.${k}.cap`), t('bt_cap'), {type:'number'})}${inp(P(i, `mare.fleet.${k}.sell`), t('bt_sell'), {type:'number', req:false})}</div>
     ${inp(P(i, `mare.fleet.${k}.crew`), t('bt_crew'), {type:'number'})}
     ${inp(P(i, `mare.fleet.${k}.home`), t('bt_home'))}${mapsLink(P(i, `mare.fleet.${k}.home`))}
-    ${inp(P(i, `mare.fleet.${k}.gear`), t('bt_gear'), {req:false, area:'short'})}
-    ${m.fleet.length > 1 ? `<button type="button" class="ct-back" data-action="fleetdel" data-i="${i}" data-k="${k}">${esc(t('bt_remove_boat'))}</button>` : ''}</section>`;
-  return split(head(t('bt_fleet_title'), t('bt_fleet_sub'), ecount(i)), `
-    ${m.fleet.map(card).join('')}
-    <button type="button" class="ct-back bt-add" data-action="fleetadd" data-i="${i}">${ic('plus',16,1.8)} ${esc(t('bt_add_boat'))}</button>`);
+    ${inp(P(i, `mare.fleet.${k}.gear`), t('bt_gear'), {req:false, area:'short'})}`;
+}
+function mareFleetScreen(i){
+  const m = ensureMare(E(i));
+  const blocks = MARE_BOATS.map(cat => {
+    const open = m.openCats.includes(cat);
+    const boats = m.fleet.map((b, k) => ({b, k})).filter(x => x.b.type === cat);
+    return `<button type="button" class="bt-cat${open ? ' is-on' : ''}" data-action="mareopen" data-i="${i}" data-v="${cat}"><span>${esc(o(cat))}</span><b>${boats.length}</b></button>
+      ${open ? boats.map(({b, k}) => `<section class="ct-block"><h3 class="ct-block-title">${esc(b.name || t('bt_boat_n', {n:k+1}))}${mareKindLabel(b) ? ' · ' + esc(mareKindLabel(b)) : ''}</h3>${mareBoatFields(i, k, b)}<button type="button" class="ct-back" data-action="fleetdel" data-i="${i}" data-k="${k}">${esc(t('bt_remove_boat'))}</button></section>`).join('') + `<button type="button" class="ct-back bt-add" data-action="fleetadd" data-i="${i}" data-type="${cat}">${ic('plus',16,1.8)} ${esc(t('bt_add_boat'))}</button>` : ''}`;
+  }).join('');
+  return split(head(t('bt_fleet_title'), t('bt_fleet_sub'), ecount(i)), `<div class="ct-stack" style="gap:12px">${blocks}</div>`);
 }
 function mareFleetOk(e){ const m = e?.mare; return !!m && m.fleet.length > 0 && m.fleet.every(mareBoatOkFields); }
 function mareMapSvg(e, i){
@@ -2818,7 +2868,8 @@ function mareMapScreen(i){
   const ports = m.ops.map((op, n) => op.area === m.focus ? `<div class="ct-block">${inp(P(i, `mare.ops.${n}.port`), t('bt_port_name'))}${mapsLink(P(i, `mare.ops.${n}.port`))}${m.ops.filter(x => x.area === m.focus).length > 1 ? `<button type="button" class="ct-back" data-action="mareportdel" data-i="${i}" data-n="${n}">${esc(t('bt_port_remove'))}</button>` : ''}</div>` : '').join('');
   const progress = m.ops.filter(op => op.port.trim()).map(op => {
     const n = m.ops.indexOf(op);
-    return `<button type="button" class="${m.hi === n ? 'is-on' : ''}" data-action="marehi" data-i="${i}" data-n="${n}"><span>${esc(op.port.trim())} → ${esc(mareName(e, op.area))}</span><span>${esc(t('bt_st_' + mareOpState(e, n)))}</span></button>`;
+    const custom = mareHasYacht(e, n);
+    return `<button type="button" class="${m.hi === n ? 'is-on' : ''}" data-action="marehi" data-i="${i}" data-n="${n}"><span>${esc(op.port.trim())} → ${esc(mareName(e, op.area))}${custom ? ' · ' + esc(t('bt_custom')) : ''}</span><span>${esc(t('bt_st_' + mareOpState(e, n)))}</span></button>`;
   }).join('');
   return split(head(t('bt_map_title'), t('bt_map_sub'), ecount(i)), `
     ${mareMapSvg(e, i)}
@@ -2859,6 +2910,7 @@ function mareBandScreen(i, n){
   const half = op.halfPart;
   return split(head(t('bt_band_title'), '', ecount(i)), `
     ${mareOpRef(e, n)}
+    ${note(t('bt_inherit'), 'info')}
     ${group(t('bt_band_title'), `<div class="ct-pills" role="group">${MARE_BANDS.map(c => {
       const on = has(c);
       return `<button type="button" class="ct-pill${on ? ' is-on' : ''}" role="checkbox" aria-checked="${on}" data-action="tog" data-p="${P(i, `mare.ops.${n}.bands`)}" data-v="${c}"><span>${esc(t('bt_band_' + c))}</span></button>`;
@@ -2892,18 +2944,22 @@ function mareBandOk(e, n){
   if(op.allWeek === 'yes') return true;
   return op.allWeek === 'no' && op.days.length > 0;
 }
+function mareHasYacht(e, n){ return (e?.mare?.ops?.[n]?.boatIds || []).some(id => mareBoatById(e, id)?.type === 'yacht'); }
 function mareLinkScreen(i, n){
   const e = E(i), m = ensureMare(e), op = m.ops[n];
-  const cards = m.fleet.map(b => {
+  const list = m.fleet.filter(b => !m.linkFilter || b.type === m.linkFilter);
+  const cards = list.map(b => {
     const on = op.boatIds.includes(b.id);
     const compat = b.home && op.port && b.home.trim().toLowerCase() === op.port.trim().toLowerCase();
+    const kind = mareKindLabel(b);
     return `<button type="button" class="bt-pick${on ? ' is-on' : ''}" role="checkbox" aria-checked="${on}" data-action="marelink" data-i="${i}" data-n="${n}" data-id="${b.id}">
-      <span class="bt-boatcard">${boatWire(b.type)}<span><strong>${esc(b.name || o(b.type))}</strong><p>${esc(o(b.type))} · ${esc(t('bt_cap_short'))} ${esc(String(b.cap || '—'))} · ${esc(b.home || '')}</p>${compat ? `<p>${esc(t('bt_compat'))}</p>` : ''}${b.type === 'yacht' && on ? `<p>${esc(t('bn_agency'))}</p>` : ''}</span></span></button>`;
+      <span class="bt-boatcard">${boatWire(b)}<span><strong>${esc(b.name || o(b.type))}</strong><p>${esc(o(b.type))}${kind ? ' · ' + esc(kind) : ''} · ${esc(t('bt_cap_short'))} ${esc(String(b.cap || '—'))} · ${esc(b.home || '')}</p>${compat ? `<p>${esc(t('bt_compat'))}</p>` : ''}${b.type === 'yacht' && on ? `<p>${esc(t('bt_custom'))}</p>` : ''}</span></span></button>`;
   }).join('');
   return split(head(t('bt_link_title'), t('bt_link_sub'), ecount(i)), `
     ${mareOpRef(e, n)}
-    <div class="ct-stack" style="gap:12px">${cards}</div>
-    ${op.boatIds.some(id => mareBoatById(e, id)?.type === 'yacht') ? note(t('bn_agency'), 'info') : ''}`);
+    ${group(t('bt_filter'), pills(P(i, 'mare.linkFilter'), [''].concat(MARE_BOATS), { lab:c => c ? o(c) : t('bt_filter_all') }))}
+    <div class="ct-stack" style="gap:12px">${cards || `<p>${esc(t('bt_fleet_sub'))}</p>`}</div>
+    ${mareHasYacht(e, n) ? `<p class="bt-ref">${esc(t('bt_custom'))}</p>${note(t('bn_agency'), 'info')}` : ''}`);
 }
 function mareLinkOk(e, n){ const op = e?.mare?.ops?.[n]; return !!op && op.boatIds.length > 0; }
 function mareSideOk(s, cap){ return s && (s.unit === 'persona' || s.unit === 'gruppo') && pos(s.low) && pos(s.mid) && pos(s.high) && s.min >= 2 && s.max >= s.min && s.max <= cap && s.minAge >= 0 && s.minAge !== ''; }
@@ -2921,10 +2977,11 @@ function marePriceScreen(i, n, b){
   const panel = (side, title, label) => `<section class="ct-block"><h3 class="ct-block-title">${esc(title)}</h3>
     ${group(t('bt_unit'), pills(P(i, `mare.ops.${n}.offer.${id}.${side}.unit`), ['persona','gruppo'], { lab:c => t('bt_unit_' + c) }))}
     ${mareSeasons(i, n, id, side, label)}
+    ${money(P(i, `mare.ops.${n}.offer.${id}.${side}.extra`), t('bt_link_sup'), {req:false})}
     ${marePeople(i, n, id, side, cap)}</section>`;
   return split(head(t('bt_price_title'), '', ecount(i)), `
     ${mareOpRef(e, n)}
-    <p class="bt-ref">${boatWire(boat.type)} <span>${esc(boat.name)} · ${esc(o(boat.type))} · ${esc(t('bt_cap_short'))} ${cap}</span></p>
+    <p class="bt-ref">${boatWire(boat)} <span>${esc(boat.name)} · ${esc(o(boat.type))}${mareKindLabel(boat) ? ' · ' + esc(mareKindLabel(boat)) : ''} · ${esc(t('bt_cap_short'))} ${cap}</span></p>
     ${note(t('bt_period'), 'info')}
     ${group(t('bt_modes'), pills(P(i, `mare.ops.${n}.offer.${id}.modes`), ['shared','priv','both'], { lab:c => t(c === 'both' ? 'bt_mode_both' : c === 'priv' ? 'pr_priv_short' : 'pr_shared_short') }))}
     ${modes === 'shared' || modes === 'both' ? panel('shared', t('pr_shared_short'), t('bt_agency')) : ''}
@@ -3008,20 +3065,21 @@ function renderFleet(){
   const i = Math.max(0, S.exps.indexOf(exp));
   const m = ensureMare(S.exps[i]);
   const here = mareHere();
-  const card = (b, k) => {
-    const links = m.ops.filter(op => op.boatIds.includes(b.id) && op.port.trim()).map(op => `${op.port.trim()} → ${mareName(S.exps[i], op.area)}`).join(', ');
-    const on = here && m.ops[here.n]?.boatIds.includes(b.id);
-    return `<section class="ct-block">${boatWire(b.type)}
-      <p><strong>${esc(b.name || t('bt_boat_n', {n:k+1}))}</strong> · ${esc(b.type ? o(b.type) : '')}</p>
-      <p>${esc(t('bt_cap_short'))} ${esc(String(b.cap || '—'))}${b.home ? ' · ' + esc(b.home) : ''}</p>
-      ${links ? `<p>${esc(t('bt_linked'))}: ${esc(links)}</p>` : ''}
-      ${inp(P(i, `mare.fleet.${k}.name`), t('bt_boat_name'))}
-      ${here ? `<button type="button" class="ct-back${on ? ' is-on' : ''}" data-action="fleetsel" data-i="${here.i}" data-n="${here.n}" data-id="${b.id}">${esc(t('bt_use_here'))}</button>` : ''}
-    </section>`;
-  };
-  panel.innerHTML = `<div class="ct-panel-top"><h2 id="fleetTitle">${esc(t('bt_myboats'))}</h2><button type="button" class="ct-x" data-action="fleetclose" aria-label="${esc(t('bt_close'))}">${ic('x',18,1.8)}</button></div>
-    ${m.fleet.map(card).join('')}
-    <button type="button" class="ct-back bt-add" data-action="fleetadd" data-i="${i}">${ic('plus',16,1.8)} ${esc(t('bt_add_boat'))}</button>`;
+  const groups = MARE_BOATS.map(cat => {
+    const open = m.openCats.includes(cat);
+    const boats = m.fleet.map((b, k) => ({b, k})).filter(x => x.b.type === cat);
+    const body = open ? boats.map(({b, k}) => {
+      const links = m.ops.filter(op => op.boatIds.includes(b.id) && op.port.trim()).map(op => `${op.port.trim()} → ${mareName(S.exps[i], op.area)}`).join(', ');
+      const on = here && m.ops[here.n]?.boatIds.includes(b.id);
+      return `<section class="ct-block">${boatWire(b)}<p><strong>${esc(b.name || t('bt_boat_n', {n:k+1}))}</strong>${mareKindLabel(b) ? ' · ' + esc(mareKindLabel(b)) : ''}</p>
+        ${links ? `<p>${esc(t('bt_linked'))}: ${esc(links)}</p>` : ''}
+        ${mareBoatFields(i, k, b)}
+        ${here ? `<button type="button" class="ct-back${on ? ' is-on' : ''}" data-action="fleetsel" data-i="${here.i}" data-n="${here.n}" data-id="${b.id}">${esc(t('bt_use_here'))}</button>` : ''}
+        <button type="button" class="ct-back" data-action="fleetdel" data-i="${i}" data-k="${k}">${esc(t('bt_remove_boat'))}</button></section>`;
+    }).join('') + `<button type="button" class="ct-back bt-add" data-action="fleetadd" data-i="${i}" data-type="${cat}">${ic('plus',16,1.8)} ${esc(t('bt_add_boat'))}</button>` : '';
+    return `<button type="button" class="bt-cat${open ? ' is-on' : ''}" data-action="mareopen" data-i="${i}" data-v="${cat}"><span>${esc(o(cat))}</span><b>${boats.length}</b></button>${body}`;
+  }).join('');
+  panel.innerHTML = `<div class="ct-panel-top"><h2 id="fleetTitle">${esc(t('bt_myboats'))}</h2><button type="button" class="ct-x" data-action="fleetclose" aria-label="${esc(t('bt_close'))}">${ic('x',18,1.8)}</button></div>${groups}`;
   panel.classList.add('is-open'); panel.setAttribute('aria-hidden','false'); scrim.classList.add('is-open'); scrim.hidden = false;
 }
 
@@ -3892,7 +3950,7 @@ function buildPayload(){
     contact: {...S.contact, phone_e164: S.contact.prefix + digits(S.contact.phone)},
     organization: {...S.org, vat: S.org.vat.replace(/\s/g,''), cf: S.org.cf.replace(/\s/g,'').toUpperCase(), manual_review: S.org.form==='altra_forma'},
     collaboration: { experiences: hasA, agreement: hasB },
-    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); const row = { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>{ const p={...e.price[b]}; delete p.extra; if(e.sector==='artigianato'){ p.incl = 1; p.min = ''; } return [b, p]; })), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; delete row.manual; delete row.cancel; delete row.penalties; delete row.noshow; delete row.weather; if(row.billing==='bill_receipt') row.billing=''; if(e.sector === 'artigianato'){ row.priceMode = 'pm_persona'; delete row.equipProvided; delete row.bringNote; delete row.bring; delete row.limits; delete row.safety; delete row.localita; delete row.meet; delete row.end; if(row.sq){ delete row.sq.materials; delete row.sq.workshop_loc; delete row.sq.live_demo; delete row.sq.sale; } } if(e.sector === 'mare'){ delete row.address; delete row.meetAddress; delete row.activityAddress; delete row.meetDifferent; } else { delete row.localita; delete row.meet; delete row.end; if(!e.meetDifferent){ delete row.meetAddress; delete row.activityAddress; } } if(e.sector === 'enogastronomia'){ delete row.limits; delete row.safety; delete row.prevExp; delete row.difficulty; } if(e.sector === 'cultura'){ delete row.equipProvided; delete row.bringNote; delete row.bring; } if(!isSpa(e)) delete row.spaTreatments; if(isHike(e)) row.hike = hikePayload(e); else delete row.hike; return row; }) : [],
+    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); if(e.sector === 'mare') ensureMare(e); const row = { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>{ const p={...e.price[b]}; delete p.extra; if(e.sector==='artigianato'){ p.incl = 1; p.min = ''; } return [b, p]; })), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; delete row.manual; delete row.cancel; delete row.penalties; delete row.noshow; delete row.weather; if(row.billing==='bill_receipt') row.billing=''; if(e.sector === 'artigianato'){ row.priceMode = 'pm_persona'; delete row.equipProvided; delete row.bringNote; delete row.bring; delete row.limits; delete row.safety; delete row.localita; delete row.meet; delete row.end; if(row.sq){ delete row.sq.materials; delete row.sq.workshop_loc; delete row.sq.live_demo; delete row.sq.sale; } } if(e.sector === 'mare'){ delete row.address; delete row.meetAddress; delete row.activityAddress; delete row.meetDifferent; } else { delete row.localita; delete row.meet; delete row.end; if(!e.meetDifferent){ delete row.meetAddress; delete row.activityAddress; } } if(e.sector === 'enogastronomia'){ delete row.limits; delete row.safety; delete row.prevExp; delete row.difficulty; } if(e.sector === 'cultura'){ delete row.equipProvided; delete row.bringNote; delete row.bring; } if(!isSpa(e)) delete row.spaTreatments; if(isHike(e)) row.hike = hikePayload(e); else delete row.hike; return row; }) : [],
     agreement: hasB ? {...S.conv, group: cgroup()} : null,
     consents: {...S.consents, at: new Date().toISOString()},
     /* TODO(backend): when termsAccepted is true, generate the SDT partner contract PDF from the accepted terms and store it with termsAcceptedAt. This preview has no backend and does not create a PDF. */
@@ -4103,7 +4161,8 @@ const ACT = {
   marelink: el => { const m = ensureMare(S.exps[+el.dataset.i]); const op = m.ops[+el.dataset.n]; if(!op) return; const id = el.dataset.id; const k = op.boatIds.indexOf(id); if(k < 0) op.boatIds.push(id); else op.boatIds.splice(k, 1); rerender(); },
   fleetopen: () => { FLEET.open = true; if(typeof H !== 'undefined' && H.open) helpClose(); renderFleet(); },
   fleetclose: () => { FLEET.open = false; renderFleet(); },
-  fleetadd: el => { const m = ensureMare(S.exps[+el.dataset.i]); m.fleet.push(blankMareBoat({})); rerender(); },
+  fleetadd: el => { const m = ensureMare(S.exps[+el.dataset.i]); const type = MARE_BOATS.includes(el.dataset.type) ? el.dataset.type : ''; m.fleet.push(blankMareBoat({ type })); if(type && !m.openCats.includes(type)) m.openCats.push(type); rerender(); },
+  mareopen: el => { const m = ensureMare(S.exps[+el.dataset.i]); const v = el.dataset.v; const k = m.openCats.indexOf(v); if(k < 0) m.openCats.push(v); else m.openCats.splice(k, 1); rerender(); },
   fleetdel: el => { const m = ensureMare(S.exps[+el.dataset.i]); const id = m.fleet[+el.dataset.k]?.id; m.fleet.splice(+el.dataset.k, 1); if(!m.fleet.length) m.fleet.push(blankMareBoat({})); m.ops.forEach(op => { op.boatIds = op.boatIds.filter(x => x !== id); }); rerender(); },
   fleetsel: el => { const m = ensureMare(S.exps[+el.dataset.i]); const op = m.ops[+el.dataset.n]; if(!op) return; const id = el.dataset.id; const k = op.boatIds.indexOf(id); if(k < 0) op.boatIds.push(id); else op.boatIds.splice(k, 1); rerender(); },
   mareincl: el => { const item = ensureMare(S.exps[+el.dataset.i]).incl[el.dataset.k]; if(item){ item.mode = el.dataset.v; if(item.mode !== 'sup') item.price = ''; } rerender(); },
