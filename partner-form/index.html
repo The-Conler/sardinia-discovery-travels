@@ -1358,6 +1358,7 @@ en:{
   o_yacht:'Yacht',
   bt_spec_title:'Boat details', bt_len:'Length (m)', bt_wid:'Width (m)', bt_brand:'Make', bt_boat_n:'Boat {n}',
   bt_price_title:'How do you price it?', bt_period:'Reference period: April–November',
+  bt_unit:'Price unit', bt_unit_persona:'Per person', bt_unit_gruppo:'Per group/boat',
   bt_season_low:'Low season', bt_season_low_m:'April / October / November', bt_season_mid:'Mid season', bt_season_mid_m:'May / September', bt_season_high:'High season', bt_season_high_m:'June / July / August',
   bt_agency:'Agency price', bt_net:'Private net price',
   bt_allweek:'Available every day of the week?',
@@ -1569,6 +1570,7 @@ it:{
   o_yacht:'Yacht',
   bt_spec_title:'Specifiche sulla barca', bt_len:'Lunghezza (m)', bt_wid:'Larghezza (m)', bt_brand:'Marca', bt_boat_n:'Imbarcazione {n}',
   bt_price_title:'Come la prezzi?', bt_period:'Periodo di riferimento: aprile–novembre',
+  bt_unit:'Unità del prezzo', bt_unit_persona:'Per persona', bt_unit_gruppo:'Per gruppo/imbarcazione',
   bt_season_low:'Bassa stagione', bt_season_low_m:'Aprile / ottobre / novembre', bt_season_mid:'Media stagione', bt_season_mid_m:'Maggio / settembre', bt_season_high:'Alta stagione', bt_season_high_m:'Giugno / luglio / agosto',
   bt_agency:'Prezzo per agenzia', bt_net:'Prezzo netto privata',
   bt_allweek:'Disponibile tutti i giorni della settimana?',
@@ -2618,7 +2620,7 @@ function ensureMare(e){
       const s = (src.specs && src.specs[b]) || {};
       specs[b] = { length:s.length ?? '', width:s.width ?? '', brand:s.brand || '' };
     }
-    const side = (key) => { const s = (src.price && src.price[key]) || {}; return { low:s.low ?? '', mid:s.mid ?? '', high:s.high ?? '', min:Number(s.min)||2, max:Number(s.max)||8, minAge:s.minAge ?? 0 }; };
+    const side = (key) => { const s = (src.price && src.price[key]) || {}; return { unit: s.unit === 'persona' || s.unit === 'gruppo' ? s.unit : '', low:s.low ?? '', mid:s.mid ?? '', high:s.high ?? '', min:Number(s.min)||2, max:Number(s.max)||8, minAge:s.minAge ?? 0 }; };
     const bands = (src.bands || []).filter(b => MARE_BANDS.includes(b));
     const keepSlots = (arr) => (Array.isArray(arr) ? arr : []).filter(s => halfHours().includes(s));
     tours[a] = {
@@ -2722,7 +2724,8 @@ function mareBoatScreen(i, n){
   return split(head(t('bt_boat_title'), '', ecount(i)), `
     ${mareRef(e, n)}
     ${group(t('bt_boats_q'), pills(P(i, `mare.tours.${area}.boatsMany`), ['one','more'], { lab:c => t(c === 'one' ? 'bt_boats_one' : 'bt_boats_more') }))}
-    ${tour.boatsMany ? group(t('bt_boat_title'), pillsHtml, { req:true, multi }) : ''}`);
+    ${tour.boatsMany ? group(t('bt_boat_title'), pillsHtml, { req:true, multi }) : ''}
+    ${tour.boats.includes('yacht') ? note(t('bn_agency'), 'info') : ''}`);
 }
 function mareSpecScreen(i, n, b){
   const e = E(i), m = ensureMare(e), area = m.areas[n], boat = m.tours[area].boats[b];
@@ -2775,10 +2778,12 @@ function marePriceScreen(i, n){
     ${mareRef(e, n)}
     ${note(t('bt_period'), 'info')}
     <section class="ct-block"><h3 class="ct-block-title">${esc(t('pr_shared_short'))}</h3>
+      ${group(t('bt_unit'), pills(P(i, `mare.tours.${area}.price.shared.unit`), ['persona','gruppo'], { lab:c => t('bt_unit_' + c) }))}
       ${mareSeasons(i, area, 'shared', t('bt_agency'))}
       ${marePeople(i, area, 'shared')}
     </section>
     <section class="ct-block"><h3 class="ct-block-title">${esc(t('pr_priv_short'))}</h3>
+      ${group(t('bt_unit'), pills(P(i, `mare.tours.${area}.price.priv.unit`), ['persona','gruppo'], { lab:c => t('bt_unit_' + c) }))}
       ${mareSeasons(i, area, 'priv', t('bt_net'))}
       ${marePeople(i, area, 'priv')}
     </section>
@@ -2820,7 +2825,7 @@ function mareBandOk(e, n){
   if(tour.bands.includes('sunset') && (!tour.sunTime || !pos(tour.sunDur))) return false;
   return true;
 }
-function mareSideOk(s){ return s && pos(s.low) && pos(s.mid) && pos(s.high) && s.min >= 2 && s.max >= s.min && s.minAge >= 0 && s.minAge !== ''; }
+function mareSideOk(s){ return s && (s.unit === 'persona' || s.unit === 'gruppo') && pos(s.low) && pos(s.mid) && pos(s.high) && s.min >= 2 && s.max >= s.min && s.minAge >= 0 && s.minAge !== ''; }
 const MARE_INCL = ['skipper','gear','aperitivo','lunch','beverage','transport','fuel','insurance','photos'];
 const MARE_GAMES = ['sup','scooter','altro'];
 function mareInclScreen(i){
