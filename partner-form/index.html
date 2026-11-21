@@ -1431,7 +1431,7 @@ en:{
   bt_price_title:'How do you price it?', bt_period:'Reference period: April – October',
   bt_unit:'Price unit', bt_unit_persona:'Per person', bt_unit_gruppo:'Per group/boat',
   bt_fleet_title:'Which boats do you have available?', bt_fleet_sub:'Register each boat once. You will reuse it on every tour.',
-  bt_myboats:'My boats', bt_boat_name:'Name or internal code', bt_make:'Make and model', bt_cap:'Maximum capacity', bt_sell:'Sellable capacity, if any', bt_crew:'Crew members', bt_home:'Home port', bt_gear:'Permanent equipment on board',
+  bt_myboats:'My boats', bt_float:'My boats', bt_boat_name:'Name or internal code', bt_make:'Make and model', bt_cap:'Maximum capacity', bt_sell:'Sellable capacity, if any', bt_crew:'Crew members', bt_home:'Home port', bt_gear:'Permanent equipment on board',
   bt_add_boat:'Add a boat', bt_remove_boat:'Remove this boat', bt_port_remove:'Remove this departure',
   bt_map_title:'Where do you operate?', bt_map_sub:'Choose a destination. An area lights up. A precise place gets a pin.',
   bt_from:'Where can this tour depart from?', bt_dash_note:'The dashed line links the departure to the destination. It is not the nautical route.',
@@ -1657,7 +1657,7 @@ it:{
   bt_price_title:'Come la prezzi?', bt_period:'Periodo di riferimento: Aprile – ottobre',
   bt_unit:'Unità del prezzo', bt_unit_persona:'Per persona', bt_unit_gruppo:'Per gruppo/imbarcazione',
   bt_fleet_title:'Quali barche hai a disposizione?', bt_fleet_sub:'Registra ogni imbarcazione una sola volta. La riusi su più tour.',
-  bt_myboats:'Le mie barche', bt_boat_name:'Nome o codice identificativo interno', bt_make:'Marca e modello', bt_cap:'Capienza massima', bt_sell:'Capienza massima vendibile, eventuale', bt_crew:'Numero dei componenti dell’equipaggio', bt_home:'Porto abituale', bt_gear:'Dotazioni permanenti disponibili',
+  bt_myboats:'Le mie barche', bt_float:'Barche', bt_boat_name:'Nome o codice identificativo interno', bt_make:'Marca e modello', bt_cap:'Capienza massima', bt_sell:'Capienza massima vendibile, eventuale', bt_crew:'Numero dei componenti dell’equipaggio', bt_home:'Porto abituale', bt_gear:'Dotazioni permanenti disponibili',
   bt_add_boat:'Aggiungi un’imbarcazione', bt_remove_boat:'Rimuovi questa barca', bt_port_remove:'Rimuovi questa partenza',
   bt_map_title:'Dove operi?', bt_map_sub:'Scegli la destinazione. Un’area si illumina. Un punto preciso mostra un pin.',
   bt_from:'Da dove può partire questo tour?', bt_dash_note:'La linea tratteggiata collega la partenza alla destinazione. Non è la rotta nautica.',
@@ -3422,9 +3422,9 @@ function renderBoatSheet(){
   const show = boats.length > 0 && !registering;
   if(!show) BOATS.open = false;
   btn.hidden = !show;
-  btn.querySelector('.bt-float-label').textContent = t('bt_myboats');
+  btn.querySelector('.bt-float-label').textContent = t('bt_float');
   btn.querySelector('.bt-float-ico').innerHTML = ic('sailboat', 18, 1.8);
-  btn.setAttribute('aria-label', t('bt_myboats'));
+  btn.setAttribute('aria-label', t('bt_float'));
   btn.setAttribute('aria-expanded', BOATS.open ? 'true' : 'false');
   if(!BOATS.open){
     panel.classList.remove('is-open');
