@@ -1397,7 +1397,7 @@ en:{
   bt_from:'Where can this tour depart from?', bt_dash_note:'The dashed line links the departure to the destination. It is not the nautical route.',
   bt_op_title:'Operating tour', bt_link_title:'Which boats do you want to associate with this tour?', bt_link_sub:'Only boats whose home port is this departure are listed.',
   bt_compat:'Compatible', bt_st_done:'completed', bt_st_work:'in progress (to be completed)', bt_st_new:'not started (to be started)',
-  bt_yacht_q:'Do you offer yachts?', bt_yacht_note:'The yacht does not appear in “My boats” and follows a separate flow: the agency will contact you to arrange it.', bt_no_port:'No boat is registered at this departure port. Add one from My boats.', bt_tour_gear:'Equipment available for this tour',
+  bt_yacht_note:'The yacht does not appear in “My boats” and follows a separate flow: the agency will contact you to arrange it.', bt_no_port:'No boat is registered at this departure port. Add one from My boats.', bt_tour_gear:'Equipment available for this tour',
   bt_price_shared:'Agency price: per person.', bt_price_priv:'Agency price: total amount for the boat/group.',
   bt_modes:'How do you run it with this boat?', bt_mode_both:'Both', bt_linked:'Linked tours', bt_use_here:'Select for this tour', bt_cap_short:'Capacity', bt_close:'Close',
   bt_filter:'Filter by category', bt_filter_all:'All',
@@ -1622,7 +1622,7 @@ it:{
   bt_from:'Da dove può partire questo tour?', bt_dash_note:'La linea tratteggiata collega la partenza alla destinazione. Non è la rotta nautica.',
   bt_op_title:'Tour operativo', bt_link_title:'Quali barche vuoi associare a questo tour?', bt_link_sub:'Compaiono solo le barche con lo stesso porto di partenza.',
   bt_compat:'Compatibile', bt_st_done:'completato', bt_st_work:'in compilazione (da completare)', bt_st_new:'non iniziato (da iniziare)',
-  bt_yacht_q:'Offri yacht?', bt_yacht_note:'Lo yacht non compare in “Le mie barche” e segue un flusso separato: l’agenzia ti contatterà per la gestione.', bt_no_port:'Nessuna barca è registrata in questo porto di partenza. Aggiungila da Le mie barche.', bt_tour_gear:'Dotazioni disponibili per questo tour',
+  bt_yacht_note:'Lo yacht non compare in “Le mie barche” e segue un flusso separato: l’agenzia ti contatterà per la gestione.', bt_no_port:'Nessuna barca è registrata in questo porto di partenza. Aggiungila da Le mie barche.', bt_tour_gear:'Dotazioni disponibili per questo tour',
   bt_price_shared:'Prezzo per l’agenzia: per persona.', bt_price_priv:'Prezzo per l’agenzia: importo complessivo per barca/gruppo.',
   bt_modes:'Come la proponi con questa barca?', bt_mode_both:'Entrambe', bt_linked:'Tour collegati', bt_use_here:'Seleziona per questo tour', bt_cap_short:'Capienza', bt_close:'Chiudi',
   bt_filter:'Filtra per categoria', bt_filter_all:'Tutte',
@@ -2771,8 +2771,8 @@ function ensureMare(e){
   const hi = Number.isInteger(prev.hi) && prev.hi >= 0 && prev.hi < ops.length ? prev.hi : 0;
   const openCats = (prev.openCats || []).filter(c => MARE_BOATS.includes(c));
   const linkFilter = MARE_BOATS.includes(prev.linkFilter) ? prev.linkFilter : '';
-  const yachts = prev.yachts === 'yes' || prev.yachts === 'no' ? prev.yachts : '';
-  e.mare = { areas, areaOther: prev.areaOther || '', focus, hi, openCats, linkFilter, yachts, fleet, ops, incl, bring, games:{ on:!!gsrc.on, items:{ sup:gameItem('sup'), scooter:gameItem('scooter'), altro:gameItem('altro') } }, tickets:{ on:!!tk.on, price:tk.price ?? '', method: tk.method === 'cash' || tk.method === 'pos' ? tk.method : '' } };
+  const yachtOpen = !!prev.yachtOpen;
+  e.mare = { areas, areaOther: prev.areaOther || '', focus, hi, openCats, linkFilter, yachtOpen, fleet, ops, incl, bring, games:{ on:!!gsrc.on, items:{ sup:gameItem('sup'), scooter:gameItem('scooter'), altro:gameItem('altro') } }, tickets:{ on:!!tk.on, price:tk.price ?? '', method: tk.method === 'cash' || tk.method === 'pos' ? tk.method : '' } };
   e.spec = '';
   e.type = [];
   return e.mare;
@@ -2812,6 +2812,10 @@ function mareBoatFields(i, k, b){
     ${inp(P(i, `mare.fleet.${k}.home`), t('bt_home'))}${mapsLink(P(i, `mare.fleet.${k}.home`))}
     ${inp(P(i, `mare.fleet.${k}.gear`), t('bt_gear'), {req:false, area:'short'})}`;
 }
+function mareYachtRow(i, m){
+  return `<button type="button" class="bt-cat${m.yachtOpen ? ' is-on' : ''}" data-action="mareyacht" data-i="${i}"><span>${esc(o('yacht'))}</span></button>
+    ${m.yachtOpen ? note(t('bt_yacht_note'), 'info') : ''}`;
+}
 function mareFleetScreen(i){
   const m = ensureMare(E(i));
   const blocks = MARE_BOATS.map(cat => {
@@ -2820,11 +2824,9 @@ function mareFleetScreen(i){
     return `<button type="button" class="bt-cat${open ? ' is-on' : ''}" data-action="mareopen" data-i="${i}" data-v="${cat}"><span>${esc(o(cat))}</span><b>${boats.length}</b></button>
       ${open ? boats.map(({b, k}) => `<section class="ct-block"><h3 class="ct-block-title">${esc(b.name || t('bt_boat_n', {n:k+1}))}</h3>${mareBoatFields(i, k, b)}<button type="button" class="ct-back" data-action="fleetdel" data-i="${i}" data-k="${k}">${esc(t('bt_remove_boat'))}</button></section>`).join('') + `<button type="button" class="ct-back bt-add" data-action="fleetadd" data-i="${i}" data-type="${cat}">${ic('plus',16,1.8)} ${esc(t('bt_add_boat'))}</button>` : ''}`;
   }).join('');
-  return split(head(t('bt_fleet_title'), t('bt_fleet_sub'), ecount(i)), `<div class="ct-stack" style="gap:12px">${blocks}
-    ${group(t('bt_yacht_q'), pills(P(i, 'mare.yachts'), ['yes','no'], { lab:c => t(c === 'yes' ? 'yn_yes' : 'yn_no') }))}
-    ${m.yachts === 'yes' ? note(t('bt_yacht_note'), 'info') : ''}</div>`);
+  return split(head(t('bt_fleet_title'), t('bt_fleet_sub'), ecount(i)), `<div class="ct-stack" style="gap:12px">${blocks}${mareYachtRow(i, m)}</div>`);
 }
-function mareFleetOk(e){ const m = e?.mare; return !!m && (m.yachts === 'yes' || m.yachts === 'no') && m.fleet.every(mareBoatOkFields); }
+function mareFleetOk(e){ const m = e?.mare; return !!m && m.fleet.every(mareBoatOkFields); }
 function mareMapSvg(e, i){
   const m = e.mare, on = a => m.areas.includes(a);
   const zone = (key, inner) => `<g class="bt-zone${on(key) ? ' is-on' : ''}" data-action="marezone" data-i="${i}" data-v="${key}">${inner}<title>${esc(t('bt_a_' + key))}</title></g>`;
@@ -3068,9 +3070,7 @@ function renderFleet(){
     }).join('') + `<button type="button" class="ct-back bt-add" data-action="fleetadd" data-i="${i}" data-type="${cat}">${ic('plus',16,1.8)} ${esc(t('bt_add_boat'))}</button>` : '';
     return `<button type="button" class="bt-cat${open ? ' is-on' : ''}" data-action="mareopen" data-i="${i}" data-v="${cat}"><span>${esc(o(cat))}</span><b>${boats.length}</b></button>${body}`;
   }).join('');
-  panel.innerHTML = `<div class="ct-panel-top"><h2 id="fleetTitle">${esc(t('bt_myboats'))}</h2><button type="button" class="ct-x" data-action="fleetclose" aria-label="${esc(t('bt_close'))}">${ic('x',18,1.8)}</button></div>${groups}
-    ${group(t('bt_yacht_q'), pills(P(i, 'mare.yachts'), ['yes','no'], { lab:c => t(c === 'yes' ? 'yn_yes' : 'yn_no') }))}
-    ${m.yachts === 'yes' ? note(t('bt_yacht_note'), 'info') : ''}`;
+  panel.innerHTML = `<div class="ct-panel-top"><h2 id="fleetTitle">${esc(t('bt_myboats'))}</h2><button type="button" class="ct-x" data-action="fleetclose" aria-label="${esc(t('bt_close'))}">${ic('x',18,1.8)}</button></div>${groups}${mareYachtRow(i, m)}`;
   panel.classList.add('is-open'); panel.setAttribute('aria-hidden','false'); scrim.classList.add('is-open'); scrim.hidden = false;
 }
 
@@ -4154,6 +4154,7 @@ const ACT = {
   fleetclose: () => { FLEET.open = false; renderFleet(); },
   fleetadd: el => { const m = ensureMare(S.exps[+el.dataset.i]); const type = MARE_BOATS.includes(el.dataset.type) ? el.dataset.type : ''; m.fleet.push(blankMareBoat({ type })); if(type && !m.openCats.includes(type)) m.openCats.push(type); rerender(); },
   mareopen: el => { const m = ensureMare(S.exps[+el.dataset.i]); const v = el.dataset.v; const k = m.openCats.indexOf(v); if(k < 0) m.openCats.push(v); else m.openCats.splice(k, 1); rerender(); },
+  mareyacht: el => { const m = ensureMare(S.exps[+el.dataset.i]); m.yachtOpen = !m.yachtOpen; rerender(); },
   fleetdel: el => { const m = ensureMare(S.exps[+el.dataset.i]); const id = m.fleet[+el.dataset.k]?.id; m.fleet.splice(+el.dataset.k, 1); if(!m.fleet.length) m.fleet.push(blankMareBoat({})); m.ops.forEach(op => { op.boatIds = op.boatIds.filter(x => x !== id); }); rerender(); },
   fleetsel: el => { const m = ensureMare(S.exps[+el.dataset.i]); const op = m.ops[+el.dataset.n]; const boat = m.fleet.find(b => b.id === el.dataset.id); if(!op || !boat || !mareSamePort(boat.home, op.port)) return; const id = boat.id; const k = op.boatIds.indexOf(id); if(k < 0) op.boatIds.push(id); else op.boatIds.splice(k, 1); rerender(); },
   mareincl: el => { const item = ensureMare(S.exps[+el.dataset.i]).incl[el.dataset.k]; if(item){ item.mode = el.dataset.v; if(item.mode !== 'sup') item.price = ''; } rerender(); },
