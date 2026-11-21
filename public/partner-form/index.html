@@ -2846,18 +2846,89 @@ function mareHudSync(){
     b.classList.toggle('is-on', k === 'spin' && PRE.spin);
   });
 }
-function mareIsCore(obj){
-  for(let n = obj; n; n = n.parent){ if(n.name && /_Core$/.test(n.name)) return true; }
-  return false;
+function mareDotMap(THREE){
+  if(PRE.dotMap) return PRE.dotMap;
+  const s = 64, c = document.createElement('canvas');
+  c.width = c.height = s;
+  const g = c.getContext('2d');
+  g.beginPath();
+  g.arc(s / 2, s / 2, s * 0.46, 0, Math.PI * 2);
+  g.fillStyle = '#fff';
+  g.fill();
+  const tex = new THREE.CanvasTexture(c);
+  PRE.dotMap = tex;
+  return tex;
+}
+function mareSurfaceDots(THREE, geometry, spacing){
+  const pos = geometry.attributes && geometry.attributes.position;
+  if(!pos || !pos.count) return null;
+  const index = geometry.index;
+  const triCount = index ? index.count / 3 : pos.count / 3;
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
+  const raw = [];
+  for(let t = 0; t < triCount; t++){
+    const ia = index ? index.getX(t * 3) : t * 3;
+    const ib = index ? index.getX(t * 3 + 1) : t * 3 + 1;
+    const ic = index ? index.getX(t * 3 + 2) : t * 3 + 2;
+    a.fromBufferAttribute(pos, ia);
+    b.fromBufferAttribute(pos, ib);
+    c.fromBufferAttribute(pos, ic);
+    const longest = Math.max(a.distanceTo(b), a.distanceTo(c), b.distanceTo(c));
+    const steps = Math.max(1, Math.round(longest / spacing));
+    for(let i = 0; i <= steps; i++){
+      for(let j = 0; j <= steps - i; j++){
+        const u = i / steps, v = j / steps, w = 1 - u - v;
+        raw.push(a.x * w + b.x * u + c.x * v, a.y * w + b.y * u + c.y * v, a.z * w + b.z * u + c.z * v);
+      }
+    }
+  }
+  const cell = spacing * 0.85;
+  const seen = new Set();
+  const out = [];
+  for(let i = 0; i < raw.length; i += 3){
+    const k = Math.round(raw[i] / cell) + ',' + Math.round(raw[i + 1] / cell) + ',' + Math.round(raw[i + 2] / cell);
+    if(seen.has(k)) continue;
+    seen.add(k);
+    out.push(raw[i], raw[i + 1], raw[i + 2]);
+  }
+  if(!out.length) return null;
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(out, 3));
+  const mat = new THREE.PointsMaterial({
+    color: 0x8fd0d4,
+    size: spacing * 0.64,
+    map: mareDotMap(THREE),
+    transparent: true,
+    alphaTest: 0.5,
+    depthWrite: false,
+    sizeAttenuation: true
+  });
+  const pts = new THREE.Points(geo, mat);
+  pts.renderOrder = 2;
+  return pts;
 }
 function mareStyle(THREE, root){
-  const cream = 0xd7cfc4, teal = 0x8fd0d4;
+  root.updateMatrixWorld(true);
+  const span = Math.max(new THREE.Box3().setFromObject(root).getSize(new THREE.Vector3()).length(), 1e-4);
+  const spacing = span / 38;
+  const scale = new THREE.Vector3();
   root.traverse(obj => {
-    if(!obj.isMesh) return;
-    const color = mareIsCore(obj) ? cream : teal;
+    if(!obj.isMesh || obj.userData.mareDots) return;
+    obj.userData.mareDots = true;
     obj.visible = true;
-    if(obj.material && obj.material.dispose) obj.material.dispose();
-    obj.material = new THREE.MeshBasicMaterial({ color, wireframe:true });
+    const prev = obj.material;
+    if(prev) (Array.isArray(prev) ? prev : [prev]).forEach(m => m && m.dispose && m.dispose());
+    obj.material = new THREE.MeshBasicMaterial({
+      color: 0xb7b2aa,
+      transparent: true,
+      opacity: 0.34,
+      depthWrite: false,
+      side: THREE.DoubleSide
+    });
+    obj.getWorldScale(scale);
+    const local = spacing / Math.max(scale.x, scale.y, scale.z, 1e-6);
+    const dots = mareSurfaceDots(THREE, obj.geometry, local);
+    if(dots) obj.add(dots);
   });
 }
 function mareSit(THREE, group){
@@ -3020,7 +3091,14 @@ async function mountMarePreview(){
   PRE.view = view;
   if(PRE.renderer.domElement.parentElement !== view) view.appendChild(PRE.renderer.domElement);
   if(PRE.type !== type || !PRE.model){
-    if(PRE.model){ PRE.scene.remove(PRE.model); PRE.model.traverse(o => { o.geometry?.dispose?.(); }); }
+    if(PRE.model){
+      PRE.scene.remove(PRE.model);
+      PRE.model.traverse(o => {
+        o.geometry?.dispose?.();
+        if(o.isPoints && o.material) o.material.dispose();
+        else if(o.userData.mareDots && o.material && o.material.dispose) o.material.dispose();
+      });
+    }
     PRE.type = type;
     const model = await mareObject(THREE, type);
     if(token !== PRE.token) return;
