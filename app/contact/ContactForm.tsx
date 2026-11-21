@@ -196,7 +196,7 @@ export function ContactForm() {
           </div>
           <label className="cf-field">
             <span>{t.message}</span>
-            <textarea name="message" rows={5} placeholder={t.messagePh} />
+            <textarea name="message" rows={2} placeholder={t.messagePh} />
           </label>
           <div className="cf-field">
             <span>{t.file}</span>
