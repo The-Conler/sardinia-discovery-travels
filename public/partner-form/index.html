@@ -80,7 +80,7 @@ img{display:block}
 .bt-tiles .bt-cat > span{display:block;max-width:100%}
 .bt-tiles .bt-cat b{position:absolute;top:0;right:0;z-index:1;transform:translate(42%,-42%);display:inline-grid;place-items:center;min-width:22px;height:22px;margin:0;padding:0 6px;border-radius:999px;background:#2f7f88;color:#f8f4ee;font-size:12px;font-weight:700;line-height:1;box-shadow:0 0 0 3px var(--background)}
 .bt-stage{min-height:420px;display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:24px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03)}
-.bt-view{position:relative;flex:1;min-height:300px;border-radius:16px;overflow:hidden;touch-action:none}
+.bt-view{position:relative;flex:1;min-height:300px;border-radius:16px;overflow:hidden;touch-action:none;background:#000}
 .bt-view canvas{display:block;width:100%;height:100%;cursor:grab}
 .bt-stage .bt-wire{width:100%;height:280px}
 .bt-stage .bt-wire svg{width:100%;height:100%;animation:none;transform:none}
@@ -2861,7 +2861,7 @@ const MARE_ANIM = {
   catamarano: [{ name:'Catamarano_Radar_Scanner', type:'spin', speed:65, axis:'y' }],
   yacht: [{ name:'Yacht_Radar_Scanner', type:'spin', speed:65, axis:'y' }]
 };
-const PRE = { spin:true, theta:0.7, phi:1.15, radius:8, home:null, target:null, drag:null, raf:0, last:0, type:'', token:0, parts:[], THREE:null, renderer:null, scene:null, camera:null, model:null, view:null };
+const PRE = { spin:true, theta:-0.9, phi:1.18, radius:8, home:null, target:null, drag:null, raf:0, last:0, type:'', token:0, parts:[], THREE:null, renderer:null, scene:null, camera:null, model:null, view:null };
 function mareWebGL(){ try{ const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'))); }catch(e){ return false; } }
 function mareHudSync(){
   document.querySelectorAll('[data-mare-hud]').forEach(b => {
@@ -2871,13 +2871,16 @@ function mareHudSync(){
 }
 function mareDotMap(THREE){
   if(PRE.dotMap) return PRE.dotMap;
-  const s = 64, c = document.createElement('canvas');
+  const s = 128, c = document.createElement('canvas');
   c.width = c.height = s;
   const g = c.getContext('2d');
-  g.beginPath();
-  g.arc(s / 2, s / 2, s * 0.46, 0, Math.PI * 2);
-  g.fillStyle = '#fff';
-  g.fill();
+  const glow = g.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+  glow.addColorStop(0, 'rgba(255,255,255,1)');
+  glow.addColorStop(0.36, 'rgba(255,255,255,1)');
+  glow.addColorStop(0.55, 'rgba(255,255,255,0.4)');
+  glow.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = glow;
+  g.fillRect(0, 0, s, s);
   const tex = new THREE.CanvasTexture(c);
   PRE.dotMap = tex;
   return tex;
@@ -2885,44 +2888,63 @@ function mareDotMap(THREE){
 function mareSurfaceDots(THREE, geometry, spacing){
   const pos = geometry.attributes && geometry.attributes.position;
   if(!pos || !pos.count) return null;
-  const index = geometry.index;
-  const triCount = index ? index.count / 3 : pos.count / 3;
-  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
-  const raw = [];
-  for(let t = 0; t < triCount; t++){
-    const ia = index ? index.getX(t * 3) : t * 3;
-    const ib = index ? index.getX(t * 3 + 1) : t * 3 + 1;
-    const ic = index ? index.getX(t * 3 + 2) : t * 3 + 2;
-    a.fromBufferAttribute(pos, ia);
-    b.fromBufferAttribute(pos, ib);
-    c.fromBufferAttribute(pos, ic);
-    const longest = Math.max(a.distanceTo(b), a.distanceTo(c), b.distanceTo(c));
-    const steps = Math.max(1, Math.round(longest / spacing));
-    for(let i = 0; i <= steps; i++){
-      for(let j = 0; j <= steps - i; j++){
-        const u = i / steps, v = j / steps, w = 1 - u - v;
-        raw.push(a.x * w + b.x * u + c.x * v, a.y * w + b.y * u + c.y * v, a.z * w + b.z * u + c.z * v);
+  geometry.computeBoundingBox();
+  const bb = geometry.boundingBox;
+  const ext = [bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z];
+  const order = [0, 1, 2].sort((a, b) => ext[b] - ext[a]);
+  const out = [];
+  const seen = new Set();
+  const keep = (x, y, z, key) => { if(seen.has(key)) return; seen.add(key); out.push(x, y, z); };
+  if(ext[order[1]] < spacing * 1.25){
+    const L = order[0];
+    const n = Math.max(2, Math.round(ext[L] / spacing));
+    const c = [(bb.min.x + bb.max.x) / 2, (bb.min.y + bb.max.y) / 2, (bb.min.z + bb.max.z) / 2];
+    const mn = [bb.min.x, bb.min.y, bb.min.z], mx = [bb.max.x, bb.max.y, bb.max.z];
+    for(let i = 0; i <= n; i++){
+      const p = c.slice();
+      p[L] = mn[L] + (mx[L] - mn[L]) * (i / n);
+      keep(p[0], p[1], p[2], 'L' + i);
+    }
+  }else{
+    const index = geometry.index;
+    const triCount = index ? index.count / 3 : pos.count / 3;
+    const axes = [[order[0], order[1], 'A']];
+    if(ext[order[2]] > spacing * 2) axes.push([order[0], order[2], 'B']);
+    const va = [0, 0, 0], vb = [0, 0, 0], vc = [0, 0, 0];
+    const read = (i, d) => { d[0] = pos.getX(i); d[1] = pos.getY(i); d[2] = pos.getZ(i); };
+    for(let t = 0; t < triCount; t++){
+      const ia = index ? index.getX(t * 3) : t * 3;
+      const ib = index ? index.getX(t * 3 + 1) : t * 3 + 1;
+      const ic = index ? index.getX(t * 3 + 2) : t * 3 + 2;
+      read(ia, va); read(ib, vb); read(ic, vc);
+      for(const [A, B, tag] of axes){
+        const aA = va[A], aB = va[B], bA = vb[A], bB = vb[B], cA = vc[A], cB = vc[B];
+        const denom = (bA - aA) * (cB - aB) - (cA - aA) * (bB - aB);
+        if(Math.abs(denom) < 1e-10) continue;
+        const minA = Math.min(aA, bA, cA), maxA = Math.max(aA, bA, cA);
+        const minB = Math.min(aB, bB, cB), maxB = Math.max(aB, bB, cB);
+        for(let i = Math.ceil(minA / spacing - 1e-6); i <= Math.floor(maxA / spacing + 1e-6); i++){
+          for(let j = Math.ceil(minB / spacing - 1e-6); j <= Math.floor(maxB / spacing + 1e-6); j++){
+            const pA = i * spacing, pB = j * spacing;
+            const u = ((pA - aA) * (cB - aB) - (cA - aA) * (pB - aB)) / denom;
+            const v = ((bA - aA) * (pB - aB) - (pA - aA) * (bB - aB)) / denom;
+            if(u < -1e-3 || v < -1e-3 || u + v > 1 + 1e-3) continue;
+            const w = 1 - u - v;
+            keep(va[0] * w + vb[0] * u + vc[0] * v, va[1] * w + vb[1] * u + vc[1] * v, va[2] * w + vb[2] * u + vc[2] * v, tag + i + ',' + j);
+          }
+        }
       }
     }
-  }
-  const cell = spacing * 0.85;
-  const seen = new Set();
-  const out = [];
-  for(let i = 0; i < raw.length; i += 3){
-    const k = Math.round(raw[i] / cell) + ',' + Math.round(raw[i + 1] / cell) + ',' + Math.round(raw[i + 2] / cell);
-    if(seen.has(k)) continue;
-    seen.add(k);
-    out.push(raw[i], raw[i + 1], raw[i + 2]);
   }
   if(!out.length) return null;
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute(out, 3));
   const mat = new THREE.PointsMaterial({
-    color: 0x8fd0d4,
-    size: spacing * 0.64,
+    color: 0x19e6e0,
+    size: spacing * 0.95,
     map: mareDotMap(THREE),
     transparent: true,
-    alphaTest: 0.5,
+    blending: THREE.AdditiveBlending,
     depthWrite: false,
     sizeAttenuation: true
   });
@@ -2932,8 +2954,10 @@ function mareSurfaceDots(THREE, geometry, spacing){
 }
 function mareStyle(THREE, root){
   root.updateMatrixWorld(true);
-  const span = Math.max(new THREE.Box3().setFromObject(root).getSize(new THREE.Vector3()).length(), 1e-4);
-  const spacing = span / 38;
+  const box = new THREE.Box3().setFromObject(root);
+  const size = box.getSize(new THREE.Vector3());
+  const span = Math.max(size.x, size.y, size.z, 1e-4);
+  const spacing = span / 22;
   const scale = new THREE.Vector3();
   root.traverse(obj => {
     if(!obj.isMesh || obj.userData.mareDots) return;
@@ -2941,13 +2965,7 @@ function mareStyle(THREE, root){
     obj.visible = true;
     const prev = obj.material;
     if(prev) (Array.isArray(prev) ? prev : [prev]).forEach(m => m && m.dispose && m.dispose());
-    obj.material = new THREE.MeshBasicMaterial({
-      color: 0xb7b2aa,
-      transparent: true,
-      opacity: 0.34,
-      depthWrite: false,
-      side: THREE.DoubleSide
-    });
+    obj.material = new THREE.MeshBasicMaterial({ transparent:true, opacity:0, depthWrite:false, colorWrite:false });
     obj.getWorldScale(scale);
     const local = spacing / Math.max(scale.x, scale.y, scale.z, 1e-6);
     const dots = mareSurfaceDots(THREE, obj.geometry, local);
@@ -3045,8 +3063,8 @@ function mareFrame(THREE){
   const center = box.getCenter(new THREE.Vector3());
   PRE.target = center;
   const span = Math.max(size.x, size.y, size.z, 1);
-  PRE.radius = (span * 0.55) / Math.tan(THREE.MathUtils.degToRad(16)) * 1.2;
-  PRE.theta = 0.7; PRE.phi = 1.15;
+  PRE.radius = (span * 0.5) / Math.tan(THREE.MathUtils.degToRad(16)) * 0.86;
+  PRE.theta = -0.9; PRE.phi = 1.18;
   PRE.home = { theta:PRE.theta, phi:PRE.phi, radius:PRE.radius };
   PRE.camera.near = Math.max(0.05, span / 400);
   PRE.camera.far = Math.max(200, span * 30);
@@ -3106,7 +3124,7 @@ async function mountMarePreview(){
   if(!PRE.renderer){
     PRE.renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
     PRE.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
-    PRE.renderer.setClearColor(0x000000, 0);
+    PRE.renderer.setClearColor(0x000000, 1);
     PRE.scene = new THREE.Scene();
     PRE.camera = new THREE.PerspectiveCamera(32, 1, 0.05, 800);
     if(!PRE.raf) mareLoop();
