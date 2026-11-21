@@ -612,11 +612,10 @@ img{display:block}
 .ct-help-btn:hover{background:rgba(72,68,66,.75);transform:scale(1.04)}
 .ct-help-btn:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,127,136,.3)}
 .ct-help-btn.is-low{bottom:calc(24px + env(safe-area-inset-bottom))}
-.bt-float{position:fixed;left:var(--ct-gutter);bottom:calc(104px + env(safe-area-inset-bottom));z-index:1001;display:inline-flex;align-items:center;gap:14px;height:52px;margin:0;padding:0 6px 0 22px;border:0;border-radius:999px;background:#141211;color:#f8f4ee;font:inherit;font-size:13px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.28);transition:transform .35s var(--ease-bounce)}
+.bt-float{position:fixed;top:20px;right:var(--ct-gutter);z-index:1001;display:inline-flex;align-items:center;gap:14px;height:52px;margin:0;padding:0 6px 0 22px;border:0;border-radius:999px;background:#141211;color:#f8f4ee;font:inherit;font-size:13px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.28);transition:transform .35s var(--ease-bounce)}
 .bt-float[hidden]{display:none}
 .bt-float:hover{transform:scale(1.04)}
 .bt-float:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,127,136,.3)}
-.bt-float.is-low{bottom:calc(24px + env(safe-area-inset-bottom))}
 .bt-float-ico{display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:50%;background:#f8f4ee;color:#141211}
 .bt-sheet{position:fixed;top:16px;right:16px;bottom:16px;z-index:2200;width:min(440px,calc(100vw - 32px));display:flex;flex-direction:column;gap:8px;padding:28px;overflow:auto;border-radius:24px;background:#24211f;border:1px solid rgba(255,255,255,.12);color:#f8f4ee;transform:translateX(calc(100% + 32px));transition:transform .45s var(--ease-luxury)}
 .bt-sheet.is-open{transform:none}
@@ -631,7 +630,7 @@ img{display:block}
 .bt-dl div{display:flex;flex-direction:column;gap:2px}
 .bt-dl dt{font-size:12px;color:#b9b1a7}
 .bt-dl dd{margin:0;font-size:15px}
-@media (max-width:860px){.bt-float{left:16px}}
+@media (max-width:860px){.bt-float{right:16px}}
 @media (prefers-reduced-motion:reduce){.bt-float,.bt-sheet{transition:none}.bt-float:hover{transform:none}}
 .ct-scrim{position:fixed;inset:0;z-index:2100;background:rgba(14,12,11,.42);opacity:0;pointer-events:none;transition:opacity .3s var(--ct-ease)}
 .ct-scrim.is-open{opacity:1;pointer-events:auto}
@@ -3411,7 +3410,7 @@ function mareAddedBoats(){
   S.exps.forEach((e, i) => {
     if(e?.sector !== 'mare') return;
     (e.mare?.fleet || []).forEach((b, k) => {
-      if(b && (MARE_BOATS.includes(b.type) || String(b.name || '').trim())) out.push({ i, k, b });
+      if(b && mareBoatOkFields(b)) out.push({ i, k, b });
     });
   });
   return out;
@@ -3419,8 +3418,10 @@ function mareAddedBoats(){
 function renderBoatSheet(){
   const panel = $('boatSheet'), scrim = $('boatScrim'), btn = $('boatFloat');
   const boats = mareAddedBoats();
-  if(!boats.length) BOATS.open = false;
-  btn.hidden = !boats.length;
+  const registering = /^e\d+_btfleet$/.test(String(S.pos || ''));
+  const show = boats.length > 0 && !registering;
+  if(!show) BOATS.open = false;
+  btn.hidden = !show;
   btn.querySelector('.bt-float-label').textContent = t('bt_myboats');
   btn.querySelector('.bt-float-ico').innerHTML = ic('sailboat', 18, 1.8);
   btn.setAttribute('aria-label', t('bt_myboats'));
@@ -4304,7 +4305,6 @@ function updateNav(){
   const show = s.sec !== null;
   bar.classList.toggle('is-hidden', !show); bar.dataset.s = s.id; bar.setAttribute('aria-hidden', !show);
   $('helpBtn').classList.toggle('is-low', !show);
-  $('boatFloat').classList.toggle('is-low', !show);
   const inputs = L.filter(x=>x.sec), at = inputs.findIndex(x=>x.id===s.id);
   const p = show ? Math.round((at+1)/inputs.length*100) : 0;
   $('prog').style.width = p+'%'; bar.querySelector('.ct-progress').setAttribute('aria-valuenow', p);
