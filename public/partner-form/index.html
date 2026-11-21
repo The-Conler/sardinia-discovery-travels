@@ -1413,7 +1413,7 @@ en:{
   bt_op_title:'Operating tour', bt_link_title:'Which boats do you want to associate with this tour?', bt_link_sub:'Only boats whose home port is this departure are listed.',
   bt_compat:'Compatible', bt_st_done:'completed', bt_st_work:'in progress (to be completed)', bt_st_new:'not started (to be started)',
   bt_yacht_note:'The yacht does not appear in “My boats” and follows a separate flow: the agency will contact you to arrange it.',
-  bt_hud_core:'Core', bt_hud_xray:'X-Ray', bt_hud_wire:'Wire', bt_hud_spin:'Spin', bt_hud_reset:'Reset', bt_no_port:'No boat is registered at this departure port. Add one from My boats.', bt_tour_gear:'Equipment available for this tour',
+  bt_hud_spin:'Spin', bt_hud_reset:'Reset', bt_no_port:'No boat is registered at this departure port. Add one from My boats.', bt_tour_gear:'Equipment available for this tour',
   bt_price_shared:'Agency price: per person.', bt_price_priv:'Agency price: total amount for the boat/group.',
   bt_modes:'How do you run it with this boat?', bt_mode_both:'Both', bt_linked:'Linked tours', bt_use_here:'Select for this tour', bt_cap_short:'Capacity', bt_close:'Close',
   bt_filter:'Filter by category', bt_filter_all:'All',
@@ -1639,7 +1639,7 @@ it:{
   bt_op_title:'Tour operativo', bt_link_title:'Quali barche vuoi associare a questo tour?', bt_link_sub:'Compaiono solo le barche con lo stesso porto di partenza.',
   bt_compat:'Compatibile', bt_st_done:'completato', bt_st_work:'in compilazione (da completare)', bt_st_new:'non iniziato (da iniziare)',
   bt_yacht_note:'Lo yacht non compare in “Le mie barche” e segue un flusso separato: l’agenzia ti contatterà per la gestione.',
-  bt_hud_core:'Core', bt_hud_xray:'X-Ray', bt_hud_wire:'Wire', bt_hud_spin:'Rotazione', bt_hud_reset:'Reset', bt_no_port:'Nessuna barca è registrata in questo porto di partenza. Aggiungila da Le mie barche.', bt_tour_gear:'Dotazioni disponibili per questo tour',
+  bt_hud_spin:'Rotazione', bt_hud_reset:'Reset', bt_no_port:'Nessuna barca è registrata in questo porto di partenza. Aggiungila da Le mie barche.', bt_tour_gear:'Dotazioni disponibili per questo tour',
   bt_price_shared:'Prezzo per l’agenzia: per persona.', bt_price_priv:'Prezzo per l’agenzia: importo complessivo per barca/gruppo.',
   bt_modes:'Come la proponi con questa barca?', bt_mode_both:'Entrambe', bt_linked:'Tour collegati', bt_use_here:'Seleziona per questo tour', bt_cap_short:'Capienza', bt_close:'Chiudi',
   bt_filter:'Filtra per categoria', bt_filter_all:'Tutte',
@@ -2836,12 +2836,12 @@ const MARE_ANIM = {
   catamarano: [{ name:'Catamarano_Radar_Scanner', type:'spin', speed:65, axis:'y' }],
   yacht: [{ name:'Yacht_Radar_Scanner', type:'spin', speed:65, axis:'y' }]
 };
-const PRE = { mode:'wire', spin:true, theta:0.7, phi:1.15, radius:8, home:null, target:null, drag:null, raf:0, last:0, type:'', token:0, parts:[], THREE:null, renderer:null, scene:null, camera:null, model:null, view:null };
+const PRE = { spin:true, theta:0.7, phi:1.15, radius:8, home:null, target:null, drag:null, raf:0, last:0, type:'', token:0, parts:[], THREE:null, renderer:null, scene:null, camera:null, model:null, view:null };
 function mareWebGL(){ try{ const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl'))); }catch(e){ return false; } }
 function mareHudSync(){
   document.querySelectorAll('[data-mare-hud]').forEach(b => {
     const k = b.dataset.mareHud, v = b.dataset.v;
-    b.classList.toggle('is-on', k === 'mode' ? v === PRE.mode : k === 'spin' ? PRE.spin : false);
+    b.classList.toggle('is-on', k === 'spin' && PRE.spin);
   });
 }
 function mareIsCore(obj){
@@ -2852,21 +2852,10 @@ function mareStyle(THREE, root){
   const cream = 0xd7cfc4, teal = 0x8fd0d4;
   root.traverse(obj => {
     if(!obj.isMesh) return;
-    const core = mareIsCore(obj);
-    const color = core ? cream : teal;
+    const color = mareIsCore(obj) ? cream : teal;
     obj.visible = true;
     if(obj.material && obj.material.dispose) obj.material.dispose();
-    obj.material = PRE.mode === 'wire'
-      ? new THREE.MeshBasicMaterial({ color, wireframe:true })
-      : new THREE.MeshBasicMaterial({ color: PRE.mode === 'core' ? 0x14383c : color, transparent:true, opacity: PRE.mode === 'xray' ? 0.32 : (core ? 0.92 : 0.45), depthWrite: PRE.mode === 'core' });
-    let edges = obj.children.find(c => c.userData.edges);
-    if(PRE.mode === 'wire'){ if(edges) edges.visible = false; return; }
-    if(!edges){
-      edges = new THREE.LineSegments(new THREE.EdgesGeometry(obj.geometry, 12), new THREE.LineBasicMaterial({ color: cream }));
-      edges.userData.edges = true;
-      obj.add(edges);
-    }
-    edges.visible = true;
+    obj.material = new THREE.MeshBasicMaterial({ color, wireframe:true });
   });
 }
 function mareSit(THREE, group){
@@ -2993,7 +2982,7 @@ function mareLoop(now){
   const telem = document.querySelector('[data-mare-telem]');
   if(telem && PRE.model){
     const deg = ((PRE.model.rotation.y * 180 / Math.PI) % 360 + 360) % 360;
-    telem.textContent = 'YAW ' + deg.toFixed(1).padStart(5, '0') + '° · ' + PRE.mode.toUpperCase() + ' · SPIN ' + (PRE.spin ? 'ON' : 'OFF');
+    telem.textContent = 'YAW ' + deg.toFixed(1).padStart(5, '0') + '° · SPIN ' + (PRE.spin ? 'ON' : 'OFF');
   }
   mareCam();
   PRE.renderer.render(PRE.scene, PRE.camera);
@@ -3048,9 +3037,8 @@ async function mountMarePreview(){
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-mare-hud]'); if(!b || !PRE.THREE) return;
   const k = b.dataset.mareHud;
-  if(k === 'mode') PRE.mode = b.dataset.v;
-  else if(k === 'spin') PRE.spin = !PRE.spin;
-  else { const h = PRE.home || { theta:0.7, phi:1.15, radius:PRE.radius }; PRE.theta = h.theta; PRE.phi = h.phi; PRE.radius = h.radius; if(PRE.model) PRE.model.rotation.y = 0; PRE.spin = true; PRE.mode = 'wire'; }
+  if(k === 'spin') PRE.spin = !PRE.spin;
+  else { const h = PRE.home || { theta:0.7, phi:1.15, radius:PRE.radius }; PRE.theta = h.theta; PRE.phi = h.phi; PRE.radius = h.radius; if(PRE.model) PRE.model.rotation.y = 0; PRE.spin = true; }
   if(PRE.model) mareStyle(PRE.THREE, PRE.model);
   mareHudSync();
 });
@@ -3093,7 +3081,6 @@ function mareFleetScreen(i){
   const forms = cat ? boats.map(({b, k}) => `<section class="ct-block"><h3 class="ct-block-title">${esc(b.name || t('bt_boat_n', {n:k+1}))}</h3>${mareBoatFields(i, k, b)}<button type="button" class="ct-back" data-action="fleetdel" data-i="${i}" data-k="${k}">${esc(t('bt_remove_boat'))}</button></section>`).join('') + `<button type="button" class="ct-back bt-add" data-action="fleetadd" data-i="${i}" data-type="${cat}">${ic('plus',16,1.8)} ${esc(t('bt_add_boat'))}</button>` : '';
   const hull = m.yachtOpen ? 'yacht' : cat;
   const hud = hull ? `<div class="bt-view" data-mare-view></div><div class="bt-hud">
-      ${['core','xray','wire'].map(v => `<button type="button" data-mare-hud="mode" data-v="${v}">${esc(t('bt_hud_' + v))}</button>`).join('')}
       <button type="button" data-mare-hud="spin">${esc(t('bt_hud_spin'))}</button>
       <button type="button" data-mare-hud="reset">${esc(t('bt_hud_reset'))}</button>
     </div><p class="bt-telem" data-mare-telem></p>${m.yachtOpen ? note(t('bt_yacht_note'), 'info') : ''}` : '';
