@@ -4723,8 +4723,9 @@ if(restored && !['welcome','thanks'].includes(S.pos)) setTimeout(()=>toast(t('t_
    a checksum-valid but invented P.IVA) and goes through the normal state
    path (S + save + render), so validation, Next and autosave behave as
    with real input. Choices already made on a screen are kept; empty
-   choices get the first valid option.
-   Shift+click (or long-press on touch): fill, then press Next.
+   choices get the first valid option. It never ticks the authorization
+   checkbox and never submits the form. Boat Tour registration gets a
+   sample boat named Barca test.
    Optional URL presets for testers, e.g.
      ?devfill=paths:B,struct:st_ristorante   ?devfill=paths:A+B,sector:mare,form:associazione
    ===================================================================== */
@@ -4766,7 +4767,8 @@ if(DEV_FILL) (function(){
       case 'g3': e.durH = e.sector==='mare' ? 4 : 2; e.durM = 0; e.min = 2; e.max = 8; e.minAge = 6; break;
       case 'g4': if(!e.langs.length) e.langs = ['it','en']; if(!e.access.length) e.access = ['acc_families']; break;
       case 'mode': if(!e.mode) e.mode = CONFIG.modes[0][0]; break;
-      case 'incl': if(!Object.keys(e.incl).length){
+      case 'incl': if(e.sector === 'mare'){ const mm = ensureMare(e); Object.keys(mm.incl).forEach(k => { if(!mm.incl[k].mode) mm.incl[k].mode = 'inc'; }); break; }
+        if(!Object.keys(e.incl).length){
         const extra = e.sector === 'enogastronomia'
           ? (typeList(e).includes('degustazione') ? {} : {inc_tasting:'inc'})
           : e.sector === 'cultura'
@@ -4813,11 +4815,106 @@ if(DEV_FILL) (function(){
       if(!c.sameBooking && !(filled(c.bookName) && emailOk(c.bookEmail))){ c.bookName = 'Mario Rossi Test'; c.bookEmail = 'prenotazioni.test@example.com'; } }
   }
 
+  function fillBoat(b){
+    if(!MARE_BOATS.includes(b.type)) b.type = 'barca_motore';
+    if(!filled(b.name, 2)) b.name = 'Barca test';
+    if(!filled(b.brand, 2)) b.brand = 'Test Marine';
+    if(!pos(b.length)) b.length = '9';
+    if(!pos(b.width)) b.width = '3';
+    if(!(mareCap(b) >= 2)) b.cap = '8';
+    if(!pos(b.crew)) b.crew = '1';
+    if(!filled(b.home, 2)) b.home = 'Palau';
+    if(b.sell !== '' && b.sell != null && !(pos(b.sell) && Number(b.sell) <= mareCap(b))) b.sell = '';
+  }
+  function fillMare(i, rest){
+    const e = S.exps[i]; if(!e || e.sector !== 'mare') return;
+    const m = ensureMare(e);
+    if(rest === 'fleet'){
+      if(!m.fleet.length) m.fleet.push(blankMareBoat({ type:'barca_motore' }));
+      m.fleet.forEach(fillBoat);
+      m.openCats = [m.fleet[0].type];
+      m.yachtOpen = false;
+      return;
+    }
+    if(rest === 'map'){
+      if(!m.areas.length) m.areas = ['maddalena'];
+      if(m.areas.includes('altro') && !filled(m.areaOther, 2)) m.areaOther = 'Zona di prova';
+      m.areas.forEach(a => {
+        let op = m.ops.find(o => o.area === a);
+        if(!op){ op = blankMareOp({ area:a }); m.ops.push(op); }
+        if(!filled(op.port, 2)) op.port = m.fleet.find(b => filled(b.home, 2))?.home || 'Palau';
+      });
+      m.focus = m.areas[0] || '';
+      return;
+    }
+    const meet = rest.match(/^meet(\d+)$/);
+    const band = rest.match(/^band(\d+)$/);
+    const link = rest.match(/^link(\d+)$/);
+    const price = rest.match(/^price(\d+)_(\d+)$/);
+    const det = rest.match(/^det(\d+)$/);
+    const n = +((meet || band || link || price || det || [])[1]);
+    const op = m.ops[n]; if(!op) return;
+    if(meet){
+      if(op.meetSame !== 'same' && op.meetSame !== 'diff') op.meetSame = 'same';
+      if(op.meetSame === 'diff' && !filled(op.meet, 2)) op.meet = 'Molo di prova';
+    }else if(band){
+      if(!op.bands.includes('full') && !op.bands.includes('half')) op.bands = ['full'];
+      if(op.bands.includes('full') && !op.fullSlots.length) op.fullSlots = ['09:00'];
+      if(op.bands.includes('half')){
+        if(!['morning','evening','both'].includes(op.halfPart)) op.halfPart = 'morning';
+        if((op.halfPart === 'morning' || op.halfPart === 'both') && !op.halfAm.length) op.halfAm = ['09:00'];
+        if((op.halfPart === 'evening' || op.halfPart === 'both') && !op.halfPm.length) op.halfPm = ['17:00'];
+      }
+      if(op.bands.includes('sunset')){
+        if(!MARE_EVENING.includes(op.sunTime)) op.sunTime = '18:00';
+        if(!pos(op.sunDur)) op.sunDur = 2;
+        if(!filled(op.sunIncludes, 2)) op.sunIncludes = 'Aperitivo di prova';
+      }
+      if(op.allWeek !== 'yes' && op.allWeek !== 'no') op.allWeek = 'yes';
+      if(op.allWeek === 'no' && !op.days.length) op.days = ['d1','d2','d3','d4','d5'];
+    }else if(link){
+      if(!op.boatIds.length){
+        let boat = m.fleet.find(b => mareBoatOkFields(b) && mareSamePort(b.home, op.port));
+        if(!boat){
+          boat = blankMareBoat({ name:'Barca test', type:'barca_motore', brand:'Test Marine', length:'9', width:'3', cap:'8', crew:'1', home:String(op.port || 'Palau').trim() || 'Palau' });
+          fillBoat(boat);
+          m.fleet.push(boat);
+        }
+        op.boatIds = [boat.id];
+      }
+    }else if(price){
+      const id = op.boatIds[+price[2]];
+      const boat = m.fleet.find(b => b.id === id);
+      if(!boat) return;
+      const offer = op.offer[id] || { modes:'', gear:'', shared:blankMareSide(), priv:blankMareSide() };
+      if(!offer.modes) offer.modes = 'shared';
+      const cap = mareCap(boat);
+      (offer.modes === 'both' ? ['shared','priv'] : [offer.modes === 'priv' ? 'priv' : 'shared']).forEach(side => {
+        const p = offer[side];
+        if(!pos(p.low)) p.low = '40';
+        if(!pos(p.mid)) p.mid = '60';
+        if(!pos(p.high)) p.high = '80';
+        if(!(p.min >= 2)) p.min = 2;
+        if(!(p.max >= p.min && p.max <= cap)) p.max = Math.max(p.min, Math.min(cap, 8));
+        if(p.minAge === '' || p.minAge == null) p.minAge = 0;
+      });
+      op.offer[id] = offer;
+    }else if(det){
+      if(!filled(op.see, 2)) op.see = 'Cala di prova';
+      if(!filled(op.swim, 2)) op.swim = 'Bagno di prova';
+      if(!filled(op.stops, 2)) op.stops = 'Una sosta di prova';
+      if(!filled(op.itin, 2)) op.itin = 'Itinerario di prova lungo la costa.';
+      if(op.stopsPlan !== 'yes' && op.stopsPlan !== 'no') op.stopsPlan = 'no';
+      if(op.stopsPlan === 'yes' && !filled(op.stopsWhere, 2)) op.stopsWhere = 'Cala di prova';
+    }
+  }
   function fillCurrent(){
     const id = S.pos, C = S.contact, G = S.org;
     const m = id.match(/^e(\d+)_(\w+)$/);
     const hm = id.match(/^e(\d+)_hk(\d+)$/);
+    const bm = id.match(/^e(\d+)_bt(.+)$/);
     if(hm){ const e = S.exps[+hm[1]]; if(e){ const keys = hikeSeq(e), key = keys[+hm[2]]; if(key){ const p = ensureHike(e).profiles[key]; if(!p.cai) p.cai = 'e'; if(!pos(p.km)) p.km = '8'; if(!pos(p.elev)) p.elev = '420'; if(!filled(p.dur,1)) p.dur = '3 h'; if(!pos(p.alt)) p.alt = '900'; if(+hm[2] === keys.length-1 && !e.hike.car) e.hike.car = 'no'; } } }
+    else if(bm) fillMare(+bm[1], bm[2]);
     else if(m) fillExp(m[2], +m[1]);
     else if(/^conv_/.test(id)) fillConv(id);
     else switch(id){
@@ -4825,7 +4922,7 @@ if(DEV_FILL) (function(){
       case 'ref_role': C.role = C.role || CONFIG.roles[0][0]; break;
       case 'ref_contact': C.email = 'mario.rossi.test@example.com'; C.prefix = '+39'; C.phone = '333 000 0000'; break;
       case 'ref_lang': C.lang = C.lang || S.lang; break;
-      case 'ref_auth': C.auth = true; break;
+      case 'ref_auth': break;
       case 'org_form': G.form = G.form || PRE.form || 'societa'; break;
       case 'org_extra': ({
         societa: () => { G.socForm = G.socForm || 'srl'; },
@@ -4849,31 +4946,25 @@ if(DEV_FILL) (function(){
   /* ---------- Button, CSS and wiring ---------- */
   const FLASK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"/><path d="M6.453 15h11.094"/><path d="M8.5 2h7"/></svg>';
   const css = document.createElement('style');
-  css.textContent = `.sd-glass.dev-fill{gap:10px;padding:0 22px;border:1.5px dashed rgba(47,127,136,.95);color:#8fd0d7;font-family:inherit;font-size:17px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .2s var(--ct-ease)}
-.sd-glass.dev-fill:hover{background:rgba(47,127,136,.22)}
-.sd-glass.dev-fill:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,127,136,.3)}
-.sd-glass.dev-fill[hidden]{display:none}
-@media (max-width:640px){.sd-glass.dev-fill{width:44px;flex:none;padding:0;justify-content:center}.sd-glass.dev-fill span{display:none}.sd-tools:has(.dev-fill:not([hidden])){gap:8px}.sd-tools:has(.dev-fill:not([hidden])) .sd-save{white-space:nowrap;padding:0 12px;font-size:15px}}
-@media (max-width:380px){.sd-glass.dev-fill{width:40px}.sd-tools:has(.dev-fill:not([hidden])) .sd-save{padding:0 10px}.sd-tools:has(.dev-fill:not([hidden])){gap:6px}.sd-tools:has(.dev-fill:not([hidden])) .sd-lang button{min-width:38px;padding:0 7px}}`;
+  css.textContent = `.dev-fill{display:inline-flex;align-items:center;gap:6px;height:32px;flex:none;margin:0;padding:0 12px;border-radius:999px;border:1px dashed rgba(143,208,212,.45);background:transparent;color:#8fd0d4;font:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
+.dev-fill svg{width:14px;height:14px}
+.dev-fill:hover{background:rgba(47,127,136,.16)}
+.dev-fill:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,127,136,.3)}
+.dev-fill[hidden]{display:none}
+@media (max-width:640px){.dev-fill{padding:0 8px;font-size:11px}}`;
   document.head.appendChild(css);
   const btn = document.createElement('button');
-  btn.type = 'button'; btn.id = 'devFill'; btn.className = 'sd-glass dev-fill';   /* same pill as the IT/EN toggle, dashed teal = temporary */
-  document.querySelector('.sd-tools').prepend(btn);
+  btn.type = 'button'; btn.id = 'devFill'; btn.className = 'dev-fill';
+  document.querySelector('.ct-bar-inner').prepend(btn);
   const label = () => { const x = L('Dati di test','Fill test data');
     btn.innerHTML = `${FLASK}<span>${x}</span>`; btn.setAttribute('aria-label', x);
-    btn.title = L('Temporaneo, solo per i test. Maiusc+clic: compila e vai avanti.','Temporary, testing only. Shift+click: fill and go to Next.');
+    btn.title = L('Solo dati finti per questo passo. Non invia e non segna l’autorizzazione.','Fake data for this step only. Does not send the form or tick authorization.');
     btn.hidden = ['welcome','thanks'].includes(S.pos); };
-  const fillAndNext = () => { fillCurrent(); if(cur().s.ok()) next(); };
-  let lp = null, lpDone = false;
-  btn.addEventListener('click', e => { if(lpDone){ lpDone = false; return; } e.shiftKey ? fillAndNext() : fillCurrent(); });
-  btn.addEventListener('pointerdown', e => { if(e.pointerType!=='touch') return; lpDone = false;
-    lp = setTimeout(()=>{ lpDone = true; fillAndNext(); }, 600); });
-  ['pointerup','pointerleave','pointercancel'].forEach(ev => btn.addEventListener(ev, ()=>clearTimeout(lp)));
-  btn.addEventListener('contextmenu', e => { if(lpDone) e.preventDefault(); });
+  btn.addEventListener('click', () => fillCurrent());
   const baseRender = render;
   render = function(dir){ baseRender(dir); label(); };   /* keep label and visibility in sync with screen and language */
   label();
-  window.devFill = { fill: fillCurrent, fillAndNext };     /* handy from the console */
+  window.devFill = { fill: fillCurrent };
 })();
 </script>
 </body>
