@@ -527,6 +527,7 @@ img{display:block}
 .ct-incl{display:flex;flex-direction:column;border-radius:var(--ct-radius);background:var(--ct-fill)}
 .ct-incl-row{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:12px 16px;min-height:72px;padding:12px 16px 12px 24px}
 .ct-incl-row+.ct-incl-row{border-top:1px solid var(--ct-line)}
+.ct-incl-row.ct-incl-game{flex:1 1 100%;padding:8px 0 4px 28px;border-top:0;min-height:0}
 .ct-incl-main{display:flex;align-items:center;justify-content:space-between;gap:16px;flex:1 1 100%;min-width:0}
 .ct-incl-row .ct-check{padding:0;background:transparent;border:0;align-items:center}
 .ct-incl-row .ct-check:hover{background:transparent}
@@ -1357,10 +1358,10 @@ en:{
   o_yacht:'Yacht',
   bt_spec_title:'Boat details', bt_len:'Length (m)', bt_wid:'Width (m)', bt_brand:'Make', bt_boat_n:'Boat {n}',
   bt_price_title:'How do you price it?', bt_period:'Reference period: April–November',
-  bt_season_low:'Low season', bt_season_low_m:'April / October', bt_season_mid:'Mid season', bt_season_mid_m:'May / September', bt_season_high:'High season', bt_season_high_m:'June / July / August',
+  bt_season_low:'Low season', bt_season_low_m:'April / October / November', bt_season_mid:'Mid season', bt_season_mid_m:'May / September', bt_season_high:'High season', bt_season_high_m:'June / July / August',
   bt_agency:'Agency price', bt_net:'Private net price',
   bt_allweek:'Available every day of the week?',
-  bt_inc_skipper:'Skipper and crew', bt_inc_gear:'Equipment (masks, fins, SUP, water games)', bt_inc_aperitivo:'Aperitif', bt_inc_lunch:'Lunch', bt_inc_beverage:'Beverage', bt_inc_transport:'Transport', bt_inc_fuel:'Fuel', bt_inc_tickets:'Extra tickets (entries, environmental taxes, and similar)',
+  bt_inc_skipper:'Skipper and crew', bt_inc_gear:'Equipment (masks, fins)', bt_inc_games:'Water games', bt_game_sup:'SUP', bt_game_scooter:'Underwater scooter', bt_game_altro:'Other', bt_inc_aperitivo:'Aperitif', bt_inc_lunch:'Lunch', bt_inc_beverage:'Beverage', bt_inc_transport:'Transport', bt_inc_fuel:'Fuel', bt_inc_tickets:'Extra tickets (entries, environmental taxes, and similar)',
   bt_pp:'Supplement per person', bt_pay:'Method', bt_cash:'Cash', bt_pos:'Card (POS)',
   bt_bring_title:'Technical equipment', bt_bring_sub:'What is not included, and what should the guest bring?',
   bt_br_cream:'Sunscreen', bt_br_cream_dry:'Non-oily sunscreen', bt_br_towels:'Towels', bt_br_hat:'Hat', bt_br_shoes:'Flip-flops', bt_br_glasses:'Sunglasses', bt_br_swimsuit:'Swimsuit', bt_br_packed:'Packed lunch',
@@ -1568,10 +1569,10 @@ it:{
   o_yacht:'Yacht',
   bt_spec_title:'Specifiche sulla barca', bt_len:'Lunghezza (m)', bt_wid:'Larghezza (m)', bt_brand:'Marca', bt_boat_n:'Imbarcazione {n}',
   bt_price_title:'Come la prezzi?', bt_period:'Periodo di riferimento: aprile–novembre',
-  bt_season_low:'Bassa stagione', bt_season_low_m:'Aprile / ottobre', bt_season_mid:'Media stagione', bt_season_mid_m:'Maggio / settembre', bt_season_high:'Alta stagione', bt_season_high_m:'Giugno / luglio / agosto',
+  bt_season_low:'Bassa stagione', bt_season_low_m:'Aprile / ottobre / novembre', bt_season_mid:'Media stagione', bt_season_mid_m:'Maggio / settembre', bt_season_high:'Alta stagione', bt_season_high_m:'Giugno / luglio / agosto',
   bt_agency:'Prezzo per agenzia', bt_net:'Prezzo netto privata',
   bt_allweek:'Disponibile tutti i giorni della settimana?',
-  bt_inc_skipper:'Skipper e equipaggio', bt_inc_gear:'Attrezzatura (maschere, pinne, SUP, giochi acquatici)', bt_inc_aperitivo:'Aperitivo', bt_inc_lunch:'Pranzo', bt_inc_beverage:'Beverage', bt_inc_transport:'Trasporto', bt_inc_fuel:'Carburante', bt_inc_tickets:'Biglietti extra (ingressi, tasse ambientali, ecc.)',
+  bt_inc_skipper:'Skipper e equipaggio', bt_inc_gear:'Attrezzatura (maschere, pinne)', bt_inc_games:'Giochi acquatici', bt_game_sup:'SUP', bt_game_scooter:'Scooter subacqueo', bt_game_altro:'Altro', bt_inc_aperitivo:'Aperitivo', bt_inc_lunch:'Pranzo', bt_inc_beverage:'Beverage', bt_inc_transport:'Trasporto', bt_inc_fuel:'Carburante', bt_inc_tickets:'Biglietti extra (ingressi, tasse ambientali, ecc.)',
   bt_pp:'Supplemento per persona', bt_pay:'Metodo', bt_cash:'Contanti', bt_pos:'POS',
   bt_bring_title:'Attrezzatura tecnica', bt_bring_sub:'Cosa non è incluso, cosa deve portare il cliente?',
   bt_br_cream:'Crema', bt_br_cream_dry:'Crema non oleata', bt_br_towels:'Asciugamani', bt_br_hat:'Cappello', bt_br_shoes:'Ciabatte', bt_br_glasses:'Occhiali da sole', bt_br_swimsuit:'Costume', bt_br_packed:'Pranzo al sacco',
@@ -2664,7 +2665,15 @@ function ensureMare(e){
   const bring = {};
   for(const k of MARE_BRING) bring[k] = !!(prev.bring && prev.bring[k]);
   const tk = prev.tickets || {};
-  e.mare = { areas, areaOther: prev.areaOther || '', tours, incl, bring, tickets:{ on:!!tk.on, price:tk.price ?? '', method: tk.method === 'cash' || tk.method === 'pos' ? tk.method : '' } };
+  const gsrc = prev.games || {};
+  const gameItem = (k) => {
+    const raw = gsrc.items?.[k] || {};
+    const on = !!gsrc.on && !!raw.on;
+    const mode = on && (raw.mode === 'inc' || raw.mode === 'sup') ? raw.mode : '';
+    return { on, mode, price: mode === 'sup' ? (raw.price ?? '') : '', method: mode === 'sup' && (raw.method === 'cash' || raw.method === 'pos') ? raw.method : '' };
+  };
+  const games = { on: !!gsrc.on, items: { sup: gameItem('sup'), scooter: gameItem('scooter'), altro: gameItem('altro') } };
+  e.mare = { areas, areaOther: prev.areaOther || '', tours, incl, bring, games, tickets:{ on:!!tk.on, price:tk.price ?? '', method: tk.method === 'cash' || tk.method === 'pos' ? tk.method : '' } };
   e.spec = '';
   e.type = [];
   return e.mare;
@@ -2813,6 +2822,7 @@ function mareBandOk(e, n){
 }
 function mareSideOk(s){ return s && pos(s.low) && pos(s.mid) && pos(s.high) && s.min >= 2 && s.max >= s.min && s.minAge >= 0 && s.minAge !== ''; }
 const MARE_INCL = ['skipper','gear','aperitivo','lunch','beverage','transport','fuel','insurance','photos'];
+const MARE_GAMES = ['sup','scooter','altro'];
 function mareInclScreen(i){
   const e = E(i), m = ensureMare(e);
   const row = (key) => {
@@ -2823,9 +2833,17 @@ function mareInclScreen(i){
       ${item.mode === 'sup' ? `<label class="ct-field ct-incl-price"><span class="ct-field-label"><span>${t('sup_price')}</span></span>
         <span class="ct-money"><span>€</span><input data-cash="${P(i, 'mare.incl.' + key + '.price')}" type="text" inputmode="numeric" autocomplete="off" value="${esc(formatItAmount(item.price))}" class="${bad ? 'is-bad' : ''}"></span></label>` : ''}</div>`;
   };
+  const game = (k) => {
+    const item = m.games.items[k];
+    return `<div class="ct-incl-row ct-incl-game"><div class="ct-incl-main">${check(P(i, 'mare.games.items.' + k + '.on'), t('bt_game_' + k))}
+      ${item.on ? `<span class="ct-seg" role="radiogroup">${['inc','sup'].map(x => `<button type="button" role="radio" aria-checked="${item.mode === x}" class="${item.mode === x ? 'is-on' : ''}" data-action="maregamemode" data-i="${i}" data-k="${k}" data-v="${x}">${t(x)}</button>`).join('')}</span>` : ''}</div>
+      ${item.mode === 'sup' ? `${money(P(i, 'mare.games.items.' + k + '.price'), t('bt_pp'))}${group(t('bt_pay'), pills(P(i, 'mare.games.items.' + k + '.method'), ['cash','pos'], { lab:c => t(c === 'cash' ? 'bt_cash' : 'bt_pos') }))}` : ''}</div>`;
+  };
   const tk = m.tickets;
+  const games = `<div class="ct-incl-row"><div class="ct-incl-main">${check(P(i,'mare.games.on'), t('bt_inc_games'))}</div>
+      ${m.games.on ? MARE_GAMES.map(game).join('') : ''}</div>`;
   return split(head(t('in_title'), t('in_sub'), ecount(i)), `
-    <div class="ct-incl">${MARE_INCL.map(row).join('')}
+    <div class="ct-incl">${MARE_INCL.map(key => row(key) + (key === 'gear' ? games : '')).join('')}
       <div class="ct-incl-row"><div class="ct-incl-main">${check(P(i,'mare.tickets.on'), t('bt_inc_tickets'))}</div>
       ${tk.on ? `${money(P(i,'mare.tickets.price'), t('bt_pp'))}${group(t('bt_pay'), pills(P(i,'mare.tickets.method'), ['cash','pos'], { lab:c => t(c === 'cash' ? 'bt_cash' : 'bt_pos') }))}` : ''}
       </div></div>`);
@@ -2882,6 +2900,15 @@ function mareDetailOk(e, n){
 function mareInclOk(e){
   const m = e?.mare; if(!m) return false;
   if(m.tickets.on && (!pos(m.tickets.price) || (m.tickets.method !== 'cash' && m.tickets.method !== 'pos'))) return false;
+  if(m.games?.on){
+    const picked = MARE_GAMES.filter(k => m.games.items[k]?.on);
+    if(!picked.length) return false;
+    for(const k of picked){
+      const item = m.games.items[k];
+      if(item.mode !== 'inc' && item.mode !== 'sup') return false;
+      if(item.mode === 'sup' && (!pos(item.price) || (item.method !== 'cash' && item.method !== 'pos'))) return false;
+    }
+  }
   return MARE_INCL.every(k => m.incl[k]?.mode !== 'sup' || pos(m.incl[k]?.price));
 }
 function marePriceOk(e, n){
@@ -3908,6 +3935,7 @@ const ACT = {
   mareport: el => { const tour = ensureMare(S.exps[+el.dataset.i]).tours[el.dataset.area]; if(tour) tour.ports.push(''); rerender(); },
   mareboat: el => { const tour = ensureMare(S.exps[+el.dataset.i]).tours[el.dataset.area]; if(!tour) return; const v = el.dataset.v; if(tour.boatsMany !== 'more') tour.boats = [v]; else { const k = tour.boats.indexOf(v); k < 0 ? tour.boats.push(v) : tour.boats.splice(k, 1); } rerender(); },
   mareincl: el => { const item = ensureMare(S.exps[+el.dataset.i]).incl[el.dataset.k]; if(item){ item.mode = el.dataset.v; if(item.mode !== 'sup') item.price = ''; } rerender(); },
+  maregamemode: el => { const item = ensureMare(S.exps[+el.dataset.i]).games.items[el.dataset.k]; if(!item?.on) return; item.mode = el.dataset.v; if(item.mode !== 'sup'){ item.price = ''; item.method = ''; } rerender(); },
   mareslotadd: el => { const tour = ensureMare(S.exps[+el.dataset.i]).tours[el.dataset.area]; const sel = document.querySelector(`[data-mare-slot="${el.dataset.area}:${el.dataset.key}"]`); const v = sel?.value; if(!tour || !v || !halfHours().includes(v)) return sel?.focus(); const a = tour[el.dataset.key]; if(!a.includes(v)){ a.push(v); a.sort(); } rerender(); },
   mareslotdel: el => { const tour = ensureMare(S.exps[+el.dataset.i]).tours[el.dataset.area]; tour?.[el.dataset.key]?.splice(+el.dataset.v, 1); rerender(); },
   tog: el => { const p=el.dataset.p, v=el.dataset.v, a=get(p)||[]; const k=a.indexOf(v); k<0?a.push(v):a.splice(k,1); set(p,a); afterPick(p, a);
@@ -3984,6 +4012,7 @@ function onField(e){
   if(el.type==='checkbox') el.closest('.ct-check')?.classList.toggle('is-on', el.checked);
   if(/\.meetDifferent$/.test(p)){ save(); render(); return; }
   if(/\.food\.(aperitivo|beverage|options)$/.test(p)){ save(); render(); return; }
+  if(/\.games\.on$/.test(p) || /\.games\.items\.[^.]+\.on$/.test(p)){ save(); render(); return; }
   if(el.dataset.sugg){ hl=-1; showSugg(el); }
   const fix = (id, ok) => { const x=$(id); if(x && ok) x.hidden = true; };
   if(p==='contact.email') fix('err-email', emailOk(el.value));
