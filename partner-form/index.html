@@ -2871,30 +2871,37 @@ function mareHudSync(){
 }
 function marePointMaterial(THREE){
   return new THREE.ShaderMaterial({
-    uniforms: { uSize:{ value:12 }, uFocus:{ value:20 }, uRange:{ value:8 } },
+    uniforms: {
+      uSize:{ value:5 },
+      uDpr:{ value:1 },
+      uNear:{ value:8 },
+      uFar:{ value:40 }
+    },
     vertexShader: `
       uniform float uSize;
-      uniform float uFocus;
-      uniform float uRange;
-      attribute float aEdge;
+      uniform float uNear;
+      uniform float uFar;
       varying float vShade;
       void main(){
         vec4 mv = modelViewMatrix * vec4(position, 1.0);
         gl_Position = projectionMatrix * mv;
         gl_PointSize = uSize;
-        float t = clamp(((-mv.z) - (uFocus - uRange)) / max(uRange * 2.0, 0.001), 0.0, 1.0);
-        vShade = max(mix(1.0, 0.62, t), aEdge);
+        float t = clamp(((-mv.z) - uNear) / max(uFar - uNear, 0.001), 0.0, 1.0);
+        vShade = mix(1.0, 0.45, t);
       }
     `,
     fragmentShader: `
+      uniform float uSize;
+      uniform float uDpr;
       varying float vShade;
       void main(){
         vec2 p = gl_PointCoord - vec2(0.5);
         float r = length(p) * 2.0;
         if(r > 1.0) discard;
-        float alpha = smoothstep(1.0, 0.82, r);
-        if(alpha < 0.45) discard;
-        gl_FragColor = vec4(vec3(0.0, 0.863, 0.902) * vShade, 1.0);
+        float aa = clamp((2.0 * uDpr) / max(uSize, 1.0), 0.02, 0.85);
+        float alpha = 1.0 - smoothstep(1.0 - aa, 1.0, r);
+        if(alpha < 0.04) discard;
+        gl_FragColor = vec4(vec3(0.0, 0.863, 0.902), alpha * vShade);
       }
     `,
     transparent: true,
@@ -2904,7 +2911,7 @@ function marePointMaterial(THREE){
   });
 }
 function mareBag(step){
-  return { step, q: step * 0.48, seen: new Set(), pos: [], edge: [] };
+  return { step, q: step * 0.34, seen: new Set(), pos: [], edge: [] };
 }
 function mareKeep(bag, x, y, z, rim){
   const k = Math.round(x / bag.q) + ',' + Math.round(y / bag.q) + ',' + Math.round(z / bag.q);
@@ -2922,17 +2929,12 @@ function mareLine(bag, a, b, rim){
     mareKeep(bag, p[0], p[1], p[2], rim || i === 0 || i === n);
   }
 }
-function mareSailRows(bag, A, B, C){
-  const ab = mareDist(A, B), rows = Math.max(5, Math.round(ab / bag.step));
-  for(let i = 0; i <= rows; i++){
-    const u = i / rows;
-    const p = mareLerp(A, B, u), q = mareLerp(A, C, u);
-    const w = mareDist(p, q);
-    const cols = Math.max(0, Math.round(w / bag.step));
-    for(let k = 0; k <= cols; k++){
-      const t = cols ? k / cols : 0;
-      const s = mareLerp(p, q, t);
-      mareKeep(bag, s[0], s[1], s[2], i === 0 || i === rows || k === 0 || k === cols);
+function mareBary(bag, A, B, C){
+  const n = Math.max(1, Math.round(Math.max(mareDist(A, B), mareDist(A, C), mareDist(B, C)) / bag.step));
+  for(let i = 0; i <= n; i++){
+    for(let j = 0; j <= n - i; j++){
+      const u = i / n, v = j / n, w = 1 - u - v;
+      mareKeep(bag, A[0] * w + B[0] * u + C[0] * v, A[1] * w + B[1] * u + C[1] * v, A[2] * w + B[2] * u + C[2] * v, i === 0 || j === 0 || i + j === n);
     }
   }
 }
@@ -2968,6 +2970,7 @@ function mareSections(bag, tris){
   tris.forEach(t => t.forEach(p => { for(let a = 0; a < 3; a++){ if(p[a] < min[a]) min[a] = p[a]; if(p[a] > max[a]) max[a] = p[a]; } }));
   const ext = [max[0] - min[0], max[1] - min[1], max[2] - min[2]];
   const axis = ext[2] >= ext[0] && ext[2] >= ext[1] ? 2 : (ext[0] >= ext[1] ? 0 : 1);
+  if(axis !== 2){ mareFlat(bag, tris); return; }
   const step = bag.step;
   const yStart = Math.ceil(min[1] / step) * step;
   for(let s = min[axis]; s <= max[axis] + 1e-4; s += step){
@@ -3047,96 +3050,104 @@ function mareWindow(type, x, y, z){
   const nose = z < -4.05 && z > -5.2 && y > 2.05 && y < 3.3 && Math.abs(x) < 2.4;
   return side || nose;
 }
-function mareRig(bag, type){
-  if(type !== 'catamarano') return;
+function mareCatamaran(bag){
   const step = bag.step;
-  const mast = [0, 4.15, -0.45];
-  const head = [0, 13.6, -0.45];
-  const tack = [0, 4.55, 0.15];
-  const clew = [0, 4.75, 5.7];
-  mareLine(bag, mast, head, true);
-  mareSailRows(bag, head, tack, clew);
-  for(let x = -1.7; x <= 1.7; x += step){
-    for(let y = 1.7; y <= 3.35; y += step){
-      if(Math.abs(x) < 1.15 && y > 2.15 && y < 3.15) continue;
-      mareKeep(bag, x, y, -1.3, true);
+  const yDeck = 1.4, halfL = 6;
+  const aMax = 0.6, bMax = 0.7;
+  const circ = Math.PI * (3 * (aMax + bMax) - Math.sqrt((3 * aMax + bMax) * (aMax + 3 * bMax)));
+  const around = Math.max(8, Math.round(circ / step));
+  const taper = u => {
+    if(u < 0.2) return Math.sin((u / 0.2) * Math.PI / 2);
+    if(u > 0.9) return 0.78 + 0.22 * Math.sin(((1 - u) / 0.1) * Math.PI / 2);
+    return 1;
+  };
+  [-2.5, 2.5].forEach(cx => {
+    for(let z = -halfL; z <= halfL + 1e-6; z += step){
+      const u = (z + halfL) / (halfL * 2);
+      const k = taper(u);
+      const a = aMax * k, b = bMax * Math.pow(k, 0.85);
+      if(a < 0.04){ mareKeep(bag, cx, bMax, z, true); continue; }
+      for(let i = 0; i < around; i++){
+        const th = (i / around) * Math.PI * 2;
+        mareKeep(bag, cx + a * Math.cos(th), bMax + b * Math.sin(th), z, true);
+      }
     }
-  }
-  mareLine(bag, [-1.15, 2.15, -1.3], [1.15, 2.15, -1.3], true);
-  mareLine(bag, [1.15, 2.15, -1.3], [1.15, 3.15, -1.3], true);
-  mareLine(bag, [1.15, 3.15, -1.3], [-1.15, 3.15, -1.3], true);
-  mareLine(bag, [-1.15, 3.15, -1.3], [-1.15, 2.15, -1.3], true);
-  for(let z = -3.6; z <= 5.3; z += step){
-    for(let x = -3.15; x <= 3.15; x += step) mareKeep(bag, x, 1.2, z, Math.abs(Math.abs(x) - 3.15) < step * 0.4);
-  }
-  for(let z = -1.3; z <= 3.5; z += step){
-    for(let y = 1.55; y <= 3.45; y += step){
-      const pane = y > 2.15 && y < 3.2 && ((z > -0.9 && z < 0.5) || (z > 1.2 && z < 2.8));
-      if(pane) continue;
-      mareKeep(bag, -2.45, y, z, true);
-      mareKeep(bag, 2.45, y, z, true);
-    }
-    for(let x = -2.45; x <= 2.45; x += step) mareKeep(bag, x, 3.55, z, false);
-  }
-  mareLine(bag, [0, 4.15, -0.15], [0, 4.15, 5.55], true);
-  mareLine(bag, head, [0, 1.85, -6.35], true);
-  mareLine(bag, head, [0, 2.9, 6.2], true);
-  [[-3.25, 1.55, -1.4], [3.25, 1.55, -1.4]].forEach(p => mareLine(bag, head, p, true));
-  [-2.45, 2.45].forEach(x => {
-    [[-0.9, 0.5], [1.2, 2.8]].forEach(([z0, z1]) => {
-      mareLine(bag, [x, 2.15, z0], [x, 3.2, z0], true);
-      mareLine(bag, [x, 3.2, z0], [x, 3.2, z1], true);
-      mareLine(bag, [x, 3.2, z1], [x, 2.15, z1], true);
-      mareLine(bag, [x, 2.15, z1], [x, 2.15, z0], true);
-    });
   });
+  for(let z = -3; z <= 3 + 1e-6; z += step){
+    for(let x = -3; x <= 3 + 1e-6; x += step) mareKeep(bag, x, yDeck, z, Math.abs(Math.abs(x) - 3) < step * 0.6 || Math.abs(Math.abs(z) - 3) < step * 0.6);
+  }
+  const y0 = 1.4, y1 = 2.6, x0 = -2, x1 = 2, z0 = -1.5, z1 = 3.5, zTop = -0.7;
+  const slopeZ = y => z0 + (zTop - z0) * ((y - y0) / (y1 - y0));
+  for(let y = y0; y <= y1 + 1e-6; y += step){
+    const zf = slopeZ(y);
+    for(let z = zf; z <= z1 + 1e-6; z += step){
+      mareKeep(bag, x0, y, z, true);
+      mareKeep(bag, x1, y, z, true);
+    }
+  }
+  for(let z = zTop; z <= z1 + 1e-6; z += step){
+    for(let x = x0; x <= x1 + 1e-6; x += step) mareKeep(bag, x, y1, z, false);
+  }
+  for(let x = x0; x <= x1 + 1e-6; x += step){
+    for(let y = y0; y <= y1 + 1e-6; y += step) mareKeep(bag, x, y, z1, true);
+  }
+  const onFront = (x, y) => [x, y, slopeZ(y)];
+  [[-1.55, -0.25], [0.25, 1.55]].forEach(([a, b]) => {
+    const yb = 1.75, yt = 2.4;
+    mareLine(bag, onFront(a, yb), onFront(b, yb), true);
+    mareLine(bag, onFront(b, yb), onFront(b, yt), true);
+    mareLine(bag, onFront(b, yt), onFront(a, yt), true);
+    mareLine(bag, onFront(a, yt), onFront(a, yb), true);
+  });
+  const foot = [0, yDeck + 1, z0];
+  const top = [0, yDeck + 15, z0];
+  const clew = [0, yDeck + 1, z0 + 6];
+  mareLine(bag, [0, yDeck, z0], top, true);
+  mareBary(bag, foot, top, clew);
+  mareLine(bag, top, [0, 1.1, -6], true);
+  mareLine(bag, top, [0, yDeck, 6], true);
+  mareLine(bag, top, [-3, yDeck, z0], true);
+  mareLine(bag, top, [3, yDeck, z0], true);
 }
 function mareStyle(THREE, root){
   if(root.userData.mareCloud) return;
   root.userData.mareCloud = true;
   root.updateMatrixWorld(true);
-  const box = new THREE.Box3().setFromObject(root);
-  const size = box.getSize(new THREE.Vector3());
-  const step = Math.max(size.x, size.z, 1) / 10;
+  const step = 0.3;
   const bag = mareBag(step);
-  const rootInv = new THREE.Matrix4().copy(root.matrixWorld).invert();
-  const toRoot = new THREE.Matrix4();
-  root.traverse(mesh => {
-    if(!mesh.isMesh || mesh.name === 'Mapping_Rig' || /bridgedeck/i.test(mesh.name || '')) return;
-    const prev = mesh.material;
-    if(prev) (Array.isArray(prev) ? prev : [prev]).forEach(m => m && m.dispose && m.dispose());
-    mesh.material = new THREE.MeshBasicMaterial({ transparent:true, opacity:0, depthWrite:false, colorWrite:false });
-    toRoot.multiplyMatrices(rootInv, mesh.matrixWorld);
-    const tris = mareTrisOf(THREE, mesh, toRoot);
-    if(!tris.length) return;
-    let min = [Infinity, Infinity, Infinity], max = [-Infinity, -Infinity, -Infinity];
-    tris.forEach(t => t.forEach(p => { for(let a = 0; a < 3; a++){ if(p[a] < min[a]) min[a] = p[a]; if(p[a] > max[a]) max[a] = p[a]; } }));
-    const ext = [max[0] - min[0], max[1] - min[1], max[2] - min[2]];
-    const order = [0, 1, 2].sort((a, b) => ext[b] - ext[a]);
-    const sail = /sail/i.test(mesh.name || '') || (order[0] === 1 && ext[order[2]] < ext[order[1]] * 0.35 && ext[order[0]] > step * 4);
-    if(sail){
-      const [h, f, c] = mareSailCorners(tris);
-      mareSailRows(bag, h, f, c);
-    }else if(ext[order[1]] < step * 1.2){
-      const L = order[0];
-      const c = [(min[0] + max[0]) / 2, (min[1] + max[1]) / 2, (min[2] + max[2]) / 2];
-      const a = c.slice(), b = c.slice();
-      a[L] = min[L]; b[L] = max[L];
-      mareLine(bag, a, b, true);
-    }else if(ext[1] < step * 1.45){
-      mareFlat(bag, tris);
-    }else{
-      mareSections(bag, tris);
-    }
-  });
-  mareRig(bag, root.userData.mareType || PRE.type);
-  const pos = [], edge = [];
-  for(let i = 0; i < bag.pos.length; i += 3){
-    const x = bag.pos[i], y = bag.pos[i + 1], z = bag.pos[i + 2];
-    if(mareWindow(PRE.type, x, y, z)) continue;
-    pos.push(x, y, z);
-    edge.push(bag.edge[i / 3]);
+  if(PRE.type === 'catamarano'){
+    mareCatamaran(bag);
+  }else{
+    const rootInv = new THREE.Matrix4().copy(root.matrixWorld).invert();
+    const toRoot = new THREE.Matrix4();
+    root.traverse(mesh => {
+      if(!mesh.isMesh) return;
+      mesh.visible = false;
+      toRoot.multiplyMatrices(rootInv, mesh.matrixWorld);
+      const tris = mareTrisOf(THREE, mesh, toRoot);
+      if(!tris.length) return;
+      let min = [Infinity, Infinity, Infinity], max = [-Infinity, -Infinity, -Infinity];
+      tris.forEach(t => t.forEach(p => { for(let a = 0; a < 3; a++){ if(p[a] < min[a]) min[a] = p[a]; if(p[a] > max[a]) max[a] = p[a]; } }));
+      const ext = [max[0] - min[0], max[1] - min[1], max[2] - min[2]];
+      const order = [0, 1, 2].sort((a, b) => ext[b] - ext[a]);
+      const sail = /sail/i.test(mesh.name || '') || (order[0] === 1 && ext[order[2]] < ext[order[1]] * 0.35 && ext[order[0]] > step * 4);
+      if(sail){
+        const [h, f, c] = mareSailCorners(tris);
+        mareBary(bag, h, f, c);
+      }else if(ext[order[1]] < step * 1.2){
+        const L = order[0];
+        const c = [(min[0] + max[0]) / 2, (min[1] + max[1]) / 2, (min[2] + max[2]) / 2];
+        const a = c.slice(), b = c.slice();
+        a[L] = min[L]; b[L] = max[L];
+        mareLine(bag, a, b, true);
+      }else if(ext[1] < step * 1.45){
+        mareFlat(bag, tris);
+      }else{
+        mareSections(bag, tris);
+      }
+    });
   }
+  const pos = bag.pos, edge = bag.edge;
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   geo.setAttribute('aEdge', new THREE.Float32BufferAttribute(edge, 1));
@@ -3147,6 +3158,8 @@ function mareStyle(THREE, root){
   root.add(pts);
   PRE.dotMat = mat;
   PRE.dotStep = step;
+  const box = new THREE.Box3().setFromObject(pts);
+  const size = box.getSize(new THREE.Vector3());
   PRE.dotSpan = Math.max(size.x, size.y, size.z);
 }
 function mareSit(THREE, group){
@@ -3216,15 +3229,23 @@ function mareBuild(THREE, type){
   return g;
 }
 async function mareObject(THREE, type){
+  if(type === 'catamarano'){
+    const g = new THREE.Group();
+    g.name = 'Catamarano';
+    return g;
+  }
   const url = MARE_GLB[type];
   if(url){
     try{
       const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
       const gltf = await new GLTFLoader().loadAsync(url);
+      gltf.scene.traverse(o => { if(o.isMesh) o.visible = false; });
       return gltf.scene;
     }catch(e){}
   }
-  return mareSit(THREE, mareBuild(THREE, type));
+  const built = mareSit(THREE, mareBuild(THREE, type));
+  built.traverse(o => { if(o.isMesh) o.visible = false; });
+  return built;
 }
 function mareBind(root, type){
   root.rotation.y = 0;
@@ -3245,7 +3266,7 @@ function mareFrame(THREE){
   const aspect = w / Math.max(h, 1);
   PRE.camera.aspect = aspect;
   PRE.camera.updateProjectionMatrix();
-  PRE.theta = 2.2; PRE.phi = 0.7;
+  PRE.theta = 2.2; PRE.phi = (90 - 25) * Math.PI / 180;
   const dots = PRE.model.getObjectByName('Mare_Dots');
   const attr = dots && dots.geometry.attributes.position;
   if(attr){
@@ -3253,19 +3274,35 @@ function mareFrame(THREE){
     center.copy(pbox.getCenter(new THREE.Vector3()));
     PRE.target = center;
   }
-  PRE.radius = Math.max(size.x, size.y, size.z, 1) * 2.4;
+  PRE.radius = Math.max(size.x, size.y, size.z, 1) * 4;
   mareCam();
   if(attr){
-    dots.updateWorldMatrix(true, false);
-    const wp = new THREE.Vector3();
-    let minX = 9, maxX = -9, minY = 9, maxY = -9;
-    for(let i = 0; i < attr.count; i++){
-      wp.fromBufferAttribute(attr, i).applyMatrix4(dots.matrixWorld).project(PRE.camera);
-      if(wp.x < minX) minX = wp.x; if(wp.x > maxX) maxX = wp.x;
-      if(wp.y < minY) minY = wp.y; if(wp.y > maxY) maxY = wp.y;
-    }
-    const mul = Math.max((maxX - minX) / 1.56, (maxY - minY) / 1.68, 0.2);
-    PRE.radius *= mul * 1.04;
+    const span = () => {
+      dots.updateWorldMatrix(true, false);
+      const wp = new THREE.Vector3();
+      let minX = 9, maxX = -9, minY = 9, maxY = -9;
+      for(let i = 0; i < attr.count; i++){
+        wp.fromBufferAttribute(attr, i).applyMatrix4(dots.matrixWorld).project(PRE.camera);
+        if(wp.x < minX) minX = wp.x; if(wp.x > maxX) maxX = wp.x;
+        if(wp.y < minY) minY = wp.y; if(wp.y > maxY) maxY = wp.y;
+      }
+      return { minX, maxX, minY, maxY };
+    };
+    let s = span();
+    let mul = Math.max((s.maxX - s.minX) / 1.60, (s.maxY - s.minY) / 1.72, 0.15);
+    PRE.radius *= mul;
+    mareCam();
+    s = span();
+    mul = Math.max((s.maxX - s.minX) / 1.60, (s.maxY - s.minY) / 1.72, 0.15);
+    if(Math.abs(mul - 1) > 0.02){ PRE.radius *= mul; mareCam(); s = span(); }
+    const midX = (s.minX + s.maxX) / 2, midY = (s.minY + s.maxY) / 2;
+    const dist = PRE.camera.position.distanceTo(PRE.target);
+    const vFov = PRE.camera.fov * Math.PI / 180;
+    const hFov = 2 * Math.atan(Math.tan(vFov / 2) * PRE.camera.aspect);
+    const up = new THREE.Vector3(0, 1, 0).applyQuaternion(PRE.camera.quaternion);
+    const right = new THREE.Vector3(1, 0, 0).applyQuaternion(PRE.camera.quaternion);
+    PRE.target.addScaledVector(right, midX * dist * Math.tan(hFov / 2));
+    PRE.target.addScaledVector(up, midY * dist * Math.tan(vFov / 2));
   }
   PRE.home = { theta:PRE.theta, phi:PRE.phi, radius:PRE.radius };
   PRE.camera.near = Math.max(0.05, Math.max(size.x, size.y, size.z) / 80);
@@ -3287,9 +3324,23 @@ function mareDotsSync(){
   const vFov = PRE.camera.fov * Math.PI / 180;
   const pxPerM = (h * 0.5) / (Math.tan(vFov / 2) * Math.max(dist, 0.001));
   const dpr = PRE.renderer ? PRE.renderer.getPixelRatio() : 1;
-  mat.uniforms.uSize.value = Math.max(8, (PRE.dotStep || 0.6) * pxPerM * 0.58) * dpr;
-  mat.uniforms.uFocus.value = dist;
-  mat.uniforms.uRange.value = Math.max((PRE.dotSpan || 8) * 0.42, 0.5);
+  mat.uniforms.uSize.value = 5 * dpr;
+  mat.uniforms.uDpr.value = dpr;
+  const dots = PRE.model && PRE.model.getObjectByName('Mare_Dots');
+  if(dots && PRE.THREE){
+    const a = dots.geometry.attributes.position;
+    const v = PRE._dv || (PRE._dv = new PRE.THREE.Vector3());
+    dots.updateWorldMatrix(true, false);
+    let near = Infinity, far = 0;
+    for(let i = 0; i < a.count; i++){
+      v.fromBufferAttribute(a, i).applyMatrix4(dots.matrixWorld).applyMatrix4(PRE.camera.matrixWorldInverse);
+      const d = -v.z;
+      if(d < near) near = d;
+      if(d > far) far = d;
+    }
+    mat.uniforms.uNear.value = near;
+    mat.uniforms.uFar.value = Math.max(far, near + 0.01);
+  }
 }
 function mareLoop(now){
   PRE.raf = requestAnimationFrame(mareLoop);
@@ -3338,11 +3389,11 @@ async function mountMarePreview(){
   if(token !== PRE.token) return;
   PRE.THREE = THREE;
   if(!PRE.renderer){
-    PRE.renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+    PRE.renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false });
     PRE.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     PRE.renderer.setClearColor(0x000000, 1);
     PRE.scene = new THREE.Scene();
-    PRE.camera = new THREE.PerspectiveCamera(20, 1, 0.05, 800);
+    PRE.camera = new THREE.PerspectiveCamera(30, 1, 0.05, 800);
     if(!PRE.raf) mareLoop();
   }
   PRE.view = view;
