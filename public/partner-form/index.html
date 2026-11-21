@@ -2819,15 +2819,15 @@ function boatWire(boat){
   const kind = type === 'yacht' ? 'yacht' : type === 'catamarano' ? 'catamarano' : (type === 'barca_vela' ? 'vela' : 'motore');
   return `<span class="bt-wire bt-wire-${kind}" aria-hidden="true"><svg viewBox="0 0 150 128"><g fill="none" stroke="currentColor" stroke-width="1.45" stroke-linejoin="round">${hull}<path d="M12 124 H140" stroke-dasharray="3 3"/></g></svg></span>`;
 }
-/* 1 unit = 1 m. Set barca_motore to models/motore.glb when that hull replaces the RIB. */
+/* 1 unit = 1 m. Barca a motore loads the center-console hull. */
 const MARE_GLB = {
-  barca_motore: new URL('models/gommone.glb', document.baseURI).href,
+  barca_motore: new URL('models/motore.glb', document.baseURI).href,
   barca_vela: new URL('models/vela.glb', document.baseURI).href,
   catamarano: new URL('models/catamarano.glb', document.baseURI).href,
   yacht: new URL('models/yacht.glb', document.baseURI).href
 };
 const MARE_ANIM = {
-  barca_motore: [{ name:'Gommone_Prop', type:'spin', speed:180, axis:'z' }],
+  barca_motore: [{ name:'Motore_Prop', type:'spin', speed:180, axis:'z' }],
   barca_vela: [
     { name:'Vela_Wind_Vane', type:'spin', speed:80, axis:'y' },
     { name:'Vela_Sail_Main', type:'sway', speed:0.55, amplitude:5, axis:'z' },
@@ -3042,7 +3042,7 @@ async function mountMarePreview(){
     PRE.scene.add(model);
     mareBind(model, type);
     mareFrame(THREE);
-    const roots = { barca_motore:'Gommone', barca_vela:'Vela', catamarano:'Catamarano', yacht:'Yacht' };
+    const roots = { barca_motore:'Motore', barca_vela:'Vela', catamarano:'Catamarano', yacht:'Yacht' };
     stage.dataset.src = model.getObjectByName(roots[type]) ? 'glb' : 'proc';
   }
   PRE.grid.visible = PRE.gridOn;
