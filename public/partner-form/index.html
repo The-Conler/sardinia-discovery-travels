@@ -72,6 +72,12 @@ img{display:block}
 .bt-cat{display:flex;justify-content:space-between;gap:12px;width:100%;text-align:left;padding:14px 16px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:inherit;cursor:pointer}
 .bt-cat.is-on{border-color:#8fd0d4}
 .bt-cat b{font-weight:600}
+.bt-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:432px}
+.bt-tiles .bt-cat{aspect-ratio:1;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:22px;padding:18px}
+.bt-stage{min-height:320px;display:grid;place-items:center;padding:28px;border-radius:24px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03)}
+.bt-stage .bt-wire{width:min(100%,280px);height:240px}
+.bt-stage .bt-wire svg{width:100%;height:100%}
+.bt-stage .ct-note{width:100%}
 .bt-boatcard strong,.bt-boatcard p{display:block}
 .bt-land{fill:rgba(248,244,238,.08);stroke:rgba(248,244,238,.35);stroke-width:1.4}
 .bt-zone{cursor:pointer;fill:rgba(47,127,136,.16);stroke:rgba(143,208,212,.7);stroke-width:1.4}
@@ -2769,9 +2775,9 @@ function ensureMare(e){
   };
   const focus = areas.includes(prev.focus) ? prev.focus : (areas[0] || '');
   const hi = Number.isInteger(prev.hi) && prev.hi >= 0 && prev.hi < ops.length ? prev.hi : 0;
-  const openCats = (prev.openCats || []).filter(c => MARE_BOATS.includes(c));
+  const openCats = (prev.openCats || []).filter(c => MARE_BOATS.includes(c)).slice(0, 1);
   const linkFilter = MARE_BOATS.includes(prev.linkFilter) ? prev.linkFilter : '';
-  const yachtOpen = !!prev.yachtOpen;
+  const yachtOpen = !!prev.yachtOpen && !openCats.length;
   e.mare = { areas, areaOther: prev.areaOther || '', focus, hi, openCats, linkFilter, yachtOpen, fleet, ops, incl, bring, games:{ on:!!gsrc.on, items:{ sup:gameItem('sup'), scooter:gameItem('scooter'), altro:gameItem('altro') } }, tickets:{ on:!!tk.on, price:tk.price ?? '', method: tk.method === 'cash' || tk.method === 'pos' ? tk.method : '' } };
   e.spec = '';
   e.type = [];
@@ -2818,13 +2824,15 @@ function mareYachtRow(i, m){
 }
 function mareFleetScreen(i){
   const m = ensureMare(E(i));
-  const blocks = MARE_BOATS.map(cat => {
-    const open = m.openCats.includes(cat);
-    const boats = m.fleet.map((b, k) => ({b, k})).filter(x => x.b.type === cat);
-    return `<button type="button" class="bt-cat${open ? ' is-on' : ''}" data-action="mareopen" data-i="${i}" data-v="${cat}"><span>${esc(o(cat))}</span><b>${boats.length}</b></button>
-      ${open ? boats.map(({b, k}) => `<section class="ct-block"><h3 class="ct-block-title">${esc(b.name || t('bt_boat_n', {n:k+1}))}</h3>${mareBoatFields(i, k, b)}<button type="button" class="ct-back" data-action="fleetdel" data-i="${i}" data-k="${k}">${esc(t('bt_remove_boat'))}</button></section>`).join('') + `<button type="button" class="ct-back bt-add" data-action="fleetadd" data-i="${i}" data-type="${cat}">${ic('plus',16,1.8)} ${esc(t('bt_add_boat'))}</button>` : ''}`;
-  }).join('');
-  return split(head(t('bt_fleet_title'), t('bt_fleet_sub'), ecount(i)), `<div class="ct-stack" style="gap:12px">${blocks}${mareYachtRow(i, m)}</div>`);
+  const cat = m.yachtOpen ? '' : (m.openCats[0] || '');
+  const tiles = MARE_BOATS.map(c => {
+    const n = m.fleet.filter(b => b.type === c).length;
+    return `<button type="button" class="bt-cat${c === cat ? ' is-on' : ''}" data-action="mareopen" data-i="${i}" data-v="${c}"><span>${esc(o(c))}</span><b>${n}</b></button>`;
+  }).join('') + `<button type="button" class="bt-cat${m.yachtOpen ? ' is-on' : ''}" data-action="mareyacht" data-i="${i}"><span>${esc(o('yacht'))}</span></button>`;
+  const boats = m.fleet.map((b, k) => ({b, k})).filter(x => x.b.type === cat);
+  const forms = cat ? boats.map(({b, k}) => `<section class="ct-block"><h3 class="ct-block-title">${esc(b.name || t('bt_boat_n', {n:k+1}))}</h3>${mareBoatFields(i, k, b)}<button type="button" class="ct-back" data-action="fleetdel" data-i="${i}" data-k="${k}">${esc(t('bt_remove_boat'))}</button></section>`).join('') + `<button type="button" class="ct-back bt-add" data-action="fleetadd" data-i="${i}" data-type="${cat}">${ic('plus',16,1.8)} ${esc(t('bt_add_boat'))}</button>` : '';
+  const stage = m.yachtOpen ? note(t('bt_yacht_note'), 'info') : (cat ? boatWire(cat) : '');
+  return splitSide(head(t('bt_fleet_title'), t('bt_fleet_sub'), ecount(i)), `<div class="bt-stage">${stage}</div>`, `<div class="bt-tiles">${tiles}</div>${forms}`);
 }
 function mareFleetOk(e){ const m = e?.mare; return !!m && m.fleet.every(mareBoatOkFields); }
 function mareMapSvg(e, i){
@@ -4152,9 +4160,9 @@ const ACT = {
   marelink: el => { const m = ensureMare(S.exps[+el.dataset.i]); const op = m.ops[+el.dataset.n]; const boat = m.fleet.find(b => b.id === el.dataset.id); if(!op || !boat || !mareSamePort(boat.home, op.port)) return; const id = boat.id; const k = op.boatIds.indexOf(id); if(k < 0) op.boatIds.push(id); else op.boatIds.splice(k, 1); rerender(); },
   fleetopen: () => { FLEET.open = true; if(typeof H !== 'undefined' && H.open) helpClose(); renderFleet(); },
   fleetclose: () => { FLEET.open = false; renderFleet(); },
-  fleetadd: el => { const m = ensureMare(S.exps[+el.dataset.i]); const type = MARE_BOATS.includes(el.dataset.type) ? el.dataset.type : ''; m.fleet.push(blankMareBoat({ type })); if(type && !m.openCats.includes(type)) m.openCats.push(type); rerender(); },
-  mareopen: el => { const m = ensureMare(S.exps[+el.dataset.i]); const v = el.dataset.v; const k = m.openCats.indexOf(v); if(k < 0) m.openCats.push(v); else m.openCats.splice(k, 1); rerender(); },
-  mareyacht: el => { const m = ensureMare(S.exps[+el.dataset.i]); m.yachtOpen = !m.yachtOpen; rerender(); },
+  fleetadd: el => { const m = ensureMare(S.exps[+el.dataset.i]); const type = MARE_BOATS.includes(el.dataset.type) ? el.dataset.type : ''; m.fleet.push(blankMareBoat({ type })); if(type){ m.openCats = [type]; m.yachtOpen = false; } rerender(); },
+  mareopen: el => { const m = ensureMare(S.exps[+el.dataset.i]); const v = el.dataset.v; if(!MARE_BOATS.includes(v)) return; m.openCats = [v]; m.yachtOpen = false; rerender(); },
+  mareyacht: el => { const m = ensureMare(S.exps[+el.dataset.i]); m.yachtOpen = true; m.openCats = []; rerender(); },
   fleetdel: el => { const m = ensureMare(S.exps[+el.dataset.i]); const id = m.fleet[+el.dataset.k]?.id; m.fleet.splice(+el.dataset.k, 1); if(!m.fleet.length) m.fleet.push(blankMareBoat({})); m.ops.forEach(op => { op.boatIds = op.boatIds.filter(x => x !== id); }); rerender(); },
   fleetsel: el => { const m = ensureMare(S.exps[+el.dataset.i]); const op = m.ops[+el.dataset.n]; const boat = m.fleet.find(b => b.id === el.dataset.id); if(!op || !boat || !mareSamePort(boat.home, op.port)) return; const id = boat.id; const k = op.boatIds.indexOf(id); if(k < 0) op.boatIds.push(id); else op.boatIds.splice(k, 1); rerender(); },
   mareincl: el => { const item = ensureMare(S.exps[+el.dataset.i]).incl[el.dataset.k]; if(item){ item.mode = el.dataset.v; if(item.mode !== 'sup') item.price = ''; } rerender(); },
