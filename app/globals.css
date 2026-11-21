@@ -5337,11 +5337,12 @@ html[data-vt-no-fab]::view-transition-group(floating-actions) {
   .site-menu-links a.site-menu-link-partner { display: block; }
 }
 
-/* Small laptops (861-1023px, no site zoom): the full-size links and the
-   Partner, EN and Menu pills cannot share one centred row, so the links live in
-   the menu drawer only. The logo sits inside the header here, so the line stays
-   at the header's bottom edge. */
-@media (min-width: 861px) and (max-width: 1023px) {
+/* Narrow desktop windows: the centred links and the Partner, appointment, EN
+   and Menu pills cannot share one row. Below 1024px there is no site zoom.
+   From 1024px to 1359px the 0.5 site zoom keeps the pills large in layout
+   pixels, so they still cover the links. The links live in the menu until
+   the side column is wide enough (1360px). */
+@media (min-width: 861px) and (max-width: 1359px) {
   .nav-links {
     display: none;
   }

@@ -244,44 +244,6 @@ export function ContactForm() {
           )}
 
           <hr className="cf-rule" />
-          <fieldset className="cf-block">
-            <legend>{t.book}</legend>
-            <div className="cf-book">
-              <div>
-                <p className="cf-label">{t.date}</p>
-                <div className="cf-cal">
-                  <div className="cf-cal-bar">
-                    <button type="button" aria-label={t.prev} onClick={() => setCursor(new Date(year, month - 1, 1))}>‹</button>
-                    <strong>{t.months[month]} {year}</strong>
-                    <button type="button" aria-label={t.next} onClick={() => setCursor(new Date(year, month + 1, 1))}>›</button>
-                  </div>
-                  <div className="cf-cal-week">{t.week.map((day) => <span key={day}>{day}</span>)}</div>
-                  <div className="cf-cal-grid">
-                    {cells.map((cell, index) => {
-                      if (!cell) return <span key={`e${index}`} />;
-                      const open = isBookable(cell, today);
-                      const on = !!date && dayKey(date) === dayKey(cell);
-                      return <button key={dayKey(cell)} type="button" disabled={!open} className={`${open ? "is-open" : ""}${on ? " is-on" : ""}`} onClick={() => { setDate(cell); setTime(""); }}>{cell.getDate()}</button>;
-                    })}
-                  </div>
-                </div>
-              </div>
-              <div className="cf-times">
-                <p className="cf-label">{t.time}</p>
-                {date ? (
-                  <div className="cf-slots">
-                    {times.map((slot) => (
-                      <button key={slot} type="button" className={time === slot ? "is-on" : ""} onClick={() => setTime(slot)}>{slot}</button>
-                    ))}
-                  </div>
-                ) : <p className="cf-hint">{t.pickDate}</p>}
-              </div>
-            </div>
-            <input type="hidden" name="date" value={date ? date.toISOString().slice(0, 10) : ""} />
-            <input type="hidden" name="time" value={time} />
-          </fieldset>
-
-          <hr className="cf-rule" />
           <div className="cf-foot">
             <fieldset className="cf-block">
               <legend>{t.method}</legend>
@@ -301,7 +263,44 @@ export function ContactForm() {
             </fieldset>
             <button className="cf-send" type="submit">{t.send}<Icon name="chevron" /></button>
           </div>
+          <input type="hidden" name="date" value={date ? date.toISOString().slice(0, 10) : ""} />
+          <input type="hidden" name="time" value={time} />
         </form>
+
+        <section className="cf-card cf-book-card">
+          <h2>{t.book}</h2>
+          <div className="cf-book">
+            <div>
+              <p className="cf-label">{t.date}</p>
+              <div className="cf-cal">
+                <div className="cf-cal-bar">
+                  <button type="button" aria-label={t.prev} onClick={() => setCursor(new Date(year, month - 1, 1))}>‹</button>
+                  <strong>{t.months[month]} {year}</strong>
+                  <button type="button" aria-label={t.next} onClick={() => setCursor(new Date(year, month + 1, 1))}>›</button>
+                </div>
+                <div className="cf-cal-week">{t.week.map((day) => <span key={day}>{day}</span>)}</div>
+                <div className="cf-cal-grid">
+                  {cells.map((cell, index) => {
+                    if (!cell) return <span key={`e${index}`} />;
+                    const open = isBookable(cell, today);
+                    const on = !!date && dayKey(date) === dayKey(cell);
+                    return <button key={dayKey(cell)} type="button" disabled={!open} className={`${open ? "is-open" : ""}${on ? " is-on" : ""}`} onClick={() => { setDate(cell); setTime(""); }}>{cell.getDate()}</button>;
+                  })}
+                </div>
+              </div>
+            </div>
+            <div className="cf-times">
+              <p className="cf-label">{t.time}</p>
+              {date ? (
+                <div className="cf-slots">
+                  {times.map((slot) => (
+                    <button key={slot} type="button" className={time === slot ? "is-on" : ""} onClick={() => setTime(slot)}>{slot}</button>
+                  ))}
+                </div>
+              ) : <p className="cf-hint">{t.pickDate}</p>}
+            </div>
+          </div>
+        </section>
 
         <aside className="cf-side">
           <section className="cf-card">
