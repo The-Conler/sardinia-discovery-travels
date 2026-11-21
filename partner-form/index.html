@@ -1368,6 +1368,11 @@ en:{
   bt_half_when:'Half day', bt_half_am:'Morning only', bt_half_pm:'Afternoon only', bt_half_both:'Both',
   bt_half_dur:'Duration (4 hours maximum)', bt_full_dur:'Duration (8 hours maximum)', bt_sun_dur:'Duration',
   bt_dep_am:'Morning departure times', bt_dep_pm:'Afternoon departure times', bt_dep:'Departure times', bt_dep_one:'Departure time',
+  bt_det_title:'Specifics of each tour', bt_det_tour:'Tour specifics', bt_see:'What we see', bt_swim:'Where we swim', bt_stops:'Stops',
+  bt_det_food:'Food specifics', bt_fd_head:'Food & beverage',
+  bt_fd_aperitivo:'Aperitif', bt_fd_salumi:'Cold cuts and cheese', bt_fd_crudi:'Seafood crudités', bt_fd_chips:'Chips and snacks', bt_fd_fritti:'Fried food', bt_fd_pane:'Bread',
+  bt_fd_beverage:'Beverage', bt_fd_caffe:'Coffee', bt_fd_analcolici:'Soft drinks', bt_fd_vini:'Wines', bt_fd_birra:'Beer', bt_fd_cocktails:'Cocktails', bt_fd_liquori:'Spirits',
+  bt_fd_options:'Options', bt_fd_gf:'Gluten free', bt_fd_vegan:'Vegan', bt_fd_veg:'Vegetarian', bt_fd_lactose:'Lactose free',
   esp_title:'What is your speciality?', esp_sub:'Select one.', esp_another:'Offer another specialty too? At the end of this form you can add a new request.', spec_other:'Describe it briefly',
   et_title:'What type of service is it?', et_sub:'You can select more than one.', et_combined:'By selecting more than one type you will be offering a combined experience.',
   spa_title:'Which treatments do you offer?', spa_q:'Treatments',
@@ -1573,6 +1578,11 @@ it:{
   bt_half_when:'Mezza giornata', bt_half_am:'Solo mattina', bt_half_pm:'Solo pomeriggio', bt_half_both:'Entrambi',
   bt_half_dur:'Durata (massimo 4 ore)', bt_full_dur:'Durata (massimo 8 ore)', bt_sun_dur:'Durata',
   bt_dep_am:'Orari di partenza, mattina', bt_dep_pm:'Orari di partenza, pomeriggio', bt_dep:'Orari di partenza', bt_dep_one:'Orario di partenza',
+  bt_det_title:'Specifiche di ciascun tour', bt_det_tour:'Specifiche sul tour', bt_see:'Cosa vediamo', bt_swim:'Dove ci tuffiamo', bt_stops:'Tappe e soste',
+  bt_det_food:'Specifiche sul cibo', bt_fd_head:'Food & beverage',
+  bt_fd_aperitivo:'Aperitivo', bt_fd_salumi:'Salumi e formaggi', bt_fd_crudi:'Crudité di mare', bt_fd_chips:'Chips e snack', bt_fd_fritti:'Fritti', bt_fd_pane:'Panificati',
+  bt_fd_beverage:'Beverage', bt_fd_caffe:'Caffetteria', bt_fd_analcolici:'Analcolici', bt_fd_vini:'Vini', bt_fd_birra:'Birra', bt_fd_cocktails:'Cocktails', bt_fd_liquori:'Liquori',
+  bt_fd_options:'Opzioni', bt_fd_gf:'Gluten free', bt_fd_vegan:'Vegan', bt_fd_veg:'Vegetariano', bt_fd_lactose:'Senza lattosio',
   esp_title:'Qual è la tua specializzazione?', esp_sub:'Seleziona un solo tasto.', esp_another:'Offri anche un’altra specialità? Alla fine di questo modulo potrai aggiungere una nuova richiesta.', spec_other:'Descrivila brevemente',
   et_title:'Che tipo di servizio è?', et_sub:'Seleziona più di un tasto.', et_combined:'Selezionando più tipologie proporrai un’esperienza combinata.',
   spa_title:'Quali trattamenti offri?', spa_q:'Trattamenti',
@@ -2625,6 +2635,15 @@ function ensureMare(e){
       fullSlots: keepSlots(src.fullSlots),
       sunTime: halfHours().includes(src.sunTime) ? src.sunTime : '',
       sunDur: Number(src.sunDur) || 0,
+      see: src.see || '', swim: src.swim || '', stops: src.stops || '',
+      food: {
+        aperitivo: !!src.food?.aperitivo,
+        aperitivoItems: src.food?.aperitivo ? (src.food.aperitivoItems || []).filter(x => ['salumi','crudi','chips','fritti','pane'].includes(x)) : [],
+        beverage: !!src.food?.beverage,
+        beverageItems: src.food?.beverage ? (src.food.beverageItems || []).filter(x => ['caffe','analcolici','vini','birra','cocktails','liquori'].includes(x)) : [],
+        options: !!src.food?.options,
+        optionItems: src.food?.options ? (src.food.optionItems || []).filter(x => ['gf','vegan','veg','lactose'].includes(x)) : []
+      },
       price: { shared: side('shared'), priv: side('priv') },
       allWeek: src.allWeek === 'yes' || src.allWeek === 'no' ? src.allWeek : '',
       days: (src.days || []).filter(d => CONFIG.weekdays.includes(d))
@@ -2810,6 +2829,42 @@ function mareBringScreen(i){
   ensureMare(E(i));
   return split(head(t('bt_bring_title'), t('bt_bring_sub'), ecount(i)),
     MARE_BRING.map(k => check(P(i, 'mare.bring.' + k), t('bt_br_' + k))).join(''));
+}
+function mareFoodOn(e){
+  const incl = e?.mare?.incl || {};
+  return ['aperitivo','lunch','beverage'].some(k => incl[k]?.mode === 'inc' || incl[k]?.mode === 'sup');
+}
+function mareFoodBox(i, area, tour, flag, itemsKey, codes){
+  const on = !!tour.food[flag];
+  return `<section class="ct-block">${check(P(i, `mare.tours.${area}.food.${flag}`), t('bt_fd_' + flag))}
+    ${on ? pills(P(i, `mare.tours.${area}.food.${itemsKey}`), codes, {multi:true, lab:c => t('bt_fd_' + c)}) : ''}</section>`;
+}
+function mareDetailScreen(i, n){
+  const e = E(i), m = ensureMare(e), area = m.areas[n], tour = m.tours[area];
+  const food = mareFoodOn(e) ? `<section class="ct-block"><h3 class="ct-block-title">${esc(t('bt_det_food'))}</h3>
+      <p class="ct-spec-head">${esc(t('bt_fd_head'))}</p>
+      ${mareFoodBox(i, area, tour, 'aperitivo', 'aperitivoItems', ['salumi','crudi','chips','fritti','pane'])}
+      ${mareFoodBox(i, area, tour, 'beverage', 'beverageItems', ['caffe','analcolici','vini','birra','cocktails','liquori'])}
+      ${mareFoodBox(i, area, tour, 'options', 'optionItems', ['gf','vegan','veg','lactose'])}
+    </section>` : '';
+  return split(head(t('bt_det_title'), '', ecount(i)), `
+    ${mareRef(e, n)}
+    <section class="ct-block"><h3 class="ct-block-title">${esc(t('bt_det_tour'))}</h3>
+      ${inp(P(i, `mare.tours.${area}.see`), t('bt_see'), {area:'short'})}
+      ${inp(P(i, `mare.tours.${area}.swim`), t('bt_swim'), {area:'short'})}
+      ${inp(P(i, `mare.tours.${area}.stops`), t('bt_stops'), {area:'short'})}
+    </section>
+    ${food}`);
+}
+function mareDetailOk(e, n){
+  const tour = mareTour(e, n); if(!tour) return false;
+  if(!filled(tour.see, 2) || !filled(tour.swim, 2) || !filled(tour.stops, 2)) return false;
+  if(!mareFoodOn(e)) return true;
+  const f = tour.food || {};
+  if(f.aperitivo && !f.aperitivoItems.length) return false;
+  if(f.beverage && !f.beverageItems.length) return false;
+  if(f.options && !f.optionItems.length) return false;
+  return true;
 }
 function mareInclOk(e){
   const m = e?.mare; if(!m) return false;
@@ -3109,6 +3164,11 @@ function screens(){
       if(k==='equip' && (e.sector === 'artigianato' || e.sector === 'enogastronomia' || e.sector === 'cooking_class' || e.sector === 'cultura')) return;
       if(k==='reqs' && (e.sector === 'enogastronomia' || e.sector === 'cooking_class' || e.sector === 'benessere')) return;
       add(`e${i}_${k}`, 'prop', () => EV[k](i), () => !!S.exps[i] && EOK[k](S.exps[i]));
+      if(k==='equip' && e.sector === 'mare'){
+        (e.mare?.areas || []).forEach((_, n) => {
+          add(`e${i}_btdet${n}`, 'prop', () => mareDetailScreen(i, n), () => mareDetailOk(S.exps[i], n));
+        });
+      }
       if(k==='reqs' && usesHikeFlow(e)) hikeSeq(e).forEach((_, n) => add(`e${i}_hk${n}`, 'prop', () => hikeDetailScreen(i, n), () => hikePageOk(S.exps[i], n)));
       if(k==='reqs' && isOffroad(e)){
         offroadSeq(e).forEach((_, n) => add(`e${i}_or${n}`, 'prop', () => offroadDetailScreen(i, n), () => offroadPageOk(S.exps[i], n)));
@@ -3140,8 +3200,8 @@ function screenLabel(id){
     if(or && e){ const n = +or[1], keys = offroadSeq(e); return `${t('exp_n',{n:+m[1]+1})}: ${t('or_title')} · ${t('hk_mode_n',{n:n+1,total:keys.length})}`; }
     if(m[2]==='drive') return `${t('exp_n',{n:+m[1]+1})}: ${t('or_drv_title')}`;
     if(m[2]==='btareas') return `${t('exp_n',{n:+m[1]+1})}: ${t('bt_areas_title')}`;
-    const bt = m[2].match(/^bt(port|boat|spec|band|price)(\d+)/);
-    if(bt && e){ const key = {port:'bt_port_title', boat:'bt_boat_title', spec:'bt_spec_title', band:'bt_band_title', price:'bt_price_title'}[bt[1]]; return `${t('exp_n',{n:+m[1]+1})}: ${t(key)}`; }
+    const bt = m[2].match(/^bt(port|boat|spec|band|price|det)(\d+)/);
+    if(bt && e){ const key = {port:'bt_port_title', boat:'bt_boat_title', spec:'bt_spec_title', band:'bt_band_title', price:'bt_price_title', det:'bt_det_title'}[bt[1]]; return `${t('exp_n',{n:+m[1]+1})}: ${t(key)}`; }
     const title = m[2]==='reqs' && e?.sector==='artigianato' ? t('rq_title_art') : t(TKEY[m[2]]+'_title',{s:o(e?.sector||'').toLowerCase()}); return `${t('exp_n',{n:+m[1]+1})}: ${title}`; }
   if(id==='conv_details') return t('cdt_title_'+cgroup());
   return t(TKEY[id]+'_title');
@@ -3910,6 +3970,7 @@ function onField(e){
   if(/\.incl\.[^.]+\.price$/.test(p)){ const bad=!pos(el.value); el.classList.toggle('is-bad', bad); el.setAttribute('aria-invalid', String(bad)); const err=el.closest('.ct-incl-price')?.querySelector('.ct-error'); if(err) err.hidden=!bad; }
   if(el.type==='checkbox') el.closest('.ct-check')?.classList.toggle('is-on', el.checked);
   if(/\.meetDifferent$/.test(p)){ save(); render(); return; }
+  if(/\.food\.(aperitivo|beverage|options)$/.test(p)){ save(); render(); return; }
   if(el.dataset.sugg){ hl=-1; showSugg(el); }
   const fix = (id, ok) => { const x=$(id); if(x && ok) x.hidden = true; };
   if(p==='contact.email') fix('err-email', emailOk(el.value));
