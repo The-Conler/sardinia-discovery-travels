@@ -106,6 +106,11 @@ img{display:block}
 /* Pills (tags) with a slight grow-on-hover bounce */
 .ct-pills{display:flex;flex-wrap:wrap;gap:8px}
 .ct-pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;min-width:96px;padding:0 24px;border-radius:999px;border:1.5px solid transparent;background:var(--ct-fill);color:var(--ct-cream);font:inherit;font-size:var(--t-card);font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .2s var(--ct-ease),border-color .2s var(--ct-ease),transform .35s var(--ease-bounce)}
+.bt-num{display:inline-grid;place-items:center;min-width:1.5em;height:1.5em;padding:0 6px;border-radius:999px;background:#2f7f88;color:#f8f4ee;font-size:12px;font-weight:700;line-height:1}
+.bt-ref{display:flex;align-items:center;gap:10px;margin:0 0 18px;font-weight:650}
+.bt-maps{margin:6px 0 14px}
+.bt-maps a{color:var(--ct-cream);font-weight:650}
+.bt-add{margin-top:4px}
 .ct-pill:hover{background:var(--ct-fill-hover);transform:scale(1.04)}
 .ct-pill:active{transform:scale(.97);transition-duration:.1s}
 .ct-pill.is-on{border-color:var(--ct-teal);background:rgba(47,127,136,.18)}
@@ -1210,8 +1215,8 @@ const CONFIG = {
       q:[ {k:'distance_km', t:'num', min:0, max:100, step:.5}, {k:'elevation_m', t:'num', min:0, max:3000, step:10},
           {k:'licensed_guide', t:'toggle'}, {k:'insurance', t:'toggle'} ] },
     { code:'mare', letter:'F', img:'/sardinia-discovery-travels/partner-form/img/cat-boat.jpg', icon:'sailboat',
-      spec:['barca_motore','barca_vela','catamarano','attivita_acquatiche','escursioni_costiere'],
-      types:['escursione_privata','escursione_condivisa','mezza_giornata','giornata_intera','esperienza_personalizzata'],
+      spec:[],
+      types:[],
       q:[ {k:'boat_type', t:'pills', o:['bt_motore','bt_vela','bt_catamarano','bt_gommone','bt_altro'], req:true},
           {k:'boat_length', t:'num', min:2, max:60, step:.5, req:true, unit:'m'},
           {k:'boat_capacity', t:'stepper', min:0, max:150, req:true},
@@ -1341,6 +1346,15 @@ en:{
   bg_mindbody:'Mind-body wellbeing', bg_bare:'Barefooting', bg_retreat_h:'Retreat', bg_pet:'Pet therapy',
   bn_agency:'The agency will contact you for more information.',
   eq_providedD_ben:'For example mats, elastic bands.',
+  bt_areas_title:'Tour area (where do you go?)', bt_areas_sub:'Select every tour. You will fill them in one by one.',
+  bt_a_corsica:'Corsica', bt_a_maddalena:'Arcipelago della Maddalena', bt_a_asinara:'Parco nazionale dell’Asinara', bt_a_tavolara:'Tavolara', bt_a_alghero:'Alghero', bt_a_baunei:'Costa di Baunei', bt_a_carloforte:'Carloforte', bt_a_cagliari:'Cagliari', bt_a_villasimius:'Villasimius', bt_a_altro:'Other',
+  bt_a_altro_lbl:'Describe the other area',
+  bt_port_title:'Departure port?', bt_ports_q:'Do you have only one port, or more than one?', bt_ports_one:'Only one port', bt_ports_more:'More than one port',
+  bt_port_name:'Port', bt_port_add:'Add a port', bt_maps:'Open in Google Maps',
+  bt_meet_q:'Meeting point', bt_meet_same:'It is the same as the departure port', bt_meet_diff:'It is different', bt_meet_search:'Meeting point',
+  bt_boat_title:'Boat type', bt_boats_q:'For this same tour, do you have more than one boat?', bt_boats_one:'One boat', bt_boats_more:'More than one boat',
+  bt_dur_title:'How long does it last?', bt_tour_n:'Tour {n} of {total}',
+  o_yacht:'Yacht',
   esp_title:'What is your speciality?', esp_sub:'Select one.', esp_another:'Offer another specialty too? At the end of this form you can add a new request.', spec_other:'Describe it briefly',
   et_title:'What type of service is it?', et_sub:'You can select more than one.', et_combined:'By selecting more than one type you will be offering a combined experience.',
   spa_title:'Which treatments do you offer?', spa_q:'Treatments',
@@ -1524,6 +1538,15 @@ it:{
   bg_mindbody:'Benessere mente-corpo', bg_bare:'Barefooting', bg_retreat_h:'Retreat', bg_pet:'Pet therapy',
   bn_agency:'Verrai contattato dall’agenzia per maggiori informazioni.',
   eq_providedD_ben:'Per esempio tappetini, elastici.',
+  bt_areas_title:'Area di interesse del tour (dove si va?)', bt_areas_sub:'Seleziona ogni tour. Li compili uno per uno.',
+  bt_a_corsica:'Corsica', bt_a_maddalena:'Arcipelago della Maddalena', bt_a_asinara:'Parco nazionale dell’Asinara', bt_a_tavolara:'Tavolara', bt_a_alghero:'Alghero', bt_a_baunei:'Costa di Baunei', bt_a_carloforte:'Carloforte', bt_a_cagliari:'Cagliari', bt_a_villasimius:'Villasimius', bt_a_altro:'Altro',
+  bt_a_altro_lbl:'Descrivi l’altra area',
+  bt_port_title:'Porto di partenza?', bt_ports_q:'Hai solo un porto o ne hai di più?', bt_ports_one:'Solo un porto', bt_ports_more:'Più di un porto',
+  bt_port_name:'Porto', bt_port_add:'Aggiungi un porto', bt_maps:'Apri in Google Maps',
+  bt_meet_q:'Punto di incontro', bt_meet_same:'Coincide con il porto di partenza', bt_meet_diff:'È diverso', bt_meet_search:'Punto di incontro',
+  bt_boat_title:'Tipologia di imbarcazione', bt_boats_q:'Per lo stesso tour hai più imbarcazioni?', bt_boats_one:'Una sola imbarcazione', bt_boats_more:'Più imbarcazioni',
+  bt_dur_title:'Quanto dura', bt_tour_n:'Tour {n} di {total}',
+  o_yacht:'Yacht',
   esp_title:'Qual è la tua specializzazione?', esp_sub:'Seleziona un solo tasto.', esp_another:'Offri anche un’altra specialità? Alla fine di questo modulo potrai aggiungere una nuova richiesta.', spec_other:'Descrivila brevemente',
   et_title:'Che tipo di servizio è?', et_sub:'Seleziona più di un tasto.', et_combined:'Selezionando più tipologie proporrai un’esperienza combinata.',
   spa_title:'Quali trattamenti offri?', spa_q:'Trattamenti',
@@ -2534,6 +2557,108 @@ function scubaShow(hit){
   dot.style.left = left + '%';
   dot.style.top = (hit.pt.y / SC_H * 100) + '%';
 }
+const MARE_AREAS = ['corsica','maddalena','asinara','tavolara','alghero','baunei','carloforte','cagliari','villasimius','altro'];
+const MARE_BOATS = ['barca_motore','barca_vela','catamarano','yacht'];
+function blankMareTour(){ return { portsMany:'', ports:[''], meetSame:'', meet:'', boatsMany:'', boats:[], durH:0 }; }
+function ensureMare(e){
+  if(e?.sector !== 'mare'){ if(e) delete e.mare; return null; }
+  const prev = e.mare && typeof e.mare === 'object' ? e.mare : {};
+  const areas = (prev.areas || []).filter(a => MARE_AREAS.includes(a));
+  const tours = {};
+  for(const a of areas){
+    const src = (prev.tours && prev.tours[a]) || {};
+    const ports = Array.isArray(src.ports) ? src.ports.map(x => String(x ?? '')) : [''];
+    const boats = Array.isArray(src.boats) ? src.boats.filter(b => MARE_BOATS.includes(b)) : [];
+    const manyP = src.portsMany === 'one' || src.portsMany === 'more' ? src.portsMany : '';
+    const manyB = src.boatsMany === 'one' || src.boatsMany === 'more' ? src.boatsMany : '';
+    tours[a] = {
+      portsMany: manyP,
+      ports: manyP === 'more' ? (ports.length ? ports : ['','']) : [ports[0] || ''],
+      meetSame: src.meetSame === 'same' || src.meetSame === 'diff' ? src.meetSame : '',
+      meet: src.meet || '',
+      boatsMany: manyB,
+      boats: manyB === 'more' ? boats : boats.slice(0, 1),
+      durH: Number(src.durH) || 0
+    };
+  }
+  e.mare = { areas, areaOther: prev.areaOther || '', tours };
+  e.spec = '';
+  e.type = [];
+  return e.mare;
+}
+function mareName(e, area){
+  if(area === 'altro' && filled(e.mare?.areaOther, 1)) return e.mare.areaOther.trim();
+  return t('bt_a_' + area);
+}
+function mareRef(e, n){
+  const area = e.mare.areas[n];
+  return `<p class="bt-ref"><span class="bt-num">${n + 1}</span><span>${esc(t('bt_tour_n', { n:n + 1, total:e.mare.areas.length }))} · ${esc(mareName(e, area))}</span></p>`;
+}
+function mapsLink(p){
+  return `<p class="bt-maps"><a href="#" data-action="maps" data-p="${p}">${esc(t('bt_maps'))}</a></p>`;
+}
+function mareAreasScreen(i){
+  const e = E(i), m = ensureMare(e);
+  return split(head(t('bt_areas_title'), t('bt_areas_sub'), ecount(i)), `
+    <div class="ct-pills" role="group">${MARE_AREAS.map(c => {
+      const n = m.areas.indexOf(c), on = n >= 0;
+      return `<button type="button" class="ct-pill${on ? ' is-on' : ''}" role="checkbox" aria-checked="${on}" data-action="tog" data-p="${P(i,'mare.areas')}" data-v="${c}"><span>${esc(t('bt_a_' + c))}</span>${on ? `<span class="bt-num" aria-hidden="true">${n + 1}</span>` : ''}</button>`;
+    }).join('')}</div>
+    ${m.areas.includes('altro') ? inp(P(i,'mare.areaOther'), t('bt_a_altro_lbl')) : ''}`);
+}
+function marePortScreen(i, n){
+  const e = E(i), m = ensureMare(e), area = m.areas[n], tour = m.tours[area];
+  if(tour.portsMany === 'more' && tour.ports.length < 2) tour.ports.push('');
+  if(tour.portsMany === 'one') tour.ports = [tour.ports[0] || ''];
+  const ports = tour.ports.map((val, k) => `${inp(P(i, `mare.tours.${area}.ports.${k}`), tour.portsMany === 'more' ? `${t('bt_port_name')} ${k + 1}` : t('bt_port_name'))}${mapsLink(P(i, `mare.tours.${area}.ports.${k}`))}`).join('');
+  return split(head(t('bt_port_title'), '', ecount(i)), `
+    ${mareRef(e, n)}
+    ${group(t('bt_ports_q'), pills(P(i, `mare.tours.${area}.portsMany`), ['one','more'], { lab:c => t(c === 'one' ? 'bt_ports_one' : 'bt_ports_more') }))}
+    ${tour.portsMany ? ports : ''}
+    ${tour.portsMany === 'more' ? `<button type="button" class="ct-back bt-add" data-action="mareport" data-i="${i}" data-area="${area}">${ic('plus',16,1.8)} ${esc(t('bt_port_add'))}</button>` : ''}
+    ${group(t('bt_meet_q'), pills(P(i, `mare.tours.${area}.meetSame`), ['same','diff'], { lab:c => t('bt_meet_' + c) }))}
+    ${tour.meetSame === 'diff' ? `${inp(P(i, `mare.tours.${area}.meet`), t('bt_meet_search'))}${mapsLink(P(i, `mare.tours.${area}.meet`))}` : ''}`);
+}
+function mareBoatScreen(i, n){
+  const e = E(i), m = ensureMare(e), area = m.areas[n], tour = m.tours[area];
+  if(tour.boatsMany === 'one' && tour.boats.length > 1) tour.boats = tour.boats.slice(0, 1);
+  const multi = tour.boatsMany === 'more';
+  const pillsHtml = `<div class="ct-pills" role="${multi ? 'group' : 'radiogroup'}">${MARE_BOATS.map(c => {
+    const k = tour.boats.indexOf(c), on = k >= 0;
+    return `<button type="button" class="ct-pill${on ? ' is-on' : ''}" role="${multi ? 'checkbox' : 'radio'}" aria-checked="${on}" data-action="mareboat" data-i="${i}" data-area="${area}" data-v="${c}"><span>${esc(o(c))}</span>${multi && on ? `<span class="bt-num" aria-hidden="true">${k + 1}</span>` : ''}</button>`;
+  }).join('')}</div>`;
+  return split(head(t('bt_boat_title'), '', ecount(i)), `
+    ${mareRef(e, n)}
+    ${group(t('bt_boats_q'), pills(P(i, `mare.tours.${area}.boatsMany`), ['one','more'], { lab:c => t(c === 'one' ? 'bt_boats_one' : 'bt_boats_more') }))}
+    ${tour.boatsMany ? group(t('bt_boat_title'), pillsHtml, { req:true, multi }) : ''}`);
+}
+function mareDurScreen(i, n){
+  const e = E(i), m = ensureMare(e), area = m.areas[n];
+  return split(head(t('bt_dur_title'), '', ecount(i)), `
+    ${mareRef(e, n)}
+    <div class="ct-steppers">${stepper(P(i, `mare.tours.${area}.durH`), t('hours'), '', 1, 12)}</div>`);
+}
+function mareAreasOk(e){
+  const m = e?.mare; if(!m || !m.areas.length) return false;
+  return !m.areas.includes('altro') || filled(m.areaOther, 2);
+}
+function mareTour(e, n){ const m = e?.mare; const area = m?.areas?.[n]; return area ? m.tours?.[area] : null; }
+function marePortOk(e, n){
+  const tour = mareTour(e, n); if(!tour) return false;
+  if(tour.portsMany !== 'one' && tour.portsMany !== 'more') return false;
+  const ports = tour.portsMany === 'more' ? tour.ports : [tour.ports[0]];
+  if(tour.portsMany === 'more' && ports.length < 2) return false;
+  if(!ports.every(p => filled(p, 2))) return false;
+  if(tour.meetSame !== 'same' && tour.meetSame !== 'diff') return false;
+  return tour.meetSame !== 'diff' || filled(tour.meet, 2);
+}
+function mareBoatOk(e, n){
+  const tour = mareTour(e, n); if(!tour) return false;
+  if(tour.boatsMany === 'one') return tour.boats.length === 1;
+  if(tour.boatsMany === 'more') return tour.boats.length >= 2;
+  return false;
+}
+function mareDurOk(e, n){ const tour = mareTour(e, n); return !!tour && pos(tour.durH); }
 const EV = {
   sector: i => split(head(t('es_title'), t('es_sub'), ecount(i), true),
     photoCards(P(i,'sector'), sectorsForPaths().map(s=>({v:s.code, img:s.img, icon:s.icon, label:`${s.letter}. ${o(s.code)}`, hint:t('h_'+s.code)})))),
@@ -2758,6 +2883,7 @@ function screens(){
       if(usesHikeFlow(e)) ensureHike(e); else delete e.hike;
       if(isOffroad(e)) ensureOffroad(e); else delete e.offroad;
       if(isScuba(e)) e.scuba = e.scuba && typeof e.scuba === 'object' ? e.scuba : {depth:'', pressure:'', seabed:''}; else delete e.scuba;
+      if(e.sector === 'mare') ensureMare(e); else delete e.mare;
       e.spaTreatments = isSpa(e) ? (e.spaTreatments||[]).filter(x => SPA_TREATS.includes(x)) : [];
       if(!showsDifficulty(e)) e.difficulty = '';
       if(e.sector === 'artigianato'){ e.equipProvided = false; e.bringNote = ''; e.bring = []; e.limits = ''; e.safety = ''; e.localita = ''; e.meet = ''; e.end = ''; e.priceMode = 'pm_persona'; for(const b of ['priv','shared']){ e.price[b].extra = ''; e.price[b].incl = 1; } e.sq = e.sq || {}; delete e.sq.materials; delete e.sq.workshop_loc; delete e.sq.live_demo; delete e.sq.sale; if(e.sq.can_buy == null) e.sq.can_buy = false; if(e.sq.takehome == null) e.sq.takehome = false; }
@@ -2784,6 +2910,8 @@ function screens(){
         ? ['sector','spec','g1','g2','g4','g3','mode','slots','price','incl','equip','reqs','scuba','sq','avail','cond','photos']
         : e.sector === 'sport'
         ? ['sector','spec','type','g1','g2','g3','g4','mode','slots','price','incl','equip','avail','cond','photos']
+        : e.sector === 'mare'
+        ? ['sector','btareas','g1','g2','g3','g4','mode','price','incl','equip','reqs','sq','avail','slots','cond','photos']
         : (e.sector === 'benessere' || e.sector === 'altro')
         ? ['sector','spec','g1','g2','g3','g4','mode','price','incl','equip','reqs','avail','slots','cond','photos']
         : ['sector','spec','type','g1','g2','g3','g4','mode','price','incl','equip','reqs','sq','avail','slots','cond','photos'];
@@ -2797,6 +2925,15 @@ function screens(){
       if(k==='type' && !hasType(e)) return;
       if(k==='type' && isHike(e)) return;
       if(k==='scuba' && !isScuba(e)) return;
+      if(k==='btareas'){
+        add(`e${i}_btareas`, 'prop', () => mareAreasScreen(i), () => mareAreasOk(S.exps[i]));
+        (S.exps[i].mare?.areas || []).forEach((_, n) => {
+          add(`e${i}_btport${n}`, 'prop', () => marePortScreen(i, n), () => marePortOk(S.exps[i], n));
+          add(`e${i}_btboat${n}`, 'prop', () => mareBoatScreen(i, n), () => mareBoatOk(S.exps[i], n));
+          add(`e${i}_btdur${n}`, 'prop', () => mareDurScreen(i, n), () => mareDurOk(S.exps[i], n));
+        });
+        return;
+      }
       if(k==='spa' && !isSpa(e)) return;
       if(k==='type' && hasSpec(e) && !specList(e).length) return;
       if(k==='sq' && (e.sector === 'artigianato' || !(SECTOR[e.sector]?.q||[]).length)) return;
@@ -2835,6 +2972,9 @@ function screenLabel(id){
     const or = m[2].match(/^or(\d+)$/);
     if(or && e){ const n = +or[1], keys = offroadSeq(e); return `${t('exp_n',{n:+m[1]+1})}: ${t('or_title')} · ${t('hk_mode_n',{n:n+1,total:keys.length})}`; }
     if(m[2]==='drive') return `${t('exp_n',{n:+m[1]+1})}: ${t('or_drv_title')}`;
+    if(m[2]==='btareas') return `${t('exp_n',{n:+m[1]+1})}: ${t('bt_areas_title')}`;
+    const bt = m[2].match(/^bt(port|boat|dur)(\d+)$/);
+    if(bt && e){ const key = bt[1]==='port' ? 'bt_port_title' : bt[1]==='boat' ? 'bt_boat_title' : 'bt_dur_title'; return `${t('exp_n',{n:+m[1]+1})}: ${t(key)}`; }
     const title = m[2]==='reqs' && e?.sector==='artigianato' ? t('rq_title_art') : t(TKEY[m[2]]+'_title',{s:o(e?.sector||'').toLowerCase()}); return `${t('exp_n',{n:+m[1]+1})}: ${title}`; }
   if(id==='conv_details') return t('cdt_title_'+cgroup());
   return t(TKEY[id]+'_title');
@@ -3524,6 +3664,9 @@ const ACT = {
   next, back,
   uilang: el => { S.lang = el.dataset.v; rerender(); },
   pick: el => { const p=el.dataset.p, prev=get(p); const off=/\.spec$/.test(p) && prev===el.dataset.v; set(p, off ? '' : el.dataset.v); afterPick(p, prev); rerender(); },
+  maps: el => { const q = String(get(el.dataset.p) || '').trim(); const url = q ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q) : 'https://www.google.com/maps'; window.open(url, '_blank', 'noopener'); },
+  mareport: el => { const tour = ensureMare(S.exps[+el.dataset.i]).tours[el.dataset.area]; if(tour) tour.ports.push(''); rerender(); },
+  mareboat: el => { const tour = ensureMare(S.exps[+el.dataset.i]).tours[el.dataset.area]; if(!tour) return; const v = el.dataset.v; if(tour.boatsMany !== 'more') tour.boats = [v]; else { const k = tour.boats.indexOf(v); k < 0 ? tour.boats.push(v) : tour.boats.splice(k, 1); } rerender(); },
   tog: el => { const p=el.dataset.p, v=el.dataset.v, a=get(p)||[]; const k=a.indexOf(v); k<0?a.push(v):a.splice(k,1); set(p,a); afterPick(p, a);
     if(p==='paths' && (v==='A'||v==='C') && (a.includes('A')||a.includes('C')) && !S.exps.length) S.exps.push(newExp());
     rerender(); },
