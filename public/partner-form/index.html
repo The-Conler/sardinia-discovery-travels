@@ -2876,8 +2876,9 @@ function mareDotMap(THREE){
   const g = c.getContext('2d');
   const glow = g.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
   glow.addColorStop(0, 'rgba(255,255,255,1)');
-  glow.addColorStop(0.36, 'rgba(255,255,255,1)');
-  glow.addColorStop(0.55, 'rgba(255,255,255,0.4)');
+  glow.addColorStop(0.42, 'rgba(255,255,255,1)');
+  glow.addColorStop(0.58, 'rgba(255,255,255,0.55)');
+  glow.addColorStop(0.78, 'rgba(255,255,255,0)');
   glow.addColorStop(1, 'rgba(255,255,255,0)');
   g.fillStyle = glow;
   g.fillRect(0, 0, s, s);
@@ -2891,7 +2892,7 @@ function mareCloud(THREE, coords, spacing, bright){
   geo.setAttribute('position', new THREE.Float32BufferAttribute(coords, 3));
   const mat = new THREE.PointsMaterial({
     color: bright ? 0x5ef6ee : 0x19e6e0,
-    size: spacing * (bright ? 0.9 : 0.8),
+    size: spacing * (bright ? 2.15 : 1.9),
     map: mareDotMap(THREE),
     transparent: true,
     blending: THREE.AdditiveBlending,
@@ -2917,7 +2918,24 @@ function mareSurfaceDots(THREE, geometry, spacing){
   const triCount = index ? index.count / 3 : pos.count / 3;
   const va = [0, 0, 0], vb = [0, 0, 0], vc = [0, 0, 0];
   const read = (i, d) => { d[0] = pos.getX(i); d[1] = pos.getY(i); d[2] = pos.getZ(i); };
-  if(ext[order[1]] < step * 1.35){
+  if(order[0] === 1 && ext[order[0]] > step * 4 && ext[order[2]] < ext[order[1]] * 0.4){
+    const n = index ? index.count : pos.count;
+    const at = i => { const k = index ? index.getX(i) : i; return [pos.getX(k), pos.getY(k), pos.getZ(k)]; };
+    let head = at(0), foot = at(0);
+    for(let i = 1; i < n; i++){ const p = at(i); if(p[1] > head[1]) head = p; if(p[1] < foot[1]) foot = p; }
+    const ab = [foot[0] - head[0], foot[1] - head[1], foot[2] - head[2]];
+    const ab2 = ab[0] * ab[0] + ab[1] * ab[1] + ab[2] * ab[2] || 1;
+    let clew = at(0), best = -1;
+    for(let i = 0; i < n; i++){
+      const p = at(i);
+      const t = ((p[0] - head[0]) * ab[0] + (p[1] - head[1]) * ab[1] + (p[2] - head[2]) * ab[2]) / ab2;
+      const d = Math.hypot(p[0] - head[0] - ab[0] * t, p[1] - head[1] - ab[1] * t, p[2] - head[2] - ab[2] * t);
+      if(d > best){ best = d; clew = p; }
+    }
+    const rows = mareTriRows(head, foot, clew, step);
+    for(let i = 0; i < rows.fill.length; i += 3) keep(fill, rows.fill[i], rows.fill[i + 1], rows.fill[i + 2], 'Sf' + i);
+    for(let i = 0; i < rows.edge.length; i += 3) keep(edge, rows.edge[i], rows.edge[i + 1], rows.edge[i + 2], 'Se' + i);
+  }else if(ext[order[1]] < step * 1.35){
     const L = order[0];
     const n = Math.max(2, Math.round(ext[L] / step));
     const c = [(bb.min.x + bb.max.x) / 2, (bb.min.y + bb.max.y) / 2, (bb.min.z + bb.max.z) / 2];
@@ -2928,27 +2946,48 @@ function mareSurfaceDots(THREE, geometry, spacing){
       keep(edge, p[0], p[1], p[2], 'L' + i);
     }
   }else{
-    const axes = [[order[0], order[1], 'A']];
+    const horiz = ext[0] >= ext[2] ? 0 : 2;
+    const across = horiz === 0 ? 2 : 0;
+    const side = ext[1] > step * 1.15;
+    const A = side ? horiz : order[0];
+    const B = side ? 1 : order[1];
+    const C = side ? across : order[2];
+    const cells = new Map();
+    const put = (x, y, z, i, j) => {
+      const key = i + ',' + j;
+      const p = [x, y, z];
+      const cell = cells.get(key);
+      if(!cell) cells.set(key, { i, j, lo:p, hi:p });
+      else if(p[C] < cell.lo[C]) cell.lo = p;
+      else if(p[C] > cell.hi[C]) cell.hi = p;
+    };
     for(let t = 0; t < triCount; t++){
       const ids = [index ? index.getX(t * 3) : t * 3, index ? index.getX(t * 3 + 1) : t * 3 + 1, index ? index.getX(t * 3 + 2) : t * 3 + 2];
       read(ids[0], va); read(ids[1], vb); read(ids[2], vc);
-      for(const [A, B, tag] of axes){
-        const aA = va[A], aB = va[B], bA = vb[A], bB = vb[B], cA = vc[A], cB = vc[B];
-        const denom = (bA - aA) * (cB - aB) - (cA - aA) * (bB - aB);
-        if(Math.abs(denom) < 1e-10) continue;
-        const minA = Math.min(aA, bA, cA), maxA = Math.max(aA, bA, cA);
-        const minB = Math.min(aB, bB, cB), maxB = Math.max(aB, bB, cB);
-        for(let i = Math.ceil(minA / step - 1e-6); i <= Math.floor(maxA / step + 1e-6); i++){
-          for(let j = Math.ceil(minB / step - 1e-6); j <= Math.floor(maxB / step + 1e-6); j++){
-            const pA = i * step, pB = j * step;
-            const u = ((pA - aA) * (cB - aB) - (cA - aA) * (pB - aB)) / denom;
-            const v = ((bA - aA) * (pB - aB) - (pA - aA) * (bB - aB)) / denom;
-            if(u < -1e-3 || v < -1e-3 || u + v > 1 + 1e-3) continue;
-            const w = 1 - u - v;
-            keep(fill, va[0] * w + vb[0] * u + vc[0] * v, va[1] * w + vb[1] * u + vc[1] * v, va[2] * w + vb[2] * u + vc[2] * v, tag + i + ',' + j);
-          }
+      const aA = va[A], aB = va[B], bA = vb[A], bB = vb[B], cA = vc[A], cB = vc[B];
+      const denom = (bA - aA) * (cB - aB) - (cA - aA) * (bB - aB);
+      if(Math.abs(denom) < 1e-10) continue;
+      const minA = Math.min(aA, bA, cA), maxA = Math.max(aA, bA, cA);
+      const minB = Math.min(aB, bB, cB), maxB = Math.max(aB, bB, cB);
+      for(let i = Math.ceil(minA / step - 1e-6); i <= Math.floor(maxA / step + 1e-6); i++){
+        for(let j = Math.ceil(minB / step - 1e-6); j <= Math.floor(maxB / step + 1e-6); j++){
+          const pA = i * step, pB = j * step;
+          const u = ((pA - aA) * (cB - aB) - (cA - aA) * (pB - aB)) / denom;
+          const v = ((bA - aA) * (pB - aB) - (pA - aA) * (bB - aB)) / denom;
+          if(u < -1e-3 || v < -1e-3 || u + v > 1 + 1e-3) continue;
+          const w = 1 - u - v;
+          put(va[0] * w + vb[0] * u + vc[0] * v, va[1] * w + vb[1] * u + vc[1] * v, va[2] * w + vb[2] * u + vc[2] * v, i, j);
         }
       }
+    }
+    const has = (i, j) => cells.has(i + ',' + j);
+    for(const cell of cells.values()){
+      const rim = !has(cell.i - 1, cell.j) || !has(cell.i + 1, cell.j) || !has(cell.i, cell.j - 1) || !has(cell.i, cell.j + 1);
+      if(!side && !rim) continue;
+      const bucket = rim ? edge : fill;
+      const split = Math.abs(cell.hi[C] - cell.lo[C]) > step * 1.4;
+      keep(bucket, cell.lo[0], cell.lo[1], cell.lo[2], cell.i + ',' + cell.j + 'a');
+      if(split) keep(bucket, cell.hi[0], cell.hi[1], cell.hi[2], cell.i + ',' + cell.j + 'b');
     }
   }
   const g = new THREE.Group();
@@ -2968,21 +3007,37 @@ function mareSegment(THREE, parent, ax, ay, az, bx, by, bz, spacing, bright){
   const pts = mareCloud(THREE, coords, spacing, bright !== false);
   if(pts) parent.add(pts);
 }
-function mareTriDots(THREE, parent, A, B, C, spacing){
-  const ab = Math.hypot(B[0] - A[0], B[1] - A[1], B[2] - A[2]);
-  const ac = Math.hypot(C[0] - A[0], C[1] - A[1], C[2] - A[2]);
-  const steps = Math.max(6, Math.round(Math.max(ab, ac) / spacing));
-  const fill = [], edge = [];
-  for(let i = 0; i <= steps; i++){
-    for(let j = 0; j <= steps - i; j++){
-      const u = i / steps, v = j / steps, w = 1 - u - v;
-      const x = A[0] * w + B[0] * u + C[0] * v;
-      const y = A[1] * w + B[1] * u + C[1] * v;
-      const z = A[2] * w + B[2] * u + C[2] * v;
-      (i === 0 || j === 0 || i + j === steps ? edge : fill).push(x, y, z);
+function mareTriRows(A, B, C, spacing){
+  const y0 = Math.min(A[1], B[1], C[1]), y1 = Math.max(A[1], B[1], C[1]);
+  const edge = [], fill = [];
+  const cut = (y, P, Q) => {
+    if(Math.abs(Q[1] - P[1]) < 1e-6 || (P[1] - y) * (Q[1] - y) > 1e-4) return null;
+    const t = (y - P[1]) / (Q[1] - P[1]);
+    if(t < -1e-3 || t > 1 + 1e-3) return null;
+    return [P[0] + (Q[0] - P[0]) * t, y, P[2] + (Q[2] - P[2]) * t];
+  };
+  for(let i = Math.ceil(y0 / spacing - 1e-6); i <= Math.floor(y1 / spacing + 1e-6); i++){
+    const y = i * spacing;
+    const hits = [cut(y, A, B), cut(y, B, C), cut(y, C, A)].filter(Boolean);
+    let p = null, q = null, best = -1;
+    for(let a = 0; a < hits.length; a++) for(let b = a + 1; b < hits.length; b++){
+      const d = Math.hypot(hits[a][0] - hits[b][0], hits[a][2] - hits[b][2]);
+      if(d > best){ best = d; p = hits[a]; q = hits[b]; }
+    }
+    if(!p || best < spacing * 0.2) continue;
+    const n = Math.max(1, Math.round(best / spacing));
+    const top = Math.abs(y - y1) <= spacing * 0.51, bot = Math.abs(y - y0) <= spacing * 0.51;
+    for(let k = 0; k <= n; k++){
+      const t = k / n;
+      const bucket = top || bot || k === 0 || k === n ? edge : fill;
+      bucket.push(p[0] + (q[0] - p[0]) * t, y, p[2] + (q[2] - p[2]) * t);
     }
   }
-  const a = mareCloud(THREE, fill, spacing, false), b = mareCloud(THREE, edge, spacing, true);
+  return { edge, fill };
+}
+function mareTriDots(THREE, parent, A, B, C, spacing){
+  const rows = mareTriRows(A, B, C, spacing);
+  const a = mareCloud(THREE, rows.fill, spacing, false), b = mareCloud(THREE, rows.edge, spacing, true);
   if(a) parent.add(a);
   if(b) parent.add(b);
 }
@@ -2991,7 +3046,7 @@ function mareDress(THREE, model, type){
   model.userData.mareDress = true;
   const box = new THREE.Box3().setFromObject(model);
   const size = box.getSize(new THREE.Vector3());
-  const spacing = Math.max(size.x, size.z, 1) / 14;
+  const spacing = Math.max(size.x, size.z, size.y, 1) / 16;
   const g = new THREE.Group();
   g.name = 'Catamaran_Rig';
   const head = [0, 14.4, -1];
@@ -3022,7 +3077,7 @@ function mareStyle(THREE, root){
   const box = new THREE.Box3().setFromObject(root);
   const size = box.getSize(new THREE.Vector3());
   const span = Math.max(size.x, size.y, size.z, 1e-4);
-  const spacing = Math.max(size.x, size.z, 1e-4) / 14;
+  const spacing = span / 18;
   const scale = new THREE.Vector3();
   root.traverse(obj => {
     if(!obj.isMesh || obj.userData.mareDots) return;
@@ -3145,7 +3200,7 @@ function mareFrame(THREE){
     maxX = Math.max(maxX, Math.abs(rel.dot(right)));
     maxY = Math.max(maxY, Math.abs(rel.dot(up)));
   }
-  PRE.radius = Math.max(maxX / Math.tan(hFov / 2), maxY / Math.tan(vFov / 2)) * 0.92;
+  PRE.radius = Math.max(maxX / Math.tan(hFov / 2), maxY / Math.tan(vFov / 2)) * 1.1;
   PRE.home = { theta:PRE.theta, phi:PRE.phi, radius:PRE.radius };
   PRE.camera.near = Math.max(0.05, Math.max(size.x, size.y, size.z) / 80);
   PRE.camera.far = Math.max(200, PRE.radius * 8);
