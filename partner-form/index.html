@@ -83,8 +83,11 @@ img{display:block}
 .bt-dash{fill:none;stroke:rgba(248,244,238,.55);stroke-width:1.4;stroke-dasharray:5 4}
 .bt-dash.is-on{stroke:#8fd0d4;stroke-width:2.6}
 .bt-inset{fill:rgba(255,255,255,.04);stroke:rgba(248,244,238,.28)}
-.bt-wire{width:92px;height:78px;color:#d7cfc4}
-.bt-boatcard{display:grid;grid-template-columns:96px 1fr auto;gap:12px;align-items:center;width:100%}
+.bt-wire{display:grid;width:112px;height:96px;perspective:380px;color:#d7cfc4}
+.bt-wire svg{width:108px;height:92px;overflow:visible;transform:rotateX(16deg) rotateY(-28deg);animation:bt-yaw 8s ease-in-out infinite}
+@keyframes bt-yaw{0%,100%{transform:rotateX(16deg) rotateY(-36deg)}50%{transform:rotateX(16deg) rotateY(36deg)}}
+@media (prefers-reduced-motion:reduce){.bt-wire svg{animation:none}}
+.bt-boatcard{display:grid;grid-template-columns:116px 1fr auto;gap:12px;align-items:center;width:100%}
 .bt-boatcard p{margin:0}
 .bt-progress{display:flex;flex-direction:column;gap:8px}
 .bt-progress button{display:flex;justify-content:space-between;gap:12px;text-align:left;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:inherit;cursor:pointer}
@@ -1394,7 +1397,8 @@ en:{
   bt_from:'Where can this tour depart from?', bt_dash_note:'The dashed line links the departure to the destination. It is not the nautical route.',
   bt_op_title:'Operating tour', bt_link_title:'Which boats do you want to associate with this tour?', bt_link_sub:'Only boats whose home port is this departure are listed.',
   bt_compat:'Compatible', bt_st_done:'completed', bt_st_work:'in progress (to be completed)', bt_st_new:'not started (to be started)',
-  bt_yacht_q:'Do you offer yachts?', bt_no_port:'No boat is registered at this departure port. Add one from My boats.', bt_tour_gear:'Equipment available for this tour',
+  bt_yacht_q:'Do you offer yachts?', bt_yacht_note:'The yacht does not appear in “My boats” and follows a separate flow: the agency will contact you to arrange it.', bt_no_port:'No boat is registered at this departure port. Add one from My boats.', bt_tour_gear:'Equipment available for this tour',
+  bt_price_shared:'Agency price: per person.', bt_price_priv:'Agency price: total amount for the boat/group.',
   bt_modes:'How do you run it with this boat?', bt_mode_both:'Both', bt_linked:'Linked tours', bt_use_here:'Select for this tour', bt_cap_short:'Capacity', bt_close:'Close',
   bt_filter:'Filter by category', bt_filter_all:'All',
   bt_link_sup:'Supplement, if any',
@@ -1406,10 +1410,10 @@ en:{
   bt_pp:'Supplement per person', bt_pay:'Method', bt_cash:'Cash', bt_pos:'Card (POS)',
   bt_bring_title:'Technical equipment', bt_bring_sub:'What is not included, and what should the guest bring?',
   bt_br_cream:'Sunscreen', bt_br_cream_dry:'Non-oily sunscreen', bt_br_towels:'Towels', bt_br_hat:'Hat', bt_br_shoes:'Flip-flops', bt_br_glasses:'Sunglasses', bt_br_swimsuit:'Swimsuit', bt_br_packed:'Packed lunch',
-  bt_band_title:'How long, by time of day', bt_band_full:'Full day', bt_band_half:'Half day', bt_band_sunset:'Sunset aperitif',
-  bt_half_when:'Half day', bt_half_am:'Morning only', bt_half_pm:'Afternoon only', bt_half_both:'Both',
-  bt_half_dur:'Duration (4 hours maximum)', bt_full_dur:'Duration (8 hours maximum)', bt_sun_dur:'Duration',
-  bt_dep_am:'Morning departure times', bt_dep_pm:'Afternoon departure times', bt_dep:'Departure times', bt_dep_one:'Departure time',
+  bt_band_title:'Duration and time of day', bt_main:'Main duration of the tour', bt_band_full:'Full day', bt_band_half:'Half day', bt_band_sunset:'Sunset aperitif',
+  bt_half_when:'Half day', bt_half_am:'Morning only', bt_half_pm:'Evening only', bt_half_both:'Both',
+  bt_half_dur:'Duration (4 hours maximum)', bt_full_dur:'Duration (8 hours maximum)', bt_sun_dur:'Duration', bt_sun_incl:'What it includes',
+  bt_dep_am:'Morning departure times', bt_dep_pm:'Evening departure times', bt_dep:'Departure times', bt_dep_one:'Departure time',
   bt_det_title:'Specifics of each tour', bt_det_tour:'Tour specifics', bt_see:'What we see', bt_swim:'Where we swim', bt_stops:'Stops',
   bt_itin:'Itinerary', bt_itin_tell:'Tell us a little', bt_stops_q:'Are stops planned?', bt_stops_where:'How many, and where',
   bt_det_food:'Food specifics', bt_fd_head:'Food & beverage',
@@ -1618,7 +1622,8 @@ it:{
   bt_from:'Da dove può partire questo tour?', bt_dash_note:'La linea tratteggiata collega la partenza alla destinazione. Non è la rotta nautica.',
   bt_op_title:'Tour operativo', bt_link_title:'Quali barche vuoi associare a questo tour?', bt_link_sub:'Compaiono solo le barche con lo stesso porto di partenza.',
   bt_compat:'Compatibile', bt_st_done:'completato', bt_st_work:'in compilazione (da completare)', bt_st_new:'non iniziato (da iniziare)',
-  bt_yacht_q:'Offri yacht?', bt_no_port:'Nessuna barca è registrata in questo porto di partenza. Aggiungila da Le mie barche.', bt_tour_gear:'Dotazioni disponibili per questo tour',
+  bt_yacht_q:'Offri yacht?', bt_yacht_note:'Lo yacht non compare in “Le mie barche” e segue un flusso separato: l’agenzia ti contatterà per la gestione.', bt_no_port:'Nessuna barca è registrata in questo porto di partenza. Aggiungila da Le mie barche.', bt_tour_gear:'Dotazioni disponibili per questo tour',
+  bt_price_shared:'Prezzo per l’agenzia: per persona.', bt_price_priv:'Prezzo per l’agenzia: importo complessivo per barca/gruppo.',
   bt_modes:'Come la proponi con questa barca?', bt_mode_both:'Entrambe', bt_linked:'Tour collegati', bt_use_here:'Seleziona per questo tour', bt_cap_short:'Capienza', bt_close:'Chiudi',
   bt_filter:'Filtra per categoria', bt_filter_all:'Tutte',
   bt_link_sup:'Supplemento, eventuale',
@@ -1630,10 +1635,10 @@ it:{
   bt_pp:'Supplemento per persona', bt_pay:'Metodo', bt_cash:'Contanti', bt_pos:'POS',
   bt_bring_title:'Attrezzatura tecnica', bt_bring_sub:'Cosa non è incluso, cosa deve portare il cliente?',
   bt_br_cream:'Crema', bt_br_cream_dry:'Crema non oleata', bt_br_towels:'Asciugamani', bt_br_hat:'Cappello', bt_br_shoes:'Ciabatte', bt_br_glasses:'Occhiali da sole', bt_br_swimsuit:'Costume', bt_br_packed:'Pranzo al sacco',
-  bt_band_title:'Quanto dura per fascia oraria', bt_band_full:'Giornata intera', bt_band_half:'Mezza giornata', bt_band_sunset:'Aperitivo al tramonto',
-  bt_half_when:'Mezza giornata', bt_half_am:'Solo mattina', bt_half_pm:'Solo pomeriggio', bt_half_both:'Entrambi',
-  bt_half_dur:'Durata (massimo 4 ore)', bt_full_dur:'Durata (massimo 8 ore)', bt_sun_dur:'Durata',
-  bt_dep_am:'Orari di partenza, mattina', bt_dep_pm:'Orari di partenza, pomeriggio', bt_dep:'Orari di partenza', bt_dep_one:'Orario di partenza',
+  bt_band_title:'Quanto dura e fascia oraria', bt_main:'Durata principale del tour', bt_band_full:'Giornata intera', bt_band_half:'Mezza giornata', bt_band_sunset:'Aperitivo al tramonto',
+  bt_half_when:'Mezza giornata', bt_half_am:'Solo mattina', bt_half_pm:'Solo sera', bt_half_both:'Entrambe',
+  bt_half_dur:'Durata (massimo 4 ore)', bt_full_dur:'Durata (massimo 8 ore)', bt_sun_dur:'Durata', bt_sun_incl:'Cosa comprende',
+  bt_dep_am:'Orari di partenza, mattina', bt_dep_pm:'Orari di partenza, sera', bt_dep:'Orari di partenza', bt_dep_one:'Orario di partenza',
   bt_det_title:'Specifiche di ciascun tour', bt_det_tour:'Specifiche sul tour', bt_see:'Cosa vediamo', bt_swim:'Dove ci tuffiamo', bt_stops:'Tappe e soste',
   bt_itin:'Itinerario', bt_itin_tell:'Raccontaci un po’', bt_stops_q:'Sono previste tappe e soste?', bt_stops_where:'Quante e dove',
   bt_det_food:'Specifiche sul cibo', bt_fd_head:'Food & beverage',
@@ -2654,6 +2659,8 @@ const MARE_AREAS = ['corsica','maddalena','asinara','tavolara','alghero','baunei
 const MARE_BOATS = ['barca_motore','barca_vela','catamarano'];
 const MARE_PORT_GEO = [['porto rafael','Nord','Est'],['santa maria navarrese','Centro','Est'],['golfo aranci','Nord','Est'],['san teodoro','Nord','Est'],['santa teresa','Nord','Est'],['porto torres','Nord','Ovest'],['la maddalena','Nord','Est'],['cannigione','Nord','Est'],['palau','Nord','Est'],['olbia','Nord','Est'],['alghero','Nord','Ovest'],['stintino','Nord','Ovest'],['castelsardo','Nord','Ovest'],['bosa','Nord','Ovest'],['cala gonone','Centro','Est'],['arbatax','Centro','Est'],['tortoli','Centro','Est'],['orosei','Centro','Est'],['baunei','Centro','Est'],['villasimius','Sud','Est'],['carloforte','Sud','Ovest'],['portoscuso','Sud','Ovest'],['teulada','Sud','Ovest'],['cagliari','Sud',''],['bonifacio','','']];
 const MARE_BANDS = ['full','half','sunset'];
+const MARE_MORNING = halfHours().filter(h => h >= '07:00' && h <= '12:30');
+const MARE_EVENING = halfHours().filter(h => h >= '16:00' && h <= '21:00');
 const MARE_BRING = ['cream','cream_dry','towels','hat','shoes','glasses','swimsuit','packed'];
 const MARE_AREA_KIND = { corsica:'area', maddalena:'area', asinara:'area', baunei:'area' };
 const MARE_ANCHOR = { corsica:[96,78], maddalena:[452,112], asinara:[168,92], baunei:[438,348], tavolara:[468,176], alghero:[186,214], carloforte:[156,552], cagliari:[318,628], villasimius:[408,598], altro:[300,440] };
@@ -2687,19 +2694,21 @@ function blankMareFood(src){
 }
 function blankMareOp(src){
   src = src || {};
-  const keepSlots = (arr) => (Array.isArray(arr) ? arr : []).filter(s => halfHours().includes(s));
+  const keepSlots = (arr, hours) => (Array.isArray(arr) ? arr : []).filter(s => hours.includes(s));
+  const rawBands = (src.bands || []).filter(b => MARE_BANDS.includes(b));
+  const main = rawBands.includes('full') ? 'full' : (rawBands.includes('half') ? 'half' : '');
+  const halfPart = src.halfPart === 'afternoon' ? 'evening' : src.halfPart;
   return {
     area: src.area, port: src.port || '',
     meetSame: src.meetSame === 'same' || src.meetSame === 'diff' ? src.meetSame : '',
     meet: src.meet || '',
-    bands: (src.bands || []).filter(b => MARE_BANDS.includes(b)),
-    halfPart: ['morning','afternoon','both'].includes(src.halfPart) ? src.halfPart : '',
-    halfDur: Math.min(4, Number(src.halfDur) || 0),
-    halfAm: keepSlots(src.halfAm), halfPm: keepSlots(src.halfPm),
-    fullDur: Math.min(8, Number(src.fullDur) || 0),
-    fullSlots: keepSlots(src.fullSlots),
-    sunTime: halfHours().includes(src.sunTime) ? src.sunTime : '',
+    bands: main ? (rawBands.includes('sunset') ? [main, 'sunset'] : [main]) : (rawBands.includes('sunset') ? ['sunset'] : []),
+    halfPart: ['morning','evening','both'].includes(halfPart) ? halfPart : '',
+    halfAm: keepSlots(src.halfAm, MARE_MORNING), halfPm: keepSlots(src.halfPm, MARE_EVENING),
+    fullSlots: keepSlots(src.fullSlots, halfHours()),
+    sunTime: MARE_EVENING.includes(src.sunTime) ? src.sunTime : '',
     sunDur: Number(src.sunDur) || 0,
+    sunIncludes: src.sunIncludes || '',
     allWeek: src.allWeek === 'yes' || src.allWeek === 'no' ? src.allWeek : '',
     days: (src.days || []).filter(d => CONFIG.weekdays.includes(d)),
     see: src.see || '', swim: src.swim || '', stops: src.stops || '',
@@ -2734,7 +2743,9 @@ function ensureMare(e){
       if(!boat) continue;
       const raw = op.offer[id] || {};
       const cap = mareCap(boat);
-      offer[id] = { modes: ['priv','shared','both'].includes(raw.modes) ? raw.modes : '', gear: raw.gear || '', shared: mareClampSide(blankMareSide(raw.shared), cap), priv: mareClampSide(blankMareSide(raw.priv), cap) };
+      const shared = mareClampSide(blankMareSide(raw.shared), cap), priv = mareClampSide(blankMareSide(raw.priv), cap);
+      shared.unit = 'persona'; priv.unit = 'gruppo';
+      offer[id] = { modes: ['priv','shared','both'].includes(raw.modes) ? raw.modes : '', gear: raw.gear || '', shared, priv };
     }
     op.offer = offer;
     return op;
@@ -2782,11 +2793,11 @@ function mapsLink(p){
 function boatWire(boat){
   const type = typeof boat === 'string' ? boat : boat?.type;
   const hull = type === 'catamarano'
-    ? '<path d="M16 74 L42 74 L36 104 L22 104 Z M78 74 L104 74 L98 104 L84 104 Z"/><path d="M42 66 H78 M36 86 H84"/>'
+    ? '<path d="M22 72 L48 58 L58 66 L32 80 Z"/><path d="M22 72 V88 L48 102 L58 86 V66"/><path d="M48 58 V74"/><path d="M92 66 L118 52 L128 60 L102 74 Z"/><path d="M92 66 V82 L118 96 L128 80 V60"/><path d="M118 52 V66"/><path d="M48 70 L102 62 L110 70 L56 78 Z"/><path d="M56 78 V86 L110 78 V70"/>'
     : type === 'barca_vela'
-    ? '<path d="M20 100 L38 68 H102 L116 100 Z"/><path d="M70 68 V24 M70 34 L102 66 H70"/>'
-    : '<path d="M18 100 L36 72 H108 L124 100 Z"/><path d="M50 72 V50 H96 V72 M50 50 H96"/>';
-  return `<svg class="bt-wire" viewBox="0 0 140 120" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5">${hull}<path d="M8 110 H132" stroke-dasharray="3 3"/></g></svg>`;
+    ? '<path d="M24 84 L76 60 L126 76 L116 90 L46 106 Z"/><path d="M24 84 V98 L46 116 L116 100 V90"/><path d="M76 60 V74"/><path d="M72 92 V30"/><path d="M72 38 L112 78 H72"/><path d="M72 48 L40 78 H72"/>'
+    : '<path d="M22 78 L74 54 L130 72 L120 86 L42 104 Z"/><path d="M22 78 V94 L42 114 L120 98 V86"/><path d="M74 54 V70"/><path d="M56 72 L90 56 L116 68 L82 84 Z"/><path d="M90 56 V46 L116 58 V68"/><path d="M82 84 V92 L116 76 V68"/>';
+  return `<span class="bt-wire" aria-hidden="true"><svg viewBox="0 0 150 128"><g fill="none" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round">${hull}<path d="M16 118 H136" stroke-dasharray="3 3"/></g></svg></span>`;
 }
 function mareBoatOkFields(b){
   return filled(b.name, 2) && MARE_BOATS.includes(b.type) && filled(b.brand, 2) && pos(b.length) && pos(b.width) && mareCap(b) >= 2 && pos(b.crew) && filled(b.home, 2) && (b.sell === '' || b.sell == null || (pos(b.sell) && Number(b.sell) <= mareCap(b)));
@@ -2810,7 +2821,7 @@ function mareFleetScreen(i){
   }).join('');
   return split(head(t('bt_fleet_title'), t('bt_fleet_sub'), ecount(i)), `<div class="ct-stack" style="gap:12px">${blocks}
     ${group(t('bt_yacht_q'), pills(P(i, 'mare.yachts'), ['yes','no'], { lab:c => t(c === 'yes' ? 'yn_yes' : 'yn_no') }))}
-    ${m.yachts === 'yes' ? note(t('bn_agency'), 'info') : ''}</div>`);
+    ${m.yachts === 'yes' ? note(t('bt_yacht_note'), 'info') : ''}</div>`);
 }
 function mareFleetOk(e){ const m = e?.mare; return !!m && (m.yachts === 'yes' || m.yachts === 'no') && m.fleet.every(mareBoatOkFields); }
 function mareMapSvg(e, i){
@@ -2877,49 +2888,50 @@ function mareMeetOk(e, n){
   if(op.meetSame !== 'same' && op.meetSame !== 'diff') return false;
   return op.meetSame !== 'diff' || filled(op.meet, 2);
 }
-function mareSlotBox(i, n, key, label){
-  const slots = E(i).mare.ops[n][key] || [];
-  const opts = halfHours().map(hm => `<option value="${hm}"${slots.includes(hm) ? ' disabled' : ''}>${hm}</option>`).join('');
+function mareSlotBox(i, n, key, label, hours){
+  const slots = (E(i).mare.ops[n][key] || []).filter(s => hours.includes(s));
+  const opts = hours.map(hm => `<option value="${hm}"${slots.includes(hm) ? ' disabled' : ''}>${hm}</option>`).join('');
   return group(label, `<div class="ct-slots">${slots.map((s,k)=>`<span class="ct-slot">${esc(s)}<button type="button" data-action="mareslotdel" data-i="${i}" data-n="${n}" data-key="${key}" data-v="${k}" aria-label="${esc(s)}">${ic('x',14,2)}</button></span>`).join('')}
     <span class="ct-slot-add"><select data-mare-slot="${n}:${key}" aria-label="${esc(label)}">${opts}</select><button type="button" class="ct-back" data-action="mareslotadd" data-i="${i}" data-n="${n}" data-key="${key}">${ic('plus',16,1.8)} ${t('slot_add')}</button></span></div>`);
 }
 function mareBandScreen(i, n){
   const e = E(i), m = ensureMare(e), op = m.ops[n];
-  const has = c => op.bands.includes(c);
+  const main = op.bands.includes('full') ? 'full' : (op.bands.includes('half') ? 'half' : '');
+  const sunset = op.bands.includes('sunset');
   const half = op.halfPart;
+  const choice = (v, label) => `<button type="button" class="ct-pill${main === v ? ' is-on' : ''}" role="radio" aria-checked="${main === v}" data-action="maremain" data-i="${i}" data-n="${n}" data-v="${v}"><span>${esc(label)}</span></button>`;
   return split(head(t('bt_band_title'), '', ecount(i)), `
     ${mareOpRef(e, n)}
     ${note(t('bt_inherit'), 'info')}
-    ${group(t('bt_band_title'), `<div class="ct-pills" role="group">${MARE_BANDS.map(c => {
-      const on = has(c);
-      return `<button type="button" class="ct-pill${on ? ' is-on' : ''}" role="checkbox" aria-checked="${on}" data-action="tog" data-p="${P(i, `mare.ops.${n}.bands`)}" data-v="${c}"><span>${esc(t('bt_band_' + c))}</span></button>`;
-    }).join('')}</div>`, {multi:true})}
-    ${has('half') ? `<section class="ct-block"><h3 class="ct-block-title">${esc(t('bt_band_half'))}</h3>
-      ${pills(P(i, `mare.ops.${n}.halfPart`), ['morning','afternoon','both'], { lab:c => t(c === 'morning' ? 'bt_half_am' : c === 'afternoon' ? 'bt_half_pm' : 'bt_half_both') })}
-      <div class="ct-steppers">${stepper(P(i, `mare.ops.${n}.halfDur`), t('bt_half_dur'), '', 1, 4)}</div>
-      ${half === 'morning' || half === 'both' ? mareSlotBox(i, n, 'halfAm', t('bt_dep_am')) : ''}
-      ${half === 'afternoon' || half === 'both' ? mareSlotBox(i, n, 'halfPm', t('bt_dep_pm')) : ''}
+    ${group(t('bt_main'), `<div class="ct-pills" role="radiogroup">${choice('full', t('bt_band_full'))}${choice('half', t('bt_band_half'))}</div>`)}
+    ${main === 'full' ? `<section class="ct-block"><h3 class="ct-block-title">${esc(t('bt_band_full'))}</h3>
+      ${mareSlotBox(i, n, 'fullSlots', t('bt_dep'), halfHours())}
     </section>` : ''}
-    ${has('full') ? `<section class="ct-block"><h3 class="ct-block-title">${esc(t('bt_band_full'))}</h3>
-      <div class="ct-steppers">${stepper(P(i, `mare.ops.${n}.fullDur`), t('bt_full_dur'), '', 1, 8)}</div>
-      ${mareSlotBox(i, n, 'fullSlots', t('bt_dep'))}
+    ${main === 'half' ? `<section class="ct-block"><h3 class="ct-block-title">${esc(t('bt_band_half'))}</h3>
+      ${pills(P(i, `mare.ops.${n}.halfPart`), ['morning','evening','both'], { lab:c => t(c === 'morning' ? 'bt_half_am' : c === 'evening' ? 'bt_half_pm' : 'bt_half_both') })}
+      ${half === 'morning' || half === 'both' ? mareSlotBox(i, n, 'halfAm', t('bt_dep_am'), MARE_MORNING) : ''}
+      ${half === 'evening' || half === 'both' ? mareSlotBox(i, n, 'halfPm', t('bt_dep_pm'), MARE_EVENING) : ''}
     </section>` : ''}
-    ${has('sunset') ? `<section class="ct-block"><h3 class="ct-block-title">${esc(t('bt_band_sunset'))}</h3>
-      ${group(t('bt_dep_one'), `<select data-bind="${P(i, `mare.ops.${n}.sunTime`)}">${[''].concat(halfHours()).map(hm => `<option value="${hm}"${op.sunTime === hm ? ' selected' : ''}>${hm || '—'}</option>`).join('')}</select>`)}
+    ${group(t('bt_band_sunset'), `<button type="button" class="ct-pill${sunset ? ' is-on' : ''}" role="checkbox" aria-checked="${sunset}" data-action="maresunset" data-i="${i}" data-n="${n}"><span>${esc(t(sunset ? 'yn_yes' : 'yn_no'))}</span></button>`, {req:false})}
+    ${sunset ? `<section class="ct-block"><h3 class="ct-block-title">${esc(t('bt_band_sunset'))}</h3>
+      ${group(t('bt_dep_one'), `<select data-bind="${P(i, `mare.ops.${n}.sunTime`)}">${[''].concat(MARE_EVENING).map(hm => `<option value="${hm}"${op.sunTime === hm ? ' selected' : ''}>${hm || '—'}</option>`).join('')}</select>`)}
       <div class="ct-steppers">${stepper(P(i, `mare.ops.${n}.sunDur`), t('bt_sun_dur'), '', 1, 4)}</div>
+      ${inp(P(i, `mare.ops.${n}.sunIncludes`), t('bt_sun_incl'), {area:'short'})}
     </section>` : ''}
     ${group(t('bt_allweek'), pills(P(i, `mare.ops.${n}.allWeek`), ['yes','no'], { lab:c => t(c === 'yes' ? 'yn_yes' : 'yn_no') }))}
     ${op.allWeek === 'no' ? group(t('weekdays'), pills(P(i, `mare.ops.${n}.days`), CONFIG.weekdays, {multi:true}), {multi:true}) : ''}`);
 }
 function mareBandOk(e, n){
-  const op = e?.mare?.ops?.[n]; if(!op || !op.bands.length) return false;
-  if(op.bands.includes('half')){
-    if(!op.halfPart || !(op.halfDur >= 1 && op.halfDur <= 4)) return false;
+  const op = e?.mare?.ops?.[n]; if(!op) return false;
+  const full = op.bands.includes('full'), half = op.bands.includes('half');
+  if(full === half) return false;
+  if(half){
+    if(!['morning','evening','both'].includes(op.halfPart)) return false;
     if((op.halfPart === 'morning' || op.halfPart === 'both') && !op.halfAm.length) return false;
-    if((op.halfPart === 'afternoon' || op.halfPart === 'both') && !op.halfPm.length) return false;
+    if((op.halfPart === 'evening' || op.halfPart === 'both') && !op.halfPm.length) return false;
   }
-  if(op.bands.includes('full') && (!(op.fullDur >= 1 && op.fullDur <= 8) || !op.fullSlots.length)) return false;
-  if(op.bands.includes('sunset') && (!op.sunTime || !pos(op.sunDur))) return false;
+  if(full && !op.fullSlots.length) return false;
+  if(op.bands.includes('sunset') && (!MARE_EVENING.includes(op.sunTime) || !pos(op.sunDur) || !filled(op.sunIncludes, 2))) return false;
   if(op.allWeek === 'yes') return true;
   return op.allWeek === 'no' && op.days.length > 0;
 }
@@ -2942,17 +2954,17 @@ function mareSideOk(s, cap){ return s && (s.unit === 'persona' || s.unit === 'gr
 function marePeople(i, n, id, side, cap){
   return `<div class="ct-steppers">${stepper(P(i, `mare.ops.${n}.offer.${id}.${side}.min`), t('minP'), t('minPD'), 2, cap)}${stepper(P(i, `mare.ops.${n}.offer.${id}.${side}.max`), t('maxP'), t('maxPD'), 2, cap)}${stepper(P(i, `mare.ops.${n}.offer.${id}.${side}.minAge`), t('minAge'), t('minAgeD'), 0, 18)}</div>`;
 }
-function mareSeasons(i, n, id, side, label){
-  return ['low','mid','high'].map(s => money(P(i, `mare.ops.${n}.offer.${id}.${side}.${s}`), `${label}, ${t('bt_season_' + s).toLowerCase()}`, { hint:t('bt_season_' + s + '_m') })).join('');
+function mareSeasons(i, n, id, side){
+  return ['low','mid','high'].map(s => money(P(i, `mare.ops.${n}.offer.${id}.${side}.${s}`), t('bt_season_' + s), { hint:t('bt_season_' + s + '_m') })).join('');
 }
 function marePriceScreen(i, n, b){
   const e = E(i), m = ensureMare(e), op = m.ops[n], id = op.boatIds[b], boat = mareBoatById(e, id), offer = op.offer[id];
   if(!boat) return split(head(t('bt_price_title'), '', ecount(i)), mareOpRef(e, n));
   const cap = mareCap(boat);
   const modes = offer?.modes;
-  const panel = (side, title, label) => `<section class="ct-block"><h3 class="ct-block-title">${esc(title)}</h3>
-    ${group(t('bt_unit'), pills(P(i, `mare.ops.${n}.offer.${id}.${side}.unit`), ['persona','gruppo'], { lab:c => t('bt_unit_' + c) }))}
-    ${mareSeasons(i, n, id, side, label)}
+  const panel = (side, title) => `<section class="ct-block"><h3 class="ct-block-title">${esc(title)}</h3>
+    <p class="ct-spec-head">${esc(t(side === 'shared' ? 'bt_price_shared' : 'bt_price_priv'))}</p>
+    ${mareSeasons(i, n, id, side)}
     ${money(P(i, `mare.ops.${n}.offer.${id}.${side}.extra`), t('bt_link_sup'), {req:false})}
     ${marePeople(i, n, id, side, cap)}</section>`;
   return split(head(t('bt_price_title'), '', ecount(i)), `
@@ -2961,8 +2973,8 @@ function marePriceScreen(i, n, b){
     ${inp(P(i, `mare.ops.${n}.offer.${id}.gear`), t('bt_tour_gear'), {req:false, area:'short'})}
     ${note(t('bt_period'), 'info')}
     ${group(t('bt_modes'), pills(P(i, `mare.ops.${n}.offer.${id}.modes`), ['shared','priv','both'], { lab:c => t(c === 'both' ? 'bt_mode_both' : c === 'priv' ? 'pr_priv_short' : 'pr_shared_short') }))}
-    ${modes === 'shared' || modes === 'both' ? panel('shared', t('pr_shared_short'), t('bt_agency')) : ''}
-    ${modes === 'priv' || modes === 'both' ? panel('priv', t('pr_priv_short'), t('bt_net')) : ''}`);
+    ${modes === 'shared' || modes === 'both' ? panel('shared', t('pr_shared_short')) : ''}
+    ${modes === 'priv' || modes === 'both' ? panel('priv', t('pr_priv_short')) : ''}`);
 }
 function mareOnePriceOk(offer, cap){
   if(!offer) return false;
@@ -3057,7 +3069,7 @@ function renderFleet(){
   }).join('');
   panel.innerHTML = `<div class="ct-panel-top"><h2 id="fleetTitle">${esc(t('bt_myboats'))}</h2><button type="button" class="ct-x" data-action="fleetclose" aria-label="${esc(t('bt_close'))}">${ic('x',18,1.8)}</button></div>${groups}
     ${group(t('bt_yacht_q'), pills(P(i, 'mare.yachts'), ['yes','no'], { lab:c => t(c === 'yes' ? 'yn_yes' : 'yn_no') }))}
-    ${m.yachts === 'yes' ? note(t('bn_agency'), 'info') : ''}`;
+    ${m.yachts === 'yes' ? note(t('bt_yacht_note'), 'info') : ''}`;
   panel.classList.add('is-open'); panel.setAttribute('aria-hidden','false'); scrim.classList.add('is-open'); scrim.hidden = false;
 }
 
@@ -4145,7 +4157,9 @@ const ACT = {
   fleetsel: el => { const m = ensureMare(S.exps[+el.dataset.i]); const op = m.ops[+el.dataset.n]; const boat = m.fleet.find(b => b.id === el.dataset.id); if(!op || !boat || !mareSamePort(boat.home, op.port)) return; const id = boat.id; const k = op.boatIds.indexOf(id); if(k < 0) op.boatIds.push(id); else op.boatIds.splice(k, 1); rerender(); },
   mareincl: el => { const item = ensureMare(S.exps[+el.dataset.i]).incl[el.dataset.k]; if(item){ item.mode = el.dataset.v; if(item.mode !== 'sup') item.price = ''; } rerender(); },
   maregamemode: el => { const item = ensureMare(S.exps[+el.dataset.i]).games.items[el.dataset.k]; if(!item?.on) return; item.mode = el.dataset.v; if(item.mode !== 'sup'){ item.price = ''; item.method = ''; } rerender(); },
-  mareslotadd: el => { const op = ensureMare(S.exps[+el.dataset.i]).ops[+el.dataset.n]; const sel = document.querySelector(`[data-mare-slot="${el.dataset.n}:${el.dataset.key}"]`); const v = sel?.value; if(!op || !v || !halfHours().includes(v)) return sel?.focus(); const a = op[el.dataset.key]; if(!a.includes(v)){ a.push(v); a.sort(); } rerender(); },
+  maremain: el => { const op = ensureMare(S.exps[+el.dataset.i]).ops[+el.dataset.n]; if(!op) return; const v = el.dataset.v === 'half' ? 'half' : 'full'; const sunset = op.bands.includes('sunset'); op.bands = sunset ? [v, 'sunset'] : [v]; rerender(); },
+  maresunset: el => { const op = ensureMare(S.exps[+el.dataset.i]).ops[+el.dataset.n]; if(!op) return; const k = op.bands.indexOf('sunset'); if(k < 0) op.bands.push('sunset'); else op.bands.splice(k, 1); rerender(); },
+  mareslotadd: el => { const op = ensureMare(S.exps[+el.dataset.i]).ops[+el.dataset.n]; const sel = document.querySelector(`[data-mare-slot="${el.dataset.n}:${el.dataset.key}"]`); const v = sel?.value; const hours = el.dataset.key === 'halfAm' ? MARE_MORNING : (el.dataset.key === 'halfPm' ? MARE_EVENING : halfHours()); if(!op || !v || !hours.includes(v)) return sel?.focus(); const a = op[el.dataset.key]; if(!a.includes(v)){ a.push(v); a.sort(); } rerender(); },
   mareslotdel: el => { const op = ensureMare(S.exps[+el.dataset.i]).ops[+el.dataset.n]; op?.[el.dataset.key]?.splice(+el.dataset.v, 1); rerender(); },
   tog: el => { const p=el.dataset.p, v=el.dataset.v, a=get(p)||[]; const k=a.indexOf(v); k<0?a.push(v):a.splice(k,1); set(p,a); afterPick(p, a);
     if(p==='paths' && (v==='A'||v==='C') && (a.includes('A')||a.includes('C')) && !S.exps.length) S.exps.push(newExp());
