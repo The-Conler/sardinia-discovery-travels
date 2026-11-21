@@ -1240,12 +1240,12 @@ const CONFIG = {
       types:['noleggio','escursione_guidata'],
       q:[] },
     { code:'benessere', letter:'J', img:'/partner-form/img/cat-culture.jpg', icon:'sun',
-      spec:['yoga','pilates','barefooting','meditazione','mindfulness','respirazione','massaggi','aromaterapia','fangoterapia','percorsi_termali','ben_spa','retreat'],
+      spec:['pilates','yoga','meditazione','barefooting','retreat','pet_therapy'],
       specGroups:[
-        {h:'bg_move', o:['yoga','pilates','barefooting']},
-        {h:'bg_mind', o:['meditazione','mindfulness','respirazione']},
-        {h:'bg_treat', o:['massaggi','aromaterapia','fangoterapia','percorsi_termali','ben_spa']},
-        {h:'bg_retreat', o:['retreat']}
+        {h:'bg_mindbody', o:['pilates','yoga','meditazione']},
+        {h:'bg_bare', o:['barefooting']},
+        {h:'bg_retreat_h', o:['retreat']},
+        {h:'bg_pet', o:['pet_therapy']}
       ],
       types:[], q:[] },
     { code:'altro', letter:'K', img:'/partner-form/img/cat-artisan.jpg', icon:'message',
@@ -1338,6 +1338,9 @@ en:{
   sp_unit:'Unit', sp_u_ora:'Per hour', sp_u_mezza:'Half day (2-4 hours)', sp_u_full:'Full day (5-8 hours)',
   sp_hand:'Handover', o_hand_checkin:'Self check-in', o_hand_staff:'Handover with staff', o_hand_guided:'Guided',
   bg_move:'01 Movement and body awareness', bg_mind:'02 Mindfulness and relaxation', bg_treat:'03 Treatments and physical wellbeing', bg_retreat:'04 Retreats and holistic experiences',
+  bg_mindbody:'Mind-body wellbeing', bg_bare:'Barefooting', bg_retreat_h:'Retreat', bg_pet:'Pet therapy',
+  bn_agency:'The agency will contact you for more information.',
+  eq_providedD_ben:'For example mats, elastic bands.',
   esp_title:'What is your speciality?', esp_sub:'Select one.', esp_another:'Offer another specialty too? At the end of this form you can add a new request.', spec_other:'Describe it briefly',
   et_title:'What type of service is it?', et_sub:'You can select more than one.', et_combined:'By selecting more than one type you will be offering a combined experience.',
   spa_title:'Which treatments do you offer?', spa_q:'Treatments',
@@ -1408,7 +1411,7 @@ en:{
   o_archeologia:'Archaeological site', o_storia:'History', o_musei:'Museums', o_tradizioni_popolari:'Folk traditions', o_patrimonio:'Cultural heritage', o_architettura:'Architecture', o_cultura_locale:'Local culture',
   sd_archeologia:'Giants\' tombs, nuraghi, mines, Roman remains, baths, menhirs, dolmens.', sd_musei:'Artistic, historical, archaeological, naturalistic, cultural.', sd_architettura:'Churches, cathedrals, historic palaces, squares, botanical gardens.', sd_patrimonio:'Canto a tenore, domus de janas, UNESCO, Nino di Gallura\'s house, Villa Asquer.',
   o_visita_guidata:'Guided visit', o_percorso_culturale:'Cultural route', o_incontro_culturale:'Cultural encounter',
-  o_trekking:'Trekking', o_ciaspolate:'Snowshoeing', o_vie_ferrate:'Via ferrata', o_arrampicata:'Climbing', o_acquatrek:'Aquatrekking', o_escursionismo:'Hiking', o_naturalistiche:'Nature experiences', o_turismo_rurale:'Rural tourism', o_sport_outdoor:'Outdoor sports', o_montagna:'Mountain activities', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Baggy', o_4x4_altro:'Other', o_cavallo_exp:'Horse riding experience', o_asino_exp:'Donkey experience', o_alpaca_exp:'Alpaca experience', o_cavalli:'Horses', o_asinelli:'Donkeys', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkelling', o_scuba:'Scuba diving', o_rafting:'Rafting', o_citybike:'CityBike', o_ebike:'E-bike', o_mtb:'Mountain bike', o_barefooting:'Barefooting', o_retreat:'Retreat / Wellness retreats', o_mindfulness:'Mindfulness', o_respirazione:'Breathing techniques', o_massaggi:'Massages', o_aromaterapia:'Aromatherapy', o_fangoterapia:'Mud therapy', o_noleggio:'Rental', o_escursione_guidata:'Guided excursion', o_pet_therapy:'Pet Therapy', o_pilates:'Pilates', o_yoga:'Yoga', o_meditazione:'Meditation', o_percorsi_termali:'Thermal circuits', o_ben_spa:'SPA', o_spa_massage:'Massages', o_spa_aroma:'Aromatherapy', o_spa_mud:'Mud therapy', o_natura_altro:'Other',
+  o_trekking:'Trekking', o_ciaspolate:'Snowshoeing', o_vie_ferrate:'Via ferrata', o_arrampicata:'Climbing', o_acquatrek:'Aquatrekking', o_escursionismo:'Hiking', o_naturalistiche:'Nature experiences', o_turismo_rurale:'Rural tourism', o_sport_outdoor:'Outdoor sports', o_montagna:'Mountain activities', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Baggy', o_4x4_altro:'Other', o_cavallo_exp:'Horse riding experience', o_asino_exp:'Donkey experience', o_alpaca_exp:'Alpaca experience', o_cavalli:'Horses', o_asinelli:'Donkeys', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkelling', o_scuba:'Scuba diving', o_rafting:'Rafting', o_citybike:'CityBike', o_ebike:'E-bike', o_mtb:'Mountain bike', o_barefooting:'Barefooting', o_retreat:'Retreat', o_mindfulness:'Mindfulness', o_respirazione:'Breathing techniques', o_massaggi:'Massages', o_aromaterapia:'Aromatherapy', o_fangoterapia:'Mud therapy', o_noleggio:'Rental', o_escursione_guidata:'Guided excursion', o_pet_therapy:'Pet therapy', o_pilates:'Pilates', o_yoga:'Yoga', o_meditazione:'Meditation', o_percorsi_termali:'Thermal circuits', o_ben_spa:'SPA', o_spa_massage:'Massages', o_spa_aroma:'Aromatherapy', o_spa_mud:'Mud therapy', o_natura_altro:'Other',
   o_escursione_guidata:'Guided excursion', o_attivita_sportiva:'Sports activity', o_esperienza_naturalistica:'Nature experience', o_tour_privato:'Private tour', o_esperienza_gruppo:'Group experience',
   o_barca_motore:'Motor boat', o_barca_vela:'Sailing boat', o_catamarano:'Catamaran', o_snorkeling:'Snorkelling', o_attivita_acquatiche:'Water activities', o_escursioni_costiere:'Coastal excursions',
   o_escursione_privata:'Private excursion', o_escursione_condivisa:'Shared excursion', o_mezza_giornata:'Half day', o_giornata_intera:'Full day', o_esperienza_personalizzata:'Tailor-made experience',
@@ -1518,6 +1521,9 @@ it:{
   sp_unit:'Unità', sp_u_ora:'All’ora', sp_u_mezza:'Mezza giornata (2-4 ore)', sp_u_full:'Giornata intera (5-8 ore)',
   sp_hand:'Consegna', o_hand_checkin:'Self check-in', o_hand_staff:'Consegna con personale', o_hand_guided:'Guidato',
   bg_move:'01 Movimento & consapevolezza corporea', bg_mind:'02 Mindfulness & rilassamento', bg_treat:'03 Trattamenti & benessere fisico', bg_retreat:'04 Ritiri & esperienze olistiche',
+  bg_mindbody:'Benessere mente-corpo', bg_bare:'Barefooting', bg_retreat_h:'Retreat', bg_pet:'Pet therapy',
+  bn_agency:'Verrai contattato dall’agenzia per maggiori informazioni.',
+  eq_providedD_ben:'Per esempio tappetini, elastici.',
   esp_title:'Qual è la tua specializzazione?', esp_sub:'Seleziona un solo tasto.', esp_another:'Offri anche un’altra specialità? Alla fine di questo modulo potrai aggiungere una nuova richiesta.', spec_other:'Descrivila brevemente',
   et_title:'Che tipo di servizio è?', et_sub:'Seleziona più di un tasto.', et_combined:'Selezionando più tipologie proporrai un’esperienza combinata.',
   spa_title:'Quali trattamenti offri?', spa_q:'Trattamenti',
@@ -1587,7 +1593,7 @@ it:{
   o_archeologia:'Sito archeologico', o_storia:'Storia', o_musei:'Musei', o_tradizioni_popolari:'Tradizioni popolari', o_patrimonio:'Patrimonio culturale', o_architettura:'Architettura', o_cultura_locale:'Cultura locale',
   sd_archeologia:'Tombe dei giganti, nuraghe, miniere, resti romani, terme, menhir, dolmen.', sd_musei:'Artistici, storici, archeologici, naturalistici, culturali.', sd_architettura:'Chiese, cattedrali, palazzi storici, piazze, orti botanici.', sd_patrimonio:'Canto a tenore, domus de janas, UNESCO, casa di Nino di Gallura, Villa Asquer.',
   o_visita_guidata:'Visita guidata', o_percorso_culturale:'Percorso culturale', o_incontro_culturale:'Incontro culturale',
-  o_trekking:'Trekking', o_ciaspolate:'Ciaspolate', o_vie_ferrate:'Vie ferrate', o_arrampicata:'Arrampicata', o_acquatrek:'Acquatrek', o_escursionismo:'Escursionismo', o_naturalistiche:'Esperienze naturalistiche', o_turismo_rurale:'Turismo rurale', o_sport_outdoor:'Sport outdoor', o_montagna:'Attività in montagna', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Baggy', o_4x4_altro:'Altro', o_cavallo_exp:'Esperienza a cavallo', o_asino_exp:'Esperienza con l’asino', o_alpaca_exp:'Esperienza con alpaca', o_cavalli:'Cavalli', o_asinelli:'Asinelli', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkeling', o_scuba:'Scuba diving', o_rafting:'Rafting', o_citybike:'CityBike', o_ebike:'E-bike', o_mtb:'Mountain bike', o_barefooting:'Barefooting', o_retreat:'Retreat / Ritiri benessere', o_mindfulness:'Mindfulness', o_respirazione:'Tecniche di respirazione', o_massaggi:'Massaggi', o_aromaterapia:'Aromaterapia', o_fangoterapia:'Fangoterapia', o_noleggio:'Noleggio', o_escursione_guidata:'Escursione guidata', o_pet_therapy:'Pet Therapy', o_pilates:'Pilates', o_yoga:'Yoga', o_meditazione:'Meditazione', o_percorsi_termali:'Percorsi termali', o_ben_spa:'SPA', o_spa_massage:'Massaggi', o_spa_aroma:'Aromaterapia', o_spa_mud:'Fangoterapia', o_natura_altro:'Altro',
+  o_trekking:'Trekking', o_ciaspolate:'Ciaspolate', o_vie_ferrate:'Vie ferrate', o_arrampicata:'Arrampicata', o_acquatrek:'Acquatrek', o_escursionismo:'Escursionismo', o_naturalistiche:'Esperienze naturalistiche', o_turismo_rurale:'Turismo rurale', o_sport_outdoor:'Sport outdoor', o_montagna:'Attività in montagna', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Baggy', o_4x4_altro:'Altro', o_cavallo_exp:'Esperienza a cavallo', o_asino_exp:'Esperienza con l’asino', o_alpaca_exp:'Esperienza con alpaca', o_cavalli:'Cavalli', o_asinelli:'Asinelli', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkeling', o_scuba:'Scuba diving', o_rafting:'Rafting', o_citybike:'CityBike', o_ebike:'E-bike', o_mtb:'Mountain bike', o_barefooting:'Barefooting', o_retreat:'Retreat', o_mindfulness:'Mindfulness', o_respirazione:'Tecniche di respirazione', o_massaggi:'Massaggi', o_aromaterapia:'Aromaterapia', o_fangoterapia:'Fangoterapia', o_noleggio:'Noleggio', o_escursione_guidata:'Escursione guidata', o_pet_therapy:'Pet therapy', o_pilates:'Pilates', o_yoga:'Yoga', o_meditazione:'Meditazione', o_percorsi_termali:'Percorsi termali', o_ben_spa:'SPA', o_spa_massage:'Massaggi', o_spa_aroma:'Aromaterapia', o_spa_mud:'Fangoterapia', o_natura_altro:'Altro',
   o_escursione_guidata:'Escursione guidata', o_attivita_sportiva:'Attività sportiva', o_esperienza_naturalistica:'Esperienza naturalistica', o_tour_privato:'Tour privato', o_esperienza_gruppo:'Esperienza di gruppo',
   o_barca_motore:'Barca a motore', o_barca_vela:'Barca a vela', o_catamarano:'Catamarano', o_snorkeling:'Snorkeling', o_attivita_acquatiche:'Attività acquatiche', o_escursioni_costiere:'Escursioni costiere',
   o_escursione_privata:'Escursione privata', o_escursione_condivisa:'Escursione condivisa', o_mezza_giornata:'Mezza giornata', o_giornata_intera:'Giornata intera', o_esperienza_personalizzata:'Esperienza personalizzata',
@@ -2057,7 +2063,7 @@ const OR_EXP = ['ox_none','ox_prev','ox_adv'];
 const isHike = e => e?.sector === 'natura' && HIKE_SPECS.includes(specList(e)[0]);
 const isOffroad = e => e?.sector === 'natura' && OFFROAD_SPECS.includes(specList(e)[0]);
 const isWater = e => e?.sector === 'natura' && WATER_SPECS.includes(specList(e)[0]);
-const isScuba = e => e?.sector === 'natura' && specList(e)[0] === 'scuba';
+const isScuba = e => isWater(e);
 const isSportRental = e => e?.sector === 'sport' && typeList(e).includes('noleggio') && !typeList(e).includes('escursione_guidata');
 const isSportGuided = e => e?.sector === 'sport' && typeList(e).includes('escursione_guidata');
 const usesHikeFlow = e => isHike(e) || isSportGuided(e);
@@ -2065,13 +2071,18 @@ const showsDifficulty = e => e.sector === 'natura' && !isHike(e) && !isOffroad(e
 const isSpa = () => false;
 const SPA_TREATS = ['spa_massage','spa_aroma','spa_mud'];
 const personaGruppo = ['pm_persona','pm_gruppo'];
-const priceModesFor = e => (e?.sector === 'natura' || isSportGuided(e) || isSportRental(e)) ? personaGruppo : CONFIG.priceModes;
+const benessereModes = ['pm_persona','pm_gruppo','pm_ora','pm_mezza','pm_giornata'];
+const priceModesFor = e => (e?.sector === 'natura' || e?.sector === 'cooking_class' || isSportGuided(e) || isSportRental(e)) ? personaGruppo : e?.sector === 'benessere' ? benessereModes : CONFIG.priceModes;
 const ARTISAN_OMIT_INCLUDES = ['inc_tasting','inc_meal','inc_drinks'];
 const ENO_OMIT_INCLUDES = ['inc_materials','inc_tickets','inc_equipment','inc_insurance','inc_meal','inc_drinks'];
 const CULTURA_OMIT_INCLUDES = ['inc_materials','inc_tasting','inc_meal','inc_drinks','inc_equipment'];
+const COOKING_OMIT_INCLUDES = ['inc_materials','inc_tickets','inc_insurance'];
+const BEN_OMIT_INCLUDES = ['inc_materials','inc_tickets'];
 const includesFor = e => CONFIG.includes.filter(c => {
   if(e?.sector === 'artigianato' && ARTISAN_OMIT_INCLUDES.includes(c)) return false;
   if(e?.sector === 'cultura' && CULTURA_OMIT_INCLUDES.includes(c)) return false;
+  if(e?.sector === 'cooking_class' && COOKING_OMIT_INCLUDES.includes(c)) return false;
+  if(e?.sector === 'benessere' && BEN_OMIT_INCLUDES.includes(c)) return false;
   if(e?.sector === 'enogastronomia'){
     if(ENO_OMIT_INCLUDES.includes(c)) return false;
     /* Degustazione is already the service type, so it is not listed again. */
@@ -2535,6 +2546,7 @@ const EV = {
       : (e.sector === 'cultura' ? specCards(P(i,'spec'), s.spec) : pills(P(i,'spec'), s.spec));
     return split(head(t('esp_title'), t('esp_sub'), ecount(i, o(e.sector))), `
     <div class="ct-stack" style="gap:16px">${choices}
+    ${e.sector === 'benessere' ? note(t('bn_agency'), 'info') : ''}
     ${specs.length ? `<p class="ct-spec-note">${esc(t('esp_another'))}</p>` : ''}</div>
     ${specs.some(x => CONFIG.otherSpec.includes(x)) ? inp(P(i,'specOther'), t('spec_other')) : ''}`); },
   spa: i => split(head(t('spa_title'), '', ecount(i)),
@@ -2565,7 +2577,7 @@ const EV = {
           <span class="ct-money"><span>€</span><input id="${fid(P(i,'incl.'+c+'.price'))}" data-cash="${P(i,'incl.'+c+'.price')}" type="text" inputmode="numeric" autocomplete="off" value="${esc(formatItAmount(price))}" class="${bad?'is-bad':''}" aria-invalid="${bad}"></span>
           <span class="ct-error" ${bad?'':'hidden'}>${t('sup_price_err')}</span></label>`:''}</div>`;}).join('')}</div>`); },
   equip: i => { const e=E(i); return split(head(t('eq_title'), t('eq_sub'), ecount(i)), `
-    ${toggle(P(i,'equipProvided'), t('eq_provided'), t(isHike(e) ? 'eq_providedD_hike' : 'eq_providedD'))}
+    ${toggle(P(i,'equipProvided'), t('eq_provided'), t(isHike(e) ? 'eq_providedD_hike' : e.sector === 'benessere' ? 'eq_providedD_ben' : 'eq_providedD'))}
     ${e.equipProvided ? '' : inp(P(i,'bringNote'), t('eq_bring_note'), {area:'short', ph:t('eq_bring_notePh')})}`); },
   reqs: i => { const e=E(i); const artisan = e.sector === 'artigianato'; if(!showsDifficulty(e)) e.difficulty = ''; if(artisan){ e.limits = ''; e.safety = ''; e.localita = ''; e.meet = ''; e.end = ''; return split(head(t('rq_title_art'), t('rq_sub'), ecount(i)), `
     <div class="ct-stack" style="gap:16px">${placeFields(i)}${toggle(P(i,'prevExp'), t('prev_exp'), t('prev_expD_art'))}${note(t('prev_exp_note'))}</div>
@@ -2602,7 +2614,7 @@ const EV = {
     ${bl.map(b=>`<div class="ct-block">${bl.length>1||e.mode?`<h3 class="ct-block-title">${t(bl.length>1?(b==='priv'?'pr_priv':'pr_shared'):'pr_single')}</h3>`:''}
       <div class="ct-row">${money(P(i,`price.${b}.base`), t('pr_base'))}${money(P(i,`price.${b}.min`), t('pr_min'), {req:false, hint:t('pr_minD')})}</div>
       <div class="ct-steppers">${stepper(P(i,`price.${b}.incl`), t('pr_incl'), t('pr_inclD'), 1, 200)}</div>
-      ${money(P(i,`price.${b}.extra`), t('pr_extra'), {req:false})}</div>`).join('')}`); },
+      </div>`).join('')}`); },
   cond: i => { const e=E(i); if(e.billing==='bill_receipt') e.billing=''; return split(head(t('cd_title'), t('cd_sub'), ecount(i)), `
     <div class="ct-terms">${['term_pay','term_cancel','term_other'].map(k=>`<section class="ct-term"><h3>${t(k)}</h3><p class="ct-term-ph">${t('term_ph')}</p></section>`).join('')}</div>
     ${check(P(i,'termsAccepted'), t('term_accept'))}
@@ -2741,7 +2753,8 @@ function screens(){
       e.manual = false;
       e.type = typeList(e).filter(x => allowedTypes(e).includes(x));
       if(e.sector === 'natura') e.type = [];
-      if(e.sector === 'natura' || isSportGuided(e)){ if(['pm_ora','pm_mezza','pm_giornata','pm_esperienza'].includes(e.priceMode)) e.priceMode = ''; }
+      if(e.priceMode && !priceModesFor(e).includes(e.priceMode)) e.priceMode = '';
+      for(const b of ['priv','shared']) if(e.price?.[b]) e.price[b].extra = '';
       if(usesHikeFlow(e)) ensureHike(e); else delete e.hike;
       if(isOffroad(e)) ensureOffroad(e); else delete e.offroad;
       if(isScuba(e)) e.scuba = e.scuba && typeof e.scuba === 'object' ? e.scuba : {depth:'', pressure:'', seabed:''}; else delete e.scuba;
@@ -2754,7 +2767,8 @@ function screens(){
         if(ticketsChosen(e)) e.sq.tickets = inclMode(e, 'inc_tickets') === 'sup' ? 'tk_extra' : 'tk_inc';
         else { for(const q of (SECTOR[e.sector].q || [])) delete e.sq[q.k]; }
       }
-      if(e.sector === 'enogastronomia'){ e.prevExp = false; e.limits = ''; e.safety = ''; e.difficulty = ''; e.sq = e.sq || {}; const hide = TASTE_OF[specList(e)[0]]; if(hide && Array.isArray(e.sq.tasting)) e.sq.tasting = e.sq.tasting.filter(x => x !== hide); if(lunchOnly(e)){ delete e.sq.tasting; delete e.sq.certs; } if(!hasLunch(e)){ delete e.sq.menu_kind; delete e.sq.menu_offer; } }
+      if(e.sector === 'enogastronomia' || e.sector === 'cooking_class' || e.sector === 'benessere'){ e.prevExp = false; e.limits = ''; e.safety = ''; e.difficulty = ''; }
+      if(e.sector === 'enogastronomia'){ e.sq = e.sq || {}; const hide = TASTE_OF[specList(e)[0]]; if(hide && Array.isArray(e.sq.tasting)) e.sq.tasting = e.sq.tasting.filter(x => x !== hide); if(lunchOnly(e)){ delete e.sq.tasting; delete e.sq.certs; } if(!hasLunch(e)){ delete e.sq.menu_kind; delete e.sq.menu_offer; } }
       if(e.sector !== 'mare'){ e.localita = ''; e.meet = ''; e.end = ''; if(!e.meetDifferent){ e.meetAddress = ''; e.activityAddress = ''; } }
       normalizeIncl(e);
       if(e.billing === 'bill_receipt') e.billing = '';
@@ -2765,7 +2779,7 @@ function screens(){
       const order = e.sector === 'artigianato'
         ? ['sector','spec','type','g1','g3','g4','mode','price','incl','reqs','avail','slots','cond','photos']
         : isSportRental(e)
-        ? ['sector','spec','type','g2','price','g4','avail','slots','photos']
+        ? ['sector','spec','type','g2','price','g4','equip','avail','slots','cond','photos']
         : e.sector === 'natura'
         ? ['sector','spec','g1','g2','g4','g3','mode','slots','price','incl','equip','reqs','scuba','sq','avail','cond','photos']
         : e.sector === 'sport'
@@ -2789,7 +2803,7 @@ function screens(){
       if(k==='sq' && hasTicketPage(e) && !ticketsChosen(e)) return;
       if(k==='g2' && e.sector === 'artigianato') return;
       if(k==='equip' && (e.sector === 'artigianato' || e.sector === 'enogastronomia' || e.sector === 'cooking_class' || e.sector === 'cultura')) return;
-      if(k==='reqs' && e.sector === 'enogastronomia') return;
+      if(k==='reqs' && (e.sector === 'enogastronomia' || e.sector === 'cooking_class' || e.sector === 'benessere')) return;
       add(`e${i}_${k}`, 'prop', () => EV[k](i), () => !!S.exps[i] && EOK[k](S.exps[i]));
       if(k==='reqs' && usesHikeFlow(e)) hikeSeq(e).forEach((_, n) => add(`e${i}_hk${n}`, 'prop', () => hikeDetailScreen(i, n), () => hikePageOk(S.exps[i], n)));
       if(k==='reqs' && isOffroad(e)){
@@ -2830,7 +2844,7 @@ function priceLine(e){
   if(e.sector === 'artigianato') return blocks(e).map(b=>`${t(b==='priv'?'pr_priv_short':'pr_shared_short')}: ${fmtMoney(e.price[b].base)} ${t('pr_art_persona').toLowerCase()}`).join('<br>');
   if(!e.priceMode) return '';
   return blocks(e).map(b=>{ const p=e.price[b]; const lab = blocks(e).length>1 ? t(b==='priv'?'pr_priv':'pr_shared')+': ' : '';
-    return `${lab}${fmtMoney(p.base)} ${o(e.priceMode).toLowerCase()}${p.incl>1?`, ${p.incl} ${t('pr_incl').toLowerCase()}`:''}${p.extra?`, +${fmtMoney(p.extra)}`:''}`; }).join('<br>');
+    return `${lab}${fmtMoney(p.base)} ${o(e.priceMode).toLowerCase()}${p.incl>1?`, ${p.incl} ${t('pr_incl').toLowerCase()}`:''}`; }).join('<br>');
 }
 const durLine = e => `${e.durH ? e.durH+'h' : ''}${e.durM ? ' '+e.durM+'min' : ''}`.trim();
 function tile(go, icon, title, headline, inner='', {wide=false, del=null}={}){
@@ -3307,7 +3321,7 @@ function buildPayload(){
     contact: {...S.contact, phone_e164: S.contact.prefix + digits(S.contact.phone)},
     organization: {...S.org, vat: S.org.vat.replace(/\s/g,''), cf: S.org.cf.replace(/\s/g,'').toUpperCase(), manual_review: S.org.form==='altra_forma'},
     collaboration: { experiences: hasA, agreement: hasB },
-    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); const row = { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>{ const p={...e.price[b]}; if(e.sector==='artigianato'){ delete p.extra; p.incl = 1; p.min = ''; } return [b, p]; })), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; delete row.manual; delete row.cancel; delete row.penalties; delete row.noshow; delete row.weather; if(row.billing==='bill_receipt') row.billing=''; if(e.sector === 'artigianato'){ row.priceMode = 'pm_persona'; delete row.equipProvided; delete row.bringNote; delete row.bring; delete row.limits; delete row.safety; delete row.localita; delete row.meet; delete row.end; if(row.sq){ delete row.sq.materials; delete row.sq.workshop_loc; delete row.sq.live_demo; delete row.sq.sale; } } if(e.sector === 'mare'){ delete row.address; delete row.meetAddress; delete row.activityAddress; delete row.meetDifferent; } else { delete row.localita; delete row.meet; delete row.end; if(!e.meetDifferent){ delete row.meetAddress; delete row.activityAddress; } } if(e.sector === 'enogastronomia'){ delete row.limits; delete row.safety; delete row.prevExp; delete row.difficulty; } if(e.sector === 'cultura'){ delete row.equipProvided; delete row.bringNote; delete row.bring; } if(!isSpa(e)) delete row.spaTreatments; if(isHike(e)) row.hike = hikePayload(e); else delete row.hike; return row; }) : [],
+    experiences: hasA ? S.exps.map((e,i)=>{ normalizeIncl(e); const row = { position:i+1, ...e, difficulty: showsDifficulty(e) ? e.difficulty : undefined, prices: Object.fromEntries(blocks(e).map(b=>{ const p={...e.price[b]}; delete p.extra; if(e.sector==='artigianato'){ p.incl = 1; p.min = ''; } return [b, p]; })), price:undefined, photos:e.photos.map((p,k)=>({...strip(p), cover:k===0})) }; delete row.manual; delete row.cancel; delete row.penalties; delete row.noshow; delete row.weather; if(row.billing==='bill_receipt') row.billing=''; if(e.sector === 'artigianato'){ row.priceMode = 'pm_persona'; delete row.equipProvided; delete row.bringNote; delete row.bring; delete row.limits; delete row.safety; delete row.localita; delete row.meet; delete row.end; if(row.sq){ delete row.sq.materials; delete row.sq.workshop_loc; delete row.sq.live_demo; delete row.sq.sale; } } if(e.sector === 'mare'){ delete row.address; delete row.meetAddress; delete row.activityAddress; delete row.meetDifferent; } else { delete row.localita; delete row.meet; delete row.end; if(!e.meetDifferent){ delete row.meetAddress; delete row.activityAddress; } } if(e.sector === 'enogastronomia'){ delete row.limits; delete row.safety; delete row.prevExp; delete row.difficulty; } if(e.sector === 'cultura'){ delete row.equipProvided; delete row.bringNote; delete row.bring; } if(!isSpa(e)) delete row.spaTreatments; if(isHike(e)) row.hike = hikePayload(e); else delete row.hike; return row; }) : [],
     agreement: hasB ? {...S.conv, group: cgroup()} : null,
     consents: {...S.consents, at: new Date().toISOString()},
     /* TODO(backend): when termsAccepted is true, generate the SDT partner contract PDF from the accepted terms and store it with termsAcceptedAt. This preview has no backend and does not create a PDF. */

@@ -41,26 +41,12 @@ declare global {
 }
 
 const exploreItems = [
-  {
-    title: "Blue Zone",
-    description: "Culture, longevity, and authentic local living.",
-    image: "/explore/blue-zone.png",
-  },
-  {
-    title: "Food & Wine",
-    description: "Traditional flavors, shared tables, and local stories.",
-    image: "/explore/food-expierences.png",
-  },
-  {
-    title: "Tailor Made Tours",
-    description: "Custom routes designed around your pace and interests.",
-    image: "/explore/tailor-made-tours.png",
-  },
-  {
-    title: "private transfer",
-    description: "Smooth private rides across the island.",
-    image: "/explore/private-transfer.png",
-  },
+  { title: "About Sardinia", description: "", href: "/about", image: "/about/hero.webp" },
+  { title: "The Blue Zone", description: "Culture, longevity, and authentic local living.", image: "/explore/blue-zone.png" },
+  { title: "Top Events", description: "", href: "/#top-events", image: "/about/gruppo-folk.webp" },
+  { title: "Food & Wine", description: "Traditional flavors, shared tables, and local stories.", image: "/explore/food-expierences.png" },
+  { title: "Tailor Made Tours", description: "Custom routes designed around your pace and interests.", image: "/explore/tailor-made-tours.png" },
+  { title: "private transfer", description: "Smooth private rides across the island.", href: "/private-transfers", image: "/explore/private-transfer.png" },
 ];
 
 const experienceItems = [
@@ -772,16 +758,29 @@ export function HomeView() {
               <div className="dropdown-panel explore-panel">
                 <div className="explore-list">
                   {exploreItems.map((item, index) => (
-                    <button
-                      className={`explore-option ${activeExplore === index ? "is-active" : ""}`}
-                      key={item.title}
-                      onFocus={() => setActiveExplore(index)}
-                      onMouseEnter={() => setActiveExplore(index)}
-                      type="button"
-                    >
-                      <span>{item.title}</span>
-                      <small>{item.description}</small>
-                    </button>
+                    item.href ? (
+                      <a
+                        className={`explore-option ${activeExplore === index ? "is-active" : ""}`}
+                        key={item.title}
+                        href={item.href}
+                        onFocus={() => setActiveExplore(index)}
+                        onMouseEnter={() => setActiveExplore(index)}
+                      >
+                        <span>{item.title}</span>
+                        {item.description ? <small>{item.description}</small> : null}
+                      </a>
+                    ) : (
+                      <button
+                        className={`explore-option ${activeExplore === index ? "is-active" : ""}`}
+                        key={item.title}
+                        onFocus={() => setActiveExplore(index)}
+                        onMouseEnter={() => setActiveExplore(index)}
+                        type="button"
+                      >
+                        <span>{item.title}</span>
+                        <small>{item.description}</small>
+                      </button>
+                    )
                   ))}
                 </div>
                 <div className="explore-image" aria-hidden="true">

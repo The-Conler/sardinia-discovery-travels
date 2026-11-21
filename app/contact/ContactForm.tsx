@@ -46,7 +46,10 @@ const COPY = {
     method: "How would you like to be contacted?",
     whatsappOpt: "WhatsApp",
     emailOpt: "Email",
-    video: "Video call",
+    meet: "Google Meet",
+    teams: "Microsoft Teams",
+    zoom: "Zoom",
+    facetime: "FaceTime",
     details: "Contact details",
     phonePh: "[phone to be added]",
     emailPh: "[email to be added]",
@@ -86,7 +89,10 @@ const COPY = {
     method: "Come preferisci essere contattato?",
     whatsappOpt: "WhatsApp",
     emailOpt: "Email",
-    video: "Videochiamata",
+    meet: "Google Meet",
+    teams: "Microsoft Teams",
+    zoom: "Zoom",
+    facetime: "FaceTime",
     details: "Recapiti",
     phonePh: "[telefono da inserire]",
     emailPh: "[email da inserire]",
@@ -108,7 +114,7 @@ const LEGAL = [
   "Allianz Enterprise RC N. 506336849",
 ];
 
-type Method = "" | "phone" | "whatsapp" | "email" | "video" | "other";
+type Method = "" | "phone" | "whatsapp" | "email" | "meet" | "teams" | "zoom" | "facetime" | "other";
 
 function parseClock(value: string) {
   const [h, m] = value.split(":").map(Number);
@@ -252,7 +258,10 @@ export function ContactForm() {
                   ["phone", t.phoneCall, "phone"],
                   ["whatsapp", t.whatsappOpt, "wa"],
                   ["email", t.emailOpt, "mail"],
-                  ["video", t.video, "cam"],
+                  ["meet", t.meet, "cam"],
+                  ["teams", t.teams, "cam"],
+                  ["zoom", t.zoom, "cam"],
+                  ["facetime", t.facetime, "cam"],
                 ] as const).map(([value, label, icon]) => (
                   <button key={value} type="button" role="radio" aria-checked={method === value} className={method === value ? "is-on" : ""} onClick={() => setMethod(value)}>
                     <Icon name={icon} />{label}
