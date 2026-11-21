@@ -1369,6 +1369,7 @@ en:{
   bt_half_dur:'Duration (4 hours maximum)', bt_full_dur:'Duration (8 hours maximum)', bt_sun_dur:'Duration',
   bt_dep_am:'Morning departure times', bt_dep_pm:'Afternoon departure times', bt_dep:'Departure times', bt_dep_one:'Departure time',
   bt_det_title:'Specifics of each tour', bt_det_tour:'Tour specifics', bt_see:'What we see', bt_swim:'Where we swim', bt_stops:'Stops',
+  bt_itin:'Itinerary', bt_itin_tell:'Tell us a little', bt_stops_q:'Are stops planned?', bt_stops_where:'How many, and where',
   bt_det_food:'Food specifics', bt_fd_head:'Food & beverage',
   bt_fd_aperitivo:'Aperitif', bt_fd_salumi:'Cold cuts and cheese', bt_fd_crudi:'Seafood crudités', bt_fd_chips:'Chips and snacks', bt_fd_fritti:'Fried food', bt_fd_pane:'Bread',
   bt_fd_beverage:'Beverage', bt_fd_caffe:'Coffee', bt_fd_analcolici:'Soft drinks', bt_fd_vini:'Wines', bt_fd_birra:'Beer', bt_fd_cocktails:'Cocktails', bt_fd_liquori:'Spirits',
@@ -1579,6 +1580,7 @@ it:{
   bt_half_dur:'Durata (massimo 4 ore)', bt_full_dur:'Durata (massimo 8 ore)', bt_sun_dur:'Durata',
   bt_dep_am:'Orari di partenza, mattina', bt_dep_pm:'Orari di partenza, pomeriggio', bt_dep:'Orari di partenza', bt_dep_one:'Orario di partenza',
   bt_det_title:'Specifiche di ciascun tour', bt_det_tour:'Specifiche sul tour', bt_see:'Cosa vediamo', bt_swim:'Dove ci tuffiamo', bt_stops:'Tappe e soste',
+  bt_itin:'Itinerario', bt_itin_tell:'Raccontaci un po’', bt_stops_q:'Sono previste tappe e soste?', bt_stops_where:'Quante e dove',
   bt_det_food:'Specifiche sul cibo', bt_fd_head:'Food & beverage',
   bt_fd_aperitivo:'Aperitivo', bt_fd_salumi:'Salumi e formaggi', bt_fd_crudi:'Crudité di mare', bt_fd_chips:'Chips e snack', bt_fd_fritti:'Fritti', bt_fd_pane:'Panificati',
   bt_fd_beverage:'Beverage', bt_fd_caffe:'Caffetteria', bt_fd_analcolici:'Analcolici', bt_fd_vini:'Vini', bt_fd_birra:'Birra', bt_fd_cocktails:'Cocktails', bt_fd_liquori:'Liquori',
@@ -2636,6 +2638,9 @@ function ensureMare(e){
       sunTime: halfHours().includes(src.sunTime) ? src.sunTime : '',
       sunDur: Number(src.sunDur) || 0,
       see: src.see || '', swim: src.swim || '', stops: src.stops || '',
+      itin: src.itin || '',
+      stopsPlan: src.stopsPlan === 'yes' || src.stopsPlan === 'no' ? src.stopsPlan : '',
+      stopsWhere: src.stopsPlan === 'yes' ? (src.stopsWhere || '') : '',
       food: {
         aperitivo: !!src.food?.aperitivo,
         aperitivoItems: src.food?.aperitivo ? (src.food.aperitivoItems || []).filter(x => ['salumi','crudi','chips','fritti','pane'].includes(x)) : [],
@@ -2854,11 +2859,19 @@ function mareDetailScreen(i, n){
       ${inp(P(i, `mare.tours.${area}.swim`), t('bt_swim'), {area:'short'})}
       ${inp(P(i, `mare.tours.${area}.stops`), t('bt_stops'), {area:'short'})}
     </section>
-    ${food}`);
+    ${food}
+    <section class="ct-block"><h3 class="ct-block-title">${esc(t('bt_itin'))}</h3>
+      ${inp(P(i, `mare.tours.${area}.itin`), t('bt_itin_tell'))}
+      ${group(t('bt_stops_q'), pills(P(i, `mare.tours.${area}.stopsPlan`), ['yes','no'], { lab:c => t(c === 'yes' ? 'yn_yes' : 'yn_no') }))}
+      ${tour.stopsPlan === 'yes' ? inp(P(i, `mare.tours.${area}.stopsWhere`), t('bt_stops_where')) : ''}
+    </section>`);
 }
 function mareDetailOk(e, n){
   const tour = mareTour(e, n); if(!tour) return false;
   if(!filled(tour.see, 2) || !filled(tour.swim, 2) || !filled(tour.stops, 2)) return false;
+  if(!filled(tour.itin, 2)) return false;
+  if(tour.stopsPlan !== 'yes' && tour.stopsPlan !== 'no') return false;
+  if(tour.stopsPlan === 'yes' && !filled(tour.stopsWhere, 2)) return false;
   if(!mareFoodOn(e)) return true;
   const f = tour.food || {};
   if(f.aperitivo && !f.aperitivoItems.length) return false;
