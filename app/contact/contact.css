@@ -185,7 +185,7 @@
   .cf-slots { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (max-width:860px){
-  .cf{padding-top:128px;gap:16px}
+  .cf{padding-top:140px;gap:16px}
   .cf-layout,.cf-row,.cf-split,.cf-book,.cf-foot{grid-template-columns:1fr;display:grid}
   form.cf-card,.cf-book-card,.cf-side{grid-column:auto;grid-row:auto}
   .cf-side{display:flex}
@@ -199,11 +199,11 @@
   .cf-send{justify-content:center}
 }
 @media (min-width: 1024px) {
-  .cf { zoom: calc(1 / var(--site-zoom)); padding: 56px 16px 8px; gap: 8px; }
-  .cf-hero { height: 56px; min-height: 56px; border-radius: 16px; }
-  .cf-hero-copy { padding: 8px 18px; }
-  .cf-kicker { margin: 0 0 2px; font-size: 11px; }
-  .cf-hero h1 { font-size: 26px; }
+  .cf { zoom: calc(1 / var(--site-zoom)); padding: 88px 16px 4px; gap: 4px; }
+  .cf-hero { height: 48px; min-height: 48px; border-radius: 16px; }
+  .cf-hero-copy { padding: 4px 18px; }
+  .cf-kicker { margin: 0 0 1px; font-size: 11px; }
+  .cf-hero h1 { font-size: 24px; }
   .cf-layout { grid-template-columns: minmax(0, 2.35fr) minmax(200px, .78fr) minmax(170px, .72fr); gap: 12px; }
   .cf-card { gap: 12px; padding: 18px 20px; border-radius: 20px; }
   .cf-side { gap: 14px; }
@@ -234,7 +234,7 @@
   .cf-cal-week { margin-bottom: 4px; }
   .cf-cal-week span { font-size: 12px; }
   .cf-cal-week, .cf-cal-grid { gap: 4px; }
-  .cf-cal-grid button { height: 30px; font-size: 13px; }
+  .cf-cal-grid button { height: 28px; font-size: 13px; }
   .cf-slots { gap: 6px; }
   .cf-slots button { height: 32px; font-size: 12px; }
   .cf-send { height: 40px; font-size: 14px; padding: 0 16px; }
@@ -247,8 +247,8 @@
   .cf-slots { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (min-width: 1280px) and (min-height: 800px) {
-  .cf { padding: 58px 24px 16px; gap: 12px; }
-  .cf-hero { height: 72px; min-height: 72px; }
+  .cf { padding: 88px 24px 16px; gap: 12px; }
+  .cf-hero { height: 64px; min-height: 64px; }
   .cf-hero h1 { font-size: 30px; }
   .cf-layout { gap: 16px; }
   .cf-card { gap: 14px; padding: 22px 24px; }
@@ -257,7 +257,8 @@
   .cf-note { padding: 10px 14px; }
 }
 @media (min-width: 1024px) and (max-width: 1100px) {
-  .cf { gap: 6px; padding-bottom: 4px; }
+  .cf { gap: 4px; padding-bottom: 0; }
+  .cf-hero { height: 44px; min-height: 44px; }
   .cf-card { gap: 8px; }
   .cf-book-card { padding: 12px 14px; }
   .cf-book { gap: 8px; }
