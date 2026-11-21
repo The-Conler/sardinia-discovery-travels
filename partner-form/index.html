@@ -1355,6 +1355,19 @@ en:{
   bt_boat_title:'Boat type', bt_boats_q:'For this same tour, do you have more than one boat?', bt_boats_one:'One boat', bt_boats_more:'More than one boat',
   bt_dur_title:'How long does it last?', bt_tour_n:'Tour {n} of {total}',
   o_yacht:'Yacht',
+  bt_spec_title:'Boat details', bt_len:'Length (m)', bt_wid:'Width (m)', bt_brand:'Make', bt_boat_n:'Boat {n}',
+  bt_price_title:'How do you price it?', bt_period:'Reference period: April–November',
+  bt_season_low:'Low season', bt_season_low_m:'April / October', bt_season_mid:'Mid season', bt_season_mid_m:'May / September', bt_season_high:'High season', bt_season_high_m:'June / July / August',
+  bt_agency:'Agency price', bt_net:'Private net price',
+  bt_allweek:'Available every day of the week?',
+  bt_inc_skipper:'Skipper and crew', bt_inc_gear:'Equipment (masks, fins, SUP, water games)', bt_inc_aperitivo:'Aperitif', bt_inc_lunch:'Lunch', bt_inc_beverage:'Beverage', bt_inc_transport:'Transport', bt_inc_fuel:'Fuel', bt_inc_tickets:'Extra tickets (entries, environmental taxes, and similar)',
+  bt_pp:'Supplement per person', bt_pay:'Method', bt_cash:'Cash', bt_pos:'Card (POS)',
+  bt_bring_title:'Technical equipment', bt_bring_sub:'What is not included, and what should the guest bring?',
+  bt_br_cream:'Sunscreen', bt_br_cream_dry:'Non-oily sunscreen', bt_br_towels:'Towels', bt_br_hat:'Hat', bt_br_shoes:'Flip-flops', bt_br_glasses:'Sunglasses', bt_br_swimsuit:'Swimsuit', bt_br_packed:'Packed lunch',
+  bt_band_title:'How long, by time of day', bt_band_full:'Full day', bt_band_half:'Half day', bt_band_sunset:'Sunset aperitif',
+  bt_half_when:'Half day', bt_half_am:'Morning only', bt_half_pm:'Afternoon only', bt_half_both:'Both',
+  bt_half_dur:'Duration (4 hours maximum)', bt_full_dur:'Duration (8 hours maximum)', bt_sun_dur:'Duration',
+  bt_dep_am:'Morning departure times', bt_dep_pm:'Afternoon departure times', bt_dep:'Departure times', bt_dep_one:'Departure time',
   esp_title:'What is your speciality?', esp_sub:'Select one.', esp_another:'Offer another specialty too? At the end of this form you can add a new request.', spec_other:'Describe it briefly',
   et_title:'What type of service is it?', et_sub:'You can select more than one.', et_combined:'By selecting more than one type you will be offering a combined experience.',
   spa_title:'Which treatments do you offer?', spa_q:'Treatments',
@@ -1547,6 +1560,19 @@ it:{
   bt_boat_title:'Tipologia di imbarcazione', bt_boats_q:'Per lo stesso tour hai più imbarcazioni?', bt_boats_one:'Una sola imbarcazione', bt_boats_more:'Più imbarcazioni',
   bt_dur_title:'Quanto dura', bt_tour_n:'Tour {n} di {total}',
   o_yacht:'Yacht',
+  bt_spec_title:'Specifiche sulla barca', bt_len:'Lunghezza (m)', bt_wid:'Larghezza (m)', bt_brand:'Marca', bt_boat_n:'Imbarcazione {n}',
+  bt_price_title:'Come la prezzi?', bt_period:'Periodo di riferimento: aprile–novembre',
+  bt_season_low:'Bassa stagione', bt_season_low_m:'Aprile / ottobre', bt_season_mid:'Media stagione', bt_season_mid_m:'Maggio / settembre', bt_season_high:'Alta stagione', bt_season_high_m:'Giugno / luglio / agosto',
+  bt_agency:'Prezzo per agenzia', bt_net:'Prezzo netto privata',
+  bt_allweek:'Disponibile tutti i giorni della settimana?',
+  bt_inc_skipper:'Skipper e equipaggio', bt_inc_gear:'Attrezzatura (maschere, pinne, SUP, giochi acquatici)', bt_inc_aperitivo:'Aperitivo', bt_inc_lunch:'Pranzo', bt_inc_beverage:'Beverage', bt_inc_transport:'Trasporto', bt_inc_fuel:'Carburante', bt_inc_tickets:'Biglietti extra (ingressi, tasse ambientali, ecc.)',
+  bt_pp:'Supplemento per persona', bt_pay:'Metodo', bt_cash:'Contanti', bt_pos:'POS',
+  bt_bring_title:'Attrezzatura tecnica', bt_bring_sub:'Cosa non è incluso, cosa deve portare il cliente?',
+  bt_br_cream:'Crema', bt_br_cream_dry:'Crema non oleata', bt_br_towels:'Asciugamani', bt_br_hat:'Cappello', bt_br_shoes:'Ciabatte', bt_br_glasses:'Occhiali da sole', bt_br_swimsuit:'Costume', bt_br_packed:'Pranzo al sacco',
+  bt_band_title:'Quanto dura per fascia oraria', bt_band_full:'Giornata intera', bt_band_half:'Mezza giornata', bt_band_sunset:'Aperitivo al tramonto',
+  bt_half_when:'Mezza giornata', bt_half_am:'Solo mattina', bt_half_pm:'Solo pomeriggio', bt_half_both:'Entrambi',
+  bt_half_dur:'Durata (massimo 4 ore)', bt_full_dur:'Durata (massimo 8 ore)', bt_sun_dur:'Durata',
+  bt_dep_am:'Orari di partenza, mattina', bt_dep_pm:'Orari di partenza, pomeriggio', bt_dep:'Orari di partenza', bt_dep_one:'Orario di partenza',
   esp_title:'Qual è la tua specializzazione?', esp_sub:'Seleziona un solo tasto.', esp_another:'Offri anche un’altra specialità? Alla fine di questo modulo potrai aggiungere una nuova richiesta.', spec_other:'Descrivila brevemente',
   et_title:'Che tipo di servizio è?', et_sub:'Seleziona più di un tasto.', et_combined:'Selezionando più tipologie proporrai un’esperienza combinata.',
   spa_title:'Quali trattamenti offri?', spa_q:'Trattamenti',
@@ -2559,7 +2585,10 @@ function scubaShow(hit){
 }
 const MARE_AREAS = ['corsica','maddalena','asinara','tavolara','alghero','baunei','carloforte','cagliari','villasimius','altro'];
 const MARE_BOATS = ['barca_motore','barca_vela','catamarano','yacht'];
-function blankMareTour(){ return { portsMany:'', ports:[''], meetSame:'', meet:'', boatsMany:'', boats:[], durH:0 }; }
+const MARE_BANDS = ['full','half','sunset'];
+const MARE_BRING = ['cream','cream_dry','towels','hat','shoes','glasses','swimsuit','packed'];
+function blankBoatSpec(){ return { length:'', width:'', brand:'' }; }
+function blankMareSide(){ return { low:'', mid:'', high:'', min:2, max:8, minAge:0 }; }
 function ensureMare(e){
   if(e?.sector !== 'mare'){ if(e) delete e.mare; return null; }
   const prev = e.mare && typeof e.mare === 'object' ? e.mare : {};
@@ -2571,6 +2600,14 @@ function ensureMare(e){
     const boats = Array.isArray(src.boats) ? src.boats.filter(b => MARE_BOATS.includes(b)) : [];
     const manyP = src.portsMany === 'one' || src.portsMany === 'more' ? src.portsMany : '';
     const manyB = src.boatsMany === 'one' || src.boatsMany === 'more' ? src.boatsMany : '';
+    const specs = {};
+    for(const b of (manyB === 'more' ? boats : boats.slice(0, 1))){
+      const s = (src.specs && src.specs[b]) || {};
+      specs[b] = { length:s.length ?? '', width:s.width ?? '', brand:s.brand || '' };
+    }
+    const side = (key) => { const s = (src.price && src.price[key]) || {}; return { low:s.low ?? '', mid:s.mid ?? '', high:s.high ?? '', min:Number(s.min)||2, max:Number(s.max)||8, minAge:s.minAge ?? 0 }; };
+    const bands = (src.bands || []).filter(b => MARE_BANDS.includes(b));
+    const keepSlots = (arr) => (Array.isArray(arr) ? arr : []).filter(s => halfHours().includes(s));
     tours[a] = {
       portsMany: manyP,
       ports: manyP === 'more' ? (ports.length ? ports : ['','']) : [ports[0] || ''],
@@ -2578,10 +2615,32 @@ function ensureMare(e){
       meet: src.meet || '',
       boatsMany: manyB,
       boats: manyB === 'more' ? boats : boats.slice(0, 1),
-      durH: Number(src.durH) || 0
+      specs,
+      bands,
+      halfPart: ['morning','afternoon','both'].includes(src.halfPart) ? src.halfPart : '',
+      halfDur: Math.min(4, Number(src.halfDur) || 0),
+      halfAm: keepSlots(src.halfAm),
+      halfPm: keepSlots(src.halfPm),
+      fullDur: Math.min(8, Number(src.fullDur) || 0),
+      fullSlots: keepSlots(src.fullSlots),
+      sunTime: halfHours().includes(src.sunTime) ? src.sunTime : '',
+      sunDur: Number(src.sunDur) || 0,
+      price: { shared: side('shared'), priv: side('priv') },
+      allWeek: src.allWeek === 'yes' || src.allWeek === 'no' ? src.allWeek : '',
+      days: (src.days || []).filter(d => CONFIG.weekdays.includes(d))
     };
   }
-  e.mare = { areas, areaOther: prev.areaOther || '', tours };
+  const incKeys = ['skipper','gear','aperitivo','lunch','beverage','transport','fuel','insurance','photos'];
+  const incl = {};
+  for(const k of incKeys){
+    const raw = prev.incl?.[k];
+    const mode = raw === 'inc' || raw === 'sup' ? raw : (raw && (raw.mode === 'inc' || raw.mode === 'sup') ? raw.mode : '');
+    incl[k] = { mode, price: mode === 'sup' ? (raw?.price ?? '') : '' };
+  }
+  const bring = {};
+  for(const k of MARE_BRING) bring[k] = !!(prev.bring && prev.bring[k]);
+  const tk = prev.tickets || {};
+  e.mare = { areas, areaOther: prev.areaOther || '', tours, incl, bring, tickets:{ on:!!tk.on, price:tk.price ?? '', method: tk.method === 'cash' || tk.method === 'pos' ? tk.method : '' } };
   e.spec = '';
   e.type = [];
   return e.mare;
@@ -2632,11 +2691,66 @@ function mareBoatScreen(i, n){
     ${group(t('bt_boats_q'), pills(P(i, `mare.tours.${area}.boatsMany`), ['one','more'], { lab:c => t(c === 'one' ? 'bt_boats_one' : 'bt_boats_more') }))}
     ${tour.boatsMany ? group(t('bt_boat_title'), pillsHtml, { req:true, multi }) : ''}`);
 }
-function mareDurScreen(i, n){
-  const e = E(i), m = ensureMare(e), area = m.areas[n];
-  return split(head(t('bt_dur_title'), '', ecount(i)), `
+function mareSpecScreen(i, n, b){
+  const e = E(i), m = ensureMare(e), area = m.areas[n], boat = m.tours[area].boats[b];
+  return split(head(t('bt_spec_title'), '', ecount(i)), `
     ${mareRef(e, n)}
-    <div class="ct-steppers">${stepper(P(i, `mare.tours.${area}.durH`), t('hours'), '', 1, 12)}</div>`);
+    <p class="bt-ref"><span class="bt-num">${b + 1}</span><span>${esc(t('bt_boat_n', { n:b + 1 }))} · ${esc(o(boat))}</span></p>
+    <div class="ct-row">${inp(P(i, `mare.tours.${area}.specs.${boat}.length`), t('bt_len'), {type:'number'})}${inp(P(i, `mare.tours.${area}.specs.${boat}.width`), t('bt_wid'), {type:'number'})}</div>
+    ${inp(P(i, `mare.tours.${area}.specs.${boat}.brand`), t('bt_brand'))}`);
+}
+function mareSlotBox(i, area, key, label){
+  const slots = E(i).mare.tours[area][key] || [];
+  const opts = halfHours().map(hm => `<option value="${hm}"${slots.includes(hm) ? ' disabled' : ''}>${hm}</option>`).join('');
+  return group(label, `<div class="ct-slots">${slots.map((s,k)=>`<span class="ct-slot">${esc(s)}<button type="button" data-action="mareslotdel" data-i="${i}" data-area="${area}" data-key="${key}" data-v="${k}" aria-label="${esc(s)}">${ic('x',14,2)}</button></span>`).join('')}
+    <span class="ct-slot-add"><select data-mare-slot="${area}:${key}" aria-label="${esc(label)}">${opts}</select><button type="button" class="ct-back" data-action="mareslotadd" data-i="${i}" data-area="${area}" data-key="${key}">${ic('plus',16,1.8)} ${t('slot_add')}</button></span></div>`);
+}
+function mareBandScreen(i, n){
+  const e = E(i), m = ensureMare(e), area = m.areas[n], tour = m.tours[area];
+  const has = c => tour.bands.includes(c);
+  const half = tour.halfPart;
+  return split(head(t('bt_band_title'), '', ecount(i)), `
+    ${mareRef(e, n)}
+    ${group(t('bt_band_title'), `<div class="ct-pills" role="group">${MARE_BANDS.map(c => {
+      const on = has(c);
+      return `<button type="button" class="ct-pill${on ? ' is-on' : ''}" role="checkbox" aria-checked="${on}" data-action="tog" data-p="${P(i, `mare.tours.${area}.bands`)}" data-v="${c}"><span>${esc(t('bt_band_' + c))}</span></button>`;
+    }).join('')}</div>`, {multi:true})}
+    ${has('half') ? `<section class="ct-block"><h3 class="ct-block-title">${esc(t('bt_band_half'))}</h3>
+      ${pills(P(i, `mare.tours.${area}.halfPart`), ['morning','afternoon','both'], { lab:c => t(c === 'morning' ? 'bt_half_am' : c === 'afternoon' ? 'bt_half_pm' : 'bt_half_both') })}
+      <div class="ct-steppers">${stepper(P(i, `mare.tours.${area}.halfDur`), t('bt_half_dur'), '', 1, 4)}</div>
+      ${half === 'morning' || half === 'both' ? mareSlotBox(i, area, 'halfAm', t('bt_dep_am')) : ''}
+      ${half === 'afternoon' || half === 'both' ? mareSlotBox(i, area, 'halfPm', t('bt_dep_pm')) : ''}
+    </section>` : ''}
+    ${has('full') ? `<section class="ct-block"><h3 class="ct-block-title">${esc(t('bt_band_full'))}</h3>
+      <div class="ct-steppers">${stepper(P(i, `mare.tours.${area}.fullDur`), t('bt_full_dur'), '', 1, 8)}</div>
+      ${mareSlotBox(i, area, 'fullSlots', t('bt_dep'))}
+    </section>` : ''}
+    ${has('sunset') ? `<section class="ct-block"><h3 class="ct-block-title">${esc(t('bt_band_sunset'))}</h3>
+      ${group(t('bt_dep_one'), `<select data-bind="${P(i, `mare.tours.${area}.sunTime`)}">${[''].concat(halfHours()).map(hm => `<option value="${hm}"${tour.sunTime === hm ? ' selected' : ''}>${hm || '—'}</option>`).join('')}</select>`)}
+      <div class="ct-steppers">${stepper(P(i, `mare.tours.${area}.sunDur`), t('bt_sun_dur'), '', 1, 4)}</div>
+    </section>` : ''}`);
+}
+function marePeople(i, area, side){
+  return `<div class="ct-steppers">${stepper(P(i, `mare.tours.${area}.price.${side}.min`), t('minP'), t('minPD'), 2, 200)}${stepper(P(i, `mare.tours.${area}.price.${side}.max`), t('maxP'), t('maxPD'), 2, 200)}${stepper(P(i, `mare.tours.${area}.price.${side}.minAge`), t('minAge'), t('minAgeD'), 0, 18)}</div>`;
+}
+function mareSeasons(i, area, side, label){
+  return ['low','mid','high'].map(s => money(P(i, `mare.tours.${area}.price.${side}.${s}`), `${label}, ${t('bt_season_' + s).toLowerCase()}`, { hint:t('bt_season_' + s + '_m') })).join('');
+}
+function marePriceScreen(i, n){
+  const e = E(i), m = ensureMare(e), area = m.areas[n], tour = m.tours[area];
+  return split(head(t('bt_price_title'), '', ecount(i)), `
+    ${mareRef(e, n)}
+    ${note(t('bt_period'), 'info')}
+    <section class="ct-block"><h3 class="ct-block-title">${esc(t('pr_shared_short'))}</h3>
+      ${mareSeasons(i, area, 'shared', t('bt_agency'))}
+      ${marePeople(i, area, 'shared')}
+    </section>
+    <section class="ct-block"><h3 class="ct-block-title">${esc(t('pr_priv_short'))}</h3>
+      ${mareSeasons(i, area, 'priv', t('bt_net'))}
+      ${marePeople(i, area, 'priv')}
+    </section>
+    ${group(t('bt_allweek'), pills(P(i, `mare.tours.${area}.allWeek`), ['yes','no'], { lab:c => t(c === 'yes' ? 'yn_yes' : 'yn_no') }))}
+    ${tour.allWeek === 'no' ? group(t('weekdays'), pills(P(i, `mare.tours.${area}.days`), CONFIG.weekdays, {multi:true}), {multi:true}) : ''}`);
 }
 function mareAreasOk(e){
   const m = e?.mare; if(!m || !m.areas.length) return false;
@@ -2658,7 +2772,56 @@ function mareBoatOk(e, n){
   if(tour.boatsMany === 'more') return tour.boats.length >= 2;
   return false;
 }
-function mareDurOk(e, n){ const tour = mareTour(e, n); return !!tour && pos(tour.durH); }
+function mareSpecOk(e, n, b){
+  const tour = mareTour(e, n); const boat = tour?.boats?.[b]; const s = boat && tour.specs?.[boat];
+  return !!s && pos(s.length) && pos(s.width) && filled(s.brand, 2);
+}
+function mareBandOk(e, n){
+  const tour = mareTour(e, n); if(!tour || !tour.bands.length) return false;
+  if(tour.bands.includes('half')){
+    if(!tour.halfPart || !(tour.halfDur >= 1 && tour.halfDur <= 4)) return false;
+    if((tour.halfPart === 'morning' || tour.halfPart === 'both') && !tour.halfAm.length) return false;
+    if((tour.halfPart === 'afternoon' || tour.halfPart === 'both') && !tour.halfPm.length) return false;
+  }
+  if(tour.bands.includes('full') && (!(tour.fullDur >= 1 && tour.fullDur <= 8) || !tour.fullSlots.length)) return false;
+  if(tour.bands.includes('sunset') && (!tour.sunTime || !pos(tour.sunDur))) return false;
+  return true;
+}
+function mareSideOk(s){ return s && pos(s.low) && pos(s.mid) && pos(s.high) && s.min >= 2 && s.max >= s.min && s.minAge >= 0 && s.minAge !== ''; }
+const MARE_INCL = ['skipper','gear','aperitivo','lunch','beverage','transport','fuel','insurance','photos'];
+function mareInclScreen(i){
+  const e = E(i), m = ensureMare(e);
+  const row = (key) => {
+    const item = m.incl[key] || { mode:'', price:'' };
+    const bad = item.mode === 'sup' && !pos(item.price);
+    return `<div class="ct-incl-row"><div class="ct-incl-main"><span>${esc(t('bt_inc_' + key))}</span>
+      <span class="ct-seg" role="radiogroup">${['inc','sup'].map(x => `<button type="button" role="radio" aria-checked="${item.mode === x}" class="${item.mode === x ? 'is-on' : ''}" data-action="mareincl" data-i="${i}" data-k="${key}" data-v="${x}">${t(x)}</button>`).join('')}</span></div>
+      ${item.mode === 'sup' ? `<label class="ct-field ct-incl-price"><span class="ct-field-label"><span>${t('sup_price')}</span></span>
+        <span class="ct-money"><span>€</span><input data-cash="${P(i, 'mare.incl.' + key + '.price')}" type="text" inputmode="numeric" autocomplete="off" value="${esc(formatItAmount(item.price))}" class="${bad ? 'is-bad' : ''}"></span></label>` : ''}</div>`;
+  };
+  const tk = m.tickets;
+  return split(head(t('in_title'), t('in_sub'), ecount(i)), `
+    <div class="ct-incl">${MARE_INCL.map(row).join('')}
+      <div class="ct-incl-row"><div class="ct-incl-main">${check(P(i,'mare.tickets.on'), t('bt_inc_tickets'))}</div>
+      ${tk.on ? `${money(P(i,'mare.tickets.price'), t('bt_pp'))}${group(t('bt_pay'), pills(P(i,'mare.tickets.method'), ['cash','pos'], { lab:c => t(c === 'cash' ? 'bt_cash' : 'bt_pos') }))}` : ''}
+      </div></div>`);
+}
+function mareBringScreen(i){
+  ensureMare(E(i));
+  return split(head(t('bt_bring_title'), t('bt_bring_sub'), ecount(i)),
+    MARE_BRING.map(k => check(P(i, 'mare.bring.' + k), t('bt_br_' + k))).join(''));
+}
+function mareInclOk(e){
+  const m = e?.mare; if(!m) return false;
+  if(m.tickets.on && (!pos(m.tickets.price) || (m.tickets.method !== 'cash' && m.tickets.method !== 'pos'))) return false;
+  return MARE_INCL.every(k => m.incl[k]?.mode !== 'sup' || pos(m.incl[k]?.price));
+}
+function marePriceOk(e, n){
+  const tour = mareTour(e, n); if(!tour) return false;
+  if(!mareSideOk(tour.price?.shared) || !mareSideOk(tour.price?.priv)) return false;
+  if(tour.allWeek === 'yes') return true;
+  return tour.allWeek === 'no' && tour.days.length > 0;
+}
 const EV = {
   sector: i => split(head(t('es_title'), t('es_sub'), ecount(i), true),
     photoCards(P(i,'sector'), sectorsForPaths().map(s=>({v:s.code, img:s.img, icon:s.icon, label:`${s.letter}. ${o(s.code)}`, hint:t('h_'+s.code)})))),
@@ -2693,7 +2856,7 @@ const EV = {
     ${group(t('exp_langs'), pills(P(i,'langs'), CONFIG.expLangs, {multi:true}), {multi:true})}
     ${group(t('access'), pills(P(i,'access'), CONFIG.access, {multi:true}), {req:false, multi:true, sub:t('accessD')})}`); },
   mode: i => split(head(t('md_title'), t('md_sub'), ecount(i)), opts(P(i,'mode'), CONFIG.modes, {sub:c=>t('md_'+c+'D')})),
-  incl: i => { const e=E(i); normalizeIncl(e); return split(head(t('in_title'), t('in_sub'), ecount(i)), `
+  incl: i => { const e=E(i); if(e.sector === 'mare') return mareInclScreen(i); normalizeIncl(e); return split(head(t('in_title'), t('in_sub'), ecount(i)), `
     <p class="ct-multi-hint">${esc(t('et_sub'))}</p>
     <div class="ct-incl">${includesFor(e).map(c=>{ const mode=inclMode(e,c); const price=inclPrice(e,c); const bad=mode==='sup' && !pos(price); return `
       <div class="ct-incl-row"><div class="ct-incl-main"><label class="ct-check${mode?' is-on':''}"><input type="checkbox" data-incl="${c}" data-i="${i}" ${mode?'checked':''}><span class="ct-check-box" aria-hidden="true">${ic('check',14,2.4)}</span><span>${esc(o(c))}</span></label>
@@ -2701,7 +2864,7 @@ const EV = {
         ${mode==='sup'?`<label class="ct-field ct-incl-price"><span class="ct-field-label"><span>${t('sup_price')}</span></span>
           <span class="ct-money"><span>€</span><input id="${fid(P(i,'incl.'+c+'.price'))}" data-cash="${P(i,'incl.'+c+'.price')}" type="text" inputmode="numeric" autocomplete="off" value="${esc(formatItAmount(price))}" class="${bad?'is-bad':''}" aria-invalid="${bad}"></span>
           <span class="ct-error" ${bad?'':'hidden'}>${t('sup_price_err')}</span></label>`:''}</div>`;}).join('')}</div>`); },
-  equip: i => { const e=E(i); return split(head(t('eq_title'), t('eq_sub'), ecount(i)), `
+  equip: i => { const e=E(i); if(e.sector === 'mare') return mareBringScreen(i); return split(head(t('eq_title'), t('eq_sub'), ecount(i)), `
     ${toggle(P(i,'equipProvided'), t('eq_provided'), t(isHike(e) ? 'eq_providedD_hike' : e.sector === 'benessere' ? 'eq_providedD_ben' : 'eq_providedD'))}
     ${e.equipProvided ? '' : inp(P(i,'bringNote'), t('eq_bring_note'), {area:'short', ph:t('eq_bring_notePh')})}`); },
   reqs: i => { const e=E(i); const artisan = e.sector === 'artigianato'; if(!showsDifficulty(e)) e.difficulty = ''; if(artisan){ e.limits = ''; e.safety = ''; e.localita = ''; e.meet = ''; e.end = ''; return split(head(t('rq_title_art'), t('rq_sub'), ecount(i)), `
@@ -2718,7 +2881,7 @@ const EV = {
     ${group(t('period'), pills(P(i,'period'), CONFIG.opening))}
     ${group(t('months'), `<div class="ct-pills ct-pills--months">${M.map((m,k)=>{const on=e.months.includes(k); return `<button type="button" class="ct-pill${on?' is-on':''}" role="checkbox" aria-checked="${on}" data-action="togn" data-p="${P(i,'months')}" data-v="${k}">${m}</button>`;}).join('')}</div>`, {multi:true})}
     ${group(t('weekdays'), pills(P(i,'days'), CONFIG.weekdays, {multi:true}), {multi:true})}`); },
-  slots: i => { const e=E(i); return split(head(t('sl_title'), t('sl_sub'), ecount(i)), `
+  slots: i => { const e=E(i); if(e.sector === 'mare') return split(head(t('notice'), t('tip_notice'), ecount(i)), group(t('notice'), pills(P(i,'notice'), CONFIG.notice))); return split(head(t('sl_title'), t('sl_sub'), ecount(i)), `
     ${group(t('bands'), bandPills(i, e), {multi:true})}
     ${group(t('slots'), slotPicker(i, e), {req:false, tip:'tip_slots'})}
     ${group(t('notice'), pills(P(i,'notice'), CONFIG.notice), {tip:'tip_notice'})}`); },
@@ -2781,13 +2944,13 @@ const EOK = {
   g3: e => e.durH > 0 && e.min >= 2 && e.max >= e.min,
   g4: e => e.langs.length > 0 && (!isSportRental(e) || !!e.handover),
   mode: e => !!e.mode,
-  incl: e => includesFor(e).every(c => inclMode(e,c) !== 'sup' || pos(inclPrice(e,c))),
-  equip: e => e.sector === 'artigianato' ? true : (e.equipProvided || filled(e.bringNote, 3)),
+  incl: e => e.sector === 'mare' ? mareInclOk(e) : includesFor(e).every(c => inclMode(e,c) !== 'sup' || pos(inclPrice(e,c))),
+  equip: e => e.sector === 'mare' || e.sector === 'artigianato' ? true : (e.equipProvided || filled(e.bringNote, 3)),
   reqs: e => e.sector === 'artigianato' ? placeOk(e) : isOffroad(e) ? offroadReqOk(e) : usesHikeFlow(e) ? hikeReqOk(e) : (showsDifficulty(e) ? !!e.difficulty : true),
   scuba: e => !isScuba(e) || (pos(e.scuba?.depth) && filled(String(e.scuba?.pressure??''), 1) && filled(e.scuba?.seabed, 2)),
   sq: e => sectorQs(e).every(q => qOk(e,q)),
   avail: e => !!e.period && e.months.length > 0 && e.days.length > 0,
-  slots: e => e.bands.length > 0 && !!e.notice,
+  slots: e => e.sector === 'mare' ? !!e.notice : (e.bands.length > 0 && !!e.notice),
   price: e => e.sector === 'artigianato' ? blocks(e).every(b => pos(e.price[b].base)) : (!!e.priceMode && (!isSportRental(e) || !!e.priceUnit) && blocks(e).every(b => pos(e.price[b].base) && e.price[b].incl >= 1)),
   cond: e => !!e.termsAccepted && !!e.billing && e.billing !== 'bill_receipt',
   photos: e => e.photos.length >= MIN_PHOTOS
@@ -2911,7 +3074,7 @@ function screens(){
         : e.sector === 'sport'
         ? ['sector','spec','type','g1','g2','g3','g4','mode','slots','price','incl','equip','avail','cond','photos']
         : e.sector === 'mare'
-        ? ['sector','btareas','g1','g2','g3','g4','mode','price','incl','equip','reqs','sq','avail','slots','cond','photos']
+        ? ['sector','btareas','g1','g4','incl','equip','reqs','slots','cond','photos']
         : (e.sector === 'benessere' || e.sector === 'altro')
         ? ['sector','spec','g1','g2','g3','g4','mode','price','incl','equip','reqs','avail','slots','cond','photos']
         : ['sector','spec','type','g1','g2','g3','g4','mode','price','incl','equip','reqs','sq','avail','slots','cond','photos'];
@@ -2930,7 +3093,11 @@ function screens(){
         (S.exps[i].mare?.areas || []).forEach((_, n) => {
           add(`e${i}_btport${n}`, 'prop', () => marePortScreen(i, n), () => marePortOk(S.exps[i], n));
           add(`e${i}_btboat${n}`, 'prop', () => mareBoatScreen(i, n), () => mareBoatOk(S.exps[i], n));
-          add(`e${i}_btdur${n}`, 'prop', () => mareDurScreen(i, n), () => mareDurOk(S.exps[i], n));
+          (S.exps[i].mare.tours[S.exps[i].mare.areas[n]]?.boats || []).forEach((_, b) => {
+            add(`e${i}_btspec${n}_${b}`, 'prop', () => mareSpecScreen(i, n, b), () => mareSpecOk(S.exps[i], n, b));
+          });
+          add(`e${i}_btband${n}`, 'prop', () => mareBandScreen(i, n), () => mareBandOk(S.exps[i], n));
+          add(`e${i}_btprice${n}`, 'prop', () => marePriceScreen(i, n), () => marePriceOk(S.exps[i], n));
         });
         return;
       }
@@ -2973,8 +3140,8 @@ function screenLabel(id){
     if(or && e){ const n = +or[1], keys = offroadSeq(e); return `${t('exp_n',{n:+m[1]+1})}: ${t('or_title')} · ${t('hk_mode_n',{n:n+1,total:keys.length})}`; }
     if(m[2]==='drive') return `${t('exp_n',{n:+m[1]+1})}: ${t('or_drv_title')}`;
     if(m[2]==='btareas') return `${t('exp_n',{n:+m[1]+1})}: ${t('bt_areas_title')}`;
-    const bt = m[2].match(/^bt(port|boat|dur)(\d+)$/);
-    if(bt && e){ const key = bt[1]==='port' ? 'bt_port_title' : bt[1]==='boat' ? 'bt_boat_title' : 'bt_dur_title'; return `${t('exp_n',{n:+m[1]+1})}: ${t(key)}`; }
+    const bt = m[2].match(/^bt(port|boat|spec|band|price)(\d+)/);
+    if(bt && e){ const key = {port:'bt_port_title', boat:'bt_boat_title', spec:'bt_spec_title', band:'bt_band_title', price:'bt_price_title'}[bt[1]]; return `${t('exp_n',{n:+m[1]+1})}: ${t(key)}`; }
     const title = m[2]==='reqs' && e?.sector==='artigianato' ? t('rq_title_art') : t(TKEY[m[2]]+'_title',{s:o(e?.sector||'').toLowerCase()}); return `${t('exp_n',{n:+m[1]+1})}: ${title}`; }
   if(id==='conv_details') return t('cdt_title_'+cgroup());
   return t(TKEY[id]+'_title');
@@ -3667,6 +3834,9 @@ const ACT = {
   maps: el => { const q = String(get(el.dataset.p) || '').trim(); const url = q ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q) : 'https://www.google.com/maps'; window.open(url, '_blank', 'noopener'); },
   mareport: el => { const tour = ensureMare(S.exps[+el.dataset.i]).tours[el.dataset.area]; if(tour) tour.ports.push(''); rerender(); },
   mareboat: el => { const tour = ensureMare(S.exps[+el.dataset.i]).tours[el.dataset.area]; if(!tour) return; const v = el.dataset.v; if(tour.boatsMany !== 'more') tour.boats = [v]; else { const k = tour.boats.indexOf(v); k < 0 ? tour.boats.push(v) : tour.boats.splice(k, 1); } rerender(); },
+  mareincl: el => { const item = ensureMare(S.exps[+el.dataset.i]).incl[el.dataset.k]; if(item){ item.mode = el.dataset.v; if(item.mode !== 'sup') item.price = ''; } rerender(); },
+  mareslotadd: el => { const tour = ensureMare(S.exps[+el.dataset.i]).tours[el.dataset.area]; const sel = document.querySelector(`[data-mare-slot="${el.dataset.area}:${el.dataset.key}"]`); const v = sel?.value; if(!tour || !v || !halfHours().includes(v)) return sel?.focus(); const a = tour[el.dataset.key]; if(!a.includes(v)){ a.push(v); a.sort(); } rerender(); },
+  mareslotdel: el => { const tour = ensureMare(S.exps[+el.dataset.i]).tours[el.dataset.area]; tour?.[el.dataset.key]?.splice(+el.dataset.v, 1); rerender(); },
   tog: el => { const p=el.dataset.p, v=el.dataset.v, a=get(p)||[]; const k=a.indexOf(v); k<0?a.push(v):a.splice(k,1); set(p,a); afterPick(p, a);
     if(p==='paths' && (v==='A'||v==='C') && (a.includes('A')||a.includes('C')) && !S.exps.length) S.exps.push(newExp());
     rerender(); },
