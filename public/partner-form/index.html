@@ -80,7 +80,7 @@ img{display:block}
 .bt-tiles .bt-cat > span{display:block;max-width:100%}
 .bt-tiles .bt-cat b{position:absolute;top:0;right:0;z-index:1;transform:translate(42%,-42%);display:inline-grid;place-items:center;min-width:22px;height:22px;margin:0;padding:0 6px;border-radius:999px;background:#2f7f88;color:#f8f4ee;font-size:12px;font-weight:700;line-height:1;box-shadow:0 0 0 3px var(--background)}
 .bt-stage{min-height:420px;display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:24px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03)}
-.bt-view{position:relative;flex:1;min-height:300px;border-radius:16px;overflow:hidden;touch-action:none;background:#000}
+.bt-view{position:relative;flex:none;height:760px;min-height:760px;border-radius:16px;overflow:hidden;touch-action:none;background:#000}
 .bt-view canvas{display:block;width:100%;height:100%;cursor:grab}
 .bt-stage .bt-wire{width:100%;height:280px}
 .bt-stage .bt-wire svg{width:100%;height:100%;animation:none;transform:none}
@@ -2887,7 +2887,7 @@ function marePointMaterial(THREE){
         gl_Position = projectionMatrix * mv;
         gl_PointSize = uSize;
         float t = clamp(((-mv.z) - uNear) / max(uFar - uNear, 0.001), 0.0, 1.0);
-        vShade = mix(1.0, 0.45, t);
+        vShade = mix(1.0, 0.28, t);
       }
     `,
     fragmentShader: `
@@ -2922,8 +2922,8 @@ function mareKeep(bag, x, y, z, rim){
 }
 function mareDist(a, b){ return Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]); }
 function mareLerp(a, b, t){ return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }
-function mareLine(bag, a, b, rim){
-  const n = Math.max(2, Math.round(mareDist(a, b) / bag.step));
+function mareLine(bag, a, b, rim, step){
+  const n = Math.max(2, Math.round(mareDist(a, b) / (step || bag.step)));
   for(let i = 0; i <= n; i++){
     const p = mareLerp(a, b, i / n);
     mareKeep(bag, p[0], p[1], p[2], rim || i === 0 || i === n);
@@ -2931,12 +2931,15 @@ function mareLine(bag, a, b, rim){
 }
 function mareBary(bag, A, B, C){
   const n = Math.max(1, Math.round(Math.max(mareDist(A, B), mareDist(A, C), mareDist(B, C)) / bag.step));
-  for(let i = 0; i <= n; i++){
-    for(let j = 0; j <= n - i; j++){
+  for(let i = 1; i < n; i++){
+    for(let j = 1; j < n - i; j++){
       const u = i / n, v = j / n, w = 1 - u - v;
-      mareKeep(bag, A[0] * w + B[0] * u + C[0] * v, A[1] * w + B[1] * u + C[1] * v, A[2] * w + B[2] * u + C[2] * v, i === 0 || j === 0 || i + j === n);
+      mareKeep(bag, A[0] * w + B[0] * u + C[0] * v, A[1] * w + B[1] * u + C[1] * v, A[2] * w + B[2] * u + C[2] * v, false);
     }
   }
+  mareLine(bag, A, B, true, bag.step * 0.5);
+  mareLine(bag, B, C, true, bag.step * 0.5);
+  mareLine(bag, C, A, true, bag.step * 0.5);
 }
 function mareTrisOf(THREE, mesh, toRoot){
   const pos = mesh.geometry.attributes.position;
@@ -3102,18 +3105,18 @@ function mareCatamaran(bag){
   const foot = [0, yDeck + 1, z0];
   const top = [0, yDeck + 15, z0];
   const clew = [0, yDeck + 1, z0 + 6];
-  mareLine(bag, [0, yDeck, z0], top, true);
+  mareLine(bag, [0, yDeck, z0], top, true, 0.5);
   mareBary(bag, foot, top, clew);
-  mareLine(bag, top, [0, 1.1, -6], true);
-  mareLine(bag, top, [0, yDeck, 6], true);
-  mareLine(bag, top, [-3, yDeck, z0], true);
-  mareLine(bag, top, [3, yDeck, z0], true);
+  mareLine(bag, top, [0, 1.1, -6], true, 0.7);
+  mareLine(bag, top, [0, yDeck, 6], true, 0.7);
+  mareLine(bag, top, [-3, yDeck, z0], true, 0.7);
+  mareLine(bag, top, [3, yDeck, z0], true, 0.7);
 }
 function mareStyle(THREE, root){
   if(root.userData.mareCloud) return;
   root.userData.mareCloud = true;
   root.updateMatrixWorld(true);
-  const step = 0.3;
+  const step = 0.5;
   const bag = mareBag(step);
   if(PRE.type === 'catamarano'){
     mareCatamaran(bag);
@@ -3289,11 +3292,11 @@ function mareFrame(THREE){
       return { minX, maxX, minY, maxY };
     };
     let s = span();
-    let mul = Math.max((s.maxX - s.minX) / 1.60, (s.maxY - s.minY) / 1.72, 0.15);
+    let mul = Math.max((s.maxX - s.minX) / 1.60, (s.maxY - s.minY) / 1.84, 0.15);
     PRE.radius *= mul;
     mareCam();
     s = span();
-    mul = Math.max((s.maxX - s.minX) / 1.60, (s.maxY - s.minY) / 1.72, 0.15);
+    mul = Math.max((s.maxX - s.minX) / 1.60, (s.maxY - s.minY) / 1.84, 0.15);
     if(Math.abs(mul - 1) > 0.02){ PRE.radius *= mul; mareCam(); s = span(); }
     const midX = (s.minX + s.maxX) / 2, midY = (s.minY + s.maxY) / 2;
     const dist = PRE.camera.position.distanceTo(PRE.target);
@@ -3371,8 +3374,15 @@ function mareFit(){
   const view = PRE.view; if(!view || !PRE.renderer) return;
   const w = view.clientWidth || 320, h = view.clientHeight || 300;
   PRE.renderer.setSize(w, h, false);
-  PRE.camera.aspect = w / Math.max(h, 1);
-  PRE.camera.updateProjectionMatrix();
+  if(PRE.camera){
+    PRE.camera.aspect = w / Math.max(h, 1);
+    PRE.camera.updateProjectionMatrix();
+  }
+  if(PRE.THREE && PRE.model && PRE.model.getObjectByName('Mare_Dots') && (PRE.frameW !== w || PRE.frameH !== h)){
+    PRE.frameW = w; PRE.frameH = h;
+    mareFrame(PRE.THREE);
+    return;
+  }
   mareDotsSync();
 }
 async function mountMarePreview(){
