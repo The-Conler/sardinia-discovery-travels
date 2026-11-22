@@ -82,6 +82,49 @@ img{display:block}
 .bt-stage{min-height:420px;display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:24px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03)}
 .bt-view{position:relative;flex:none;height:760px;min-height:760px;border-radius:16px;overflow:hidden;touch-action:none;background:#000}
 .bt-view canvas{display:block;width:100%;height:100%;cursor:grab}
+/* Fleet step: one viewport between the header and the fixed bar. The preview
+   takes the height that remains after the title and the canvas controls. */
+html:has(.ct-wizard.is-fleet){overflow:hidden}
+.ct-wizard.is-fleet{box-sizing:border-box;height:100dvh;min-height:0;max-height:100dvh;padding-top:var(--fleet-top,120px);padding-bottom:var(--fleet-bottom,96px);overflow:hidden}
+.ct-wizard.is-fleet .ct-stage{height:100%;min-height:0;display:flex;flex-direction:column}
+.ct-wizard.is-fleet .ct-split{flex:1 1 auto;min-height:0;height:100%;grid-template-columns:minmax(280px,.9fr) minmax(0,1.15fr);column-gap:clamp(16px,2.4vw,40px);row-gap:0;align-items:stretch}
+.ct-wizard.is-fleet .ct-split-side,.ct-wizard.is-fleet .ct-split-body{min-height:0;height:100%;overflow:hidden}
+.ct-wizard.is-fleet .ct-split-side{gap:8px}
+.ct-wizard.is-fleet .ct-head{flex:none}
+.ct-wizard.is-fleet .ct-count{margin-bottom:4px}
+.ct-wizard.is-fleet .ct-title{font-size:clamp(26px,3.4vh,48px);line-height:1.05}
+.ct-wizard.is-fleet .ct-sub{margin-top:6px;font-size:clamp(13px,1.7vh,17px);line-height:1.3}
+.ct-wizard.is-fleet .bt-stage{flex:1 1 auto;min-height:0;gap:6px;padding:8px}
+.ct-wizard.is-fleet .bt-view{flex:1 1 auto;height:auto;min-height:0;max-height:none}
+.ct-wizard.is-fleet .bt-hud,.ct-wizard.is-fleet .bt-telem{flex:none}
+.ct-wizard.is-fleet .bt-telem{font-size:10px}
+.ct-wizard.is-fleet .ct-split-body{gap:8px}
+.ct-wizard.is-fleet .bt-tiles{flex:none;width:100%;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.ct-wizard.is-fleet .bt-tiles .bt-cat{aspect-ratio:auto;height:clamp(56px,9vh,96px);min-height:0;padding:8px 10px;border-radius:16px}
+.ct-wizard.is-fleet .ct-block{flex:1 1 auto;min-height:0;gap:6px;padding:10px 12px;overflow:hidden}
+.ct-wizard.is-fleet .ct-block-title{font-size:14px}
+.ct-wizard.is-fleet .ct-field{gap:2px}
+.ct-wizard.is-fleet .ct-field-label{font-size:13px;line-height:1.2}
+.ct-wizard.is-fleet .ct-field input{height:32px;padding:0 12px;font-size:14px}
+.ct-wizard.is-fleet .ct-field textarea.is-short{min-height:36px;padding:6px 12px;font-size:14px}
+.ct-wizard.is-fleet .ct-row{gap:8px}
+.ct-wizard.is-fleet .bt-maps{margin:0}
+.ct-wizard.is-fleet .ct-back{height:34px;padding:0 14px;font-size:14px}
+.ct-wizard.is-fleet .bt-add{flex:none;margin-top:0}
+.ct-wizard.is-fleet.is-dense .ct-title{font-size:clamp(22px,3vh,32px)}
+.ct-wizard.is-fleet.is-dense .ct-sub{font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ct-wizard.is-fleet.is-dense .ct-split-side{gap:4px}
+.ct-wizard.is-fleet.is-dense .bt-tiles .bt-cat{height:48px;padding:6px 8px;font-size:13px}
+.ct-wizard.is-fleet.is-dense .ct-block{display:grid;grid-template-columns:1fr 1fr 1fr;align-content:start;gap:1px 8px;padding:2px 8px}
+.ct-wizard.is-fleet.is-dense .ct-field{gap:0}
+.ct-wizard.is-fleet.is-dense .ct-block-title,.ct-wizard.is-fleet.is-dense .ct-block>.ct-back,.ct-wizard.is-fleet.is-dense .ct-field:has(textarea),.ct-wizard.is-fleet.is-dense .bt-maps{grid-column:1 / -1}
+.ct-wizard.is-fleet.is-dense .ct-row{display:contents}
+.ct-wizard.is-fleet.is-dense .ct-field-label{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct-wizard.is-fleet.is-dense .ct-field textarea,.ct-wizard.is-fleet.is-dense .ct-field textarea.is-short{min-height:22px;height:22px;padding:2px 10px}
+.ct-wizard.is-fleet.is-dense .ct-field input{height:24px}
+.ct-wizard.is-fleet.is-dense .ct-field textarea.is-short{min-height:28px}
+.ct-wizard.is-fleet.is-dense .ct-back{height:30px}
+.ct-wizard.is-fleet.is-dense .bt-hud button{height:28px}
 .bt-stage .bt-wire{width:100%;height:280px}
 .bt-stage .bt-wire svg{width:100%;height:100%;animation:none;transform:none}
 .bt-hud{display:flex;flex-wrap:wrap;gap:6px}
@@ -4831,7 +4874,7 @@ function render(dir){
   renderBoatSheet();
   $('helpBtn').innerHTML = `${ic('help',20,1.8)}<span>${t('help_btn')}</span>`; $('helpBtn').setAttribute('aria-label', t('help_btn'));
   $('mCancel').textContent = t('cancelBtn');
-  updateCounters(); updateNav(); fitReview(); fitChoices();
+  updateCounters(); updateNav(); fitReview(); fitChoices(); fitFleet();
   if(H.open) renderPanel();
   mountMarePreview();
 }
@@ -5010,7 +5053,36 @@ function dockHelp(){
   const sec = $('sections'); sec.classList.remove('is-compact');
   if(sec.scrollWidth > sec.clientWidth + 1) sec.classList.add('is-compact');
 }
-let fitT; addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(()=>{ dockHelp(); fitChoices(); fitReview(); }, 80); });
+function fitFleet(){
+  const wiz = $('wizard'), stage = $('stage');
+  const on = /^e\d+_btfleet$/.test(stage?.dataset.screen || '');
+  wiz.classList.remove('is-fleet','is-dense');
+  wiz.style.removeProperty('--fleet-top'); wiz.style.removeProperty('--fleet-bottom');
+  if(!on) return;
+  const header = document.querySelector('.sd-header'), bar = $('bar');
+  const top = Math.ceil(header.getBoundingClientRect().bottom) + 8;
+  const bottom = Math.ceil(bar.getBoundingClientRect().height) + 8;
+  wiz.style.setProperty('--fleet-top', top + 'px');
+  wiz.style.setProperty('--fleet-bottom', bottom + 'px');
+  wiz.classList.add('is-fleet');
+  const barTop = () => bar.getBoundingClientRect().top;
+  const past = () => {
+    const head = stage.querySelector('.ct-title');
+    const hud = stage.querySelector('.bt-hud');
+    const add = stage.querySelector('.bt-add');
+    const tiles = stage.querySelector('.bt-tiles');
+    const block = stage.querySelector('.ct-block');
+    if(head && head.getBoundingClientRect().top < header.getBoundingClientRect().bottom - 1) return true;
+    if(hud && hud.getBoundingClientRect().bottom > barTop() - 2) return true;
+    if(add && add.getBoundingClientRect().bottom > barTop() - 2) return true;
+    if(tiles && tiles.getBoundingClientRect().bottom > barTop() - 2) return true;
+    if(block && block.scrollHeight > block.clientHeight + 2) return true;
+    if(document.documentElement.scrollHeight > innerHeight + 2) return true;
+    return false;
+  };
+  if(past()) wiz.classList.add('is-dense');
+}
+let fitT; addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(()=>{ dockHelp(); fitChoices(); fitReview(); fitFleet(); if(window.mareFit) mareFit(); }, 80); });
 
 /* Review: same one-screen rule. The header gets compact, the rows share the
    height left between header and bar; if it still does not fit, a denser
