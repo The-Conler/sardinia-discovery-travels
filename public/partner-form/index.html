@@ -2881,24 +2881,28 @@ function marePointMaterial(THREE){
       uniform float uSize;
       uniform float uNear;
       uniform float uFar;
+      attribute float aScale;
       varying float vShade;
+      varying float vScale;
       void main(){
         vec4 mv = modelViewMatrix * vec4(position, 1.0);
         gl_Position = projectionMatrix * mv;
-        gl_PointSize = uSize;
+        vScale = aScale;
+        gl_PointSize = uSize * aScale;
         float t = clamp(((-mv.z) - uNear) / max(uFar - uNear, 0.001), 0.0, 1.0);
-        vShade = mix(1.0, 0.28, t);
+        vShade = mix(1.0, 0.28, t) * clamp(aScale, 0.55, 1.0);
       }
     `,
     fragmentShader: `
       uniform float uSize;
       uniform float uDpr;
       varying float vShade;
+      varying float vScale;
       void main(){
         vec2 p = gl_PointCoord - vec2(0.5);
         float r = length(p) * 2.0;
         if(r > 1.0) discard;
-        float aa = clamp((2.0 * uDpr) / max(uSize, 1.0), 0.02, 0.85);
+        float aa = clamp((2.0 * uDpr) / max(uSize * vScale, 1.0), 0.02, 0.85);
         float alpha = 1.0 - smoothstep(1.0 - aa, 1.0, r);
         if(alpha < 0.04) discard;
         gl_FragColor = vec4(vec3(0.0, 0.863, 0.902), alpha * vShade);
@@ -2911,22 +2915,23 @@ function marePointMaterial(THREE){
   });
 }
 function mareBag(step){
-  return { step, q: step * 0.34, seen: new Set(), pos: [], edge: [] };
+  return { step, q: step * 0.34, seen: new Set(), pos: [], edge: [], scale: [] };
 }
-function mareKeep(bag, x, y, z, rim){
+function mareKeep(bag, x, y, z, rim, scale){
   const k = Math.round(x / bag.q) + ',' + Math.round(y / bag.q) + ',' + Math.round(z / bag.q);
   if(bag.seen.has(k)) return;
   bag.seen.add(k);
   bag.pos.push(x, y, z);
   bag.edge.push(rim ? 1 : 0);
+  bag.scale.push(scale == null ? 1 : scale);
 }
 function mareDist(a, b){ return Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]); }
 function mareLerp(a, b, t){ return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }
-function mareLine(bag, a, b, rim, step){
+function mareLine(bag, a, b, rim, step, scale){
   const n = Math.max(2, Math.round(mareDist(a, b) / (step || bag.step)));
   for(let i = 0; i <= n; i++){
     const p = mareLerp(a, b, i / n);
-    mareKeep(bag, p[0], p[1], p[2], rim || i === 0 || i === n);
+    mareKeep(bag, p[0], p[1], p[2], rim || i === 0 || i === n, scale);
   }
 }
 function mareBary(bag, A, B, C){
@@ -3112,72 +3117,120 @@ function mareCatamaran(bag){
   mareLine(bag, top, [-3, yDeck, z0], true, 0.7);
   mareLine(bag, top, [3, yDeck, z0], true, 0.7);
 }
-function marePoly(bag, pts, step){
-  for(let i = 1; i < pts.length; i++) mareLine(bag, pts[i - 1], pts[i], true, step);
+function marePoly(bag, pts, step, scale){
+  for(let i = 1; i < pts.length; i++) mareLine(bag, pts[i - 1], pts[i], true, step, scale);
 }
 function mareMotore(bag){
-  const fill = 0.25, edge = 0.12;
-  const z0 = -4, z1 = 4, L = z1 - z0, halfB = 1.25;
-  const profile = z => {
+  const grid = 0.34, edge = 0.18, big = 1.42, fine = 0.68;
+  const z0 = -4.3, z1 = 4.1, L = z1 - z0, halfB = 1.275;
+  const st = z => {
     const u = Math.min(1, Math.max(0, (z - z0) / L));
-    const k = u < 0.36 ? Math.pow(Math.sin((u / 0.36) * Math.PI / 2), 1.45) : 1;
-    return { b: halfB * k, sheer: 0.38 + 0.62 * k, keel: 0.38 * (1 - k), chine: 0.38 * (1 - k) + 0.2 * k, k };
+    const beamK = u < 0.2 ? Math.pow(u / 0.2, 1.65) : (u > 0.96 ? 0.98 : 1);
+    const b = halfB * beamK;
+    const sheer = 1.22 - 0.48 * Math.pow(u, 0.78);
+    const drop = u < 0.26 ? Math.pow(u / 0.26, 0.62) : 1;
+    const keel = sheer * (1 - drop) + 0.02 * drop;
+    const chine = keel + (sheer - keel) * 0.3;
+    const strake = keel + (sheer - keel) * 0.62;
+    return { u, b, sheer, keel, chine, strake };
   };
-  const rib = z => {
-    const p = profile(z);
-    if(p.b < 0.05){ mareKeep(bag, 0, p.sheer, z, true); return; }
-    marePoly(bag, [
-      [-p.b, p.sheer, z], [-p.b, p.chine, z], [0, p.keel, z],
-      [p.b, p.chine, z], [p.b, p.sheer, z], [-p.b, p.sheer, z]
-    ], edge);
+  const put = (x, y, z, scale) => mareKeep(bag, x, y, z, scale > 1.05, scale);
+  for(let z = z0; z <= z1 + 1e-4; z += edge){
+    const p = st(z);
+    put(-p.b, p.sheer, z, big);
+    put(p.b, p.sheer, z, big);
+    put(0, p.keel, z, big);
+    if(p.b > 0.15){
+      put(-p.b, p.chine, z, big);
+      put(p.b, p.chine, z, big);
+      put(-p.b, p.strake, z, big);
+      put(p.b, p.strake, z, big);
+    }
+  }
+  put(0, st(z0).sheer, z0, 1.7);
+  for(let z = z0 + grid; z < z1 - 1e-4; z += grid){
+    const p = st(z);
+    if(p.b < 0.18) continue;
+    for(let r = 1; r <= 2; r++){
+      const y = p.chine + (p.sheer - p.chine) * (r / 3);
+      put(-p.b + 0.03, y, z, 1);
+      put(p.b - 0.03, y, z, 1);
+    }
+    for(let r = 1; r <= 2; r++){
+      const t = r / 3;
+      const y = p.chine + (p.keel - p.chine) * t;
+      const x = p.b * (1 - t);
+      put(-x, y, z, 1);
+      put(x, y, z, 1);
+    }
+    for(let x = -p.b + grid; x < p.b - grid * 0.25; x += grid) put(x, p.sheer - 0.03, z, 1);
+  }
+  const stern = st(z1);
+  marePoly(bag, [
+    [-stern.b, stern.sheer, z1], [stern.b, stern.sheer, z1], [stern.b, stern.keel, z1],
+    [-stern.b, stern.keel, z1], [-stern.b, stern.sheer, z1]
+  ], edge, big);
+  for(let x = -stern.b + grid; x < stern.b; x += grid) mareLine(bag, [x, stern.keel, z1], [x, stern.sheer, z1], false, grid, 1);
+  const py = stern.sheer - 0.2, xP = stern.b * 0.86, zP1 = z1 + 0.62;
+  mareLine(bag, [-xP, py, z1], [xP, py, z1], true, edge, big);
+  mareLine(bag, [-xP, py, z1], [-xP, py, zP1 - 0.16], true, edge, big);
+  mareLine(bag, [xP, py, z1], [xP, py, zP1 - 0.16], true, edge, big);
+  const arc = [];
+  for(let i = 0; i <= 8; i++){
+    const t = i / 8;
+    arc.push([-xP + 2 * xP * t, py, zP1 - 0.16 + Math.sin(Math.PI * t) * 0.2]);
+  }
+  marePoly(bag, arc, edge, big);
+  for(let x = -xP + grid; x < xP; x += grid) for(let z = z1 + grid * 0.6; z < zP1; z += grid) put(x, py, z, 1);
+  const rail = (s) => { const p = st(s); return p.b > 0.2 ? p.b - 0.06 : 0; };
+  for(const side of [-1, 1]){
+    const pts = [];
+    for(let z = z0 + 0.7; z <= -1.05; z += edge){
+      const p = st(z);
+      if(rail(z)) pts.push([side * rail(z), p.sheer + 0.16, z]);
+    }
+    marePoly(bag, pts, edge, big);
+  }
+  const lounge = (x0, x1, za, zb, y, backX) => {
+    marePoly(bag, [[x0, y, za], [x1, y, za], [x1, y, zb], [x0, y, zb], [x0, y, za]], edge, fine);
+    mareLine(bag, [backX, y, za], [backX, y + 0.28, za], true, edge, fine);
+    mareLine(bag, [backX, y + 0.28, za], [backX, y + 0.28, zb], true, edge, fine);
+    mareLine(bag, [backX, y + 0.28, zb], [backX, y, zb], true, edge, fine);
   };
-  for(let z = z0; z <= z1 + 1e-6; z += edge){
-    const p = profile(z);
-    mareKeep(bag, -p.b, p.sheer, z, true);
-    mareKeep(bag, p.b, p.sheer, z, true);
-    mareKeep(bag, 0, p.keel, z, true);
-    mareKeep(bag, -p.b * 0.98, p.chine, z, true);
-    mareKeep(bag, p.b * 0.98, p.chine, z, true);
-  }
-  for(let z = z0; z <= z1 + 1e-6; z += fill){
-    rib(z);
-    const p = profile(z);
-    for(let x = -p.b + fill; x < p.b - fill * 0.4; x += fill) mareKeep(bag, x, p.sheer, z, false);
-  }
-  const stern = profile(z1);
-  for(let y = stern.keel; y <= stern.sheer + 1e-6; y += edge){
-    mareKeep(bag, -stern.b, y, z1, true);
-    mareKeep(bag, stern.b, y, z1, true);
-  }
-  for(let x = -stern.b; x <= stern.b + 1e-6; x += edge){
-    mareKeep(bag, x, stern.sheer, z1, true);
-    mareKeep(bag, x, stern.keel, z1, true);
-  }
-  for(let x = -stern.b + fill; x < stern.b; x += fill){
-    for(let y = stern.keel + fill; y < stern.sheer; y += fill) mareKeep(bag, x, y, z1, false);
-  }
-  const box = (x0, x1, y0, y1, zA, zB) => {
-    [[x0, y0, zA], [x1, y0, zA], [x1, y1, zA], [x0, y1, zA], [x0, y0, zA]].forEach((p, i, a) => { if(i) mareLine(bag, a[i - 1], p, true, edge); });
-    [[x0, y0, zB], [x1, y0, zB], [x1, y1, zB], [x0, y1, zB], [x0, y0, zB]].forEach((p, i, a) => { if(i) mareLine(bag, a[i - 1], p, true, edge); });
-    [[x0, y0], [x1, y0], [x1, y1], [x0, y1]].forEach(([x, y]) => mareLine(bag, [x, y, zA], [x, y, zB], true, edge));
+  const yBow = st(-2.2).sheer - 0.32;
+  lounge(-0.72, -0.28, -3.05, -1.4, yBow, -0.72);
+  lounge(0.28, 0.72, -3.05, -1.4, yBow, 0.72);
+  marePoly(bag, [[-0.72, yBow, -3.05], [0.72, yBow, -3.05], [0.72, yBow, -2.55], [-0.72, yBow, -2.55], [-0.72, yBow, -3.05]], edge, fine);
+  const zW = z0 + 0.4 * L, yW = st(zW).sheer;
+  const panel = side => [
+    [side * 0.1, yW + 0.04, zW],
+    [side * 1.02, yW + 0.02, zW + 0.08],
+    [side * 1.05, yW + 0.62, zW + 0.62],
+    [side * 0.1, yW + 0.82, zW + 0.48],
+    [side * 0.1, yW + 0.04, zW]
+  ];
+  marePoly(bag, panel(-1), edge, big);
+  marePoly(bag, panel(1), edge, big);
+  const seat = (x, zA, zB, y) => {
+    marePoly(bag, [[x - 0.18, y, zA], [x + 0.18, y, zA], [x + 0.18, y, zB], [x - 0.18, y, zB], [x - 0.18, y, zA]], edge, fine);
+    marePoly(bag, [[x - 0.18, y, zB], [x + 0.18, y, zB], [x + 0.18, y + 0.48, zB + 0.04], [x - 0.18, y + 0.48, zB + 0.04], [x - 0.18, y, zB]], edge, fine);
   };
-  box(-0.42, 0.42, 1.02, 1.5, -0.15, 1.05);
-  const glass = [[-0.55, 1.38, -0.28], [0.55, 1.38, -0.28], [0.55, 2.15, 0.28], [-0.55, 2.15, 0.28], [-0.55, 1.38, -0.28]];
-  marePoly(bag, glass, edge);
-  [[-0.78, 0.05], [0.78, 0.05], [-0.78, 1.2], [0.78, 1.2]].forEach(([x, z]) => mareLine(bag, [x, 1.02, z], [x, 2.32, z], true, edge));
-  marePoly(bag, [[-0.95, 2.32, -0.15], [0.95, 2.32, -0.15], [0.95, 2.32, 1.45], [-0.95, 2.32, 1.45], [-0.95, 2.32, -0.15]], edge);
-  mareLine(bag, [-0.95, 2.32, 0.65], [0.95, 2.32, 0.65], true, edge);
-  marePoly(bag, [[-1.05, 1.2, 2.45], [1.05, 1.2, 2.45], [1.05, 1.2, 3.25], [-1.05, 1.2, 3.25], [-1.05, 1.2, 2.45]], edge);
-  marePoly(bag, [[-1.05, 1.2, 3.2], [1.05, 1.2, 3.2], [1.05, 1.62, 3.2], [-1.05, 1.62, 3.2], [-1.05, 1.2, 3.2]], edge);
-  const pad = profile(-2.4);
-  const px = Math.min(0.7, pad.b * 0.72);
-  marePoly(bag, [[-px, pad.sheer + 0.05, -3.15], [px, pad.sheer + 0.05, -3.15], [px, pad.sheer + 0.05, -1.75], [-px, pad.sheer + 0.05, -1.75], [-px, pad.sheer + 0.05, -3.15]], edge);
-  [-0.42, 0.42].forEach(cx => {
-    const hw = 0.22, zA = 4.02, zB = 4.62, yB = 0.22, yT = 1.32;
-    box(cx - hw, cx + hw, yB, yT, zA, zB);
-    mareLine(bag, [cx, yB, (zA + zB) / 2], [cx, -0.4, zB + 0.08], true, edge);
-    mareLine(bag, [cx - 0.05, -0.05, zB], [cx + 0.05, -0.05, zB + 0.12], true, edge);
-  });
+  const ySeat = st(0.2).sheer - 0.08;
+  seat(-0.4, zW + 0.35, zW + 0.95, ySeat);
+  seat(0.4, zW + 0.35, zW + 0.95, ySeat);
+  const wy = yW + 0.38, wz = zW + 0.22;
+  const wheel = [];
+  for(let i = 0; i <= 12; i++){
+    const a = (i / 12) * Math.PI * 2;
+    wheel.push([0.4 + Math.cos(a) * 0.14, wy + Math.sin(a) * 0.14, wz]);
+  }
+  marePoly(bag, wheel, edge, fine);
+  const yAft = st(2.6).sheer - 0.12;
+  lounge(-1.08, -0.52, 1.55, 3.15, yAft, -1.08);
+  lounge(0.52, 1.08, 1.55, 3.15, yAft, 1.08);
+  marePoly(bag, [[-0.95, yAft, 3.05], [0.95, yAft, 3.05], [0.95, yAft, 3.5], [-0.95, yAft, 3.5], [-0.95, yAft, 3.05]], edge, fine);
+  marePoly(bag, [[-0.95, yAft, 3.45], [0.95, yAft, 3.45], [0.95, yAft + 0.32, 3.52], [-0.95, yAft + 0.32, 3.52], [-0.95, yAft, 3.45]], edge, fine);
+  marePoly(bag, [[-0.4, yAft + 0.06, 1.9], [0.4, yAft + 0.06, 1.9], [0.4, yAft + 0.06, 2.95], [-0.4, yAft + 0.06, 2.95], [-0.4, yAft + 0.06, 1.9]], edge, fine);
 }
 function mareStyle(THREE, root){
   if(root.userData.mareCloud) return;
@@ -3223,6 +3276,7 @@ function mareStyle(THREE, root){
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   geo.setAttribute('aEdge', new THREE.Float32BufferAttribute(edge, 1));
+  geo.setAttribute('aScale', new THREE.Float32BufferAttribute(bag.scale, 1));
   const mat = marePointMaterial(THREE);
   const pts = new THREE.Points(geo, mat);
   pts.name = 'Mare_Dots';
