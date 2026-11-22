@@ -3121,116 +3121,212 @@ function marePoly(bag, pts, step, scale){
   for(let i = 1; i < pts.length; i++) mareLine(bag, pts[i - 1], pts[i], true, step, scale);
 }
 function mareMotore(bag){
-  const grid = 0.34, edge = 0.18, big = 1.42, fine = 0.68;
-  const z0 = -4.3, z1 = 4.1, L = z1 - z0, halfB = 1.275;
-  const st = z => {
-    const u = Math.min(1, Math.max(0, (z - z0) / L));
-    const beamK = u < 0.2 ? Math.pow(u / 0.2, 1.65) : (u > 0.96 ? 0.98 : 1);
-    const b = halfB * beamK;
-    const sheer = 1.22 - 0.48 * Math.pow(u, 0.78);
-    const drop = u < 0.26 ? Math.pow(u / 0.26, 0.62) : 1;
-    const keel = sheer * (1 - drop) + 0.02 * drop;
-    const chine = keel + (sheer - keel) * 0.3;
-    const strake = keel + (sheer - keel) * 0.62;
-    return { u, b, sheer, keel, chine, strake };
+  const L = 7.5, B = 2.4, half = B / 2;
+  const grid = 0.22, edge = 0.12, big = 1.7, seatSc = 1.45;
+  const sMid = (L - 0.6) / 2;
+  const world = (x, y, s) => [x, y, sMid - s];
+  const put = (x, y, s, scale) => {
+    const p = world(x, y, s);
+    mareKeep(bag, p[0], p[1], p[2], scale > 1.2, scale);
   };
-  const put = (x, y, z, scale) => mareKeep(bag, x, y, z, scale > 1.05, scale);
-  for(let z = z0; z <= z1 + 1e-4; z += edge){
-    const p = st(z);
-    put(-p.b, p.sheer, z, big);
-    put(p.b, p.sheer, z, big);
-    put(0, p.keel, z, big);
-    if(p.b > 0.15){
-      put(-p.b, p.chine, z, big);
-      put(p.b, p.chine, z, big);
-      put(-p.b, p.strake, z, big);
-      put(p.b, p.strake, z, big);
+  const poly = (pts, step, scale) => marePoly(bag, pts.map(p => world(p[0], p[1], p[2])), step, scale);
+  const beam = x => {
+    const s = Math.min(L, Math.max(0, x));
+    if(s >= L) return 0;
+    if(s > 0.4 * L){
+      const t = (s - 0.4 * L) / (0.6 * L);
+      return half * Math.sqrt(Math.max(0, 1 - t * t));
+    }
+    return half * (0.92 + 0.08 * s / (0.4 * L));
+  };
+  const sheerY = x => {
+    const u = Math.min(1, Math.max(0, x / L));
+    return 1 + 0.5 * u * u;
+  };
+  const keelDepth = x => {
+    const u = Math.min(1, Math.max(0, x / L));
+    if(u <= 0.72) return 0.45 + 0.45 * Math.sin((u / 0.72) * Math.PI / 2);
+    return 0.9 * Math.cos(((u - 0.72) / 0.28) * Math.PI / 2);
+  };
+  const section = x => {
+    const s = Math.min(L, Math.max(0, x));
+    const b = beam(s);
+    const sheer = sheerY(s);
+    const depth = keelDepth(s);
+    const keel = sheer - depth / 0.45;
+    return { b, sheer, keel, chine: keel + depth };
+  };
+  const halfAt = (p, y) => {
+    if(y >= p.sheer || y <= p.keel) return 0;
+    if(y >= p.chine) return p.b;
+    return p.b * (y - p.keel) / Math.max(0.001, p.chine - p.keel);
+  };
+  for(let s = 0; s <= L + 1e-6; s += edge){
+    const p = section(s);
+    put(-p.b, p.sheer, s, big);
+    put(p.b, p.sheer, s, big);
+    put(0, p.keel, s, big);
+    if(p.b > 0.05){
+      put(-p.b, p.chine, s, big);
+      put(p.b, p.chine, s, big);
     }
   }
-  put(0, st(z0).sheer, z0, 1.7);
-  for(let z = z0 + grid; z < z1 - 1e-4; z += grid){
-    const p = st(z);
-    if(p.b < 0.18) continue;
-    for(let r = 1; r <= 2; r++){
-      const y = p.chine + (p.sheer - p.chine) * (r / 3);
-      put(-p.b + 0.03, y, z, 1);
-      put(p.b - 0.03, y, z, 1);
+  put(0, section(L).sheer, L, 1.9);
+  for(let s = grid * 0.5; s < L - 0.08; s += grid){
+    const p = section(s);
+    if(p.b < 0.16) continue;
+    const topH = p.sheer - p.chine;
+    const nTop = Math.max(1, Math.round(topH / grid));
+    for(let i = 1; i < nTop; i++){
+      const y = p.chine + topH * (i / nTop);
+      put(-p.b, y, s, 1);
+      put(p.b, y, s, 1);
     }
-    for(let r = 1; r <= 2; r++){
-      const t = r / 3;
-      const y = p.chine + (p.keel - p.chine) * t;
-      const x = p.b * (1 - t);
-      put(-x, y, z, 1);
-      put(x, y, z, 1);
+    const bot = Math.hypot(p.b, p.chine - p.keel);
+    const nBot = Math.max(1, Math.round(bot / grid));
+    for(let i = 1; i < nBot; i++){
+      const f = i / nBot;
+      const y = p.chine + (p.keel - p.chine) * f;
+      const x = p.b * (1 - f);
+      put(-x, y, s, 1);
+      put(x, y, s, 1);
     }
-    for(let x = -p.b + grid; x < p.b - grid * 0.25; x += grid) put(x, p.sheer - 0.03, z, 1);
   }
-  const stern = st(z1);
-  marePoly(bag, [
-    [-stern.b, stern.sheer, z1], [stern.b, stern.sheer, z1], [stern.b, stern.keel, z1],
-    [-stern.b, stern.keel, z1], [-stern.b, stern.sheer, z1]
+  const stern = section(0);
+  poly([
+    [-stern.b, stern.sheer, 0], [stern.b, stern.sheer, 0], [stern.b, stern.chine, 0],
+    [0, stern.keel, 0], [-stern.b, stern.chine, 0], [-stern.b, stern.sheer, 0]
   ], edge, big);
-  for(let x = -stern.b + grid; x < stern.b; x += grid) mareLine(bag, [x, stern.keel, z1], [x, stern.sheer, z1], false, grid, 1);
-  const py = stern.sheer - 0.2, xP = stern.b * 0.86, zP1 = z1 + 0.62;
-  mareLine(bag, [-xP, py, z1], [xP, py, z1], true, edge, big);
-  mareLine(bag, [-xP, py, z1], [-xP, py, zP1 - 0.16], true, edge, big);
-  mareLine(bag, [xP, py, z1], [xP, py, zP1 - 0.16], true, edge, big);
-  const arc = [];
-  for(let i = 0; i <= 8; i++){
-    const t = i / 8;
-    arc.push([-xP + 2 * xP * t, py, zP1 - 0.16 + Math.sin(Math.PI * t) * 0.2]);
+  for(let x = -stern.b + grid; x < stern.b; x += grid){
+    const yC = Math.abs(x) < 0.02 ? stern.keel : stern.keel + (stern.chine - stern.keel) * Math.min(1, Math.abs(x) / stern.b);
+    const y0 = Math.abs(x) >= stern.b - 0.02 ? stern.keel : yC;
+    poly([[x, Math.max(y0, stern.keel), 0], [x, stern.sheer, 0]], grid, 1);
   }
-  marePoly(bag, arc, edge, big);
-  for(let x = -xP + grid; x < xP; x += grid) for(let z = z1 + grid * 0.6; z < zP1; z += grid) put(x, py, z, 1);
-  const rail = (s) => { const p = st(s); return p.b > 0.2 ? p.b - 0.06 : 0; };
-  for(const side of [-1, 1]){
-    const pts = [];
-    for(let z = z0 + 0.7; z <= -1.05; z += edge){
-      const p = st(z);
-      if(rail(z)) pts.push([side * rail(z), p.sheer + 0.16, z]);
+  const hw = stern.b, r = 0.18, yP = stern.keel + 0.25, sAft = -0.6;
+  const plat = [[-hw, yP, 0], [hw, yP, 0], [hw, yP, sAft + r]];
+  for(let i = 0; i <= 6; i++){
+    const a = -i / 6 * (Math.PI / 2);
+    plat.push([hw - r + Math.cos(a) * r, yP, sAft + r + Math.sin(a) * r]);
+  }
+  plat.push([-(hw - r), yP, sAft]);
+  for(let i = 0; i <= 6; i++){
+    const a = -Math.PI / 2 - i / 6 * (Math.PI / 2);
+    plat.push([-hw + r + Math.cos(a) * r, yP, sAft + r + Math.sin(a) * r]);
+  }
+  plat.push([-hw, yP, 0]);
+  poly(plat, edge, big);
+  for(let x = -hw + grid; x <= hw - grid; x += grid){
+    for(let s = sAft + grid; s <= -grid * 0.5; s += grid){
+      const inset = s < sAft + r ? r * 0.65 : 0;
+      if(Math.abs(x) > hw - inset - 0.02) continue;
+      put(x, yP, s, 1);
     }
-    marePoly(bag, pts, edge, big);
   }
-  const lounge = (x0, x1, za, zb, y, backX) => {
-    marePoly(bag, [[x0, y, za], [x1, y, za], [x1, y, zb], [x0, y, zb], [x0, y, za]], edge, fine);
-    mareLine(bag, [backX, y, za], [backX, y + 0.28, za], true, edge, fine);
-    mareLine(bag, [backX, y + 0.28, za], [backX, y + 0.28, zb], true, edge, fine);
-    mareLine(bag, [backX, y + 0.28, zb], [backX, y, zb], true, edge, fine);
+  const floorY = 0.42;
+  for(let s = 0.05 * L; s <= 0.93 * L; s += 0.28){
+    const p = section(s);
+    const inner = halfAt(p, floorY) - 0.16;
+    if(inner < 0.25) continue;
+    for(let x = -inner; x <= inner; x += 0.28) put(x, floorY, s, 1);
+  }
+  const bowBack = [], bowCush = [];
+  for(let s = 0.75 * L; s <= 0.92 * L + 1e-6; s += edge){
+    const p = section(s);
+    const o = Math.max(0.08, p.b - 0.1);
+    const inner = Math.max(0.05, o - 0.32);
+    const yC = p.sheer - 0.36;
+    const yB = p.sheer + 0.2;
+    bowBack.push([-o, yB, s]);
+    bowCush.push([-inner, yC, s]);
+  }
+  for(let s = 0.92 * L; s >= 0.75 * L - 1e-6; s -= edge){
+    const p = section(s);
+    const o = Math.max(0.08, p.b - 0.1);
+    const inner = Math.max(0.05, o - 0.32);
+    bowBack.push([o, p.sheer + 0.2, s]);
+    bowCush.push([inner, p.sheer - 0.36, s]);
+  }
+  poly(bowBack, edge, seatSc);
+  poly(bowCush, edge, seatSc);
+  const bowCap = section(0.9 * L);
+  poly([[-(bowCap.b - 0.12), bowCap.sheer - 0.36, 0.9 * L], [bowCap.b - 0.12, bowCap.sheer - 0.36, 0.9 * L]], edge, seatSc);
+  for(let s = 0.76 * L; s <= 0.9 * L; s += 0.34){
+    const p = section(s);
+    poly([[-(p.b - 0.1), p.sheer - 0.36, s], [-(p.b - 0.1), p.sheer + 0.2, s]], edge, seatSc);
+    poly([[p.b - 0.1, p.sheer - 0.36, s], [p.b - 0.1, p.sheer + 0.2, s]], edge, seatSc);
+  }
+  const sweep = 0.55 * Math.tan(35 * Math.PI / 180);
+  for(const side of [-1, 1]){
+    const base = [], top = [];
+    for(let i = 0; i <= 16; i++){
+      const t = i / 16;
+      const sBase = 0.68 * L - t * 0.08 * L;
+      const hb = beam(sBase);
+      const x = side * (0.12 + Math.sin(t * Math.PI / 2) * Math.max(0.2, hb * 0.9 - 0.12));
+      const y0 = sheerY(sBase);
+      base.push([x, y0 + 0.02, sBase]);
+      top.push([x, y0 + 0.55, sBase - sweep]);
+    }
+    poly(base, edge, big);
+    poly(top, edge, big);
+    [0, 5, 10, 16].forEach(i => poly([base[i], top[i]], edge, big));
+    const glass = [];
+    for(let i = 0; i <= 16; i += 2){
+      glass.push([
+        (base[i][0] + top[i][0]) / 2,
+        (base[i][1] + top[i][1]) / 2,
+        (base[i][2] + top[i][2]) / 2
+      ]);
+    }
+    poly(glass, grid, 1);
+  }
+  const box = (x0, x1, y0, y1, s0, s1, step, scale) => {
+    const c = [[x0,y0,s0],[x1,y0,s0],[x1,y1,s0],[x0,y1,s0],[x0,y0,s1],[x1,y0,s1],[x1,y1,s1],[x0,y1,s1]];
+    [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]].forEach(([a,b]) => poly([c[a], c[b]], step, scale));
   };
-  const yBow = st(-2.2).sheer - 0.32;
-  lounge(-0.72, -0.28, -3.05, -1.4, yBow, -0.72);
-  lounge(0.28, 0.72, -3.05, -1.4, yBow, 0.72);
-  marePoly(bag, [[-0.72, yBow, -3.05], [0.72, yBow, -3.05], [0.72, yBow, -2.55], [-0.72, yBow, -2.55], [-0.72, yBow, -3.05]], edge, fine);
-  const zW = z0 + 0.4 * L, yW = st(zW).sheer;
-  const panel = side => [
-    [side * 0.1, yW + 0.04, zW],
-    [side * 1.02, yW + 0.02, zW + 0.08],
-    [side * 1.05, yW + 0.62, zW + 0.62],
-    [side * 0.1, yW + 0.82, zW + 0.48],
-    [side * 0.1, yW + 0.04, zW]
-  ];
-  marePoly(bag, panel(-1), edge, big);
-  marePoly(bag, panel(1), edge, big);
-  const seat = (x, zA, zB, y) => {
-    marePoly(bag, [[x - 0.18, y, zA], [x + 0.18, y, zA], [x + 0.18, y, zB], [x - 0.18, y, zB], [x - 0.18, y, zA]], edge, fine);
-    marePoly(bag, [[x - 0.18, y, zB], [x + 0.18, y, zB], [x + 0.18, y + 0.48, zB + 0.04], [x - 0.18, y + 0.48, zB + 0.04], [x - 0.18, y, zB]], edge, fine);
-  };
-  const ySeat = st(0.2).sheer - 0.08;
-  seat(-0.4, zW + 0.35, zW + 0.95, ySeat);
-  seat(0.4, zW + 0.35, zW + 0.95, ySeat);
-  const wy = yW + 0.38, wz = zW + 0.22;
+  const yPan = sheerY(0.5 * L) - 0.12;
+  [-0.48, 0.48].forEach(cx => {
+    box(cx - 0.25, cx + 0.25, yPan - 0.1, yPan, 0.5 * L - 0.25, 0.5 * L + 0.25, edge, seatSc);
+    box(cx - 0.25, cx + 0.25, yPan, yPan + 0.7, 0.5 * L - 0.32, 0.5 * L - 0.25, edge, seatSc);
+  });
   const wheel = [];
-  for(let i = 0; i <= 12; i++){
-    const a = (i / 12) * Math.PI * 2;
-    wheel.push([0.4 + Math.cos(a) * 0.14, wy + Math.sin(a) * 0.14, wz]);
+  const tilt = 28 * Math.PI / 180, wr = 0.19;
+  for(let i = 0; i <= 16; i++){
+    const a = (i / 16) * Math.PI * 2;
+    const dy = Math.sin(a) * wr;
+    wheel.push([0.48 + Math.cos(a) * wr, yPan + 0.28 + dy * Math.cos(tilt), 0.56 * L - dy * Math.sin(tilt)]);
   }
-  marePoly(bag, wheel, edge, fine);
-  const yAft = st(2.6).sheer - 0.12;
-  lounge(-1.08, -0.52, 1.55, 3.15, yAft, -1.08);
-  lounge(0.52, 1.08, 1.55, 3.15, yAft, 1.08);
-  marePoly(bag, [[-0.95, yAft, 3.05], [0.95, yAft, 3.05], [0.95, yAft, 3.5], [-0.95, yAft, 3.5], [-0.95, yAft, 3.05]], edge, fine);
-  marePoly(bag, [[-0.95, yAft, 3.45], [0.95, yAft, 3.45], [0.95, yAft + 0.32, 3.52], [-0.95, yAft + 0.32, 3.52], [-0.95, yAft, 3.45]], edge, fine);
-  marePoly(bag, [[-0.4, yAft + 0.06, 1.9], [0.4, yAft + 0.06, 1.9], [0.4, yAft + 0.06, 2.95], [-0.4, yAft + 0.06, 2.95], [-0.4, yAft + 0.06, 1.9]], edge, fine);
+  poly(wheel, edge, seatSc);
+  const yC = floorY + 0.45, yBk = yC + 0.4;
+  const aftOut = [], aftTop = [], portIn = [], stbdIn = [];
+  for(let s = 0.08 * L; s <= 0.3 * L + 1e-6; s += edge){
+    const o = beam(s) - 0.1;
+    aftOut.push([-o, yC, s]);
+    portIn.push([-(o - 0.42), yC, s]);
+    aftTop.push([-o, yBk, s]);
+  }
+  for(let x = -(beam(0.08 * L) - 0.1); x <= beam(0.08 * L) - 0.1; x += edge){
+    aftOut.push([x, yC, 0.08 * L]);
+    aftTop.push([x, yBk, 0.08 * L]);
+  }
+  for(let s = 0.08 * L; s <= 0.3 * L + 1e-6; s += edge){
+    const o = beam(s) - 0.1;
+    aftOut.push([o, yC, s]);
+    stbdIn.push([o - 0.42, yC, s]);
+    aftTop.push([o, yBk, s]);
+  }
+  poly(aftOut, edge, seatSc);
+  poly(portIn, edge, seatSc);
+  poly(stbdIn, edge, seatSc);
+  poly(aftTop, edge, seatSc);
+  const rearInner = beam(0.08 * L) - 0.52;
+  poly([[-rearInner, yC, 0.08 * L + 0.42], [rearInner, yC, 0.08 * L + 0.42]], edge, seatSc);
+  for(let s = 0.1 * L; s <= 0.28 * L; s += 0.36){
+    const o = beam(s) - 0.1;
+    poly([[-o, yC, s], [-o, yBk, s]], edge, seatSc);
+    poly([[o, yC, s], [o, yBk, s]], edge, seatSc);
+  }
+  box(-0.38, 0.38, yC - 0.08, yC + 0.16, 0.12 * L, 0.26 * L, edge, seatSc);
 }
 function mareStyle(THREE, root){
   if(root.userData.mareCloud) return;
@@ -3392,7 +3488,7 @@ function mareFrame(THREE){
   const aspect = w / Math.max(h, 1);
   PRE.camera.aspect = aspect;
   PRE.camera.updateProjectionMatrix();
-  PRE.theta = 2.2; PRE.phi = (90 - 25) * Math.PI / 180;
+  PRE.theta = 2.2; PRE.phi = (90 - (PRE.type === 'barca_motore' ? 22 : 25)) * Math.PI / 180;
   const dots = PRE.model.getObjectByName('Mare_Dots');
   const attr = dots && dots.geometry.attributes.position;
   if(attr){
@@ -3402,7 +3498,21 @@ function mareFrame(THREE){
   }
   PRE.radius = Math.max(size.x, size.y, size.z, 1) * 4;
   mareCam();
-  if(attr){
+  if(PRE.type === 'barca_motore' && attr){
+    dots.updateWorldMatrix(true, false);
+    const wp = new THREE.Vector3();
+    let R = 0.001;
+    for(let i = 0; i < attr.count; i++){
+      wp.fromBufferAttribute(attr, i).applyMatrix4(dots.matrixWorld);
+      const d = wp.distanceTo(center);
+      if(d > R) R = d;
+    }
+    const vFov = PRE.camera.fov * Math.PI / 180;
+    const hFov = 2 * Math.atan(Math.tan(vFov / 2) * aspect);
+    const fit = (half, fraction) => R / (fraction * Math.tan(half));
+    PRE.radius = Math.max(fit(hFov / 2, 0.80), fit(vFov / 2, 0.86));
+    mareCam();
+  }else if(attr){
     const span = () => {
       dots.updateWorldMatrix(true, false);
       const wp = new THREE.Vector3();
