@@ -236,8 +236,6 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
 .bt-ref{display:flex;align-items:center;gap:10px;margin:0 0 18px;font-weight:650}
 .bt-maps{display:flex;flex-wrap:wrap;gap:16px;margin:6px 0 14px}
 .bt-maps a{color:var(--ct-cream);font-weight:650}
-.hk-scene-3d{position:relative;height:280px;border-radius:16px;overflow:hidden;background:#000}
-.hk-scene-3d canvas{display:block;width:100%;height:100%}
 .ct-lang-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
 .bt-add{margin-top:4px}
 .ct-pill:hover{background:var(--ct-fill-hover);transform:scale(1.04)}
@@ -2491,12 +2489,9 @@ function hikeVizHtml(i, key, profile, mode, step){
   const tone = overview ? 'sand' : hikeTone(toneMode, profile?.cai);
   const pill = overview ? '' : hikePill(toneMode, profile?.cai);
   const modes = E(i).hike?.modes || [];
-  const scene = mareWebGL()
-    ? `<div class="hk-scene hk-scene-3d"><canvas data-hk3d></canvas></div>`
-    : `<div class="hk-scene">${hikeSvg(overview ? {} : profile)}</div>`;
   return `<div class="hk-viz" id="hkViz" data-i="${i}" data-key="${esc(key)}" data-tone="${tone}" style="--hk:${HK_COLOR[tone]}">
     <div class="hk-top">${pill?`<span class="hk-pill">${esc(pill)}</span>`:'<span class="hk-pill" hidden></span>'}${step?`<span class="hk-step">${esc(t('hk_mode_n',{n:step.n,total:step.total}))}</span>`:''}</div>
-    ${scene}
+    <div class="hk-scene">${hikeSvg(overview ? {} : profile)}</div>
     ${overview ? `<ul class="hk-legend">${HIKE_MODES.map(m=>`<li class="${modes.includes(m)?'is-on':''}"><i style="background:${HK_COLOR[m]}"></i>${esc(t('hk_'+m))}</li>`).join('')}</ul>` : ''}
     ${hikeMetrics(overview ? {} : profile)}
   </div>`;
@@ -2516,82 +2511,6 @@ function paintHikeViz(){
   ['km','elev','dur','alt'].forEach(k => { const el = root.querySelector('[data-spec="'+k+'"]'); if(!el) return; const m = hkMetric(p, k); el.textContent = m.text; el.classList.toggle('is-empty', m.empty); });
   const pill = root.querySelector('.hk-pill');
   if(pill){ const label = hikePill(mode, p.cai); pill.hidden = !label; pill.textContent = label || ''; }
-  syncHike3d();
-}
-const HK3 = { raf:0, renderer:null, scene:null, camera:null, root:null, group:null, canvas:null, THREE:null };
-function stopHike3d(){
-  if(HK3.raf) cancelAnimationFrame(HK3.raf);
-  HK3.raf = 0;
-  if(HK3.group){ HK3.group.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); }); HK3.group = null; }
-  if(HK3.renderer){ HK3.renderer.dispose(); HK3.renderer = null; }
-  HK3.scene = HK3.camera = HK3.root = HK3.canvas = null;
-}
-function hikePts(profile){
-  const { ys } = profileYs(profile || {});
-  const max = Math.max(...ys, 1);
-  return ys.map((h, i) => ({ x:(i / (ys.length - 1) - 0.5) * 7.2, y:(h / max) * 2.4 }));
-}
-function hikeRibbon(THREE, pts, color){
-  const half = 0.16, pos = [], idx = [];
-  pts.forEach((p, i) => {
-    pos.push(p.x, p.y, -half, p.x, 0, -half, p.x, p.y, half, p.x, 0, half);
-    if(i){
-      const a = (i - 1) * 4, b = i * 4;
-      idx.push(a, a+2, b, a+2, b+2, b, a, b, a+1, b, b+1, a+1, a+2, a+3, b+2, a+3, b+3, b+2);
-    }
-  });
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  geo.setIndex(idx);
-  const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color, transparent:true, opacity:0.45, side:THREE.DoubleSide }));
-  const crest = pts.map(p => new THREE.Vector3(p.x, p.y, 0));
-  const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(crest), new THREE.LineBasicMaterial({ color }));
-  const dots = new THREE.Points(new THREE.BufferGeometry().setFromPoints(crest), new THREE.PointsMaterial({ color, size:0.16 }));
-  const g = new THREE.Group();
-  g.add(mesh, line, dots);
-  return g;
-}
-function syncHike3d(){
-  if(!HK3.root || !HK3.THREE) return;
-  const viz = document.getElementById('hkViz'); if(!viz) return;
-  const e = S.exps[+viz.dataset.i], key = viz.dataset.key;
-  const profile = key && key !== 'overview' ? e?.hike?.profiles?.[key] : null;
-  const color = HK_COLOR[viz.dataset.tone] || HK_COLOR.sand;
-  if(HK3.group){ HK3.root.remove(HK3.group); HK3.group.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); }); }
-  HK3.group = hikeRibbon(HK3.THREE, hikePts(profile), color);
-  HK3.root.add(HK3.group);
-}
-async function mountHike3d(){
-  const canvas = document.querySelector('[data-hk3d]');
-  if(!canvas){ stopHike3d(); return; }
-  if(HK3.canvas === canvas && HK3.renderer){ syncHike3d(); return; }
-  stopHike3d();
-  const THREE = PRE.THREE || await import('three');
-  PRE.THREE = THREE;
-  if(document.querySelector('[data-hk3d]') !== canvas) return;
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:false });
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
-  renderer.setClearColor(0x000000, 1);
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 40);
-  camera.position.set(6.2, 2.6, 7.4);
-  camera.lookAt(0, 0.9, 0);
-  const root = new THREE.Group();
-  scene.add(root);
-  Object.assign(HK3, { renderer, scene, camera, root, canvas, THREE });
-  syncHike3d();
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const loop = () => {
-    if(!HK3.renderer || document.querySelector('[data-hk3d]') !== HK3.canvas) return;
-    const w = canvas.clientWidth || 320, h = canvas.clientHeight || 280;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / Math.max(h, 1);
-    camera.updateProjectionMatrix();
-    if(!reduce) root.rotation.y += 0.004;
-    renderer.render(scene, camera);
-    HK3.raf = requestAnimationFrame(loop);
-  };
-  loop();
 }
 function modePills(i){
   const modes = E(i).hike?.modes || [];
@@ -5051,7 +4970,6 @@ function render(dir){
   updateCounters(); updateNav(); fitReview(); fitChoices(); fitFleet();
   if(H.open) renderPanel();
   mountMarePreview();
-  mountHike3d();
 }
 function updateNav(){
   const {L, k, s} = cur(), bar = $('bar');
