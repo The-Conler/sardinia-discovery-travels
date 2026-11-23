@@ -234,8 +234,11 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
 .ct-pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;min-width:96px;padding:0 24px;border-radius:999px;border:1.5px solid transparent;background:var(--ct-fill);color:var(--ct-cream);font:inherit;font-size:var(--t-card);font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .2s var(--ct-ease),border-color .2s var(--ct-ease),transform .35s var(--ease-bounce)}
 .bt-num{display:inline-grid;place-items:center;min-width:1.5em;height:1.5em;padding:0 6px;border-radius:999px;background:#2f7f88;color:#f8f4ee;font-size:12px;font-weight:700;line-height:1}
 .bt-ref{display:flex;align-items:center;gap:10px;margin:0 0 18px;font-weight:650}
-.bt-maps{margin:6px 0 14px}
+.bt-maps{display:flex;flex-wrap:wrap;gap:16px;margin:6px 0 14px}
 .bt-maps a{color:var(--ct-cream);font-weight:650}
+.hk-scene-3d{position:relative;height:280px;border-radius:16px;overflow:hidden;background:#000}
+.hk-scene-3d canvas{display:block;width:100%;height:100%}
+.ct-lang-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
 .bt-add{margin-top:4px}
 .ct-pill:hover{background:var(--ct-fill-hover);transform:scale(1.04)}
 .ct-pill:active{transform:scale(.97);transition-duration:.1s}
@@ -1365,8 +1368,7 @@ const CONFIG = {
         {h:'sg_watersport', o:['kayak','sup','snorkeling','scuba','rafting']}
       ],
       types:[],
-      q:[ {k:'distance_km', t:'num', min:0, max:100, step:.5}, {k:'elevation_m', t:'num', min:0, max:3000, step:10},
-          {k:'licensed_guide', t:'toggle'}, {k:'insurance', t:'toggle'} ] },
+      q:[ {k:'licensed_guide', t:'toggle'}, {k:'insurance', t:'toggle'} ] },
     { code:'mare', letter:'F', img:'/sardinia-discovery-travels/partner-form/img/cat-boat.jpg', icon:'sailboat',
       spec:[],
       types:[],
@@ -1379,7 +1381,7 @@ const CONFIG = {
           {k:'fuel', t:'pills', o:['fuel_inc','fuel_extra','fuel_na']},
           {k:'onboard', t:'multi', o:['ob_snorkel','ob_lunch','ob_drinks','ob_toilet','ob_shade','ob_sup']} ] },
     { code:'guide', letter:'G', img:'/sardinia-discovery-travels/partner-form/img/cat-guide.jpg', icon:'compass',
-      spec:['guida_turistica','guida_gae','accompagnatore','guida_specializzata'],
+      spec:['guida_turistica','guida_gae','accompagnatore','traduttore','guida_specializzata'],
       types:['guida_oraria','mezza_giornata','giornata_intera','tour_privato','accompagnamento_gruppi'],
       q:[ {k:'license_type', t:'pills', o:['gl_turistica','gl_gae','gl_accomp','gl_altro'], req:true},
           {k:'license_no', t:'text', req:true, tip:'tip_license'},
@@ -1503,7 +1505,7 @@ en:{
   bt_a_corsica:'Corsica', bt_a_maddalena:'Arcipelago della Maddalena', bt_a_asinara:'Parco nazionale dell’Asinara', bt_a_tavolara:'Tavolara', bt_a_alghero:'Alghero', bt_a_baunei:'Costa di Baunei', bt_a_carloforte:'Carloforte', bt_a_cagliari:'Cagliari', bt_a_villasimius:'Villasimius', bt_a_altro:'Other',
   bt_a_altro_lbl:'Describe the other area',
   bt_port_title:'Departure port?', bt_ports_q:'Do you have only one port, or more than one?', bt_ports_one:'Only one port', bt_ports_more:'More than one port',
-  bt_port_name:'Port', bt_port_add:'Add a port', bt_maps:'Open in Google Maps',
+  bt_port_name:'Port', bt_lat:'Latitude', bt_lng:'Longitude', bt_port_add:'Add a port', bt_maps:'Open in Google Maps', bt_apple:'Open in Apple Maps',
   bt_meet_q:'Meeting point', bt_meet_same:'It is the same as the departure port', bt_meet_diff:'It is different', bt_meet_search:'Meeting point',
   bt_boat_title:'Boat type', bt_boats_q:'For this same tour, do you have more than one boat?', bt_boats_one:'One boat', bt_boats_more:'More than one boat',
   bt_dur_title:'How long does it last?', bt_tour_n:'Tour {n} of {total}',
@@ -1543,16 +1545,16 @@ en:{
   bt_fd_beverage:'Beverage', bt_fd_caffe:'Coffee', bt_fd_analcolici:'Soft drinks', bt_fd_vini:'Wines', bt_fd_birra:'Beer', bt_fd_cocktails:'Cocktails', bt_fd_liquori:'Spirits',
   bt_fd_options:'Options', bt_fd_gf:'Gluten free', bt_fd_vegan:'Vegan', bt_fd_veg:'Vegetarian', bt_fd_lactose:'Lactose free',
   esp_title:'What is your speciality?', esp_sub:'Select one.', esp_another:'Offer another specialty too? At the end of this form you can add a new request.', spec_other:'Describe it briefly',
-  et_title:'What type of service is it?', et_sub:'You can select more than one.', et_combined:'By selecting more than one type you will be offering a combined experience.',
+  et_title:'What type of service is it?', et_sub:'You can select more than one.', et_one:'Select one.', et_combined:'By selecting more than one type you will be offering a combined experience.',
   spa_title:'Which treatments do you offer?', spa_q:'Treatments',
-  g1_title:'Give it a short title', g1_sub:'Keep it simple and concrete.', exp_name:'Short title', exp_namePh:'For example Weaving workshop in Aggius', exp_desc:'Description', exp_descPh:'What guests do, see and learn, and who they meet.', desc_min:'At least {n} characters', desc_ok:'Long enough',
+  g1_title:'Give it a short title', g1_sub:'Keep it simple and concrete.', exp_name:'Short title', exp_namePh:'For example a ceramics workshop in Aggius', exp_desc:'Description', exp_descPh:'What guests do, see and learn, and who they meet.', desc_min:'At least {n} characters', desc_ok:'Long enough',
   g2_title:'Where does it take place?', g2_sub:'So we can plan the logistics.', exp_comune:'Municipality', exp_addr:'Full address', exp_addr_hint:'Street, number, postcode, province', exp_loc:'Place or area', exp_meet:'Meeting point', exp_end:'End point', exp_endHint:'Leave empty if it is the same as the meeting point.', meet_diff:'The meeting point is different from where the activity takes place', meet_addr:'Meeting point address', act_addr:'Activity address',
   g3_title:'Duration and group size', g3_sub:'Approximate values are fine.', dur:'Duration', parts:'Participants and age', durD:'Hours', hours:'Hours', minutes:'Minutes', minP:'Minimum participants', minPD:'Smallest group you accept (always at least 2)', maxP:'Maximum participants', maxPD:'Largest group you can host', minAge:'Minimum age', minAgeD:'0 means no limit',
   g4_title:'Languages and accessibility', g4_sub:'Who can enjoy it.', exp_langs:'Languages you run it in', access:'Accessibility', accessD:'Select what applies.',
   md_title:'Private, shared or both?', md_sub:'Private means one group only. Shared means guests from different bookings together.', md_privataD:'Only one group at a time.', md_condivisaD:'Guests from different bookings join together.', md_entrambeD:'You can run it both ways.',
   in_title:'What does it include?', in_sub:'Tick what you offer and say whether it is included or charged as a supplement.', inc:'Included', sup:'Supplement', sup_price:'Supplement price (€)', sup_price_err:'Enter the supplement price.', sup_review:'{item}: supplement {n} €', inc_review:'{item}: included',
   eq_title:'Equipment', eq_sub:'Either you provide the gear, or tell us what guests must bring.', eq_provided:'You provide the technical equipment', eq_providedD:'For example tools, helmets, snorkelling masks.', eq_providedD_hike:'E.g. poles, helmet, harness, snowshoes.', eq_bring:'Guests should bring', eq_bring_note:'What guests must bring', eq_bring_notePh:'List the gear guests need to bring with them.',
-  rq_title:'Requirements and safety', rq_title_art:'Requirements and details for crafts and traditions', rq_sub:'So we can suggest the experience to the right travellers.', difficulty:'Difficulty', prev_exp:'Previous experience required', prev_expD:'For example sailing or climbing experience.', prev_expD_art:'For example, weaving experience.', prev_exp_note:'The agency will contact you to ask for more details.', limits:'Limitations', limitsPh:'For example not suitable during pregnancy.', safety:'Safety measures', safetyPh:'For example life jackets, first aid kit, insurance.',
+  rq_title:'Requirements and safety', rq_title_art:'Requirements and details for crafts and traditions', rq_sub:'So we can suggest the experience to the right travellers.', difficulty:'Difficulty', prev_exp:'Previous experience required', prev_expD:'For example sailing or climbing experience.', prev_expD_art:'For example, ceramics experience.', prev_exp_note:'The agency will contact you to ask for more details.', altro_agency:'You will be contacted by the agency.', or_vehicle:'Which vehicle?', gd_langs:'Languages', gd_level:'Level', gd_secondary:'They must have at least one secondary language.', gd_student:'Are you a student?', gd_native:'Are you a native speaker?', lv_base:'Base', lv_intermedio:'Intermediate', lv_avanzato:'Advanced', limits:'Limitations', limitsPh:'For example not suitable during pregnancy.', safety:'Safety measures', safetyPh:'For example life jackets, first aid kit, insurance.',
   hk_ways:'Can the hike be done in only one way, or in more than one mode?', hk_one:'Only one way', hk_multi:'More than one mode (easy, moderate, hard)', hk_modes:'Modes',
   hk_facile:'Easy', hk_media:'Moderate', hk_difficile:'Hard', hk_mode_n:'Mode {n} of {total}',
   hk_cai:'CAI class', hk_cai_src:'Source: CAI – Official difficulty classification.',
@@ -1603,7 +1605,7 @@ en:{
   o_assoc_cult:'Cultural association', o_aps:'APS', o_ets:'ETS', o_odv:'ODV', o_pro_loco:'Pro Loco', o_assoc_altro:'Other',
   o_coop_lavoro:'Worker cooperative', o_coop_sociale:'Social cooperative', o_coop_agricola:'Agricultural cooperative', o_coop_servizi:'Service cooperative', o_coop_altro:'Other',
   o_artigianato:'Crafts and traditions', o_enogastronomia:'Food and wine', o_cultura:'Culture and territory', o_natura:'Nature and adventure', o_mare:'Sea and sailing', o_guide:'Guides and escorts', o_trasporti:'Transport and mobility', o_sport:'Sport', o_benessere:'Wellness and mindfulness', o_altro:'Other',
-  h_artigianato:'Workshops, demonstrations, studios', h_enogastronomia:'Tastings, producers, cooking', h_cooking_class:'Cooking courses and hands-on lessons', h_cultura:'Archaeological sites, museums, architecture, heritage', h_natura:'Trekking, outdoor, rural life', h_mare:'Boats, sailing, snorkelling', h_guide:'Tourist and nature guides', h_trasporti:'Transfers, NCC, group transport', h_sport:'CityBike, E-bike, Mountain bike', h_benessere:'Movement, mindfulness, treatments, retreats', h_altro:'Another activity, in your own words',
+  h_artigianato:'Workshops, demonstrations, studios', h_enogastronomia:'Tastings, producers', h_cooking_class:'Cooking courses and hands-on lessons', h_cultura:'Archaeological sites, museums, architecture, heritage', h_natura:'Trekking, outdoor', h_mare:'Boats, sailing, snorkelling', h_guide:'Tourist and nature guides', h_trasporti:'Transfers, NCC, group transport', h_sport:'CityBike, E-bike, Mountain bike', h_benessere:'Movement, mindfulness, retreats', h_altro:'Another activity, in your own words',
   o_tessitura:'Weaving', o_ceramica:'Ceramics', o_coltelleria:'Knife making', o_legno:'Woodwork', o_sughero:'Cork', o_metalli:'Metalwork', o_maschere:'Traditional masks', o_campanacci:'Cowbells', o_pelletteria:'Leatherwork', o_gioielli:'Jewellery', o_tessile:'Textile art', o_altre_artigianali:'Other crafts',
   o_laboratorio_pratico:'Hands-on workshop', o_dimostrazione:'Demonstration', o_visita_bottega:'Workshop visit', o_esperienza_privata:'Private experience', o_percorso_piu:'Route with several activities',
   td_laboratorio_pratico:'An experience in which the visitor takes an active part in making a craft product.', td_dimostrazione:'An experience in which the visitor watches an artisan while a product is being made.', td_visita_bottega:'An experience in which the visitor discovers the craft products on display and can buy them.',
@@ -1616,7 +1618,7 @@ en:{
   o_escursione_guidata:'Guided excursion', o_attivita_sportiva:'Sports activity', o_esperienza_naturalistica:'Nature experience', o_tour_privato:'Private tour', o_esperienza_gruppo:'Group experience',
   o_barca_motore:'Motor boat', o_barca_vela:'Sailing boat', o_catamarano:'Catamaran', o_snorkeling:'Snorkelling', o_attivita_acquatiche:'Water activities', o_escursioni_costiere:'Coastal excursions',
   o_escursione_privata:'Private excursion', o_escursione_condivisa:'Shared excursion', o_mezza_giornata:'Half day', o_giornata_intera:'Full day', o_esperienza_personalizzata:'Tailor-made experience',
-  o_guida_turistica:'Tourist guide', o_guida_gae:'Environmental hiking guide', o_accompagnatore:'Tour escort', o_guida_specializzata:'Specialised guide',
+  o_guida_turistica:'Tourist guide', o_guida_gae:'Environmental hiking guide', o_accompagnatore:'Tour escort', o_traduttore:'Translator', o_guida_specializzata:'Specialised guide',
   o_guida_oraria:'Hourly guiding', o_accompagnamento_gruppi:'Group escort',
   o_ncc:'NCC (hire with driver)', o_transfer:'Transfer', o_trasporto_gruppi:'Group transport', o_minibus:'Minibus', o_noleggio_conducente:'Chauffeur hire', o_altri_autorizzati:'Other authorised services',
   o_trasferimento_singolo:'One-way transfer', o_andata_ritorno:'Return trip', o_servizio_orario:'Hourly service', o_servizio_personalizzato:'Custom service',
@@ -1729,7 +1731,7 @@ it:{
   bt_a_corsica:'Corsica', bt_a_maddalena:'Arcipelago della Maddalena', bt_a_asinara:'Parco nazionale dell’Asinara', bt_a_tavolara:'Tavolara', bt_a_alghero:'Alghero', bt_a_baunei:'Costa di Baunei', bt_a_carloforte:'Carloforte', bt_a_cagliari:'Cagliari', bt_a_villasimius:'Villasimius', bt_a_altro:'Altro',
   bt_a_altro_lbl:'Descrivi l’altra area',
   bt_port_title:'Porto di partenza?', bt_ports_q:'Hai solo un porto o ne hai di più?', bt_ports_one:'Solo un porto', bt_ports_more:'Più di un porto',
-  bt_port_name:'Porto', bt_port_add:'Aggiungi un porto', bt_maps:'Apri in Google Maps',
+  bt_port_name:'Porto', bt_lat:'Latitudine', bt_lng:'Longitudine', bt_port_add:'Aggiungi un porto', bt_maps:'Apri in Google Maps', bt_apple:'Apri in Apple Maps',
   bt_meet_q:'Punto di incontro', bt_meet_same:'Coincide con il porto di partenza', bt_meet_diff:'È diverso', bt_meet_search:'Punto di incontro',
   bt_boat_title:'Tipologia di imbarcazione', bt_boats_q:'Per lo stesso tour hai più imbarcazioni?', bt_boats_one:'Una sola imbarcazione', bt_boats_more:'Più imbarcazioni',
   bt_dur_title:'Quanto dura', bt_tour_n:'Tour {n} di {total}',
@@ -1769,16 +1771,16 @@ it:{
   bt_fd_beverage:'Beverage', bt_fd_caffe:'Caffetteria', bt_fd_analcolici:'Analcolici', bt_fd_vini:'Vini', bt_fd_birra:'Birra', bt_fd_cocktails:'Cocktails', bt_fd_liquori:'Liquori',
   bt_fd_options:'Opzioni', bt_fd_gf:'Gluten free', bt_fd_vegan:'Vegan', bt_fd_veg:'Vegetariano', bt_fd_lactose:'Senza lattosio',
   esp_title:'Qual è la tua specializzazione?', esp_sub:'Seleziona un solo tasto.', esp_another:'Offri anche un’altra specialità? Alla fine di questo modulo potrai aggiungere una nuova richiesta.', spec_other:'Descrivila brevemente',
-  et_title:'Che tipo di servizio è?', et_sub:'Seleziona più di un tasto.', et_combined:'Selezionando più tipologie proporrai un’esperienza combinata.',
+  et_title:'Che tipo di servizio è?', et_sub:'Seleziona più di un tasto.', et_one:'Seleziona un solo tasto.', et_combined:'Selezionando più tipologie proporrai un’esperienza combinata.',
   spa_title:'Quali trattamenti offri?', spa_q:'Trattamenti',
-  g1_title:'Dai un breve titolo', g1_sub:'Semplice e concreto.', exp_name:'Breve titolo', exp_namePh:'Per esempio Laboratorio di tessitura ad Aggius', exp_desc:'Descrizione', exp_descPh:'Cosa fanno, vedono e imparano gli ospiti, e chi incontrano.', desc_min:'Almeno {n} caratteri', desc_ok:'Lunghezza sufficiente',
+  g1_title:'Dai un breve titolo', g1_sub:'Semplice e concreto.', exp_name:'Breve titolo', exp_namePh:'Per esempio Laboratorio di ceramica ad Aggius', exp_desc:'Descrizione', exp_descPh:'Cosa fanno, vedono e imparano gli ospiti, e chi incontrano.', desc_min:'Almeno {n} caratteri', desc_ok:'Lunghezza sufficiente',
   g2_title:'Dove si svolge?', g2_sub:'Ci serve per organizzare la logistica.', exp_comune:'Comune', exp_addr:'Indirizzo completo', exp_addr_hint:'Via, numero, CAP, provincia', exp_loc:'Località', exp_meet:'Punto di incontro', exp_end:'Luogo di conclusione', exp_endHint:'Lascia vuoto se coincide con il punto di incontro.', meet_diff:'Il punto di incontro è diverso dal luogo dell’attività', meet_addr:'Indirizzo del punto di incontro', act_addr:'Indirizzo del luogo dell’attività',
   g3_title:'Durata e partecipanti', g3_sub:'Vanno bene valori indicativi.', dur:'Durata', parts:'Partecipanti ed età', durD:'Ore', hours:'Ore', minutes:'Minuti', minP:'Partecipanti minimi', minPD:'Il gruppo più piccolo che accetti (sempre almeno 2)', maxP:'Partecipanti massimi', maxPD:'Il gruppo più grande che puoi ospitare', minAge:'Età minima', minAgeD:'0 significa nessun limite',
   g4_title:'Lingue e accessibilità', g4_sub:'Chi può partecipare.', exp_langs:'Lingue in cui la proponi', access:'Accessibilità', accessD:'Seleziona ciò che vale.',
   md_title:'Privata, condivisa o entrambe?', md_sub:'Privata significa un solo gruppo. Condivisa significa ospiti di prenotazioni diverse insieme.', md_privataD:'Un solo gruppo alla volta.', md_condivisaD:'Ospiti di prenotazioni diverse insieme.', md_entrambeD:'Puoi proporla in entrambi i modi.',
   in_title:'Cosa include?', in_sub:'Spunta ciò che offri e indica se è incluso o a supplemento.', inc:'Incluso', sup:'Supplemento', sup_price:'Prezzo supplemento (€)', sup_price_err:'Indica il prezzo del supplemento.', sup_review:'{item}: supplemento {n} €', inc_review:'{item}: incluso',
   eq_title:'Attrezzatura', eq_sub:'O fornisci tu l’attrezzatura, oppure indica cosa devono portare gli ospiti.', eq_provided:'Fornisci l’attrezzatura tecnica', eq_providedD:'Per esempio attrezzi, caschi, maschere da snorkeling.', eq_providedD_hike:'Es. bastoncini, caschetto, imbrago, ciaspole.', eq_bring:'Gli ospiti devono portare', eq_bring_note:'Cosa devono portare gli ospiti', eq_bring_notePh:'Elenca l’attrezzatura che gli ospiti devono portare.',
-  rq_title:'Requisiti e sicurezza', rq_title_art:'Requisiti e specifiche su artigianato e tradizioni', rq_sub:'Così possiamo proporla ai viaggiatori giusti.', difficulty:'Difficoltà', prev_exp:'Serve esperienza pregressa', prev_expD:'Per esempio esperienza di vela o arrampicata.', prev_expD_art:'Per esempio esperienza di tessitura.', prev_exp_note:'L’agenzia ti contatterà per chiederti maggiori informazioni.', limits:'Limitazioni', limitsPh:'Per esempio non adatta in gravidanza.', safety:'Misure di sicurezza', safetyPh:'Per esempio giubbotti salvagente, kit di primo soccorso, assicurazione.',
+  rq_title:'Requisiti e sicurezza', rq_title_art:'Requisiti e specifiche su artigianato e tradizioni', rq_sub:'Così possiamo proporla ai viaggiatori giusti.', difficulty:'Difficoltà', prev_exp:'Serve esperienza pregressa', prev_expD:'Per esempio esperienza di vela o arrampicata.', prev_expD_art:'Per esempio esperienza di ceramica.', prev_exp_note:'L’agenzia ti contatterà per chiederti maggiori informazioni.', altro_agency:'Verrai contattato dall’agenzia.', or_vehicle:'Quale veicolo?', gd_langs:'Lingue', gd_level:'Livello', gd_secondary:'Deve avere almeno una lingua secondaria.', gd_student:'Sei uno studente?', gd_native:'Sei un madrelingua?', lv_base:'base', lv_intermedio:'intermedio', lv_avanzato:'avanzato', limits:'Limitazioni', limitsPh:'Per esempio non adatta in gravidanza.', safety:'Misure di sicurezza', safetyPh:'Per esempio giubbotti salvagente, kit di primo soccorso, assicurazione.',
   hk_ways:'L’escursione si può fare in un solo modo o in più modalità?', hk_one:'Un solo modo', hk_multi:'Più modalità (facile, media, difficile)', hk_modes:'Modalità',
   hk_facile:'Facile', hk_media:'Media', hk_difficile:'Difficile', hk_mode_n:'Modalità {n} di {total}',
   hk_cai:'Classe CAI', hk_cai_src:'Fonte: CAI – Classificazione ufficiale delle difficoltà.',
@@ -1828,7 +1830,7 @@ it:{
   o_assoc_cult:'Associazione culturale', o_aps:'APS', o_ets:'ETS', o_odv:'ODV', o_pro_loco:'Pro Loco', o_assoc_altro:'Altro',
   o_coop_lavoro:'Cooperativa di lavoro', o_coop_sociale:'Cooperativa sociale', o_coop_agricola:'Cooperativa agricola', o_coop_servizi:'Cooperativa di servizi', o_coop_altro:'Altro',
   o_artigianato:'Artigianato e tradizioni', o_enogastronomia:'Enogastronomia', o_cultura:'Cultura e territorio', o_natura:'Natura e avventura', o_mare:'Mare e nautica', o_guide:'Guide e accompagnatori', o_trasporti:'Trasporti e mobilità', o_sport:'Sport', o_benessere:'Benessere e Mindfulness', o_altro:'Altro',
-  h_artigianato:'Laboratori, dimostrazioni, botteghe', h_enogastronomia:'Degustazioni, produttori, cucina', h_cooking_class:'Corsi di cucina e lezioni pratiche', h_cultura:'Siti archeologici, musei, architettura, patrimonio', h_natura:'Trekking, outdoor, vita rurale', h_mare:'Barche, vela, snorkeling', h_guide:'Guide turistiche e ambientali', h_trasporti:'Transfer, NCC, trasporto gruppi', h_sport:'CityBike, E-bike, Mountain bike', h_benessere:'Movimento, mindfulness, trattamenti, ritiri', h_altro:'Un’altra attività, con le tue parole',
+  h_artigianato:'Laboratori, dimostrazioni, botteghe', h_enogastronomia:'Degustazioni, produttori', h_cooking_class:'Corsi di cucina e lezioni pratiche', h_cultura:'Siti archeologici, musei, architettura, patrimonio', h_natura:'Trekking, outdoor', h_mare:'Barche, vela, snorkeling', h_guide:'Guide turistiche e ambientali', h_trasporti:'Transfer, NCC, trasporto gruppi', h_sport:'CityBike, E-bike, Mountain bike', h_benessere:'Movimento, mindfulness, ritiri', h_altro:'Un’altra attività, con le tue parole',
   o_tessitura:'Tessitura', o_ceramica:'Ceramica', o_coltelleria:'Coltelleria', o_legno:'Lavorazione del legno', o_sughero:'Sughero', o_metalli:'Lavorazione dei metalli', o_maschere:'Maschere tradizionali', o_campanacci:'Campanacci', o_pelletteria:'Pelletteria', o_gioielli:'Gioielli', o_tessile:'Arte tessile', o_altre_artigianali:'Altre attività artigianali',
   o_laboratorio_pratico:'Laboratorio pratico', o_dimostrazione:'Dimostrazione', o_visita_bottega:'Visita in bottega', o_esperienza_privata:'Esperienza privata', o_percorso_piu:'Percorso con più attività',
   td_laboratorio_pratico:'Esperienza in cui il visitatore partecipa attivamente alla creazione di un prodotto artigianale.', td_dimostrazione:'Esperienza in cui il visitatore osserva un artigiano durante la lavorazione di un prodotto.', td_visita_bottega:'Esperienza in cui il visitatore scopre e può acquistare i prodotti artigianali esposti.',
@@ -1841,7 +1843,7 @@ it:{
   o_escursione_guidata:'Escursione guidata', o_attivita_sportiva:'Attività sportiva', o_esperienza_naturalistica:'Esperienza naturalistica', o_tour_privato:'Tour privato', o_esperienza_gruppo:'Esperienza di gruppo',
   o_barca_motore:'Barca a motore', o_barca_vela:'Barca a vela', o_catamarano:'Catamarano', o_snorkeling:'Snorkeling', o_attivita_acquatiche:'Attività acquatiche', o_escursioni_costiere:'Escursioni costiere',
   o_escursione_privata:'Escursione privata', o_escursione_condivisa:'Escursione condivisa', o_mezza_giornata:'Mezza giornata', o_giornata_intera:'Giornata intera', o_esperienza_personalizzata:'Esperienza personalizzata',
-  o_guida_turistica:'Guida turistica', o_guida_gae:'Guida ambientale escursionistica', o_accompagnatore:'Accompagnatore turistico', o_guida_specializzata:'Guida specializzata',
+  o_guida_turistica:'Guida turistica', o_guida_gae:'Guida ambientale escursionistica', o_accompagnatore:'Accompagnatore turistico', o_traduttore:'Traduttore', o_guida_specializzata:'Guida specializzata',
   o_guida_oraria:'Guida oraria', o_accompagnamento_gruppi:'Accompagnamento gruppi',
   o_ncc:'NCC', o_transfer:'Transfer', o_trasporto_gruppi:'Trasporto gruppi', o_minibus:'Minibus', o_noleggio_conducente:'Noleggio con conducente', o_altri_autorizzati:'Altri servizi autorizzati',
   o_trasferimento_singolo:'Trasferimento singolo', o_andata_ritorno:'Andata e ritorno', o_servizio_orario:'Servizio orario', o_servizio_personalizzato:'Servizio personalizzato',
@@ -1906,9 +1908,9 @@ const MONTHS = { en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct'
    S.exps[] and each becomes its own record (experience_proposals).
    ===================================================================== */
 const newExp = () => ({
-  sector:'', spec:[], specOther:'', type:[],
+  sector:'', spec:[], specOther:'', vehicle:'', type:[],
   name:'', desc:'', comune:'', address:'', localita:'', meet:'', end:'', meetDifferent:false, meetAddress:'', activityAddress:'',
-  durH:2, durM:0, min:2, max:8, minAge:0, langs:[], access:[],
+  durH:2, durM:0, min:2, max:8, minAge:0, langs:[], langLevel:{}, student:'', native:'', access:[],
   mode:'', incl:{}, equipProvided:false, bring:[], bringNote:'',
   difficulty:'', prevExp:false, limits:'', safety:'', sq:{}, spaTreatments:[],
   period:'', months:[], days:[], bands:[], slots:[], notice:'', manual:false,
@@ -2489,9 +2491,12 @@ function hikeVizHtml(i, key, profile, mode, step){
   const tone = overview ? 'sand' : hikeTone(toneMode, profile?.cai);
   const pill = overview ? '' : hikePill(toneMode, profile?.cai);
   const modes = E(i).hike?.modes || [];
+  const scene = mareWebGL()
+    ? `<div class="hk-scene hk-scene-3d"><canvas data-hk3d></canvas></div>`
+    : `<div class="hk-scene">${hikeSvg(overview ? {} : profile)}</div>`;
   return `<div class="hk-viz" id="hkViz" data-i="${i}" data-key="${esc(key)}" data-tone="${tone}" style="--hk:${HK_COLOR[tone]}">
     <div class="hk-top">${pill?`<span class="hk-pill">${esc(pill)}</span>`:'<span class="hk-pill" hidden></span>'}${step?`<span class="hk-step">${esc(t('hk_mode_n',{n:step.n,total:step.total}))}</span>`:''}</div>
-    <div class="hk-scene">${hikeSvg(overview ? {} : profile)}</div>
+    ${scene}
     ${overview ? `<ul class="hk-legend">${HIKE_MODES.map(m=>`<li class="${modes.includes(m)?'is-on':''}"><i style="background:${HK_COLOR[m]}"></i>${esc(t('hk_'+m))}</li>`).join('')}</ul>` : ''}
     ${hikeMetrics(overview ? {} : profile)}
   </div>`;
@@ -2511,6 +2516,82 @@ function paintHikeViz(){
   ['km','elev','dur','alt'].forEach(k => { const el = root.querySelector('[data-spec="'+k+'"]'); if(!el) return; const m = hkMetric(p, k); el.textContent = m.text; el.classList.toggle('is-empty', m.empty); });
   const pill = root.querySelector('.hk-pill');
   if(pill){ const label = hikePill(mode, p.cai); pill.hidden = !label; pill.textContent = label || ''; }
+  syncHike3d();
+}
+const HK3 = { raf:0, renderer:null, scene:null, camera:null, root:null, group:null, canvas:null, THREE:null };
+function stopHike3d(){
+  if(HK3.raf) cancelAnimationFrame(HK3.raf);
+  HK3.raf = 0;
+  if(HK3.group){ HK3.group.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); }); HK3.group = null; }
+  if(HK3.renderer){ HK3.renderer.dispose(); HK3.renderer = null; }
+  HK3.scene = HK3.camera = HK3.root = HK3.canvas = null;
+}
+function hikePts(profile){
+  const { ys } = profileYs(profile || {});
+  const max = Math.max(...ys, 1);
+  return ys.map((h, i) => ({ x:(i / (ys.length - 1) - 0.5) * 7.2, y:(h / max) * 2.4 }));
+}
+function hikeRibbon(THREE, pts, color){
+  const half = 0.16, pos = [], idx = [];
+  pts.forEach((p, i) => {
+    pos.push(p.x, p.y, -half, p.x, 0, -half, p.x, p.y, half, p.x, 0, half);
+    if(i){
+      const a = (i - 1) * 4, b = i * 4;
+      idx.push(a, a+2, b, a+2, b+2, b, a, b, a+1, b, b+1, a+1, a+2, a+3, b+2, a+3, b+3, b+2);
+    }
+  });
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setIndex(idx);
+  const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color, transparent:true, opacity:0.45, side:THREE.DoubleSide }));
+  const crest = pts.map(p => new THREE.Vector3(p.x, p.y, 0));
+  const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(crest), new THREE.LineBasicMaterial({ color }));
+  const dots = new THREE.Points(new THREE.BufferGeometry().setFromPoints(crest), new THREE.PointsMaterial({ color, size:0.16 }));
+  const g = new THREE.Group();
+  g.add(mesh, line, dots);
+  return g;
+}
+function syncHike3d(){
+  if(!HK3.root || !HK3.THREE) return;
+  const viz = document.getElementById('hkViz'); if(!viz) return;
+  const e = S.exps[+viz.dataset.i], key = viz.dataset.key;
+  const profile = key && key !== 'overview' ? e?.hike?.profiles?.[key] : null;
+  const color = HK_COLOR[viz.dataset.tone] || HK_COLOR.sand;
+  if(HK3.group){ HK3.root.remove(HK3.group); HK3.group.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); }); }
+  HK3.group = hikeRibbon(HK3.THREE, hikePts(profile), color);
+  HK3.root.add(HK3.group);
+}
+async function mountHike3d(){
+  const canvas = document.querySelector('[data-hk3d]');
+  if(!canvas){ stopHike3d(); return; }
+  if(HK3.canvas === canvas && HK3.renderer){ syncHike3d(); return; }
+  stopHike3d();
+  const THREE = PRE.THREE || await import('three');
+  PRE.THREE = THREE;
+  if(document.querySelector('[data-hk3d]') !== canvas) return;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:false });
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+  renderer.setClearColor(0x000000, 1);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 40);
+  camera.position.set(6.2, 2.6, 7.4);
+  camera.lookAt(0, 0.9, 0);
+  const root = new THREE.Group();
+  scene.add(root);
+  Object.assign(HK3, { renderer, scene, camera, root, canvas, THREE });
+  syncHike3d();
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const loop = () => {
+    if(!HK3.renderer || document.querySelector('[data-hk3d]') !== HK3.canvas) return;
+    const w = canvas.clientWidth || 320, h = canvas.clientHeight || 280;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / Math.max(h, 1);
+    camera.updateProjectionMatrix();
+    if(!reduce) root.rotation.y += 0.004;
+    renderer.render(scene, camera);
+    HK3.raf = requestAnimationFrame(loop);
+  };
+  loop();
 }
 function modePills(i){
   const modes = E(i).hike?.modes || [];
@@ -2822,7 +2903,7 @@ function blankMareOp(src){
   const main = rawBands.includes('full') ? 'full' : (rawBands.includes('half') ? 'half' : '');
   const halfPart = src.halfPart === 'afternoon' ? 'evening' : src.halfPart;
   return {
-    area: src.area, port: src.port || '',
+    area: src.area, port: src.port || '', lat: src.lat ?? '', lng: src.lng ?? '',
     meetSame: src.meetSame === 'same' || src.meetSame === 'diff' ? src.meetSame : '',
     meet: src.meet || '',
     bands: main ? (rawBands.includes('sunset') ? [main, 'sunset'] : [main]) : (rawBands.includes('sunset') ? ['sunset'] : []),
@@ -2858,7 +2939,7 @@ function ensureMare(e){
   let ops = (Array.isArray(prev.ops) ? prev.ops : []).filter(o => areas.includes(o.area)).map(blankMareOp);
   for(const a of areas){ if(!ops.some(o => o.area === a)) ops.push(blankMareOp({ area:a })); }
   ops = ops.map(op => {
-    op.geo = mareGeo(op.port);
+    op.geo = { ...mareGeo(op.port), lat: op.lat, lng: op.lng };
     op.boatIds = op.boatIds.filter(id => { const boat = fleet.find(b => b.id === id); return boat && mareSamePort(boat.home, op.port); });
     const offer = {};
     for(const id of op.boatIds){
@@ -2890,12 +2971,22 @@ function ensureMare(e){
     const mode = on && (raw.mode === 'inc' || raw.mode === 'sup') ? raw.mode : '';
     return { on, mode, price: mode === 'sup' ? (raw.price ?? '') : '', method: mode === 'sup' && (raw.method === 'cash' || raw.method === 'pos') ? raw.method : '' };
   };
+  const portMode = {};
+  for(const a of areas){
+    const mode = prev.portMode?.[a];
+    portMode[a] = mode === 'one' || mode === 'more' ? mode : '';
+    if(portMode[a] === 'one'){
+      const keep = ops.find(o => o.area === a);
+      ops = ops.filter(o => o.area !== a);
+      if(keep) ops.push(keep);
+    }
+  }
   const focus = areas.includes(prev.focus) ? prev.focus : (areas[0] || '');
   const hi = Number.isInteger(prev.hi) && prev.hi >= 0 && prev.hi < ops.length ? prev.hi : 0;
   const openCats = (prev.openCats || []).filter(c => MARE_BOATS.includes(c)).slice(0, 1);
   const linkFilter = MARE_BOATS.includes(prev.linkFilter) ? prev.linkFilter : '';
   const yachtOpen = !!prev.yachtOpen && !openCats.length;
-  e.mare = { areas, areaOther: prev.areaOther || '', focus, hi, openCats, linkFilter, yachtOpen, fleet, ops, incl, bring, games:{ on:!!gsrc.on, items:{ sup:gameItem('sup'), scooter:gameItem('scooter'), altro:gameItem('altro') } }, tickets:{ on:!!tk.on, price:tk.price ?? '', method: tk.method === 'cash' || tk.method === 'pos' ? tk.method : '' } };
+  e.mare = { areas, areaOther: prev.areaOther || '', portMode, focus, hi, openCats, linkFilter, yachtOpen, fleet, ops, incl, bring, games:{ on:!!gsrc.on, items:{ sup:gameItem('sup'), scooter:gameItem('scooter'), altro:gameItem('altro') } }, tickets:{ on:!!tk.on, price:tk.price ?? '', method: tk.method === 'cash' || tk.method === 'pos' ? tk.method : '' } };
   e.spec = '';
   e.type = [];
   return e.mare;
@@ -2910,8 +3001,9 @@ function mareOpRef(e, n){
   const port = op.port.trim() || t('bt_port_name');
   return `<p class="bt-ref"><span class="bt-num">${n + 1}</span><span>${esc(t('bt_op_title'))} ${n + 1} · ${esc(port)} → ${esc(mareName(e, op.area))}</span></p>`;
 }
-function mapsLink(p){
-  return `<p class="bt-maps"><a href="#" data-action="maps" data-p="${p}">${esc(t('bt_maps'))}</a></p>`;
+function mapsLink(p, latP, lngP){
+  const extra = `${latP ? ` data-lat="${latP}"` : ''}${lngP ? ` data-lng="${lngP}"` : ''}`;
+  return `<p class="bt-maps"><a href="#" data-action="maps" data-kind="google" data-p="${p}"${extra}>${esc(t('bt_maps'))}</a><a href="#" data-action="maps" data-kind="apple" data-p="${p}"${extra}>${esc(t('bt_apple'))}</a></p>`;
 }
 function boatWire(boat){
   const type = typeof boat === 'string' ? boat : boat?.type;
@@ -3823,6 +3915,7 @@ function mareMapSvg(e, i){
       <text x="28" y="36">Corsica</text>
     </g>
     ${pin('tavolara', 468, 176)}${pin('alghero', 186, 214)}${pin('carloforte', 156, 552)}${pin('cagliari', 318, 628)}${pin('villasimius', 408, 598)}${pin('altro', 300, 440)}
+    ${m.areas.map(a => { const n = m.ops.filter(o => o.area === a && String(o.port||'').trim()).length; if(!n) return ''; const [x,y] = MARE_ANCHOR[a]; return `<g class="bt-count"><circle cx="${x+22}" cy="${y-18}" r="10" fill="#2f7f88"/><text x="${x+22}" y="${y-14}" text-anchor="middle" fill="#f8f4ee" font-size="12" font-weight="700">${n}</text></g>`; }).join('')}
     ${lines}
   </svg>`;
 }
@@ -3834,7 +3927,10 @@ function mareOpState(e, n){
 }
 function mareMapScreen(i){
   const e = E(i), m = ensureMare(e);
-  const ports = m.ops.map((op, n) => op.area === m.focus ? `<div class="ct-block">${inp(P(i, `mare.ops.${n}.port`), t('bt_port_name'))}${mapsLink(P(i, `mare.ops.${n}.port`))}${m.ops.filter(x => x.area === m.focus).length > 1 ? `<button type="button" class="ct-back" data-action="mareportdel" data-i="${i}" data-n="${n}">${esc(t('bt_port_remove'))}</button>` : ''}</div>` : '').join('');
+  const focusOps = m.ops.map((op, n) => ({op, n})).filter(x => x.op.area === m.focus);
+  const portMode = m.portMode[m.focus] || '';
+  const shown = portMode === 'more' ? focusOps : focusOps.slice(0, 1);
+  const ports = shown.map(({op, n}, idx) => `<div class="ct-block">${inp(P(i, `mare.ops.${n}.port`), t('bt_port_name'))}<div class="ct-row">${inp(P(i, `mare.ops.${n}.lat`), t('bt_lat'), {type:'number', req:false})}${inp(P(i, `mare.ops.${n}.lng`), t('bt_lng'), {type:'number', req:false})}</div>${mapsLink(P(i, `mare.ops.${n}.port`), P(i, `mare.ops.${n}.lat`), P(i, `mare.ops.${n}.lng`))}${portMode === 'more' && idx > 0 ? `<button type="button" class="ct-back" data-action="mareportdel" data-i="${i}" data-n="${n}">${esc(t('bt_port_remove'))}</button>` : ''}</div>`).join('');
   const progress = m.ops.filter(op => op.port.trim()).map(op => {
     const n = m.ops.indexOf(op);
     return `<button type="button" class="${m.hi === n ? ' is-on' : ''}" data-action="marehi" data-i="${i}" data-n="${n}"><span>${esc(op.port.trim())} → ${esc(mareName(e, op.area))}</span><span>${esc(t('bt_st_' + mareOpState(e, n)))}</span></button>`;
@@ -3844,15 +3940,22 @@ function mareMapScreen(i){
     ${note(t('bt_dash_note'), 'info')}
     ${m.areas.includes('altro') ? inp(P(i,'mare.areaOther'), t('bt_a_altro_lbl')) : ''}
     ${m.focus ? `<section class="ct-block"><h3 class="ct-block-title">${esc(mareName(e, m.focus))}</h3>
-      ${group(t('bt_from'), ports || '')}
-      <button type="button" class="ct-back bt-add" data-action="mareportadd" data-i="${i}" data-area="${m.focus}">${ic('plus',16,1.8)} ${esc(t('bt_port_add'))}</button>
+      ${group(t('bt_ports_q'), `<div class="ct-pills" role="radiogroup">${['one','more'].map(v => `<button type="button" class="ct-pill${portMode===v?' is-on':''}" role="radio" aria-checked="${portMode===v}" data-action="mareports" data-i="${i}" data-area="${m.focus}" data-v="${v}">${esc(t(v==='one'?'bt_ports_one':'bt_ports_more'))}</button>`).join('')}</div>`)}
+      ${portMode ? group(t('bt_from'), ports || '') : ''}
+      ${portMode === 'more' ? `<button type="button" class="ct-back bt-add" data-action="mareportadd" data-i="${i}" data-area="${m.focus}">${ic('plus',16,1.8)} ${esc(t('bt_port_add'))}</button>` : ''}
     </section>` : ''}
     ${progress ? `<div class="bt-progress">${progress}</div>` : ''}`);
 }
 function mareMapOk(e){
   const m = e?.mare; if(!m || !m.areas.length) return false;
   if(m.areas.includes('altro') && !filled(m.areaOther, 2)) return false;
-  return m.areas.every(a => m.ops.some(o => o.area === a && filled(o.port, 2)));
+  return m.areas.every(a => {
+    const mode = m.portMode?.[a];
+    const ops = m.ops.filter(o => o.area === a && filled(o.port, 2));
+    if(mode === 'one') return ops.length >= 1;
+    if(mode === 'more') return ops.length >= 2;
+    return false;
+  });
 }
 function mareMeetScreen(i, n){
   const e = E(i), m = ensureMare(e), op = m.ops[n];
@@ -4142,12 +4245,34 @@ function mareInclOk(e){
   }
   return MARE_INCL.every(k => m.incl[k]?.mode !== 'sup' || pos(m.incl[k]?.price));
 }
+const LANG_LEVELS = ['base','intermedio','avanzato'];
+function guideLangOk(e){
+  const langs = e.langs || [];
+  if(!langs.length || !langs.every(c => LANG_LEVELS.includes(e.langLevel?.[c]))) return false;
+  if(!langs.some(c => c !== 'it')) return false;
+  if(specList(e)[0] === 'traduttore' && !['yes','no'].includes(e.student)) return false;
+  if(specList(e)[0] === 'traduttore' && !['yes','no'].includes(e.native)) return false;
+  return true;
+}
+function guideLangScreen(i){
+  const e = E(i);
+  if(!e.langLevel || typeof e.langLevel !== 'object' || Array.isArray(e.langLevel)) e.langLevel = {};
+  const rows = CONFIG.expLangs.map(c => {
+    const on = (e.langs||[]).includes(c);
+    return `<div class="ct-lang-row"><button type="button" class="ct-pill${on?' is-on':''}" role="checkbox" aria-checked="${on}" data-action="tog" data-p="${P(i,'langs')}" data-v="${c}"><span>${esc(o(c))}</span></button>${on ? pills(P(i,'langLevel.'+c), LANG_LEVELS, {lab:x=>t('lv_'+x)}) : ''}</div>`;
+  }).join('');
+  const tr = specList(e)[0] === 'traduttore';
+  return split(head(t('g4_title'), t('gd_secondary'), ecount(i)), `
+    ${group(t('gd_langs'), `<div class="ct-stack" style="gap:12px">${rows}</div>`, {multi:true})}
+    ${tr ? `${group(t('gd_student'), pills(P(i,'student'), ['yes','no'], {lab:c=>t(c==='yes'?'yn_yes':'yn_no')}))}${group(t('gd_native'), pills(P(i,'native'), ['yes','no'], {lab:c=>t(c==='yes'?'yn_yes':'yn_no')}))}` : ''}`);
+}
 const EV = {
   sector: i => split(head(t('es_title'), t('es_sub'), ecount(i), true),
     photoCards(P(i,'sector'), sectorsForPaths().map(s=>({v:s.code, img:s.img, icon:s.icon, label:`${s.letter}. ${o(s.code)}`, hint:t('h_'+s.code)})))),
   type: i => { const e=E(i); const codes = allowedTypes(e);
-    const choices = e.sector === 'artigianato' ? typeCards(P(i,'type'), codes) : e.sector === 'sport' ? pills(P(i,'type'), codes) : pills(P(i,'type'), codes, {multi:true});
-    return split(head(t('et_title'), t('et_sub'), ecount(i, o(e.sector))), `<div class="ct-stack" style="gap:16px">${choices}${e.sector==='sport'?'':typeNote(e)}</div>`); },
+    const sport = e.sector === 'sport';
+    const choices = e.sector === 'artigianato' ? typeCards(P(i,'type'), codes) : sport ? `<div class="ct-pills" role="radiogroup">${codes.map(c=>{ const on = typeList(e)[0]===c; return `<button type="button" class="ct-pill${on?' is-on':''}" role="radio" aria-checked="${on}" data-action="pick" data-p="${P(i,'type')}" data-v="${c}"><span>${esc(o(c))}</span></button>`; }).join('')}</div>` : pills(P(i,'type'), codes, {multi:true});
+    return split(head(t('et_title'), sport ? t('et_one') : t('et_sub'), ecount(i, o(e.sector))), `<div class="ct-stack" style="gap:16px">${choices}${sport?'':typeNote(e)}</div>`); },
   spec: i => { const e=E(i), s=SECTOR[e.sector]; const specs = specList(e);
     const choices = s.specGroups
       ? `<div class="ct-spec-groups">${s.specGroups.map(g=>`<fieldset class="ct-group"><legend class="ct-spec-head">${esc(t(g.h))}</legend>${pills(P(i,'spec'), g.o)}</fieldset>`).join('')}</div>`
@@ -4156,14 +4281,16 @@ const EV = {
     <div class="ct-stack" style="gap:16px">${choices}
     ${e.sector === 'benessere' ? note(t('bn_agency'), 'info') : ''}
     ${specs.length ? `<p class="ct-spec-note">${esc(t('esp_another'))}</p>` : ''}</div>
-    ${specs.some(x => CONFIG.otherSpec.includes(x)) ? inp(P(i,'specOther'), t('spec_other')) : ''}`); },
+    ${specs.some(x => CONFIG.otherSpec.includes(x)) ? inp(P(i,'specOther'), t('spec_other')) : ''}
+    ${specList(e)[0] === '4x4_altro' ? inp(P(i,'vehicle'), t('or_vehicle')) : ''}`); },
   spa: i => split(head(t('spa_title'), '', ecount(i)),
     group(t('spa_q'), pills(P(i,'spaTreatments'), SPA_TREATS, {multi:true}), {multi:true})),
   g1: i => { const e=E(i); return split(head(t('g1_title'), t('g1_sub'), ecount(i)), `
     ${inp(P(i,'name'), t('exp_name'), {ph:t('exp_namePh'), max:80})}
     <label class="ct-field"><span class="ct-field-label"><span>${t('exp_desc')}</span></span>
       <textarea id="${fid(P(i,'desc'))}" data-bind="${P(i,'desc')}" rows="7" maxlength="${DESC_MAX}" placeholder="${esc(t('exp_descPh'))}">${esc(e.desc)}</textarea>
-      <span class="ct-field-hint" id="cnt-desc" data-for="${P(i,'desc')}"></span></label>`); },
+      <span class="ct-field-hint" id="cnt-desc" data-for="${P(i,'desc')}"></span></label>
+    ${e.sector === 'altro' ? note(t('altro_agency'), 'info') : ''}`); },
   g2: i => split(head(t('g2_title'), t('g2_sub'), ecount(i)), placeFields(i)),
   g3: i => { const e=E(i); if(e.min < 2) e.min = 2; return split(head(t('g3_title'), t('g3_sub'), ecount(i)), `
     ${group(t('dur'), `<div class="ct-steppers">${stepper(P(i,'durH'), t('hours'), t('durD'), 1, 12)}</div>`)}
@@ -4172,6 +4299,7 @@ const EV = {
     if(isSportRental(e)) return split(head(t('g4_title'), t('g4_sub'), ecount(i)), `
     ${group(t('exp_langs'), pills(P(i,'langs'), CONFIG.expLangs, {multi:true}), {multi:true})}
     ${group(t('sp_hand'), pills(P(i,'handover'), ['hand_checkin','hand_staff','hand_guided']))}`);
+    if(e.sector === 'guide') return guideLangScreen(i);
     return split(head(t('g4_title'), t('g4_sub'), ecount(i)), `
     ${group(t('exp_langs'), pills(P(i,'langs'), CONFIG.expLangs, {multi:true}), {multi:true})}
     ${group(t('access'), pills(P(i,'access'), CONFIG.access, {multi:true}), {req:false, multi:true, sub:t('accessD')})}`); },
@@ -4256,13 +4384,13 @@ function qOk(e, q){
 }
 const EOK = {
   sector: e => !!e.sector,
-  spec: e => !hasSpec(e) || (specList(e).length > 0 && (!specList(e).some(x => CONFIG.otherSpec.includes(x)) || filled(e.specOther,3))),
+  spec: e => !hasSpec(e) || (specList(e).length > 0 && (!specList(e).some(x => CONFIG.otherSpec.includes(x)) || filled(e.specOther,3)) && (specList(e)[0] !== '4x4_altro' || filled(e.vehicle, 2))),
   spa: e => !isSpa(e) || (Array.isArray(e.spaTreatments) && e.spaTreatments.length > 0 && e.spaTreatments.every(x => SPA_TREATS.includes(x))),
   type: e => isHike(e) || !hasType(e) || (typeList(e).length > 0 && typeList(e).every(x => allowedTypes(e).includes(x))),
   g1: e => filled(e.name,3) && e.desc.trim().length >= DESC_MIN,
   g2: e => placeOk(e),
   g3: e => e.durH > 0 && e.min >= 2 && e.max >= e.min,
-  g4: e => e.langs.length > 0 && (!isSportRental(e) || !!e.handover),
+  g4: e => e.sector === 'guide' ? guideLangOk(e) : (e.langs.length > 0 && (!isSportRental(e) || !!e.handover)),
   mode: e => !!e.mode,
   incl: e => e.sector === 'mare' ? mareInclOk(e) : includesFor(e).every(c => inclMode(e,c) !== 'sup' || pos(inclPrice(e,c))),
   equip: e => e.sector === 'mare' || e.sector === 'artigianato' ? true : (e.equipProvided || filled(e.bringNote, 3)),
@@ -4377,6 +4505,8 @@ function screens(){
         else { for(const q of (SECTOR[e.sector].q || [])) delete e.sq[q.k]; }
       }
       if(e.sector === 'enogastronomia' || e.sector === 'cooking_class' || e.sector === 'benessere'){ e.prevExp = false; e.limits = ''; e.safety = ''; e.difficulty = ''; }
+      if(e.sector === 'guide'){ if(!e.langLevel || typeof e.langLevel !== 'object' || Array.isArray(e.langLevel)) e.langLevel = {}; for(const k of Object.keys(e.langLevel)) if(!(e.langs||[]).includes(k)) delete e.langLevel[k]; }
+      if(specList(e)[0] !== '4x4_altro') e.vehicle = '';
       if(e.sector === 'enogastronomia'){ e.sq = e.sq || {}; const hide = TASTE_OF[specList(e)[0]]; if(hide && Array.isArray(e.sq.tasting)) e.sq.tasting = e.sq.tasting.filter(x => x !== hide); if(lunchOnly(e)){ delete e.sq.tasting; delete e.sq.certs; } if(!hasLunch(e)){ delete e.sq.menu_kind; delete e.sq.menu_offer; } }
       if(e.sector !== 'mare'){ e.localita = ''; e.meet = ''; e.end = ''; if(!e.meetDifferent){ e.meetAddress = ''; e.activityAddress = ''; } }
       normalizeIncl(e);
@@ -4391,11 +4521,17 @@ function screens(){
         ? ['sector','spec','type','g2','price','g4','equip','avail','slots','cond','photos']
         : e.sector === 'natura'
         ? ['sector','spec','g1','g2','g4','g3','mode','slots','price','incl','equip','reqs','scuba','sq','avail','cond','photos']
+        : isSportGuided(e)
+        ? ['sector','spec','type','g1','g2','g3','g4','mode','slots','price','incl','equip','reqs','avail','cond','photos']
         : e.sector === 'sport'
         ? ['sector','spec','type','g1','g2','g3','g4','mode','slots','price','incl','equip','avail','cond','photos']
         : e.sector === 'mare'
         ? ['sector','btfleet','btmap','g1','g4','incl','equip','reqs','slots','cond','photos']
-        : (e.sector === 'benessere' || e.sector === 'altro')
+        : e.sector === 'altro'
+        ? ['sector','g1','cond']
+        : e.sector === 'cooking_class'
+        ? ['sector','g1','g2','g3','mode','price','g4','incl','avail','slots','cond','photos']
+        : e.sector === 'benessere'
         ? ['sector','spec','g1','g2','g3','g4','mode','price','incl','equip','reqs','avail','slots','cond','photos']
         : ['sector','spec','type','g1','g2','g3','g4','mode','price','incl','equip','reqs','sq','avail','slots','cond','photos'];
       if(hasTicketPage(e)){ const at = order.indexOf('incl'); if(at >= 0){ order.splice(order.indexOf('sq'), 1); order.splice(at + 1, 0, 'sq'); } }
@@ -4407,6 +4543,7 @@ function screens(){
       if(k==='spec' && !hasSpec(e)) return;
       if(k==='type' && !hasType(e)) return;
       if(k==='type' && isHike(e)) return;
+      if(k==='reqs' && isWater(e) && specList(e)[0] !== 'rafting') return;
       if(k==='scuba' && !isScuba(e)) return;
       if(k==='btfleet'){
         add(`e${i}_btfleet`, 'prop', () => mareFleetScreen(i), () => mareFleetOk(S.exps[i]));
@@ -4521,7 +4658,7 @@ function spaFacts(e){
   return `<ul class="ct-tile-list"><li>${esc(t('spa_q'))}: <b>${esc(e.spaTreatments.map(o).join(', '))}</b></li></ul>`;
 }
 function hikeFacts(e){
-  if(!isHike(e) || !e.hike) return '';
+  if(!usesHikeFlow(e) || !e.hike) return '';
   const h = e.hike, rows = [];
   if(h.ways) rows.push(`<li>${esc(t('hk_ways'))}: <b>${esc(t(h.ways==='one'?'hk_one':'hk_multi'))}</b></li>`);
   for(const k of hikeKeys(e)){
@@ -4914,6 +5051,7 @@ function render(dir){
   updateCounters(); updateNav(); fitReview(); fitChoices(); fitFleet();
   if(H.open) renderPanel();
   mountMarePreview();
+  mountHike3d();
 }
 function updateNav(){
   const {L, k, s} = cur(), bar = $('bar');
@@ -5201,7 +5339,25 @@ const ACT = {
   next, back,
   uilang: el => { S.lang = el.dataset.v; rerender(); },
   pick: el => { const p=el.dataset.p, prev=get(p); const off=/\.spec$/.test(p) && prev===el.dataset.v; set(p, off ? '' : el.dataset.v); afterPick(p, prev); rerender(); },
-  maps: el => { const q = String(get(el.dataset.p) || '').trim(); const url = q ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q) : 'https://www.google.com/maps'; window.open(url, '_blank', 'noopener'); },
+  maps: el => {
+    const q = String(get(el.dataset.p) || '').trim();
+    const lat = el.dataset.lat ? String(get(el.dataset.lat) || '').trim() : '';
+    const lng = el.dataset.lng ? String(get(el.dataset.lng) || '').trim() : '';
+    const query = lat && lng ? lat + ',' + lng : q;
+    const apple = el.dataset.kind === 'apple';
+    const url = apple
+      ? (query ? 'https://maps.apple.com/?q=' + encodeURIComponent(query) : 'https://maps.apple.com/')
+      : (query ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query) : 'https://www.google.com/maps');
+    window.open(url, '_blank', 'noopener');
+  },
+  mareports: el => {
+    const m = ensureMare(S.exps[+el.dataset.i]); const area = el.dataset.area; const v = el.dataset.v;
+    m.portMode[area] = v;
+    const list = m.ops.filter(o => o.area === area);
+    if(v === 'one'){ const keep = list[0] || blankMareOp({ area }); m.ops = m.ops.filter(o => o.area !== area); m.ops.push(keep); }
+    else if(list.length < 2) m.ops.push(blankMareOp({ area }));
+    m.focus = area; rerender();
+  },
   marezone: el => { const m = ensureMare(S.exps[+el.dataset.i]); const v = el.dataset.v; const k = m.areas.indexOf(v); if(k < 0){ m.areas.push(v); m.focus = v; if(!m.ops.some(o => o.area === v)) m.ops.push(blankMareOp({ area:v })); } else { m.areas.splice(k, 1); m.ops = m.ops.filter(o => o.area !== v); m.focus = m.areas[0] || ''; } m.hi = Math.max(0, m.ops.findIndex(o => o.area === m.focus)); rerender(); },
   marehi: el => { const m = ensureMare(S.exps[+el.dataset.i]); m.hi = +el.dataset.n; m.focus = m.ops[m.hi]?.area || m.focus; rerender(); },
   mareportadd: el => { const m = ensureMare(S.exps[+el.dataset.i]); const area = el.dataset.area; const at = m.ops.findLastIndex(o => o.area === area); const op = blankMareOp({ area }); if(at < 0) m.ops.push(op); else m.ops.splice(at + 1, 0, op); m.focus = area; rerender(); },
@@ -5385,7 +5541,7 @@ if(DEV_FILL) (function(){
   const L = (it, en) => S.lang==='it' ? it : en;
   const FAKE_VAT = '12345678903';                 /* invented, passes the 11-digit check and the P.IVA checksum */
   const EXP_TXT = {
-    artigianato:   ['Laboratorio di tessitura (test)', 'Weaving workshop (test)', 'Aggius'],
+    artigianato:   ['Laboratorio di ceramica (test)', 'Ceramics workshop (test)', 'Aggius'],
     enogastronomia:['Degustazione in cantina (test)', 'Winery tasting (test)', 'Tempio Pausania'],
     cultura:       ['Visita guidata al nuraghe (test)', 'Guided nuraghe visit (test)', 'Barumini'],
     natura:        ['Escursione sul Limbara (test)', 'Limbara hike (test)', 'Tempio Pausania'],
@@ -5426,7 +5582,7 @@ if(DEV_FILL) (function(){
         normalizeIncl(e);
       } break;
       case 'equip': e.equipProvided = true; e.bringNote=''; break;
-      case 'reqs': if(e.sector==='artigianato'){ if(!e.comune) e.comune = txt()[2]; if(!filled(e.address,3)) e.address = L('Via Roma 12','12 Via Roma'); } if(isHike(e)){ const h = ensureHike(e); if(!h.ways) h.ways = 'one'; const key = hikeInlineKey(e); if(key){ const p = h.profiles[key]; if(!p.cai) p.cai = 'e'; if(!pos(p.km)) p.km = '8'; if(!pos(p.elev)) p.elev = '420'; if(!filled(p.dur,1)) p.dur = '3 h'; if(!pos(p.alt)) p.alt = '900'; if(!h.car) h.car = 'no'; } } else if(showsDifficulty(e)){ if(!e.difficulty) e.difficulty = CONFIG.difficulty[0]; } else e.difficulty = ''; break;
+      case 'reqs': if(e.sector==='artigianato'){ if(!e.comune) e.comune = txt()[2]; if(!filled(e.address,3)) e.address = L('Via Roma 12','12 Via Roma'); } if(usesHikeFlow(e)){ const h = ensureHike(e); if(!h.ways) h.ways = 'one'; const key = hikeInlineKey(e); if(key){ const p = h.profiles[key]; if(!p.cai) p.cai = 'e'; if(!pos(p.km)) p.km = '8'; if(!pos(p.elev)) p.elev = '420'; if(!filled(p.dur,1)) p.dur = '3 h'; if(!pos(p.alt)) p.alt = '900'; if(!h.car) h.car = 'no'; } } else if(showsDifficulty(e)){ if(!e.difficulty) e.difficulty = CONFIG.difficulty[0]; } else e.difficulty = ''; break;
       case 'sq': sectorQs(e).forEach(q=>{
         const v = e.sq[q.k];
         if(q.t==='toggle'){ if(v===undefined) e.sq[q.k] = q.def ?? true; }
