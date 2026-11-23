@@ -147,11 +147,11 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
   html:has(.ct-wizard.is-fleet) .sd-header-in{padding-bottom:8px}
   html:has(.ct-wizard.is-fleet) .sd-logo img{height:46px}
   html:has(.ct-wizard.is-fleet) .ct-bar-inner{padding-top:8px;padding-bottom:8px}
-  .ct-wizard.is-fleet.is-tight .ct-block{gap:3px 10px}
-  .ct-wizard.is-fleet.is-tight .ct-field input{height:24px}
-  .ct-wizard.is-fleet.is-tight .ct-field textarea.is-short{min-height:24px;height:24px}
+  .ct-wizard.is-fleet.is-tight .ct-block{gap:2px 10px}
+  .ct-wizard.is-fleet.is-tight .ct-field input{height:20px}
+  .ct-wizard.is-fleet.is-tight .ct-field textarea.is-short{min-height:20px;height:20px;padding:2px 12px}
   .ct-wizard.is-fleet.is-tight .bt-actions .ct-back{height:28px;padding:0 12px;font-size:12.5px}
-  .ct-wizard.is-fleet.is-tight .bt-maps{padding-top:4px}
+  .ct-wizard.is-fleet.is-tight .bt-maps{padding-top:2px}
 }
 @media (max-width:1440px){
   .ct-bar[data-s$="_btfleet"] .ct-sections{gap:8px}
@@ -200,7 +200,8 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
 
 /* ---------- Page ---------- */
 .ct-page{background:var(--background);color:var(--ct-cream);min-height:100svh;position:relative;overflow-x:clip}
-.ct-wizard{position:relative;min-height:100svh;padding:clamp(200px,20vw,300px) var(--ct-gutter) 160px}
+.ct-wizard{position:relative;min-height:100svh;padding:clamp(200px,20vw,300px) var(--ct-gutter) 160px;--ct-bar-space:112px}
+.ct-wizard:not(.is-intro):not(.is-fleet){box-sizing:border-box;height:calc(100dvh - var(--ct-bar-space));min-height:0;overflow-x:hidden;overflow-y:auto;padding-bottom:24px}
 .ct-stage{width:100%;animation:ct-in .5s var(--ease-luxury) both}
 .ct-stage.no-anim{animation:none}
 @keyframes ct-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
@@ -546,8 +547,12 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
 .sd-modal-box h3{margin:24px 0 8px;font-size:28px;font-weight:500;letter-spacing:-.015em}
 .sd-modal-box p{margin:0 0 32px;font-size:var(--t-card);line-height:1.5;color:var(--ct-muted)}
 .sd-modal-actions{display:flex;flex-wrap:wrap;gap:16px}
-.sd-toast{position:fixed;left:50%;bottom:112px;z-index:1500;max-width:calc(100vw - 32px);padding:14px 20px;border-radius:999px;background:rgba(42,39,37,.98);border:1px solid var(--ct-line);color:#f8f4ee;font-size:15px;text-align:center;opacity:0;pointer-events:none;transform:translate(-50%,12px);transition:opacity .3s var(--ct-ease),transform .3s var(--ct-ease)}
+.sd-toast{position:fixed;left:50%;top:22px;bottom:auto;z-index:30;width:max-content;max-width:min(360px,calc(100vw - 480px));padding:10px 16px;border-radius:999px;background:rgba(42,39,37,.98);border:1px solid var(--ct-line);color:#f8f4ee;font-size:14px;line-height:1.3;text-align:center;opacity:0;pointer-events:none;transform:translate(-50%,-8px);transition:opacity .3s var(--ct-ease),transform .3s var(--ct-ease)}
 .sd-toast.is-on{opacity:1;transform:translate(-50%,0)}
+@media (max-width:1180px){
+  .sd-toast{max-width:min(280px,calc(100vw - 640px));font-size:13px;padding:8px 14px}
+  body:has(#fleetBtn:not([hidden])) .sd-toast{max-width:220px}
+}
 
 /* ---------- Responsive (same breakpoints as contact.css) ---------- */
 @media (max-width:1100px){
@@ -608,7 +613,7 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
   .ct-tile-headline{font-size:24px}
   .ct-thanks-actions{flex-direction:column;align-items:stretch}
   .ct-thanks-actions .button-02{justify-content:center}
-  .sd-toast{bottom:104px;border-radius:16px}
+  .sd-toast{top:16px;bottom:auto;max-width:min(280px,calc(100vw - 220px));font-size:13px;border-radius:16px}
 }
 
 /* =====================================================================
@@ -745,8 +750,15 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
 .ct-thanks .ct-confirm{margin:0 0 48px;max-width:62ch;font-size:var(--t-sub);line-height:1.6;color:var(--ct-muted)}
 .ct-thanks .ct-confirm p{margin:0 0 16px}
 
-@media (max-width:1100px){
+@media (max-width:1359px){
   .ct-sections li:not(.is-on){display:none}
+}
+@media (min-width:1360px){
+  html[lang="it"] .ct-sections{gap:12px}
+  html[lang="it"] .ct-sections li{font-size:13px;gap:6px}
+  html[lang="it"] .ct-bar .button-02 .inner{padding-inline:28px}
+  html[lang="it"] .ct-bar .ct-back{padding-inline:16px}
+  html[lang="it"] .ct-bar .ct-help-btn.is-docked{padding-inline:12px}
 }
 @media (max-width:640px){
   .ct-opts{grid-template-columns:1fr}
@@ -794,7 +806,7 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
 .ct-help-btn.is-docked{position:static;flex:none;height:48px;transform:none;background:transparent;border:1.5px solid rgba(248,244,238,.28);-webkit-backdrop-filter:none;backdrop-filter:none}
 .ct-help-btn.is-docked:hover{transform:none;border-color:var(--ct-cream);background:transparent}
 .ct-bar-inner .ct-help-btn.is-docked+.ct-sections{margin-left:8px}
-.ct-sections.is-compact li:not(.is-on){font-size:0;gap:0}
+.ct-sections.is-compact li:not(.is-on){display:none}
 
 /* ---------- Review (Riepilogo): one-screen bento ---------- */
 .rv{display:flex;flex-direction:column;gap:16px}
@@ -4956,7 +4968,7 @@ function render(dir){
   stage.dataset.screen = s.id;
   rescueHelp();
   stage.innerHTML = s.view();
-  if(dir){ window.scrollTo({top:0}); stage.querySelector('h1')?.focus({preventScroll:true}); }
+  if(dir){ wiz.scrollTo({top:0}); window.scrollTo({top:0}); stage.querySelector('h1')?.focus({preventScroll:true}); }
   document.documentElement.lang = S.lang;
   document.querySelectorAll('[data-action="uilang"]').forEach(b=>{ const on=b.dataset.v===S.lang; b.classList.toggle('is-on',on); b.setAttribute('aria-pressed',on); });
   $('saveExit').textContent = t('saveExit'); $('saveExit').hidden = s.id==='thanks';
@@ -4967,7 +4979,7 @@ function render(dir){
   renderBoatSheet();
   $('helpBtn').innerHTML = `${ic('help',20,1.8)}<span>${t('help_btn')}</span>`; $('helpBtn').setAttribute('aria-label', t('help_btn'));
   $('mCancel').textContent = t('cancelBtn');
-  updateCounters(); updateNav(); fitReview(); fitChoices(); fitFleet();
+  updateCounters(); updateNav(); fitReview(); fitChoices(); fitFleet(); clearFold();
   if(H.open) renderPanel();
   mountMarePreview();
 }
@@ -5134,6 +5146,77 @@ function fitChoices(){
   /* the left column (heading) must fit as well */
   const head = stage.querySelector('.ct-head'); if(head && head.offsetHeight > innerHeight - top - bottom){ wiz.classList.remove('is-fit'); grid.classList.remove('is-fit'); grid.style.gridTemplateColumns=''; grid.style.gridAutoRows=''; }
 }
+/* Keep the scrollport clear of the fixed bar, and don't leave a short row sliced on the fold. */
+function clearFold(){
+  const wiz = $('wizard');
+  if(!wiz) return;
+  if(wiz.classList.contains('is-intro') || wiz.classList.contains('is-fleet')){
+    wiz.style.removeProperty('--ct-bar-space');
+    return;
+  }
+  const bar = $('bar');
+  const base = Math.ceil(bar.getBoundingClientRect().height + 24);
+  const sel = '.ct-incl-row, .ct-field, .ct-toggle, .ct-stepper, .ct-type-card, .sc-stat, .hk-metrics li, .ct-pills, .ct-opt, .ct-term, .hk-cai-card';
+  const rows = () => [...wiz.querySelectorAll(sel)].filter(el => {
+    const r = el.getBoundingClientRect();
+    return r.height >= 20 && r.height <= 150 && r.width >= 40;
+  });
+  let space = base;
+  wiz.style.setProperty('--ct-bar-space', space + 'px');
+  for(let n = 0; n < 3; n++){
+    const edge = wiz.getBoundingClientRect().bottom;
+    let hit = null;
+    for(const el of rows()){
+      const r = el.getBoundingClientRect();
+      const visible = edge - r.top;
+      if(r.bottom > edge + 4 && visible > 0 && visible < r.height - 8 && visible <= 100){
+        if(!hit || r.top < hit.top) hit = r;
+      }
+    }
+    if(!hit) break;
+    const need = Math.ceil(edge - hit.top);
+    if(need < 1 || need > 100) break;
+    space += need;
+    wiz.style.setProperty('--ct-bar-space', space + 'px');
+  }
+  /* Show a row that is only a few pixels past the fold, unless that uncovers a sliced row. */
+  const edge = wiz.getBoundingClientRect().bottom;
+  let reveal = 0;
+  for(const el of rows()){
+    const r = el.getBoundingClientRect();
+    const hidden = r.bottom - edge;
+    if(r.top < edge - 24 && hidden > 1 && hidden <= 14) reveal = Math.max(reveal, Math.ceil(hidden));
+  }
+  const floor = Math.ceil(bar.getBoundingClientRect().height + 16);
+  if(reveal && space - reveal >= floor){
+    const next = space - reveal;
+    wiz.style.setProperty('--ct-bar-space', next + 'px');
+    const edge2 = wiz.getBoundingClientRect().bottom;
+    const sliced = rows().some(el => {
+      const r = el.getBoundingClientRect();
+      const visible = edge2 - r.top;
+      return r.bottom > edge2 + 4 && visible > 0 && visible < r.height - 8;
+    });
+    if(sliced) wiz.style.setProperty('--ct-bar-space', space + 'px');
+    else space = next;
+  }
+  /* Keep a few pixels of the card below a row, so the next one cannot peek. */
+  const edge3 = wiz.getBoundingClientRect().bottom;
+  const peek = rows().some(el => {
+    const r = el.getBoundingClientRect();
+    return r.top > edge3 - 2 && r.top < edge3 + 3 && r.bottom > edge3 + 8;
+  });
+  if(peek){
+    wiz.style.setProperty('--ct-bar-space', (space + 10) + 'px');
+    const edge4 = wiz.getBoundingClientRect().bottom;
+    const sliced = rows().some(el => {
+      const r = el.getBoundingClientRect();
+      const visible = edge4 - r.top;
+      return visible > 2 && visible < r.height - 4 && r.bottom > edge4 + 4;
+    });
+    if(sliced) wiz.style.setProperty('--ct-bar-space', space + 'px');
+  }
+}
 /* Dock the help button inside the bar on desktop; float it on mobile and when the bar is hidden. */
 function dockHelp(){
   const btn = $('helpBtn'), bar = $('bar'), inner = bar.querySelector('.ct-bar-inner');
@@ -5179,7 +5262,7 @@ function fitFleet(){
   if(past()){ wiz.classList.add('is-tight'); applyPad(); }
   if(typeof mareFit === 'function') mareFit();
 }
-let fitT; addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(()=>{ dockHelp(); fitChoices(); fitReview(); fitFleet(); if(window.mareFit) mareFit(); }, 80); });
+let fitT; addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(()=>{ dockHelp(); fitChoices(); fitReview(); fitFleet(); clearFold(); if(window.mareFit) mareFit(); }, 80); });
 
 /* Review: same one-screen rule. The header gets compact, the rows share the
    height left between header and bar; if it still does not fit, a denser
