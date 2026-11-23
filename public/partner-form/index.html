@@ -82,81 +82,86 @@ img{display:block}
 .bt-stage{min-height:420px;display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:24px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03)}
 .bt-view{position:relative;flex:none;height:760px;min-height:760px;border-radius:16px;overflow:hidden;touch-action:none;background:#000}
 .bt-view canvas{display:block;width:100%;height:100%;cursor:grab}
-/* Fleet step: title and type pills on one row, then two equal panels. */
+/* Fleet step: title row with type pills, then two content-sized panels. */
 html:has(.ct-wizard.is-fleet){overflow:hidden}
-.ct-wizard.is-fleet{box-sizing:border-box;height:100dvh;min-height:0;max-height:100dvh;padding-top:var(--fleet-top,120px);padding-bottom:var(--fleet-bottom,96px);overflow:hidden}
-.ct-wizard.is-fleet .ct-stage{height:100%;min-height:0}
-.bt-fleet{display:flex;flex-direction:column;gap:16px;height:100%;min-height:0}
-.bt-fleet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex:none}
-.bt-fleet-head .ct-head{min-width:0;flex:1 1 auto}
-.bt-fleet-head .ct-count{margin:0 0 6px}
-.bt-fleet-head .ct-title{white-space:nowrap;font-size:clamp(22px,2.15vw,44px);line-height:1.05;letter-spacing:-.03em}
-.bt-fleet-head .ct-sub{margin:8px 0 0;max-width:none;font-size:clamp(13px,1.5vh,17px);line-height:1.35}
-.ct-wizard.is-fleet .bt-tiles{display:flex;flex:none;width:auto;gap:10px;align-items:flex-start}
-.ct-wizard.is-fleet .bt-tiles .bt-cat{flex:1 1 110px;width:auto;max-width:168px;height:44px;min-width:0;aspect-ratio:auto;margin:0;padding:0 28px 0 12px;border-radius:14px;font-size:13px;line-height:1.15}
+.ct-wizard.is-fleet{box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;height:100dvh;min-height:0;max-height:100dvh;padding-top:var(--fleet-top,120px);padding-bottom:var(--fleet-bottom,96px);overflow:hidden}
+.ct-wizard.is-fleet .ct-stage{flex:0 1 auto;height:auto;max-height:100%;min-height:0;width:100%}
+.bt-fleet{display:flex;flex-direction:column;gap:16px;height:auto;max-height:none;min-height:0}
+.bt-fleet-head{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:24px;align-items:center;flex:none}
+.bt-fleet-head .ct-head{display:contents}
+.bt-fleet-head .ct-count{grid-column:1;grid-row:1;margin:0 0 4px}
+.bt-fleet-head .ct-title{grid-column:1;grid-row:2;white-space:nowrap;font-size:clamp(22px,2.1vw,40px);line-height:1.05;letter-spacing:-.03em}
+.bt-fleet-head .ct-sub{grid-column:1;grid-row:3;margin:6px 0 0;max-width:none;font-size:clamp(13px,1.5vh,16px);line-height:1.35}
+.ct-wizard.is-fleet .bt-tiles{grid-column:2;grid-row:2;display:flex;flex:none;width:auto;gap:12px;align-items:center;align-self:center}
+.ct-wizard.is-fleet .bt-tiles .bt-cat{flex:0 0 auto;width:max-content;min-width:118px;max-width:none;height:44px;aspect-ratio:auto;margin:0;padding:0 14px;border-radius:14px;font-size:13px;line-height:1;white-space:nowrap}
+.ct-wizard.is-fleet .bt-tiles .bt-cat>span{display:block;white-space:nowrap;overflow:visible;text-overflow:clip}
 .ct-wizard.is-fleet .bt-tiles .bt-cat.is-on{border-color:#8fd0d4;color:#8fd0d4}
-.ct-wizard.is-fleet .bt-tiles .bt-cat b{top:-6px;right:-6px;transform:none;min-width:18px;height:18px;font-size:11px}
-.bt-fleet-panels{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:24px;flex:1 1 auto;min-height:0;align-items:stretch}
-.bt-panel{min-height:0;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
-.ct-wizard.is-fleet .bt-stage{display:flex;flex-direction:column;gap:10px;padding:12px;background:#000}
-.ct-wizard.is-fleet .bt-view{flex:1 1 auto;width:100%;height:auto;min-height:0;max-height:calc(100% - 40px);aspect-ratio:16/9}
+.ct-wizard.is-fleet .bt-tiles .bt-cat b{top:-7px;right:-7px;transform:none;min-width:18px;height:18px;font-size:11px}
+.bt-fleet-panels{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:24px;flex:0 0 auto;min-height:0;align-items:stretch}
+.bt-panel{min-height:0;height:auto;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.ct-wizard.is-fleet .bt-stage{display:flex;flex-direction:column;justify-content:flex-start;gap:10px;padding:12px;background:rgba(255,255,255,.04);height:auto;container-type:size}
+.ct-wizard.is-fleet .bt-view{flex:none;width:100%;min-height:0;max-height:none;aspect-ratio:auto;height:clamp(calc(100cqw * 0.625), calc(100cqh - 46px), calc(100cqw * 0.75))}
 .ct-wizard.is-fleet .bt-hud{display:flex;flex:none;flex-wrap:nowrap;align-items:center;gap:12px}
 .ct-wizard.is-fleet .bt-telem{margin:0;font-size:12px;letter-spacing:.06em}
-.ct-wizard.is-fleet .bt-fields{display:flex;flex-direction:column;padding:18px 20px;min-height:0;overflow:hidden}
-.ct-wizard.is-fleet .ct-block{display:grid;grid-template-columns:1fr 1fr;align-content:start;gap:14px 20px;flex:1 1 auto;min-height:0;margin:0;padding:0;background:transparent;overflow:hidden}
+.ct-wizard.is-fleet .bt-fields{display:flex;flex-direction:column;padding:20px;min-height:0;overflow:visible}
+.ct-wizard.is-fleet .ct-block{display:grid;grid-template-columns:1fr 1fr;align-content:start;gap:14px 18px;flex:0 0 auto;min-height:0;margin:0;padding:0;background:transparent;overflow:visible}
 .ct-wizard.is-fleet .ct-block-title{display:none}
 .ct-wizard.is-fleet .ct-row{display:contents}
-.ct-wizard.is-fleet .ct-field{gap:6px}
+.ct-wizard.is-fleet .ct-field{gap:6px;min-width:0}
 .ct-wizard.is-fleet .ct-field-label{font-size:14px;line-height:1.25;white-space:normal;overflow:visible;text-overflow:clip}
 .ct-wizard.is-fleet .ct-field input{height:40px;padding:0 14px;font-size:15px}
 .ct-wizard.is-fleet .ct-field:has(textarea),.ct-wizard.is-fleet .bt-maps,.ct-wizard.is-fleet .bt-actions{grid-column:1 / -1}
-.ct-wizard.is-fleet .ct-field textarea.is-short{min-height:56px;height:56px;padding:8px 14px;font-size:15px}
+.ct-wizard.is-fleet .ct-field textarea.is-short{min-height:52px;height:52px;padding:8px 14px;font-size:15px}
 .ct-wizard.is-fleet .bt-maps{margin:0;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}
 .ct-wizard.is-fleet .bt-maps a{display:inline-flex;align-items:center;gap:8px;color:var(--ct-cream);font-weight:600;text-decoration:none}
 .ct-wizard.is-fleet .bt-maps a::before{content:"";width:16px;height:16px;flex:none;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z'/%3E%3Ccircle cx='12' cy='10' r='2.4'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z'/%3E%3Ccircle cx='12' cy='10' r='2.4'/%3E%3C/svg%3E") center/contain no-repeat}
 .bt-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .bt-actions .ct-back{width:100%;height:42px}
+.ct-wizard.is-fleet .bt-actions .ct-back{padding:0 16px;white-space:nowrap}
 .ct-wizard.is-fleet .bt-add{margin:0;border-color:#8fd0d4;color:#8fd0d4}
-.ct-wizard.is-fleet.is-dense .bt-fleet{gap:8px}
-.ct-wizard.is-fleet.is-dense .bt-fleet-head .ct-count{margin-bottom:2px}
-.ct-wizard.is-fleet.is-dense .bt-fleet-head .ct-title{font-size:clamp(18px,1.9vw,26px)}
-.ct-wizard.is-fleet.is-dense .bt-fleet-head .ct-sub{margin-top:2px;font-size:12.5px;line-height:1.3}
-.ct-wizard.is-fleet.is-dense .bt-fleet-panels{gap:12px}
-.ct-wizard.is-fleet.is-dense .bt-fields{padding:8px 10px}
-.ct-wizard.is-fleet.is-dense .ct-block{gap:6px 10px}
-.ct-wizard.is-fleet.is-dense .ct-field{gap:2px}
-.ct-wizard.is-fleet.is-dense .ct-field-label{font-size:12.5px;line-height:1.2}
-.ct-wizard.is-fleet.is-dense .ct-field input{height:26px;padding:0 10px;font-size:13px}
-.ct-wizard.is-fleet.is-dense .ct-field textarea.is-short{min-height:28px;height:28px;padding:4px 10px;font-size:13px}
-.ct-wizard.is-fleet.is-dense .bt-maps{padding-top:6px}
-.ct-wizard.is-fleet.is-dense .bt-actions{gap:8px}
-.ct-wizard.is-fleet.is-dense .bt-actions .ct-back{height:30px;font-size:13px}
-.ct-wizard.is-fleet.is-dense .bt-stage{padding:8px;gap:6px}
-.ct-wizard.is-fleet.is-dense .bt-tiles .bt-cat{height:40px;font-size:12px}
-.ct-wizard.is-fleet.is-tight .bt-fleet{gap:4px}
-.ct-wizard.is-fleet.is-tight .bt-fleet-head .ct-sub{margin-top:0}
-.ct-wizard.is-fleet.is-tight .bt-fleet-panels{grid-template-columns:minmax(0,2fr) minmax(0,3.2fr);gap:10px}
-.ct-wizard.is-fleet.is-tight .bt-fields{padding:4px 8px}
-.ct-wizard.is-fleet.is-tight .ct-block{gap:2px 8px}
-.ct-wizard.is-fleet.is-tight .bt-maps{padding-top:2px}
-.ct-wizard.is-fleet.is-tight .ct-field{gap:1px}
-.ct-wizard.is-fleet.is-tight .ct-field-label{font-size:12px;line-height:1.15}
-.ct-wizard.is-fleet.is-tight .ct-field input{height:22px;font-size:12.5px}
-.ct-wizard.is-fleet.is-tight .ct-field textarea.is-short{min-height:24px;height:24px}
-.ct-wizard.is-fleet.is-tight .bt-maps{padding-top:4px}
-.ct-wizard.is-fleet.is-tight .bt-actions .ct-back{height:28px;font-size:12.5px}
-@media (max-width:1280px){
-  .ct-bar[data-s$="_btfleet"] .ct-bar-inner{gap:8px}
-  .ct-bar[data-s$="_btfleet"] .ct-sections{gap:6px}
-  .ct-bar[data-s$="_btfleet"] .ct-sections li{display:inline-flex;gap:4px;font-size:11px}
-  .ct-bar[data-s$="_btfleet"] .ct-back{height:40px;padding:0 14px}
-  .ct-bar[data-s$="_btfleet"] .button-02 .inner{padding-inline:16px}
+.ct-wizard.is-fleet.is-dense .bt-fleet{gap:10px}
+.ct-wizard.is-fleet.is-dense .bt-fleet-head .ct-title{font-size:clamp(20px,2vw,30px)}
+.ct-wizard.is-fleet.is-dense .bt-fleet-head .ct-sub{margin-top:4px;font-size:13px}
+.ct-wizard.is-fleet.is-dense .bt-fleet-panels{gap:16px}
+.ct-wizard.is-fleet.is-dense .bt-fields{padding:16px}
+.ct-wizard.is-fleet.is-dense .ct-field-label{font-size:13px;line-height:1.25}
+.ct-wizard.is-fleet.is-dense .ct-block{gap:8px 14px}
+.ct-wizard.is-fleet.is-dense .ct-field input{height:32px}
+.ct-wizard.is-fleet.is-dense .ct-field textarea.is-short{min-height:36px;height:36px}
+.ct-wizard.is-fleet.is-dense .bt-actions .ct-back{height:36px}
+.ct-wizard.is-fleet.is-tight .bt-fleet{gap:8px}
+.ct-wizard.is-fleet.is-tight .bt-fleet-head .ct-title{font-size:22px}
+.ct-wizard.is-fleet.is-tight .bt-fleet-head .ct-sub{margin-top:2px;font-size:12.5px;line-height:1.25}
+.ct-wizard.is-fleet.is-tight .bt-fields{padding:16px}
+.ct-wizard.is-fleet.is-tight .ct-block{gap:4px 12px}
+.ct-wizard.is-fleet.is-tight .ct-field{gap:2px}
+.ct-wizard.is-fleet.is-tight .ct-field-label{font-size:12px;line-height:1.2}
+.ct-wizard.is-fleet.is-tight .ct-field input{height:26px;font-size:13px}
+.ct-wizard.is-fleet.is-tight .ct-field textarea.is-short{min-height:28px;height:28px;padding:4px 12px}
+.ct-wizard.is-fleet.is-tight .bt-maps{padding-top:6px}
+.ct-wizard.is-fleet.is-tight .bt-actions .ct-back{height:30px;font-size:13px}
+.ct-wizard.is-fleet.is-tight .bt-stage{gap:8px;padding:10px}
+.ct-wizard.is-fleet.is-tight .bt-tiles .bt-cat{height:44px;min-width:110px;font-size:12px;padding:0 12px}
+@media (max-height:640px){
+  html:has(.ct-wizard.is-fleet) .sd-header{padding-top:12px}
+  html:has(.ct-wizard.is-fleet) .sd-header-in{padding-bottom:8px}
+  html:has(.ct-wizard.is-fleet) .sd-logo img{height:46px}
+  html:has(.ct-wizard.is-fleet) .ct-bar-inner{padding-top:8px;padding-bottom:8px}
+  .ct-wizard.is-fleet.is-tight .ct-block{gap:3px 10px}
+  .ct-wizard.is-fleet.is-tight .ct-field input{height:24px}
+  .ct-wizard.is-fleet.is-tight .ct-field textarea.is-short{min-height:24px;height:24px}
+  .ct-wizard.is-fleet.is-tight .bt-actions .ct-back{height:28px;padding:0 12px;font-size:12.5px}
+  .ct-wizard.is-fleet.is-tight .bt-maps{padding-top:4px}
 }
-@media (max-width:1100px){
-  .ct-bar[data-s$="_btfleet"] .ct-sections{gap:2px}
-  .ct-bar[data-s$="_btfleet"] .ct-sections li{font-size:10px;gap:2px}
-  .ct-bar[data-s$="_btfleet"] .ct-sections li i{width:16px;height:16px}
-  .ct-bar[data-s$="_btfleet"] .ct-back,.ct-bar[data-s$="_btfleet"] .ct-help-btn{padding-inline:10px;font-size:13px}
+@media (max-width:1440px){
+  .ct-bar[data-s$="_btfleet"] .ct-sections{gap:8px}
+  .ct-bar[data-s$="_btfleet"] .ct-sections li{font-size:12px;gap:4px}
+  .ct-bar[data-s$="_btfleet"] .button-02 .inner{padding-inline:32px}
+}
+@media (max-width:1360px){
+  .ct-bar[data-s$="_btfleet"] .ct-sections{gap:6px}
+  .ct-bar[data-s$="_btfleet"] .ct-sections li{font-size:11px;gap:4px}
+  .ct-bar[data-s$="_btfleet"] .button-02 .inner{padding-inline:24px}
 }
 .bt-stage .bt-wire{width:100%;height:280px}
 .bt-stage .bt-wire svg{width:100%;height:100%;animation:none;transform:none}
@@ -5092,27 +5097,30 @@ function fitFleet(){
   wiz.style.removeProperty('--fleet-top'); wiz.style.removeProperty('--fleet-bottom');
   if(!on) return;
   const header = document.querySelector('.sd-header'), bar = $('bar');
-  const top = Math.ceil(header.getBoundingClientRect().bottom) + 4;
-  const bottom = Math.ceil(bar.getBoundingClientRect().height) + 4;
-  wiz.style.setProperty('--fleet-top', top + 'px');
-  wiz.style.setProperty('--fleet-bottom', bottom + 'px');
-  wiz.classList.add('is-fleet');
   const sec = $('sections'); if(sec) sec.classList.remove('is-compact');
+  wiz.classList.add('is-fleet');
+  const applyPad = () => {
+    const top = Math.ceil(header.getBoundingClientRect().bottom) + 4;
+    const bottom = Math.ceil(bar.getBoundingClientRect().height) + 4;
+    wiz.style.setProperty('--fleet-top', top + 'px');
+    wiz.style.setProperty('--fleet-bottom', bottom + 'px');
+  };
+  applyPad();
   const barTop = () => bar.getBoundingClientRect().top;
   const past = () => {
     const head = stage.querySelector('.ct-title');
     const hud = stage.querySelector('.bt-hud');
     const add = stage.querySelector('.bt-add');
-    const block = stage.querySelector('.ct-block');
+    const fields = stage.querySelector('.bt-fields');
     if(head && head.getBoundingClientRect().top < header.getBoundingClientRect().bottom - 1) return true;
     if(hud && hud.getBoundingClientRect().bottom > barTop() - 2) return true;
     if(add && add.getBoundingClientRect().bottom > barTop() - 2) return true;
-    if(block && block.scrollHeight > block.clientHeight + 2) return true;
+    if(fields && fields.scrollHeight > fields.clientHeight + 2) return true;
     if(document.documentElement.scrollHeight > innerHeight + 2) return true;
     return false;
   };
-  if(past()) wiz.classList.add('is-dense');
-  if(past()) wiz.classList.add('is-tight');
+  if(past()){ wiz.classList.add('is-dense'); applyPad(); }
+  if(past()){ wiz.classList.add('is-tight'); applyPad(); }
   if(typeof mareFit === 'function') mareFit();
 }
 let fitT; addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(()=>{ dockHelp(); fitChoices(); fitReview(); fitFleet(); if(window.mareFit) mareFit(); }, 80); });
