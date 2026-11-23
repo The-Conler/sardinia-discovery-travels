@@ -147,11 +147,15 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
   html:has(.ct-wizard.is-fleet) .sd-header-in{padding-bottom:8px}
   html:has(.ct-wizard.is-fleet) .sd-logo img{height:46px}
   html:has(.ct-wizard.is-fleet) .ct-bar-inner{padding-top:8px;padding-bottom:8px}
-  .ct-wizard.is-fleet.is-tight .ct-block{gap:2px 10px}
-  .ct-wizard.is-fleet.is-tight .ct-field input{height:20px}
-  .ct-wizard.is-fleet.is-tight .ct-field textarea.is-short{min-height:20px;height:20px;padding:2px 12px}
+  .ct-wizard.is-fleet.is-tight .ct-block{gap:4px 8px}
+  .ct-wizard.is-fleet.is-tight .ct-field{gap:3px}
+  .ct-wizard.is-fleet.is-tight .ct-field-label{font-size:12px;line-height:1.2;letter-spacing:-.01em}
+  .ct-wizard.is-fleet.is-tight .ct-field input{height:22px}
+  .ct-wizard.is-fleet.is-tight .ct-field textarea.is-short{min-height:22px;height:22px;padding:3px 12px}
   .ct-wizard.is-fleet.is-tight .bt-actions .ct-back{height:28px;padding:0 12px;font-size:12.5px}
-  .ct-wizard.is-fleet.is-tight .bt-maps{padding-top:2px}
+  .ct-wizard.is-fleet.is-tight .bt-maps{padding-top:8px;gap:14px;align-items:center}
+  .ct-wizard.is-fleet.is-tight .bt-maps a{font-size:12px;font-weight:500;line-height:1.2;gap:6px}
+  .ct-wizard.is-fleet.is-tight .bt-maps a::before{width:12px;height:12px}
 }
 @media (max-width:1440px){
   .ct-bar[data-s$="_btfleet"] .ct-sections{gap:8px}
@@ -547,12 +551,9 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
 .sd-modal-box h3{margin:24px 0 8px;font-size:28px;font-weight:500;letter-spacing:-.015em}
 .sd-modal-box p{margin:0 0 32px;font-size:var(--t-card);line-height:1.5;color:var(--ct-muted)}
 .sd-modal-actions{display:flex;flex-wrap:wrap;gap:16px}
-.sd-toast{position:fixed;left:50%;top:22px;bottom:auto;z-index:30;width:max-content;max-width:min(360px,calc(100vw - 480px));padding:10px 16px;border-radius:999px;background:rgba(42,39,37,.98);border:1px solid var(--ct-line);color:#f8f4ee;font-size:14px;line-height:1.3;text-align:center;opacity:0;pointer-events:none;transform:translate(-50%,-8px);transition:opacity .3s var(--ct-ease),transform .3s var(--ct-ease)}
+.sd-toast{position:fixed;left:50%;top:22px;bottom:auto;z-index:30;width:max-content;max-width:min(480px,calc(100vw - 32px));padding:8px 14px;border-radius:999px;background:rgba(42,39,37,.98);border:1px solid var(--ct-line);color:#f8f4ee;font-size:13px;line-height:1.3;text-align:center;white-space:nowrap;opacity:0;pointer-events:none;transform:translate(-50%,-8px);transition:opacity .3s var(--ct-ease),transform .3s var(--ct-ease)}
 .sd-toast.is-on{opacity:1;transform:translate(-50%,0)}
-@media (max-width:1180px){
-  .sd-toast{max-width:min(280px,calc(100vw - 640px));font-size:13px;padding:8px 14px}
-  body:has(#fleetBtn:not([hidden])) .sd-toast{max-width:220px}
-}
+.sd-toast.is-below{padding:4px 12px;line-height:1.2}
 
 /* ---------- Responsive (same breakpoints as contact.css) ---------- */
 @media (max-width:1100px){
@@ -2002,7 +2003,57 @@ const filled = (s, n=2) => String(s||'').trim().length >= n;
 const pos = n => Number(n) > 0;
 const andList = xs => xs.length < 2 ? xs.join('') : `${xs.slice(0,-1).join(', ')} ${t('and')} ${xs[xs.length-1]}`;
 const DESC_MIN = 40, DESC_MAX = 1200;
-function toast(msg){ const el=$('toast'); el.textContent=msg; el.classList.add('is-on'); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove('is-on'),3400); }
+function toast(msg){ const el=$('toast'); el.textContent=msg; el.classList.add('is-on'); placeToast(); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove('is-on'),3400); }
+/* Keep the welcome pill in the header gap when it fits, otherwise just under the header line. */
+function placeToast(){
+  const el = $('toast');
+  const header = document.querySelector('.sd-header');
+  if(!el || !header || !el.textContent.trim()) return;
+  el.classList.remove('is-below');
+  el.style.left = '50%';
+  el.style.top = '22px';
+  el.style.maxWidth = 'none';
+  const natural = Math.ceil(el.getBoundingClientRect().width);
+  const logo = document.querySelector('.sd-logo')?.getBoundingClientRect();
+  let limit = innerWidth - 12;
+  for(const node of document.querySelectorAll('.sd-lang, #fleetBtn, #saveExit')){
+    if(node.hidden) continue;
+    const r = node.getBoundingClientRect();
+    if(r.width > 2 && r.height > 2) limit = Math.min(limit, r.left);
+  }
+  const leftBound = logo && logo.width > 2 ? logo.right : 12;
+  const room = limit - leftBound - 24;
+  const band = document.querySelector('.sd-header-in').getBoundingClientRect();
+  const fits = natural > 0 && natural <= room && room >= 160;
+  if(fits){
+    el.style.left = ((leftBound + 12 + limit - 12) / 2) + 'px';
+    el.style.top = Math.max(8, band.top + (band.height - el.offsetHeight) / 2) + 'px';
+    el.style.maxWidth = room + 'px';
+  }else below();
+  const hits = box => [...document.querySelectorAll('.sd-logo, .sd-lang, #fleetBtn, #saveExit')].some(node => {
+    if(node.hidden) return false;
+    const r = node.getBoundingClientRect();
+    if(r.width < 2 || r.height < 2) return false;
+    const ox = Math.min(r.right, box.right) - Math.max(r.left, box.left);
+    const oy = Math.min(r.bottom, box.bottom) - Math.max(r.top, box.top);
+    return ox > 1 && oy > 1;
+  });
+  if(hits(el.getBoundingClientRect())) below();
+  function below(){
+    el.classList.add('is-below');
+    el.style.left = '50%';
+    el.style.maxWidth = 'min(480px, calc(100vw - 32px))';
+    const line = header.getBoundingClientRect().bottom;
+    let content = innerHeight;
+    for(const node of document.querySelectorAll('.ct-title, #stage h1, .bt-cat, .ct-field, .ct-opt, .bt-tiles')){
+      const r = node.getBoundingClientRect();
+      if(r.width > 2 && r.height > 2 && r.bottom > line) content = Math.min(content, r.top);
+    }
+    const h = el.offsetHeight;
+    const gap = content - line;
+    el.style.top = (line + (gap > h ? Math.max(4, (gap - h) / 2) : 4)) + 'px';
+  }
+}
 function teal(label, action, extra=''){
   return `<button type="button" class="button-02 button-02--teal ct-btn" data-action="${action}" ${extra}><span class="inner">${esc(label)}</span><span class="circle" aria-hidden="true"><span>${ic('arrowRight',18,1.8)}</span></span></button>`;
 }
@@ -4979,7 +5030,7 @@ function render(dir){
   renderBoatSheet();
   $('helpBtn').innerHTML = `${ic('help',20,1.8)}<span>${t('help_btn')}</span>`; $('helpBtn').setAttribute('aria-label', t('help_btn'));
   $('mCancel').textContent = t('cancelBtn');
-  updateCounters(); updateNav(); fitReview(); fitChoices(); fitFleet(); clearFold();
+  updateCounters(); updateNav(); fitReview(); fitChoices(); fitFleet(); clearFold(); placeToast();
   if(H.open) renderPanel();
   mountMarePreview();
 }
@@ -5262,7 +5313,7 @@ function fitFleet(){
   if(past()){ wiz.classList.add('is-tight'); applyPad(); }
   if(typeof mareFit === 'function') mareFit();
 }
-let fitT; addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(()=>{ dockHelp(); fitChoices(); fitReview(); fitFleet(); clearFold(); if(window.mareFit) mareFit(); }, 80); });
+let fitT; addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(()=>{ dockHelp(); fitChoices(); fitReview(); fitFleet(); clearFold(); placeToast(); if(window.mareFit) mareFit(); }, 80); });
 
 /* Review: same one-screen rule. The header gets compact, the rows share the
    height left between header and bar; if it still does not fit, a denser
