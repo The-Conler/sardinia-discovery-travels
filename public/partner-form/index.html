@@ -82,49 +82,82 @@ img{display:block}
 .bt-stage{min-height:420px;display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:24px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03)}
 .bt-view{position:relative;flex:none;height:760px;min-height:760px;border-radius:16px;overflow:hidden;touch-action:none;background:#000}
 .bt-view canvas{display:block;width:100%;height:100%;cursor:grab}
-/* Fleet step: one viewport between the header and the fixed bar. The preview
-   takes the height that remains after the title and the canvas controls. */
+/* Fleet step: title and type pills on one row, then two equal panels. */
 html:has(.ct-wizard.is-fleet){overflow:hidden}
 .ct-wizard.is-fleet{box-sizing:border-box;height:100dvh;min-height:0;max-height:100dvh;padding-top:var(--fleet-top,120px);padding-bottom:var(--fleet-bottom,96px);overflow:hidden}
-.ct-wizard.is-fleet .ct-stage{height:100%;min-height:0;display:flex;flex-direction:column}
-.ct-wizard.is-fleet .ct-split{flex:1 1 auto;min-height:0;height:100%;grid-template-columns:minmax(280px,.9fr) minmax(0,1.15fr);column-gap:clamp(16px,2.4vw,40px);row-gap:0;align-items:stretch}
-.ct-wizard.is-fleet .ct-split-side,.ct-wizard.is-fleet .ct-split-body{min-height:0;height:100%;overflow:hidden}
-.ct-wizard.is-fleet .ct-split-side{gap:8px}
-.ct-wizard.is-fleet .ct-head{flex:none}
-.ct-wizard.is-fleet .ct-count{margin-bottom:4px}
-.ct-wizard.is-fleet .ct-title{font-size:clamp(26px,3.4vh,48px);line-height:1.05}
-.ct-wizard.is-fleet .ct-sub{margin-top:6px;font-size:clamp(13px,1.7vh,17px);line-height:1.3}
-.ct-wizard.is-fleet .bt-stage{flex:1 1 auto;min-height:0;gap:6px;padding:8px}
-.ct-wizard.is-fleet .bt-view{flex:1 1 auto;height:auto;min-height:0;max-height:none}
-.ct-wizard.is-fleet .bt-hud,.ct-wizard.is-fleet .bt-telem{flex:none}
-.ct-wizard.is-fleet .bt-telem{font-size:10px}
-.ct-wizard.is-fleet .ct-split-body{gap:8px}
-.ct-wizard.is-fleet .bt-tiles{flex:none;width:100%;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.ct-wizard.is-fleet .bt-tiles .bt-cat{aspect-ratio:auto;height:clamp(56px,9vh,96px);min-height:0;padding:8px 10px;border-radius:16px}
-.ct-wizard.is-fleet .ct-block{flex:1 1 auto;min-height:0;gap:6px;padding:10px 12px;overflow:hidden}
-.ct-wizard.is-fleet .ct-block-title{font-size:14px}
-.ct-wizard.is-fleet .ct-field{gap:2px}
-.ct-wizard.is-fleet .ct-field-label{font-size:13px;line-height:1.2}
-.ct-wizard.is-fleet .ct-field input{height:32px;padding:0 12px;font-size:14px}
-.ct-wizard.is-fleet .ct-field textarea.is-short{min-height:36px;padding:6px 12px;font-size:14px}
-.ct-wizard.is-fleet .ct-row{gap:8px}
-.ct-wizard.is-fleet .bt-maps{margin:0}
-.ct-wizard.is-fleet .ct-back{height:34px;padding:0 14px;font-size:14px}
-.ct-wizard.is-fleet .bt-add{flex:none;margin-top:0}
-.ct-wizard.is-fleet.is-dense .ct-title{font-size:clamp(22px,3vh,32px)}
-.ct-wizard.is-fleet.is-dense .ct-sub{font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.ct-wizard.is-fleet.is-dense .ct-split-side{gap:4px}
-.ct-wizard.is-fleet.is-dense .bt-tiles .bt-cat{height:48px;padding:6px 8px;font-size:13px}
-.ct-wizard.is-fleet.is-dense .ct-block{display:grid;grid-template-columns:1fr 1fr 1fr;align-content:start;gap:1px 8px;padding:2px 8px}
-.ct-wizard.is-fleet.is-dense .ct-field{gap:0}
-.ct-wizard.is-fleet.is-dense .ct-block-title,.ct-wizard.is-fleet.is-dense .ct-block>.ct-back,.ct-wizard.is-fleet.is-dense .ct-field:has(textarea),.ct-wizard.is-fleet.is-dense .bt-maps{grid-column:1 / -1}
-.ct-wizard.is-fleet.is-dense .ct-row{display:contents}
-.ct-wizard.is-fleet.is-dense .ct-field-label{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ct-wizard.is-fleet.is-dense .ct-field textarea,.ct-wizard.is-fleet.is-dense .ct-field textarea.is-short{min-height:22px;height:22px;padding:2px 10px}
-.ct-wizard.is-fleet.is-dense .ct-field input{height:24px}
-.ct-wizard.is-fleet.is-dense .ct-field textarea.is-short{min-height:28px}
-.ct-wizard.is-fleet.is-dense .ct-back{height:30px}
-.ct-wizard.is-fleet.is-dense .bt-hud button{height:28px}
+.ct-wizard.is-fleet .ct-stage{height:100%;min-height:0}
+.bt-fleet{display:flex;flex-direction:column;gap:16px;height:100%;min-height:0}
+.bt-fleet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex:none}
+.bt-fleet-head .ct-head{min-width:0;flex:1 1 auto}
+.bt-fleet-head .ct-count{margin:0 0 6px}
+.bt-fleet-head .ct-title{white-space:nowrap;font-size:clamp(22px,2.15vw,44px);line-height:1.05;letter-spacing:-.03em}
+.bt-fleet-head .ct-sub{margin:8px 0 0;max-width:none;font-size:clamp(13px,1.5vh,17px);line-height:1.35}
+.ct-wizard.is-fleet .bt-tiles{display:flex;flex:none;width:auto;gap:10px;align-items:flex-start}
+.ct-wizard.is-fleet .bt-tiles .bt-cat{flex:1 1 110px;width:auto;max-width:168px;height:44px;min-width:0;aspect-ratio:auto;margin:0;padding:0 28px 0 12px;border-radius:14px;font-size:13px;line-height:1.15}
+.ct-wizard.is-fleet .bt-tiles .bt-cat.is-on{border-color:#8fd0d4;color:#8fd0d4}
+.ct-wizard.is-fleet .bt-tiles .bt-cat b{top:-6px;right:-6px;transform:none;min-width:18px;height:18px;font-size:11px}
+.bt-fleet-panels{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:24px;flex:1 1 auto;min-height:0;align-items:stretch}
+.bt-panel{min-height:0;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.ct-wizard.is-fleet .bt-stage{display:flex;flex-direction:column;gap:10px;padding:12px;background:#000}
+.ct-wizard.is-fleet .bt-view{flex:1 1 auto;width:100%;height:auto;min-height:0;max-height:calc(100% - 40px);aspect-ratio:16/9}
+.ct-wizard.is-fleet .bt-hud{display:flex;flex:none;flex-wrap:nowrap;align-items:center;gap:12px}
+.ct-wizard.is-fleet .bt-telem{margin:0;font-size:12px;letter-spacing:.06em}
+.ct-wizard.is-fleet .bt-fields{display:flex;flex-direction:column;padding:18px 20px;min-height:0;overflow:hidden}
+.ct-wizard.is-fleet .ct-block{display:grid;grid-template-columns:1fr 1fr;align-content:start;gap:14px 20px;flex:1 1 auto;min-height:0;margin:0;padding:0;background:transparent;overflow:hidden}
+.ct-wizard.is-fleet .ct-block-title{display:none}
+.ct-wizard.is-fleet .ct-row{display:contents}
+.ct-wizard.is-fleet .ct-field{gap:6px}
+.ct-wizard.is-fleet .ct-field-label{font-size:14px;line-height:1.25;white-space:normal;overflow:visible;text-overflow:clip}
+.ct-wizard.is-fleet .ct-field input{height:40px;padding:0 14px;font-size:15px}
+.ct-wizard.is-fleet .ct-field:has(textarea),.ct-wizard.is-fleet .bt-maps,.ct-wizard.is-fleet .bt-actions{grid-column:1 / -1}
+.ct-wizard.is-fleet .ct-field textarea.is-short{min-height:56px;height:56px;padding:8px 14px;font-size:15px}
+.ct-wizard.is-fleet .bt-maps{margin:0;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}
+.ct-wizard.is-fleet .bt-maps a{display:inline-flex;align-items:center;gap:8px;color:var(--ct-cream);font-weight:600;text-decoration:none}
+.ct-wizard.is-fleet .bt-maps a::before{content:"";width:16px;height:16px;flex:none;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z'/%3E%3Ccircle cx='12' cy='10' r='2.4'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8'%3E%3Cpath d='M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z'/%3E%3Ccircle cx='12' cy='10' r='2.4'/%3E%3C/svg%3E") center/contain no-repeat}
+.bt-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bt-actions .ct-back{width:100%;height:42px}
+.ct-wizard.is-fleet .bt-add{margin:0;border-color:#8fd0d4;color:#8fd0d4}
+.ct-wizard.is-fleet.is-dense .bt-fleet{gap:8px}
+.ct-wizard.is-fleet.is-dense .bt-fleet-head .ct-count{margin-bottom:2px}
+.ct-wizard.is-fleet.is-dense .bt-fleet-head .ct-title{font-size:clamp(18px,1.9vw,26px)}
+.ct-wizard.is-fleet.is-dense .bt-fleet-head .ct-sub{margin-top:2px;font-size:12.5px;line-height:1.3}
+.ct-wizard.is-fleet.is-dense .bt-fleet-panels{gap:12px}
+.ct-wizard.is-fleet.is-dense .bt-fields{padding:8px 10px}
+.ct-wizard.is-fleet.is-dense .ct-block{gap:6px 10px}
+.ct-wizard.is-fleet.is-dense .ct-field{gap:2px}
+.ct-wizard.is-fleet.is-dense .ct-field-label{font-size:12.5px;line-height:1.2}
+.ct-wizard.is-fleet.is-dense .ct-field input{height:26px;padding:0 10px;font-size:13px}
+.ct-wizard.is-fleet.is-dense .ct-field textarea.is-short{min-height:28px;height:28px;padding:4px 10px;font-size:13px}
+.ct-wizard.is-fleet.is-dense .bt-maps{padding-top:6px}
+.ct-wizard.is-fleet.is-dense .bt-actions{gap:8px}
+.ct-wizard.is-fleet.is-dense .bt-actions .ct-back{height:30px;font-size:13px}
+.ct-wizard.is-fleet.is-dense .bt-stage{padding:8px;gap:6px}
+.ct-wizard.is-fleet.is-dense .bt-tiles .bt-cat{height:40px;font-size:12px}
+.ct-wizard.is-fleet.is-tight .bt-fleet{gap:4px}
+.ct-wizard.is-fleet.is-tight .bt-fleet-head .ct-sub{margin-top:0}
+.ct-wizard.is-fleet.is-tight .bt-fleet-panels{grid-template-columns:minmax(0,2fr) minmax(0,3.2fr);gap:10px}
+.ct-wizard.is-fleet.is-tight .bt-fields{padding:4px 8px}
+.ct-wizard.is-fleet.is-tight .ct-block{gap:2px 8px}
+.ct-wizard.is-fleet.is-tight .bt-maps{padding-top:2px}
+.ct-wizard.is-fleet.is-tight .ct-field{gap:1px}
+.ct-wizard.is-fleet.is-tight .ct-field-label{font-size:12px;line-height:1.15}
+.ct-wizard.is-fleet.is-tight .ct-field input{height:22px;font-size:12.5px}
+.ct-wizard.is-fleet.is-tight .ct-field textarea.is-short{min-height:24px;height:24px}
+.ct-wizard.is-fleet.is-tight .bt-maps{padding-top:4px}
+.ct-wizard.is-fleet.is-tight .bt-actions .ct-back{height:28px;font-size:12.5px}
+@media (max-width:1280px){
+  .ct-bar[data-s$="_btfleet"] .ct-bar-inner{gap:8px}
+  .ct-bar[data-s$="_btfleet"] .ct-sections{gap:6px}
+  .ct-bar[data-s$="_btfleet"] .ct-sections li{display:inline-flex;gap:4px;font-size:11px}
+  .ct-bar[data-s$="_btfleet"] .ct-back{height:40px;padding:0 14px}
+  .ct-bar[data-s$="_btfleet"] .button-02 .inner{padding-inline:16px}
+}
+@media (max-width:1100px){
+  .ct-bar[data-s$="_btfleet"] .ct-sections{gap:2px}
+  .ct-bar[data-s$="_btfleet"] .ct-sections li{font-size:10px;gap:2px}
+  .ct-bar[data-s$="_btfleet"] .ct-sections li i{width:16px;height:16px}
+  .ct-bar[data-s$="_btfleet"] .ct-back,.ct-bar[data-s$="_btfleet"] .ct-help-btn{padding-inline:10px;font-size:13px}
+}
 .bt-stage .bt-wire{width:100%;height:280px}
 .bt-stage .bt-wire svg{width:100%;height:100%;animation:none;transform:none}
 .bt-hud{display:flex;flex-wrap:wrap;gap:6px}
@@ -3757,12 +3790,11 @@ function mareFleetScreen(i){
     return `<button type="button" class="bt-cat${c === cat ? ' is-on' : ''}" data-action="mareopen" data-i="${i}" data-v="${c}"><span>${esc(o(c))}</span><b>${n}</b></button>`;
   }).join('') + `<button type="button" class="bt-cat${m.yachtOpen ? ' is-on' : ''}" data-action="mareyacht" data-i="${i}"><span>${esc(o('yacht'))}</span></button>`;
   const boats = m.fleet.map((b, k) => ({b, k})).filter(x => x.b.type === cat);
-  const forms = cat ? boats.map(({b, k}) => `<section class="ct-block"><h3 class="ct-block-title">${esc(b.name || t('bt_boat_n', {n:k+1}))}</h3>${mareBoatFields(i, k, b)}<button type="button" class="ct-back" data-action="fleetdel" data-i="${i}" data-k="${k}">${esc(t('bt_remove_boat'))}</button></section>`).join('') + `<button type="button" class="ct-back bt-add" data-action="fleetadd" data-i="${i}" data-type="${cat}">${ic('plus',16,1.8)} ${esc(t('bt_add_boat'))}</button>` : '';
+  const forms = cat ? boats.map(({b, k}, idx, arr) => `<section class="ct-block"><h3 class="ct-block-title">${esc(b.name || t('bt_boat_n', {n:k+1}))}</h3>${mareBoatFields(i, k, b)}<div class="bt-actions"><button type="button" class="ct-back" data-action="fleetdel" data-i="${i}" data-k="${k}">${esc(t('bt_remove_boat'))}</button>${idx === arr.length - 1 ? `<button type="button" class="ct-back bt-add" data-action="fleetadd" data-i="${i}" data-type="${cat}">${ic('plus',16,1.8)} ${esc(t('bt_add_boat'))}</button>` : ''}</div></section>`).join('') : '';
   const hull = m.yachtOpen ? 'yacht' : cat;
-  const hud = hull ? `<div class="bt-view" data-mare-view></div><div class="bt-hud">
-      <button type="button" data-mare-hud="spin">${esc(t('bt_hud_spin'))}</button>
-    </div><p class="bt-telem" data-mare-telem></p>${m.yachtOpen ? note(t('bt_yacht_note'), 'info') : ''}` : '';
-  return splitSide(head(t('bt_fleet_title'), t('bt_fleet_sub'), ecount(i)), `<div class="bt-stage" data-hull="${hull}">${hud}</div>`, `<div class="bt-tiles">${tiles}</div>${forms}`);
+  const hud = hull ? `<div class="bt-view" data-mare-view></div><div class="bt-hud"><button type="button" data-mare-hud="spin">${esc(t('bt_hud_spin'))}</button><p class="bt-telem" data-mare-telem></p></div>${m.yachtOpen ? note(t('bt_yacht_note'), 'info') : ''}` : '';
+  const addOnly = cat && !boats.length ? `<div class="bt-actions"><button type="button" class="ct-back bt-add" data-action="fleetadd" data-i="${i}" data-type="${cat}">${ic('plus',16,1.8)} ${esc(t('bt_add_boat'))}</button></div>` : '';
+  return `<div class="bt-fleet"><div class="bt-fleet-head">${head(t('bt_fleet_title'), t('bt_fleet_sub'), ecount(i))}<div class="bt-tiles">${tiles}</div></div><div class="bt-fleet-panels"><div class="bt-stage bt-panel" data-hull="${hull}">${hud}</div><div class="bt-panel bt-fields">${forms}${addOnly}</div></div></div>`;
 }
 function mareFleetOk(e){ const m = e?.mare; return !!m && m.fleet.every(mareBoatOkFields); }
 function mareMapSvg(e, i){
@@ -5056,31 +5088,32 @@ function dockHelp(){
 function fitFleet(){
   const wiz = $('wizard'), stage = $('stage');
   const on = /^e\d+_btfleet$/.test(stage?.dataset.screen || '');
-  wiz.classList.remove('is-fleet','is-dense');
+  wiz.classList.remove('is-fleet','is-dense','is-tight');
   wiz.style.removeProperty('--fleet-top'); wiz.style.removeProperty('--fleet-bottom');
   if(!on) return;
   const header = document.querySelector('.sd-header'), bar = $('bar');
-  const top = Math.ceil(header.getBoundingClientRect().bottom) + 8;
-  const bottom = Math.ceil(bar.getBoundingClientRect().height) + 8;
+  const top = Math.ceil(header.getBoundingClientRect().bottom) + 4;
+  const bottom = Math.ceil(bar.getBoundingClientRect().height) + 4;
   wiz.style.setProperty('--fleet-top', top + 'px');
   wiz.style.setProperty('--fleet-bottom', bottom + 'px');
   wiz.classList.add('is-fleet');
+  const sec = $('sections'); if(sec) sec.classList.remove('is-compact');
   const barTop = () => bar.getBoundingClientRect().top;
   const past = () => {
     const head = stage.querySelector('.ct-title');
     const hud = stage.querySelector('.bt-hud');
     const add = stage.querySelector('.bt-add');
-    const tiles = stage.querySelector('.bt-tiles');
     const block = stage.querySelector('.ct-block');
     if(head && head.getBoundingClientRect().top < header.getBoundingClientRect().bottom - 1) return true;
     if(hud && hud.getBoundingClientRect().bottom > barTop() - 2) return true;
     if(add && add.getBoundingClientRect().bottom > barTop() - 2) return true;
-    if(tiles && tiles.getBoundingClientRect().bottom > barTop() - 2) return true;
     if(block && block.scrollHeight > block.clientHeight + 2) return true;
     if(document.documentElement.scrollHeight > innerHeight + 2) return true;
     return false;
   };
   if(past()) wiz.classList.add('is-dense');
+  if(past()) wiz.classList.add('is-tight');
+  if(typeof mareFit === 'function') mareFit();
 }
 let fitT; addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(()=>{ dockHelp(); fitChoices(); fitReview(); fitFleet(); if(window.mareFit) mareFit(); }, 80); });
 
