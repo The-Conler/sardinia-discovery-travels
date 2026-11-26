@@ -70,6 +70,28 @@ img{display:block}
 .sd-fleet{padding:0 18px;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap}
 .sd-fleet[hidden]{display:none}
 .bt-map-frame{width:min(100%,calc(min(80vh,720px) * 640 / 900));aspect-ratio:640/900;margin-inline:auto;container-type:size}
+/* Dove operi fills one viewport: pills under the title, map on the right at the real ratio. */
+.ct-wizard:not(.is-intro):not(.is-fleet):has(.ct-stage--exp-btmap){display:flex;flex-direction:column;overflow:hidden}
+.ct-stage--exp-btmap{flex:1;min-height:0;display:flex;flex-direction:column}
+.bt-dove{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.15fr) auto;grid-template-rows:auto minmax(0,1fr);grid-template-areas:"copy map" "side map";column-gap:clamp(24px,3vw,48px);row-gap:16px;align-items:start}
+.bt-dove-copy{grid-area:copy;min-width:0}
+.bt-dove-copy .ct-head{margin:0}
+.bt-dove-copy .ct-count{margin-bottom:8px}
+.bt-dove-copy .ct-sub{margin-top:12px}
+.bt-dove-side{grid-area:side;min-width:0;display:flex;flex-direction:column;gap:16px}
+.bt-dove .bt-map-picks{margin:0}
+.bt-dove-map{grid-area:map;align-self:stretch;min-width:0;min-height:0;display:flex;align-items:flex-start;justify-content:flex-end}
+.bt-dove .bt-map-frame{width:auto;height:100%;max-height:100%;aspect-ratio:640/900;margin:0}
+.bt-dove .ct-note{margin:0;padding:12px 14px;width:100%;max-width:42ch}
+@media (max-width:860px){
+  .ct-wizard:not(.is-intro):not(.is-fleet):has(.ct-stage--exp-btmap){display:block;overflow-x:hidden;overflow-y:auto}
+  .ct-stage--exp-btmap{display:block;height:auto}
+  .bt-dove{display:grid;grid-template-columns:1fr;grid-template-rows:auto auto auto;grid-template-areas:"copy" "map" "side";row-gap:16px;height:auto}
+  .bt-dove-map{height:auto;justify-content:center}
+  .bt-dove .bt-map-frame{width:min(100%,180px);height:auto;aspect-ratio:640/900;margin-inline:auto}
+  .bt-dove .ct-pill{height:40px;min-width:0;padding:0 12px;font-size:14px}
+  .bt-dove .ct-note{max-width:none}
+}
 .bt-map{width:100%;height:100%;display:block;border-radius:20px;background:#1c1917}
 .bt-pick{display:block;width:100%;text-align:left;padding:12px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:inherit;cursor:pointer}
 .bt-pick.is-on{border-color:#8fd0d4;background:rgba(47,127,136,.22)}
@@ -3957,17 +3979,18 @@ function mareMapScreen(i){
   }).join('');
   const chipLabel = key => key === 'asinara' ? 'Asinara' : key === 'maddalena' ? 'Maddalena' : key === 'baunei' ? 'Costa di Baunei' : t('bt_a_' + key);
   const chips = `<div class="ct-pills bt-map-picks" role="group" aria-label="${esc(t('bt_map_title'))}">${MARE_AREAS.map(key => `<button type="button" class="ct-pill${m.areas.includes(key)?' is-on':''}" data-action="marezone" data-i="${i}" data-v="${key}">${esc(chipLabel(key))}</button>`).join('')}</div>`;
-  return split(head(t('bt_map_title'), t('bt_map_sub'), ecount(i)), `
-    ${mareMapSvg(e, i)}
-    ${chips}
-    ${note(t('bt_dash_note'), 'info')}
-    ${m.areas.includes('altro') ? inp(P(i,'mare.areaOther'), t('bt_a_altro_lbl')) : ''}
+  const extra = `${m.areas.includes('altro') ? inp(P(i,'mare.areaOther'), t('bt_a_altro_lbl')) : ''}
     ${m.focus ? `<section class="ct-block"><h3 class="ct-block-title">${esc(mareName(e, m.focus))}</h3>
       ${group(t('bt_ports_q'), `<div class="ct-pills" role="radiogroup">${['one','more'].map(v => `<button type="button" class="ct-pill${portMode===v?' is-on':''}" role="radio" aria-checked="${portMode===v}" data-action="mareports" data-i="${i}" data-area="${m.focus}" data-v="${v}">${esc(t(v==='one'?'bt_ports_one':'bt_ports_more'))}</button>`).join('')}</div>`)}
       ${portMode ? group(t('bt_from'), ports || '') : ''}
       ${portMode === 'more' ? `<button type="button" class="ct-back bt-add" data-action="mareportadd" data-i="${i}" data-area="${m.focus}">${ic('plus',16,1.8)} ${esc(t('bt_port_add'))}</button>` : ''}
     </section>` : ''}
-    ${progress ? `<div class="bt-progress">${progress}</div>` : ''}`);
+    ${progress ? `<div class="bt-progress">${progress}</div>` : ''}`;
+  return `<div class="bt-dove">
+    <div class="bt-dove-copy">${head(t('bt_map_title'), t('bt_map_sub'), ecount(i))}</div>
+    <div class="bt-dove-side">${chips}${note(t('bt_dash_note'), 'info')}${extra}</div>
+    <div class="bt-dove-map">${mareMapSvg(e, i)}</div>
+  </div>`;
 }
 function mareMapOk(e){
   const m = e?.mare; if(!m || !m.areas.length) return false;
