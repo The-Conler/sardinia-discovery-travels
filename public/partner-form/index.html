@@ -2174,6 +2174,8 @@ function bandGroup(i, e, codes){
   }).join('')}</div>`;
 }
 function bandPills(i, e){
+  /* Cooking class: full day and half day are not offered. Morning, afternoon, evening stay. */
+  if(e.sector === 'cooking_class') return bandGroup(i, e, ['band_morning','band_afternoon','band_evening']);
   if(e.sector !== 'natura' && e.sector !== 'sport') return bandGroup(i, e, CONFIG.bands);
   return `<p class="ct-spec-head">${esc(t('sl_half'))}</p>${bandGroup(i, e, ['band_morning','band_afternoon','band_evening'])}
     <p class="ct-spec-head">${esc(t('sl_full'))}</p>${bandGroup(i, e, ['band_full'])}`;
@@ -4551,6 +4553,7 @@ function screens(){
         else { for(const q of (SECTOR[e.sector].q || [])) delete e.sq[q.k]; }
       }
       if(e.sector === 'enogastronomia' || e.sector === 'cooking_class' || e.sector === 'benessere'){ e.prevExp = false; e.limits = ''; e.safety = ''; e.difficulty = ''; }
+      if(e.sector === 'cooking_class') e.bands = (e.bands||[]).filter(b => b !== 'band_full');
       if(e.sector === 'guide'){ if(!e.langLevel || typeof e.langLevel !== 'object' || Array.isArray(e.langLevel)) e.langLevel = {}; for(const k of Object.keys(e.langLevel)) if(!(e.langs||[]).includes(k)) delete e.langLevel[k]; }
       if(specList(e)[0] !== '4x4_altro') e.vehicle = '';
       if(e.sector === 'enogastronomia'){ e.sq = e.sq || {}; const hide = TASTE_OF[specList(e)[0]]; if(hide && Array.isArray(e.sq.tasting)) e.sq.tasting = e.sq.tasting.filter(x => x !== hide); if(lunchOnly(e)){ delete e.sq.tasting; delete e.sq.certs; } if(!hasLunch(e)){ delete e.sq.menu_kind; delete e.sq.menu_offer; } }
