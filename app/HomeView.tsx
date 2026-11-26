@@ -10,6 +10,8 @@ import { GoogleReviews } from "./GoogleReviews";
 import { CinematicHero } from "./CinematicHero";
 import { FloatingActions } from "./FloatingActions";
 import { textReveal02 } from "./textReveal02";
+import { readSiteLang, writeSiteLang } from "./siteLang";
+import { WINE_CARD_COPY, WINE_MULTI_COPY } from "./contact/contactData";
 
 declare global {
   interface Window {
@@ -39,26 +41,12 @@ declare global {
 }
 
 const exploreItems = [
-  {
-    title: "blue zone",
-    description: "Culture, longevity, and authentic local living.",
-    image: "/explore/blue-zone.png",
-  },
-  {
-    title: "Tailor Made Tours",
-    description: "Custom routes designed around your pace and interests.",
-    image: "/explore/tailor-made-tours.png",
-  },
-  {
-    title: "private transfer",
-    description: "Smooth private rides across the island.",
-    image: "/explore/private-transfer.png",
-  },
-  {
-    title: "food expierences",
-    description: "Traditional flavors, shared tables, and local stories.",
-    image: "/explore/food-expierences.png",
-  },
+  { title: "About Sardinia", description: "", href: "/about", image: "/about/hero.webp" },
+  { title: "The Blue Zone", description: "Culture, longevity, and authentic local living.", image: "/explore/blue-zone.png" },
+  { title: "Top Events", description: "", href: "/#top-events", image: "/about/gruppo-folk.webp" },
+  { title: "Food & Wine", description: "Traditional flavors, shared tables, and local stories.", image: "/explore/food-expierences.png" },
+  { title: "Tailor Made Tours", description: "Custom routes designed around your pace and interests.", image: "/explore/tailor-made-tours.png" },
+  { title: "private transfer", description: "Smooth private rides across the island.", href: "/private-transfers", image: "/explore/private-transfer.png" },
 ];
 
 const experienceItems = [
@@ -179,11 +167,26 @@ const tripFinderFields = [
   { key: "travel", label: "Budget" },
 ] as const;
 
-const tripTypeOptions: Record<string, string[]> = {
-  Experiences: ["Boat tour", "Cooking class", "Off road", "Escursioni", "Blue zone"],
-  Tours: ["Tailor made tour", "Private transfer", "Food experience", "Island route"],
-  Stays: ["Boutique hotel", "Sea-view retreat", "Countryside stay", "Luxury villa"],
+const tripTypeOptions: Record<string, { value: string }[]> = {
+  Experiences: [
+    { value: "Boat tour" },
+    { value: "Cooking class" },
+    { value: "wine" },
+    { value: "Off road" },
+    { value: "Escursioni" },
+    { value: "Blue zone" },
+  ],
+  Tours: ["Tailor made tour", "Private transfer", "Food experience", "Island route"].map((value) => ({ value })),
+  Stays: ["Boutique hotel", "Sea-view retreat", "Countryside stay", "Luxury villa"].map((value) => ({ value })),
 };
+
+function tripTypeLabel(value: string, code: string) {
+  if (value === "wine") return WINE_CARD_COPY[code === "it" ? "it" : "en"].label;
+  return value;
+}
+function wineHint(code: string) {
+  return WINE_CARD_COPY[code === "it" ? "it" : "en"].hint;
+}
 
 const tripFieldOptions: Record<Exclude<TripFieldKey, "type">, string[]> = {
   where: [
@@ -213,10 +216,11 @@ export function HomeView() {
   const [menuMounted, setMenuMounted] = useState(false);
   const [menuOrigin, setMenuOrigin] = useState<CSSProperties>({});
   const [activeTripTab, setActiveTripTab] = useState(tripFinderTabs[0]);
+  const [multiWinery, setMultiWinery] = useState(false);
   const [openTripField, setOpenTripField] = useState<TripFieldKey | null>(null);
   const [tripSelections, setTripSelections] = useState<Record<TripFieldKey, string>>({
     where: "Sardinia area",
-    type: tripTypeOptions[tripFinderTabs[0]][0],
+    type: tripTypeOptions[tripFinderTabs[0]][0].value,
     when: "Flexible dates",
     travel: "€0 to €900",
   });
@@ -226,6 +230,12 @@ export function HomeView() {
   const serviceRailRef = useRef<HTMLDivElement | null>(null);
   const serviceRailReturnTimer = useRef<number | null>(null);
   const isServiceRailHeld = useRef(false);
+
+  useEffect(() => {
+    const code = readSiteLang();
+    const found = languages.find((language) => language.code === code);
+    if (found) setSelectedLanguage(found);
+  }, []);
 
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
@@ -641,14 +651,17 @@ export function HomeView() {
 
             <div className="nav-links">
               <NavButton
-                label="Explore"
-                active={activeDropdown === "explore"}
-                onOpen={() => openDropdown("explore")}
-              />
-              <NavButton
                 label="Experiences"
                 active={activeDropdown === "experiences"}
                 onOpen={() => openDropdown("experiences")}
+              />
+              <a className="nav-link nav-link-static" href="/pacchetti">
+                {selectedLanguage.code === "it" ? "Pacchetti" : "Packages"}
+              </a>
+              <NavButton
+                label="Explore"
+                active={activeDropdown === "explore"}
+                onOpen={() => openDropdown("explore")}
               />
               <NavButton
                 label="Destinations"
@@ -666,6 +679,9 @@ export function HomeView() {
                 href={`/partner?lang=${selectedLanguage.code === "it" ? "it" : "en"}`}
               >
                 <span className="menu-trigger-label"><span className="menu-trigger-roll"><span>Partner</span><span aria-hidden="true">Partner</span></span></span>
+              </a>
+              <a className="partner-pill" href="/contact">
+                <span className="menu-trigger-label"><span className="menu-trigger-roll"><span>{selectedLanguage.code === "it" ? "Prenota un appuntamento" : "Book an appointment"}</span><span aria-hidden="true">{selectedLanguage.code === "it" ? "Prenota un appuntamento" : "Book an appointment"}</span></span></span>
               </a>
               <div
                 ref={languageMenu.ref}
@@ -698,6 +714,7 @@ export function HomeView() {
                       role="menuitem"
                       onClick={() => {
                         setSelectedLanguage(language);
+                        writeSiteLang(language.code);
                       setIsLanguageOpen(false);
                       languageMenu.focusButton();
                       }}
@@ -741,16 +758,29 @@ export function HomeView() {
               <div className="dropdown-panel explore-panel">
                 <div className="explore-list">
                   {exploreItems.map((item, index) => (
-                    <button
-                      className={`explore-option ${activeExplore === index ? "is-active" : ""}`}
-                      key={item.title}
-                      onFocus={() => setActiveExplore(index)}
-                      onMouseEnter={() => setActiveExplore(index)}
-                      type="button"
-                    >
-                      <span>{item.title}</span>
-                      <small>{item.description}</small>
-                    </button>
+                    item.href ? (
+                      <a
+                        className={`explore-option ${activeExplore === index ? "is-active" : ""}`}
+                        key={item.title}
+                        href={item.href}
+                        onFocus={() => setActiveExplore(index)}
+                        onMouseEnter={() => setActiveExplore(index)}
+                      >
+                        <span>{item.title}</span>
+                        {item.description ? <small>{item.description}</small> : null}
+                      </a>
+                    ) : (
+                      <button
+                        className={`explore-option ${activeExplore === index ? "is-active" : ""}`}
+                        key={item.title}
+                        onFocus={() => setActiveExplore(index)}
+                        onMouseEnter={() => setActiveExplore(index)}
+                        type="button"
+                      >
+                        <span>{item.title}</span>
+                        <small>{item.description}</small>
+                      </button>
+                    )
                   ))}
                 </div>
                 <div className="explore-image" aria-hidden="true">
@@ -858,19 +888,21 @@ export function HomeView() {
               <nav className="site-menu-links" aria-label="Expanded navigation">
                 {(
                   [
+                    { label: "Experiences", href: "#experiences" },
+                    { label: selectedLanguage.code === "it" ? "Pacchetti" : "Packages", href: "/pacchetti" },
                     { label: "Home", href: "#" },
                     { label: "Explore", href: "#explore" },
-                    { label: "Experiences", href: "#experiences" },
                     { label: "About", href: "/about" },
                     { label: "Contact", href: "/contact" },
                     { label: "Partner", href: `/partner?lang=${selectedLanguage.code === "it" ? "it" : "en"}` },
+                    { label: selectedLanguage.code === "it" ? "Prenota un appuntamento" : "Book an appointment", href: "/contact", pill: true },
                   ] as const
                 ).map((item, index) => (
                   <a
                     href={item.href}
                     key={item.label}
                     data-drawer-item=""
-                    className={item.label === "Partner" ? "site-menu-link-partner" : undefined}
+                    className={item.label === "Partner" || ("pill" in item && item.pill) ? "site-menu-link-partner" : undefined}
                     style={{ "--item-index": index } as CSSProperties}
                     onClick={closeSiteMenu}
                   >
@@ -928,7 +960,7 @@ export function HomeView() {
                     setOpenTripField(null);
                     setTripSelections((current) => ({
                       ...current,
-                      type: tripTypeOptions[tab][0],
+                      type: tripTypeOptions[tab][0].value,
                     }));
                   }}
                   role="tab"
@@ -960,7 +992,7 @@ export function HomeView() {
                     <span className="trip-field-copy">
                       <span className="trip-field-label">{field.label}</span>
                       <span className="trip-field-value">
-                        {tripSelections[field.key]}
+                        {field.key === "type" ? tripTypeLabel(tripSelections.type, selectedLanguage.code) : tripSelections[field.key]}
                       </span>
                     </span>
                     <span className="trip-field-chevron" aria-hidden="true" />
@@ -968,24 +1000,29 @@ export function HomeView() {
 
                   <div className="trip-field-menu">
                     {(field.key === "type"
-                      ? tripTypeOptions[activeTripTab]
-                      : tripFieldOptions[field.key]
+                      ? tripTypeOptions[activeTripTab].map((item) => ({
+                          value: item.value,
+                          label: tripTypeLabel(item.value, selectedLanguage.code),
+                          hint: item.value === "wine" ? wineHint(selectedLanguage.code) : "",
+                        }))
+                      : tripFieldOptions[field.key].map((option) => ({ value: option, label: option, hint: "" }))
                     ).map((option) => (
                       <button
                         className={`trip-field-option ${
-                          tripSelections[field.key] === option ? "is-selected" : ""
+                          tripSelections[field.key] === option.value ? "is-selected" : ""
                         }`}
-                        key={option}
+                        key={option.value}
                         onClick={() => {
                           setTripSelections((current) => ({
                             ...current,
-                            [field.key]: option,
+                            [field.key]: option.value,
                           }));
                           setOpenTripField(null);
                         }}
                         type="button"
                       >
-                        {option}
+                        <span>{option.label}</span>
+                        {option.hint ? <small>{option.hint}</small> : null}
                       </button>
                     ))}
                   </div>
@@ -997,6 +1034,18 @@ export function HomeView() {
                 <span className="trip-search-chevron" aria-hidden="true" />
               </button>
             </div>
+            {tripSelections.type === "wine" && (
+              <div className="trip-wine">
+                <p>{wineHint(selectedLanguage.code)}</p>
+                <label>
+                  <input type="checkbox" checked={multiWinery} onChange={(event) => setMultiWinery(event.target.checked)} />
+                  <span>
+                    <strong>{WINE_MULTI_COPY[selectedLanguage.code === "nl" ? "nl" : selectedLanguage.code === "it" ? "it" : "en"].label}</strong>
+                    <small>{WINE_MULTI_COPY[selectedLanguage.code === "nl" ? "nl" : selectedLanguage.code === "it" ? "it" : "en"].hint}</small>
+                  </span>
+                </label>
+              </div>
+            )}
           </div>
         </div>
           </section>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLanguageMenu } from "./useLanguageMenu";
+import { readSiteLang, writeSiteLang } from "./siteLang";
 import { createPortal } from "react-dom";
 import type { CSSProperties } from "react";
 
@@ -10,10 +11,12 @@ import type { CSSProperties } from "react";
 // they navigate to the homepage sections from sub-pages.
 
 const exploreItems = [
-  { title: "blue zone", description: "Culture, longevity, and authentic local living.", image: "/explore/blue-zone.png" },
+  { title: "About Sardinia", description: "", href: "/about", image: "/about/hero.webp" },
+  { title: "The Blue Zone", description: "Culture, longevity, and authentic local living.", image: "/explore/blue-zone.png" },
+  { title: "Top Events", description: "", href: "/#top-events", image: "/about/gruppo-folk.webp" },
+  { title: "Food & Wine", description: "Traditional flavors, shared tables, and local stories.", image: "/explore/food-expierences.png" },
   { title: "Tailor Made Tours", description: "Custom routes designed around your pace and interests.", image: "/explore/tailor-made-tours.png" },
-  { title: "private transfer", description: "Smooth private rides across the island.", image: "/explore/private-transfer.png" },
-  { title: "food expierences", description: "Traditional flavors, shared tables, and local stories.", image: "/explore/food-expierences.png" },
+  { title: "private transfer", description: "Smooth private rides across the island.", href: "/private-transfers", image: "/explore/private-transfer.png" },
 ];
 
 const experienceItems = [
@@ -72,6 +75,14 @@ export function SiteHeader() {
   const closeTimer = useRef<number | null>(null);
   const switchTimer = useRef<number | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    const code = readSiteLang();
+    const found = languages.find((language) => language.code === code);
+    if (found) setSelectedLanguage(found);
+    const q = new URLSearchParams(window.location.search).get("lang");
+    if (q === "it" || q === "en") writeSiteLang(q);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -229,8 +240,11 @@ export function SiteHeader() {
           </a>
 
           <div className="nav-links">
-            <NavButton label="Explore" active={activeDropdown === "explore"} onOpen={() => openDropdown("explore")} />
             <NavButton label="Experiences" active={activeDropdown === "experiences"} onOpen={() => openDropdown("experiences")} />
+            <a className="nav-link nav-link-static" href="/pacchetti">
+              {selectedLanguage.code === "it" ? "Pacchetti" : "Packages"}
+            </a>
+            <NavButton label="Explore" active={activeDropdown === "explore"} onOpen={() => openDropdown("explore")} />
             <NavButton label="Destinations" active={activeDropdown === "destinations"} onOpen={() => openDropdown("destinations")} />
             <a className="nav-link nav-link-static" href="/about">
               About
@@ -243,6 +257,9 @@ export function SiteHeader() {
               href={`/partner?lang=${selectedLanguage.code === "it" ? "it" : "en"}`}
             >
               <span className="menu-trigger-label"><span className="menu-trigger-roll"><span>Partner</span><span aria-hidden="true">Partner</span></span></span>
+            </a>
+            <a className="partner-pill" href="/contact">
+              <span className="menu-trigger-label"><span className="menu-trigger-roll"><span>{selectedLanguage.code === "it" ? "Prenota un appuntamento" : "Book an appointment"}</span><span aria-hidden="true">{selectedLanguage.code === "it" ? "Prenota un appuntamento" : "Book an appointment"}</span></span></span>
             </a>
             <div
               ref={languageMenu.ref}
@@ -273,6 +290,7 @@ export function SiteHeader() {
                     role="menuitem"
                     onClick={() => {
                       setSelectedLanguage(language);
+                      writeSiteLang(language.code);
                       setIsLanguageOpen(false);
                       languageMenu.focusButton();
                     }}
@@ -315,16 +333,29 @@ export function SiteHeader() {
             <div className="dropdown-panel explore-panel">
               <div className="explore-list">
                 {exploreItems.map((item, index) => (
-                  <button
-                    className={`explore-option ${activeExplore === index ? "is-active" : ""}`}
-                    key={item.title}
-                    onFocus={() => setActiveExplore(index)}
-                    onMouseEnter={() => setActiveExplore(index)}
-                    type="button"
-                  >
-                    <span>{item.title}</span>
-                    <small>{item.description}</small>
-                  </button>
+                  item.href ? (
+                    <a
+                      className={`explore-option ${activeExplore === index ? "is-active" : ""}`}
+                      key={item.title}
+                      href={item.href}
+                      onFocus={() => setActiveExplore(index)}
+                      onMouseEnter={() => setActiveExplore(index)}
+                    >
+                      <span>{item.title}</span>
+                      {item.description ? <small>{item.description}</small> : null}
+                    </a>
+                  ) : (
+                    <button
+                      className={`explore-option ${activeExplore === index ? "is-active" : ""}`}
+                      key={item.title}
+                      onFocus={() => setActiveExplore(index)}
+                      onMouseEnter={() => setActiveExplore(index)}
+                      type="button"
+                    >
+                      <span>{item.title}</span>
+                      <small>{item.description}</small>
+                    </button>
+                  )
                 ))}
               </div>
               <div className="explore-image" aria-hidden="true">
@@ -407,19 +438,21 @@ export function SiteHeader() {
             <nav className="site-menu-links" aria-label="Expanded navigation">
               {(
                 [
+                  { label: "Experiences", href: "/#experiences" },
+                  { label: selectedLanguage.code === "it" ? "Pacchetti" : "Packages", href: "/pacchetti" },
                   { label: "Home", href: "/" },
                   { label: "Explore", href: "/#explore" },
-                  { label: "Experiences", href: "/#experiences" },
                   { label: "About", href: "/about" },
                   { label: "Contact", href: "/contact" },
                   { label: "Partner", href: `/partner?lang=${selectedLanguage.code === "it" ? "it" : "en"}` },
+                  { label: selectedLanguage.code === "it" ? "Prenota un appuntamento" : "Book an appointment", href: "/contact", pill: true },
                 ] as const
               ).map((item, index) => (
                 <a
                   href={item.href}
                   key={item.label}
                   data-drawer-item=""
-                    className={item.label === "Partner" ? "site-menu-link-partner" : undefined}
+                    className={item.label === "Partner" || ("pill" in item && item.pill) ? "site-menu-link-partner" : undefined}
                     style={{ "--item-index": index } as CSSProperties}
                   onClick={closeSiteMenu}
                 >
