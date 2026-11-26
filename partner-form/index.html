@@ -1976,7 +1976,14 @@ function load(){
   }catch(e){ return null; }
 }
 let quotaWarned = false;
+/* Preview deep link for the boat-tour map. In memory only: never reads or writes KEY. */
+const PREVIEW_DOVE = (() => {
+  const q = new URLSearchParams(location.search).get('preview');
+  const hash = (location.hash || '').replace(/^#/, '');
+  return q === 'dove-operi' || hash === 'dove-operi';
+})();
 function save(){
+  if(PREVIEW_DOVE) return;
   /* SERVER DRAFT: in production every save is also debounced to
      PATCH /api/drafts/:id (application_drafts.data, schema_version, last_step),
      after the email has been verified. localStorage is only a local cache. */
@@ -1986,11 +1993,21 @@ function save(){
     if(!quotaWarned){ quotaWarned = true; toast(t('t_quota')); }
   }
 }
-const restored = load();
+const restored = PREVIEW_DOVE ? null : load();
 let S = restored || defaults();
 if(!restored && !(navigator.language||'').toLowerCase().startsWith('it')) S.lang = 'en';
 /* Site integration: the site passes its current language as ?lang=it|en. */
 { const qLang = new URLSearchParams(location.search).get('lang'); if(qLang === 'it' || qLang === 'en') S.lang = qLang; }
+if(PREVIEW_DOVE){
+  const lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'it';
+  S = defaults();
+  S.lang = lang;
+  S.paths = ['A'];
+  S.pos = 'e0_btmap';
+  const exp = newExp();
+  exp.sector = 'mare';
+  S.exps = [exp];
+}
 
 /* ---------- Helpers ---------- */
 const $ = id => document.getElementById(id);
@@ -5481,7 +5498,7 @@ const ACT = {
   saveexit: () => { save(); modal({icon:'save', title:t('m_title'), sub:t('m_sub'), ok:t('m_ok'), cancel:false}); },
   modalok: () => { const f=MODAL_OK; MODAL_OK=null; closeModal(); if(f) f(); },
   closemodal: () => { MODAL_OK=null; closeModal(); },
-  restart: () => { const lang=S.lang; localStorage.removeItem(KEY); S = {...defaults(), lang}; render('b'); },
+  restart: () => { const lang=S.lang; if(!PREVIEW_DOVE) localStorage.removeItem(KEY); S = {...defaults(), lang}; render('b'); },
   pvopen: pvOpen, pvclose: pvClose, ...PV_ACT,
   helpopen: helpOpen, helpclose: helpClose,
   helpmode: el => { H.mode = el.dataset.v || null; H.topics = []; renderPanel(); },
