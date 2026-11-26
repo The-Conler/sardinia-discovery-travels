@@ -7,7 +7,7 @@
 if(new URLSearchParams(location.search).has('embed')){document.documentElement.classList.add('is-embed');var b=document.createElement('base');b.target='_top';document.head.appendChild(b);}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1f1d1c">
-<link rel="icon" href="/partner-form/img/sardinia-logo.png">
+<link rel="icon" href="img/sardinia-logo.png">
 <title>Become a partner | Sardinia Discovery Travels</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1242,7 +1242,7 @@ html.is-embed .sd-header-in{justify-content:flex-end;border-bottom:0;padding-bot
 <div class="ct-page">
   <header class="sd-header">
     <div class="sd-header-in">
-      <a class="sd-logo" href="/"><img src="/partner-form/img/sardinia-logo.png" alt="Sardinia Discovery Travels" width="284" height="234"></a>
+      <a class="sd-logo" href="../"><img src="img/sardinia-logo.png" alt="Sardinia Discovery Travels" width="284" height="234"></a>
       <div class="sd-tools">
         <div class="sd-glass sd-lang" role="group" aria-label="Language">
           <button type="button" data-action="uilang" data-v="it" lang="it">IT</button>
@@ -1381,25 +1381,25 @@ const CONFIG = {
   coopTypes: ['coop_lavoro','coop_sociale','coop_agricola','coop_servizi','coop_altro'],
   /* Percorso A, section 7.2 of the brief. q = sector questions (section 9; Cultura and Natura use a subset). */
   sectors: [
-    { code:'artigianato', letter:'A', img:'/partner-form/img/cat-artisan.jpg', icon:'amphora',
+    { code:'artigianato', letter:'A', img:'img/cat-artisan.jpg', icon:'amphora',
       spec:['ceramica','coltelleria','legno','sughero','metalli','maschere','pelletteria','gioielli','tessile','altre_artigianali'],
       types:['laboratorio_pratico','dimostrazione','visita_bottega'],
       q:[ {k:'takehome', t:'toggle'}, {k:'can_buy', t:'toggle', def:false} ] },
-    { code:'enogastronomia', letter:'B', img:'/partner-form/img/cat-wine.jpg', icon:'wine',
+    { code:'enogastronomia', letter:'B', img:'img/cat-wine.jpg', icon:'wine',
       spec:['vino','formaggi','salumi_carni','olio','panificazione','cereali_farine','pastificio','pasticceria','miele','mirto','altri_alimentari'],
       types:['degustazione','visita_produttore','laboratorio','pranzo_cena'],
       q:[ {k:'tasting', t:'multi', o:['tp_vino','tp_formaggi','tp_salumi','tp_olio','tp_pane','tp_dolci','tp_miele']},
           {k:'diets', t:'multi', o:['diet_veg','diet_vegan','diet_gf','diet_lf']},
           {k:'allergens', t:'toggle'},
           {k:'certs', t:'multi', o:['cert_bio','cert_dop','cert_doc','cert_docg','cert_igp','cert_igt','cert_none']} ] },
-    { code:'cooking_class', letter:'C', img:'/partner-form/img/cat-cooking.jpg', icon:'utensils',
+    { code:'cooking_class', letter:'C', img:'img/cat-cooking.jpg', icon:'utensils',
       spec:[], types:[], q:[] },
-    { code:'cultura', letter:'D', img:'/partner-form/img/cat-culture.jpg', icon:'landmark',
+    { code:'cultura', letter:'D', img:'img/cat-culture.jpg', icon:'landmark',
       spec:['archeologia','musei','architettura','patrimonio'],
       types:['visita_guidata','laboratorio'],
       q:[ {k:'tickets', t:'pills', o:['tk_inc','tk_extra','tk_na'], req:true},
           {k:'site_booking', t:'toggle'}, {k:'licensed_guide', t:'toggle'} ] },
-    { code:'natura', letter:'E', img:'/partner-form/img/cat-hiking.jpg', icon:'mountain',
+    { code:'natura', letter:'E', img:'img/cat-hiking.jpg', icon:'mountain',
       spec:['trekking','ciaspolate','vie_ferrate','arrampicata','acquatrek','jeep','quad','buggy','4x4_altro','cavallo_exp','asino_exp','alpaca_exp','kayak','sup','snorkeling','scuba','rafting'],
       specGroups:[
         {h:'sg_escursionismo', o:['trekking','ciaspolate','vie_ferrate','arrampicata','acquatrek']},
@@ -1409,7 +1409,7 @@ const CONFIG = {
       ],
       types:[],
       q:[ {k:'licensed_guide', t:'toggle'}, {k:'insurance', t:'toggle'} ] },
-    { code:'mare', letter:'F', img:'/partner-form/img/cat-boat.jpg', icon:'sailboat',
+    { code:'mare', letter:'F', img:'img/cat-boat.jpg', icon:'sailboat',
       spec:[],
       types:[],
       q:[ {k:'boat_type', t:'pills', o:['bt_motore','bt_vela','bt_catamarano','bt_gommone','bt_altro'], req:true},
@@ -1420,13 +1420,13 @@ const CONFIG = {
           {k:'port', t:'text', req:true},
           {k:'fuel', t:'pills', o:['fuel_inc','fuel_extra','fuel_na']},
           {k:'onboard', t:'multi', o:['ob_snorkel','ob_lunch','ob_drinks','ob_toilet','ob_shade','ob_sup']} ] },
-    { code:'guide', letter:'G', img:'/partner-form/img/cat-guide.jpg', icon:'compass',
+    { code:'guide', letter:'G', img:'img/cat-guide.jpg', icon:'compass',
       spec:['guida_turistica','guida_gae','accompagnatore','traduttore','guida_specializzata'],
       types:['guida_oraria','mezza_giornata','giornata_intera','tour_privato','accompagnamento_gruppi'],
       q:[ {k:'license_type', t:'pills', o:['gl_turistica','gl_gae','gl_accomp','gl_altro'], req:true},
           {k:'license_no', t:'text', req:true, tip:'tip_license'},
           {k:'areas', t:'text'}, {k:'insurance', t:'toggle'} ] },
-    { code:'trasporti', letter:'H', img:'/partner-form/img/cat-transport.jpg', icon:'bus',
+    { code:'trasporti', letter:'H', img:'img/cat-transport.jpg', icon:'bus',
       spec:['ncc','transfer','trasporto_gruppi','minibus','noleggio_conducente','altri_autorizzati'],
       types:['trasferimento_singolo','andata_ritorno','servizio_orario','mezza_giornata','giornata_intera','servizio_personalizzato'],
       q:[ {k:'auth_type', t:'pills', o:['ta_ncc','ta_bus','ta_altro'], req:true, tip:'tip_ncc'},
@@ -1435,11 +1435,11 @@ const CONFIG = {
           {k:'seats', t:'stepper', min:0, max:80, req:true}, {k:'fleet', t:'stepper', min:0, max:50},
           {k:'served', t:'multi', o:['sv_olb','sv_aho','sv_cag','sv_ports','sv_island']},
           {k:'child_seats', t:'toggle'} ] },
-    { code:'sport', letter:'I', img:'/partner-form/img/cat-hiking.jpg', icon:'mountain',
+    { code:'sport', letter:'I', img:'img/cat-hiking.jpg', icon:'mountain',
       spec:['citybike','ebike','mtb'],
       types:['noleggio','escursione_guidata'],
       q:[] },
-    { code:'benessere', letter:'J', img:'/partner-form/img/cat-culture.jpg', icon:'sun',
+    { code:'benessere', letter:'J', img:'img/cat-culture.jpg', icon:'sun',
       spec:['pilates','yoga','meditazione','barefooting','retreat','pet_therapy','ben_altro'],
       specGroups:[
         {h:'bg_mindbody', o:['pilates','yoga','meditazione']},
@@ -1449,7 +1449,7 @@ const CONFIG = {
         {h:'bg_altro', o:['ben_altro']}
       ],
       types:[], q:[] },
-    { code:'altro', letter:'K', img:'/partner-form/img/cat-artisan.jpg', icon:'message',
+    { code:'altro', letter:'K', img:'img/cat-artisan.jpg', icon:'message',
       spec:[], types:[], q:[] }
   ],
   otherSpec: ['altre_artigianali','altri_alimentari','altri_autorizzati'],
@@ -1483,7 +1483,7 @@ const CONFIG = {
 };
 const SECTOR = Object.fromEntries(CONFIG.sectors.map(s=>[s.code,s]));
 const STRUCT = Object.fromEntries(CONFIG.structures.map(([k,i,g])=>[k,{icon:i,group:g}]));
-const SAMPLE_PHOTOS = ['/partner-form/img/cat-boat.jpg','/partner-form/img/cat-hiking.jpg','/partner-form/img/cat-cooking.jpg','/partner-form/img/cat-culture.jpg'];
+const SAMPLE_PHOTOS = ['img/cat-boat.jpg','img/cat-hiking.jpg','img/cat-cooking.jpg','img/cat-culture.jpg'];
 const TOWNS = ['Tempio Pausania','Olbia','Arzachena','Santa Teresa Gallura','La Maddalena','Palau','Calangianus','Aggius','Luras','Castelsardo','Sassari','Stintino','Alghero','Bosa','Oristano','Cabras','Iglesias','Carloforte','Cagliari','Villasimius','Pula','Barumini','Nuoro','Orgosolo','Mamoiada','Fonni','Oliena','Dorgali','Orosei','San Teodoro','Tortolì','Baunei','Golfo Aranci','Budoni','Siniscola','Lanusei','Sorgono','Desulo','Aritzo','Sant\'Antioco'];
 
 /* =====================================================================
@@ -2251,7 +2251,7 @@ const sec = k => t('sec_'+k);
 const VW = {};
 VW.welcome = () => `
   <div class="ct-intro">
-    <div class="ct-intro-bg" aria-hidden="true"><img src="/partner-form/img/intro-castelsardo.jpg" alt="" decoding="async" fetchpriority="high"></div>
+    <div class="ct-intro-bg" aria-hidden="true"><img src="img/intro-castelsardo.jpg" alt="" decoding="async" fetchpriority="high"></div>
     <div class="ct-intro-main">
       <span class="ct-accent">${t('w_accent')}</span>
       <h1 class="ct-display" tabindex="-1">${t('w_title')}</h1>
@@ -2265,7 +2265,7 @@ VW.welcome = () => `
       <p class="ct-intro-side-title">${t('w_side')}</p>
       <ol class="ct-intro-list">
         ${[['user','offer'],['compass','photos'],['send','live']].map(([icon,img],i)=>`
-          <li><img class="ct-intro-thumb" src="/partner-form/img/thumb-${img}.jpg" alt="" width="64" height="64" loading="lazy">
+          <li><img class="ct-intro-thumb" src="img/thumb-${img}.jpg" alt="" width="64" height="64" loading="lazy">
             <span class="ct-intro-text"><strong>${t('w_s'+(i+1)+'t')}</strong><span>${t('w_s'+(i+1)+'d')}</span></span>
             <span class="ct-intro-icon">${ic(icon,24,1.5)}</span></li>`).join('')}
       </ol>
@@ -2322,9 +2322,9 @@ VW.org_contacts = () => split(head(t('oc_title'), t('oc_sub'), sec('org')), `
 /* ---------- Step 03 Collaborazione ---------- */
 VW.collab = () => split(head(t('cb_title'), t('cb_sub'), sec('collab'), true),
   `<p class="ct-multi-hint">${esc(t('et_sub'))}</p>` + photoCards('paths', [
-    {v:'A', img:'/partner-form/img/cat-artisan.jpg', icon:'compass', label:t('path_A'), hint:t('path_AD')},
-    {v:'B', img:'/partner-form/img/path-b.jpg', icon:'handshake', label:t('path_B'), hint:t('path_BD')},
-    {v:'C', img:'/partner-form/img/cat-guide.jpg', icon:'briefcase', label:t('path_C'), hint:t('path_CD')}
+    {v:'A', img:'img/cat-artisan.jpg', icon:'compass', label:t('path_A'), hint:t('path_AD')},
+    {v:'B', img:'img/path-b.jpg', icon:'handshake', label:t('path_B'), hint:t('path_BD')},
+    {v:'C', img:'img/cat-guide.jpg', icon:'briefcase', label:t('path_C'), hint:t('path_CD')}
   ], {multi:true, cls:'ct-photos--tall'}));
 
 const OK = {
@@ -4823,7 +4823,7 @@ VW.thanks = () => { const sub=S.submitted||{}; return `
     <p class="ct-code" aria-label="${esc(t('ty_code'))}"><small>${t('ty_code')}</small><span id="appCode">${esc(sub.code||'')}</span></p>
     <div class="ct-confirm"><p>${t('ty_p1')}</p><p>${t('ty_p2')}</p><p>${t('ty_p3')}</p></div>
     <div class="ct-thanks-actions">
-      <a class="button-02 button-02--teal ct-btn" href="/"><span class="inner">${t('ty_home')}</span><span class="circle" aria-hidden="true"><span>${ic('arrowRight',18,1.8)}</span></span></a>
+      <a class="button-02 button-02--teal ct-btn" href="../"><span class="inner">${t('ty_home')}</span><span class="circle" aria-hidden="true"><span>${ic('arrowRight',18,1.8)}</span></span></a>
       <button type="button" class="ct-back" data-action="restart">${t('ty_new')}</button>
     </div>
     <details class="ct-dev"><summary>${t('ty_dev')}</summary><pre>${esc(JSON.stringify(sub.payload, (k,v)=>k==='src'&&typeof v==='string'&&v.length>80?v.slice(0,60):v, 2))}</pre></details>
@@ -5089,7 +5089,7 @@ function render(dir){
   const {s} = cur(), stage = $('stage'), wiz = $('wizard');
   const bg = BG_SCREENS.test(s.id);
   wiz.className = 'ct-wizard' + (s.id==='welcome' ? ' is-intro' : '') + (bg ? ' has-bg' : '');
-  $('bgSlot').innerHTML = bg ? '<div class="ct-bg" aria-hidden="true"><img src="/partner-form/img/bg-mariolu.jpg" alt="" decoding="async"></div>' : '';
+  $('bgSlot').innerHTML = bg ? '<div class="ct-bg" aria-hidden="true"><img src="img/bg-mariolu.jpg" alt="" decoding="async"></div>' : '';
   const kind = s.id.replace(/^e\d+_/, 'exp-');
   stage.className = 'ct-stage ct-stage--' + kind + (dir ? '' : ' no-anim');
   stage.dataset.screen = s.id;
