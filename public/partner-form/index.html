@@ -69,7 +69,8 @@ img{display:block}
 .sd-tools{display:flex;align-items:center;gap:12px}
 .sd-fleet{padding:0 18px;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap}
 .sd-fleet[hidden]{display:none}
-.bt-map{width:100%;height:460px;display:block;border-radius:20px;background:#1c1917}
+.bt-map-frame{width:min(100%,calc(min(80vh,720px) * 640 / 900));aspect-ratio:640/900;margin-inline:auto;container-type:size}
+.bt-map{width:100%;height:100%;display:block;border-radius:20px;background:#1c1917}
 .bt-pick{display:block;width:100%;text-align:left;padding:12px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:inherit;cursor:pointer}
 .bt-pick.is-on{border-color:#8fd0d4;background:rgba(47,127,136,.22)}
 .bt-cat{display:flex;justify-content:space-between;gap:12px;width:100%;text-align:left;padding:14px 16px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:inherit;cursor:pointer}
@@ -178,17 +179,17 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
 .bt-land{fill:#2c2926;stroke:rgba(248,244,238,.8);stroke-width:1.2px;stroke-linejoin:round;vector-effect:non-scaling-stroke;pointer-events:none}
 .bt-city{pointer-events:none}
 .bt-city circle{fill:rgba(248,244,238,.75)}
-.bt-city text{fill:rgba(248,244,238,.82);font-size:12px;font-weight:500}
+.bt-city text{fill:rgba(248,244,238,.82);font-size:calc(12px * 900 / 100cqh * 1px);font-weight:500}
 .bt-zone{cursor:pointer;fill:rgba(47,127,136,.2);stroke:rgba(143,208,212,.8);stroke-width:1.2px;vector-effect:non-scaling-stroke}
 .bt-zone.is-on{fill:rgba(47,127,136,.55);stroke:#f8f4ee}
 .bt-pin{cursor:pointer}
 .bt-pin circle.bt-pin-hit,.bt-pin.is-on circle.bt-pin-hit{fill:transparent;stroke:none}
 .bt-pin circle{fill:#1c1917;stroke:#f8f4ee;stroke-width:1.35px;vector-effect:non-scaling-stroke}
 .bt-pin.is-on circle{fill:#2f7f88;stroke:#f8f4ee}
-.bt-pin text,.bt-zone text,.bt-inset text{fill:#f8f4ee;font-size:13px;font-weight:600;font-family:inherit}
+.bt-pin text,.bt-zone text,.bt-inset text{fill:#f8f4ee;font-size:calc(13px * 900 / 100cqh * 1px);font-weight:600;font-family:inherit}
 .bt-dash{fill:none;stroke:rgba(248,244,238,.55);stroke-width:1.4px;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}
 .bt-dash.is-on{stroke:#8fd0d4;stroke-width:1.8px}
-.bt-count text{font-size:12px;font-weight:700}
+.bt-count text{font-size:calc(12px * 900 / 100cqh * 1px);font-weight:700}
 .bt-inset{fill:rgba(255,255,255,.04);stroke:rgba(248,244,238,.28)}
 .bt-wire{display:grid;width:112px;height:96px;perspective:380px;color:#d7cfc4}
 .bt-wire svg{width:108px;height:92px;overflow:visible;transform:rotateX(16deg) rotateY(-28deg);animation:bt-yaw 8s ease-in-out infinite}
@@ -3911,14 +3912,14 @@ function mareMapSvg(e, i){
     const x = p[0] + (k * 16 - 8), y = p[1] + 26;
     return `<line class="bt-dash${m.hi === n ? ' is-on' : ''}" x1="${x}" y1="${y}" x2="${p[0]}" y2="${p[1]}"/><circle cx="${x}" cy="${y}" r="5" fill="${m.hi === n ? '#8fd0d4' : '#f8f4ee'}"/>`;
   }).join('');
-  return `<svg class="bt-map" viewBox="0 0 640 900" role="img" aria-label="${esc(t('bt_map_title'))}">
+  return `<div class="bt-map-frame"><svg class="bt-map" viewBox="0 0 640 900" role="img" aria-label="${esc(t('bt_map_title'))}">
     <path class="bt-land" d="${MAP_LAND}"/>
     ${zone('corsica')}${zone('asinara')}${zone('maddalena')}${zone('baunei')}
     ${cities}
     ${pin('tavolara')}${pin('alghero')}${pin('carloforte')}${pin('cagliari')}${pin('villasimius')}${pin('altro')}
-    ${m.areas.map(key => { const n = m.ops.filter(o => o.area === key && String(o.port||'').trim()).length; if(!n) return ''; const [x,y] = MARE_ANCHOR[key]; return `<g class="bt-count"><circle cx="${x+18}" cy="${y-14}" r="9" fill="#2f7f88"/><text x="${x+18}" y="${y-10}" text-anchor="middle" fill="#f8f4ee" font-size="11" font-weight="700">${n}</text></g>`; }).join('')}
+    ${m.areas.map(key => { const n = m.ops.filter(o => o.area === key && String(o.port||'').trim()).length; if(!n) return ''; const [x,y] = MARE_ANCHOR[key]; return `<g class="bt-count"><circle cx="${x+18}" cy="${y-14}" r="9" fill="#2f7f88"/><text x="${x+18}" y="${y-10}" text-anchor="middle" fill="#f8f4ee">${n}</text></g>`; }).join('')}
     ${lines}
-  </svg>`;
+  </svg></div>`;
 }
 function mareOpState(e, n){
   const op = e.mare.ops[n];
