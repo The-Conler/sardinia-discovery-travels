@@ -183,7 +183,8 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
 .bt-zone{cursor:pointer;fill:rgba(47,127,136,.2);stroke:rgba(143,208,212,.8);stroke-width:1.2px;vector-effect:non-scaling-stroke}
 .bt-zone.is-on{fill:rgba(47,127,136,.55);stroke:#f8f4ee}
 .bt-pin{cursor:pointer}
-.bt-pin circle.bt-pin-hit,.bt-pin.is-on circle.bt-pin-hit{fill:transparent;stroke:none}
+.bt-pin circle.bt-pin-hit,.bt-pin.is-on circle.bt-pin-hit,.bt-zone circle.bt-zone-hit{fill:transparent;stroke:none;pointer-events:all;r:calc(22px * 900 / 100cqh * 1px)}
+.bt-map-frame{touch-action:manipulation}
 .bt-pin circle{fill:#1c1917;stroke:#f8f4ee;stroke-width:1.35px;vector-effect:non-scaling-stroke}
 .bt-pin.is-on circle{fill:#2f7f88;stroke:#f8f4ee}
 .bt-pin text,.bt-zone text,.bt-inset text{fill:#f8f4ee;font-size:calc(13px * 900 / 100cqh * 1px);font-weight:600;font-family:inherit}
@@ -3915,12 +3916,12 @@ function mareMapSvg(e, i){
   const zone = key => {
     const [x,y] = MARE_ANCHOR[key];
     const off = zoneLabel[key];
-    return `<g class="bt-zone${on(key) ? ' is-on' : ''}" data-action="marezone" data-i="${i}" data-v="${key}"><path d="${MAP_ZONE[key]}"/>${linesOf(x + off[0], y + off[1], off[2], off[3])}<title>${esc(t('bt_a_' + key))}</title></g>`;
+    return `<g class="bt-zone${on(key) ? ' is-on' : ''}" data-action="marezone" data-i="${i}" data-v="${key}"><path d="${MAP_ZONE[key]}"/><circle class="bt-zone-hit" cx="${x}" cy="${y}" r="28"/>${linesOf(x + off[0], y + off[1], off[2], off[3])}<title>${esc(t('bt_a_' + key))}</title></g>`;
   };
   const pin = key => {
     const [x,y] = MARE_ANCHOR[key];
     const off = pinLabel[key];
-    return `<g class="bt-pin${on(key) ? ' is-on' : ''}" data-action="marezone" data-i="${i}" data-v="${key}"><circle class="bt-pin-hit" cx="${x}" cy="${y}" r="16"/><circle cx="${x}" cy="${y}" r="8"/>${linesOf(x + off[0], y + off[1], off[2], [t('bt_a_' + key)])}</g>`;
+    return `<g class="bt-pin${on(key) ? ' is-on' : ''}" data-action="marezone" data-i="${i}" data-v="${key}"><circle class="bt-pin-hit" cx="${x}" cy="${y}" r="28"/><circle cx="${x}" cy="${y}" r="8"/>${linesOf(x + off[0], y + off[1], off[2], [t('bt_a_' + key)])}</g>`;
   };
   const cities = MAP_CITIES.map(([name, xy]) => { const off = cityLabel[name]; return `<g class="bt-city"><circle cx="${xy[0]}" cy="${xy[1]}" r="3.4"/>${linesOf(xy[0] + off[0], xy[1] + off[1], off[2], [name])}</g>`; }).join('');
   const lines = m.ops.map((op, n) => {
@@ -3954,8 +3955,11 @@ function mareMapScreen(i){
     const n = m.ops.indexOf(op);
     return `<button type="button" class="${m.hi === n ? ' is-on' : ''}" data-action="marehi" data-i="${i}" data-n="${n}"><span>${esc(op.port.trim())} → ${esc(mareName(e, op.area))}</span><span>${esc(t('bt_st_' + mareOpState(e, n)))}</span></button>`;
   }).join('');
+  const chipLabel = key => key === 'asinara' ? 'Asinara' : key === 'maddalena' ? 'Maddalena' : key === 'baunei' ? 'Costa di Baunei' : t('bt_a_' + key);
+  const chips = `<div class="ct-pills bt-map-picks" role="group" aria-label="${esc(t('bt_map_title'))}">${MARE_AREAS.map(key => `<button type="button" class="ct-pill${m.areas.includes(key)?' is-on':''}" data-action="marezone" data-i="${i}" data-v="${key}">${esc(chipLabel(key))}</button>`).join('')}</div>`;
   return split(head(t('bt_map_title'), t('bt_map_sub'), ecount(i)), `
     ${mareMapSvg(e, i)}
+    ${chips}
     ${note(t('bt_dash_note'), 'info')}
     ${m.areas.includes('altro') ? inp(P(i,'mare.areaOther'), t('bt_a_altro_lbl')) : ''}
     ${m.focus ? `<section class="ct-block"><h3 class="ct-block-title">${esc(mareName(e, m.focus))}</h3>
