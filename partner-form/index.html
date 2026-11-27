@@ -4097,7 +4097,12 @@ function mareLinkScreen(i, n){
     ${group(t('bt_filter'), pills(P(i, 'mare.linkFilter'), [''].concat(MARE_BOATS), { lab:c => c ? o(c) : t('bt_filter_all') }))}
     <div class="ct-stack" style="gap:12px">${cards || (portBoats.length ? '' : note(t('bt_no_port'), 'info'))}</div>`);
 }
-function mareLinkOk(e, n){ const op = e?.mare?.ops?.[n]; return !!op && op.boatIds.length > 0; }
+function mareLinkOk(e, n){
+  const op = e?.mare?.ops?.[n]; if(!op) return false;
+  /* No boat shares this departure, so there is nothing to pick. Avanti stays available. */
+  if(!marePortBoats(e, op.port).length) return true;
+  return op.boatIds.length > 0;
+}
 function mareSideOk(s, cap){ return s && (s.unit === 'persona' || s.unit === 'gruppo') && pos(s.low) && pos(s.mid) && pos(s.high) && s.min >= 2 && s.max >= s.min && s.max <= cap && s.minAge >= 0 && s.minAge !== ''; }
 function marePeople(i, n, id, side, cap){
   return `<div class="ct-steppers">${stepper(P(i, `mare.ops.${n}.offer.${id}.${side}.min`), t('minP'), t('minPD'), 2, cap)}${stepper(P(i, `mare.ops.${n}.offer.${id}.${side}.max`), t('maxP'), t('maxPD'), 2, cap)}${stepper(P(i, `mare.ops.${n}.offer.${id}.${side}.minAge`), t('minAge'), t('minAgeD'), 0, 18)}</div>`;
@@ -4471,11 +4476,18 @@ const EOK = {
   photos: e => e.photos.length >= MIN_PHOTOS
 };
 const EXP_SCREENS = Object.keys(EV);
+/* Sport rental has no title screen. Altro has no photo screen. Edit those on a screen that exists. */
+function expEditId(e, i, key){
+  if(key === 'g1' && isSportRental(e)) return `e${i}_g2`;
+  if(key === 'g1' && !e?.sector) return `e${i}_sector`;
+  if(key === 'photos' && e?.sector === 'altro') return '';
+  return `e${i}_${key}`;
+}
 
 VW.exp_more = () => split(head(t('mo_title'), t('mo_sub'), sec('prop')), `
   <div class="ct-exps" aria-label="${esc(t('mo_list'))}">${S.exps.map((e,i)=>`
     <div class="ct-exp"><span><b>${esc(e.name || t('mo_untitled'))}</b><small>${esc([o(e.sector), e.comune].filter(Boolean).join(', '))}</small></span>
-      <span class="ct-tile-acts"><button type="button" class="ct-tile-edit" data-action="goto" data-v="e${i}_g1" data-ret="1">${ic('pencil',14,1.8)}${t('r_edit')}</button>
+      <span class="ct-tile-acts"><button type="button" class="ct-tile-edit" data-action="goto" data-v="${expEditId(e,i,'g1')}" data-ret="1">${ic('pencil',14,1.8)}${t('r_edit')}</button>
       ${S.exps.length>1?`<button type="button" class="ct-tile-edit ct-tile-del" data-action="delexp" data-v="${i}" aria-label="${esc(t('r_delete'))}">${ic('trash',16,1.8)}</button>`:''}</span></div>`).join('')}</div>
   <button type="button" class="ct-opt" data-action="addexp"><span class="ct-opt-ic">${ic('plus',26,1.5)}</span><span class="ct-opt-text"><span class="ct-opt-label">${t('mo_add')}</span><span class="ct-opt-sub">${t('mo_addD')}</span></span></button>`);
 
@@ -4772,7 +4784,7 @@ function expTiles(){
   const ph = e.photos;
   return `
   <section class="rv-tile rv-exp" aria-label="${esc(t('exp_n',{n:i+1}))}" data-exp="${i}">
-    ${rvTop(SECTOR[e.sector]?.icon||'compass', `${tabs?t('r_expTitle'):t('exp_n',{n:i+1})}${tabs}`, `${rvEdit(`e${i}_g1`)}<button type="button" class="ct-tile-edit ct-tile-del" data-action="delexp" data-v="${i}" aria-label="${esc(t('r_delete'))}: ${esc(e.name||t('mo_untitled'))}">${ic('trash',16,1.8)}</button>`)}
+    ${rvTop(SECTOR[e.sector]?.icon||'compass', `${tabs?t('r_expTitle'):t('exp_n',{n:i+1})}${tabs}`, `${rvEdit(expEditId(e,i,'g1'))}<button type="button" class="ct-tile-edit ct-tile-del" data-action="delexp" data-v="${i}" aria-label="${esc(t('r_delete'))}: ${esc(e.name||t('mo_untitled'))}">${ic('trash',16,1.8)}</button>`)}
     <h2 class="rv-name">${esc(e.name||t('mo_untitled'))}</h2>
     ${chips([sectorLabel(e), spec, typeLab].filter(Boolean))}
     ${e.desc?`<p class="rv-desc"><span>${esc(e.desc)}</span></p>`:''}
@@ -4918,7 +4930,7 @@ function previewTile(i){
   return `<section class="rv-tile rv-preview" aria-label="${esc(t('pv_title'))}">
     ${rvTop('eye', t('pv_short'), `<button type="button" class="ct-tile-edit ct-tile-del" data-action="pvopen" aria-haspopup="dialog" aria-label="${esc(n>1?t('pv_openAll'):t('pv_open'))}" title="${esc(n>1?t('pv_openAll'):t('pv_open'))}">${ic('maximize',16,1.8)}</button>`)}
     <div class="rv-card" data-action="pvopen" title="${esc(n>1?t('pv_openAll'):t('pv_open'))}">${expCard(e, {compact:true})}</div>
-    <p class="rv-muted rv-pvmeta">${t('r_photosN',{n:e.photos.length})} ${rvEdit(`e${i}_photos`)}</p>
+    <p class="rv-muted rv-pvmeta">${t('r_photosN',{n:e.photos.length})} ${expEditId(e,i,'photos') ? rvEdit(expEditId(e,i,'photos')) : ''}</p>
   </section>`;
 }
 /* =====================================================================
@@ -5103,7 +5115,17 @@ function showStartOver(){
   if(S.pos === 'welcome') return !!(S.contact.first || S.contact.last || S.contact.email || S.org.name || (S.paths && S.paths.length));
   return true;
 }
-function cur(){ const L = screens(); let k = L.findIndex(s=>s.id===S.pos); if(k<0){ k = 0; S.pos = L[0].id; } return {L, k, s:L[k]}; }
+function cur(){
+  const L = screens();
+  let k = L.findIndex(s=>s.id===S.pos);
+  if(k<0){
+    /* A saved step can disappear (a removed screen, or Modifica pointing at one). Continue at the first unanswered step instead of the welcome screen. */
+    const hole = L.findIndex(s => s.sec && s.id !== 'review' && !s.ok());
+    k = hole >= 0 ? hole : Math.max(0, L.findIndex(s => s.id === 'review'));
+    S.pos = L[k].id;
+  }
+  return {L, k, s:L[k]};
+}
 function render(dir){
   const {s} = cur(), stage = $('stage'), wiz = $('wizard');
   const bg = BG_SCREENS.test(s.id);
