@@ -1298,6 +1298,7 @@ html.is-embed .sd-header-in{justify-content:flex-end;border-bottom:0;padding-bot
 <div class="sd-toast" id="toast" role="status" aria-live="polite"></div>
 <input type="file" id="fileIn" accept="image/jpeg,.jpg,.jpeg" multiple hidden>
 <script src="./it-money.js"></script>
+<script src="./comuni-sardegna.js"></script>
 <script>
 const { formatItAmount, priceFromDigits } = ItMoney;
 /* =====================================================================
@@ -1489,7 +1490,6 @@ const CONFIG = {
 const SECTOR = Object.fromEntries(CONFIG.sectors.map(s=>[s.code,s]));
 const STRUCT = Object.fromEntries(CONFIG.structures.map(([k,i,g])=>[k,{icon:i,group:g}]));
 const SAMPLE_PHOTOS = ['img/demo-food-pasta.jpg','img/demo-food-cheese.jpg','img/demo-food-bread.jpg','img/demo-food-wine.jpg'];
-const TOWNS = ['Tempio Pausania','Olbia','Arzachena','Santa Teresa Gallura','La Maddalena','Palau','Calangianus','Aggius','Luras','Castelsardo','Sassari','Stintino','Alghero','Bosa','Oristano','Cabras','Iglesias','Carloforte','Cagliari','Villasimius','Pula','Barumini','Nuoro','Orgosolo','Mamoiada','Fonni','Oliena','Dorgali','Orosei','San Teodoro','Tortolì','Baunei','Golfo Aranci','Budoni','Siniscola','Lanusei','Sorgono','Desulo','Aritzo','Sant\'Antioco'];
 
 /* =====================================================================
    I18N: every visible string. House rules: no em dashes, no ellipses,
@@ -5241,13 +5241,25 @@ async function addFiles(files){
 
 /* ---------- Town suggestions (any input with data-sugg) ---------- */
 let hl = -1;
+function foldName(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
+function comuneHit(name){ const q = foldName(name); return (COMUNI_SARDEGNA||[]).find(c => foldName(c.n) === q) || null; }
+/* A listed municipality fills the organisation province. A typed value that is not in the list is left as entered. */
+function applyComuneProv(path, name){
+  if(path !== 'org.comune') return;
+  const hit = comuneHit(name); if(!hit) return;
+  S.org.prov = hit.p;
+  const el = document.querySelector('[data-bind="org.prov"]');
+  if(el && el.value !== hit.p) el.value = hit.p;
+}
 function showSugg(inp){
   const box = inp.closest('.ct-field').querySelector('.ct-sugg'); if(!box) return;
-  const q = inp.value.trim().toLowerCase();
-  let list = TOWNS.filter(n => !q || n.toLowerCase().includes(q));
-  list.sort((a,b)=> (b.toLowerCase().startsWith(q)) - (a.toLowerCase().startsWith(q))); list = list.slice(0,6);
-  const exact = TOWNS.some(n => n.toLowerCase()===q);
-  const html = list.map((n,k)=>`<button type="button" role="option" class="${k===hl?'is-hl':''}" data-action="sugg" data-p="${inp.dataset.bind}" data-v="${esc(n)}"><span class="ct-sugg-pin">${ic('pin',18,1.6)}</span><span><b>${esc(n)}</b></span></button>`).join('');
+  const q = inp.value.trim();
+  const qf = foldName(q);
+  let list = (COMUNI_SARDEGNA||[]).filter(c => !qf || foldName(c.n).includes(qf));
+  list.sort((a,b)=> (foldName(b.n).startsWith(qf) - foldName(a.n).startsWith(qf)) || a.n.localeCompare(b.n,'it'));
+  list = list.slice(0,8);
+  const exact = (COMUNI_SARDEGNA||[]).some(c => c.n.toLowerCase() === q.toLowerCase());
+  const html = list.map((c,k)=>`<button type="button" role="option" class="${k===hl?'is-hl':''}" data-action="sugg" data-p="${inp.dataset.bind}" data-v="${esc(c.n)}"><span class="ct-sugg-pin">${ic('pin',18,1.6)}</span><span><b>${esc(c.n)}</b></span></button>`).join('');
   const open = !!html && !exact; box.innerHTML = html; box.classList.toggle('is-open', open); inp.setAttribute('aria-expanded', open);
 }
 
@@ -5541,7 +5553,7 @@ const ACT = {
     rerender(); },
   cover: el => { const ph=S.exps[expIndex()].photos; ph.unshift(ph.splice(+el.dataset.v,1)[0]); rerender(); },
   remove: el => { S.exps[expIndex()].photos.splice(+el.dataset.v,1); rerender(); },
-  sugg: el => { set(el.dataset.p, el.dataset.v); hl=-1; rerender(); },
+  sugg: el => { set(el.dataset.p, el.dataset.v); applyComuneProv(el.dataset.p, el.dataset.v); hl=-1; rerender(); },
   saveexit: () => { save(); modal({icon:'save', title:t('m_title'), sub:t('m_sub'), ok:t('m_ok'), cancel:false}); },
   startover: () => modal({icon:'trash', title:t('startOverAsk'), sub:t('startOverSub'), ok:t('startOverOk'), onOk:() => ACT.restart()}),
   modalok: () => { const f=MODAL_OK; MODAL_OK=null; closeModal(); if(f) f(); },
@@ -5590,7 +5602,7 @@ function onField(e){
   if(/\.meetDifferent$/.test(p)){ save(); render(); return; }
   if(/\.food\.(aperitivo|beverage|options)$/.test(p)){ save(); render(); return; }
   if(/\.games\.on$/.test(p) || /\.games\.items\.[^.]+\.on$/.test(p)){ save(); render(); return; }
-  if(el.dataset.sugg){ hl=-1; showSugg(el); }
+  if(el.dataset.sugg){ hl=-1; applyComuneProv(p, el.value); showSugg(el); }
   const fix = (id, ok) => { const x=$(id); if(x && ok) x.hidden = true; };
   if(p==='contact.email') fix('err-email', emailOk(el.value));
   if(p==='org.email') fix('err-oemail', emailOk(el.value));
