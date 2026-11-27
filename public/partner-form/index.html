@@ -229,6 +229,7 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
 .sd-lang button.is-on{background:rgba(255,255,255,.12);color:var(--ct-cream)}
 .sd-save{padding:0 26px;font-size:18px;font-weight:600;cursor:pointer;gap:10px;transition:background .2s var(--ct-ease)}
 .sd-save:hover{background:rgba(72,68,66,.75)}
+.ct-intro-reset{align-self:flex-start;margin-top:8px}
 .sd-lang button:focus-visible,.sd-save:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,127,136,.3)}
 
 /* ---------- Page ---------- */
@@ -601,6 +602,9 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
   .sd-glass{height:52px}
   .sd-lang button{height:42px;min-width:44px;padding:0 10px;font-size:16px}
   .sd-save{padding:0 18px;font-size:16px}
+  .sd-header-in{flex-wrap:wrap;row-gap:12px}
+  .sd-tools{flex-wrap:wrap;justify-content:flex-end;row-gap:8px}
+  .ct-intro-choice .ct-intro-reset{width:100%}
   .ct-wizard{padding:152px var(--ct-gutter) 160px}
   .ct-split{row-gap:32px}
   .ct-wizard.is-intro{padding:0 var(--ct-gutter)}
@@ -1249,6 +1253,7 @@ html.is-embed .sd-header-in{justify-content:flex-end;border-bottom:0;padding-bot
           <button type="button" data-action="uilang" data-v="en" lang="en">EN</button>
         </div>
         <button type="button" class="sd-glass sd-fleet" id="fleetBtn" data-action="fleetopen" hidden></button>
+        <button type="button" class="sd-glass sd-save" id="startOver" data-action="startover" hidden></button>
         <button type="button" class="sd-glass sd-save" id="saveExit" data-action="saveexit"></button>
       </div>
     </div>
@@ -1492,7 +1497,7 @@ const TOWNS = ['Tempio Pausania','Olbia','Arzachena','Santa Teresa Gallura','La 
    ===================================================================== */
 const I18N = {
 en:{
-  saveExit:'Save and exit', back:'Back', next:'Next', submit:'SEND APPLICATION', backToReview:'Back to review', optional:'optional', and:'and', finish:'Finish', none:'None',
+  saveExit:'Save and exit', startOver:'Start over', startOverAsk:'Start over?', startOverSub:'The answers saved on this device will be deleted.', startOverOk:'Start over', back:'Back', next:'Next', submit:'SEND APPLICATION', backToReview:'Back to review', optional:'optional', and:'and', finish:'Finish', none:'None',
   sec_ref:'Contact person', sec_org:'Organisation', sec_collab:'Collaboration', sec_prop:'Proposals', sec_review:'Review',
   exp_n:'Experience {n}', conv_h:'Commercial agreement',
   w_accent:'Partner programme', w_title:'Become a Sardinia Discovery partner',
@@ -1718,7 +1723,7 @@ en:{
   pv_d_dur:'{h} h {m} min', pv_d_durH:'{h} hours', pv_d_durM:'{m} min', pv_d_close:'Close', pv_d_view:'View gallery', pv_d_img:'Image {n}', pv_d_prev:'Previous image', pv_d_next:'Next image'
 },
 it:{
-  saveExit:'Salva ed esci', back:'Indietro', next:'Avanti', submit:'INVIA CANDIDATURA', backToReview:'Torna al riepilogo', optional:'facoltativo', and:'e', finish:'Concludi', none:'Nessuno',
+  saveExit:'Salva ed esci', startOver:'Ricomincia da zero', startOverAsk:'Ricomincia da zero?', startOverSub:'Le risposte salvate su questo dispositivo verranno cancellate.', startOverOk:'Ricomincia da zero', back:'Indietro', next:'Avanti', submit:'INVIA CANDIDATURA', backToReview:'Torna al riepilogo', optional:'facoltativo', and:'e', finish:'Concludi', none:'Nessuno',
   sec_ref:'Referente', sec_org:'Organizzazione', sec_collab:'Collaborazione', sec_prop:'Proposte', sec_review:'Riepilogo',
   exp_n:'Esperienza {n}', conv_h:'Convenzione commerciale',
   w_accent:'Programma partner', w_title:'Diventa partner di Sardinia Discovery',
@@ -2063,7 +2068,7 @@ function placeToast(){
   const natural = Math.ceil(el.getBoundingClientRect().width);
   const logo = document.querySelector('.sd-logo')?.getBoundingClientRect();
   let limit = innerWidth - 12;
-  for(const node of document.querySelectorAll('.sd-lang, #fleetBtn, #saveExit')){
+  for(const node of document.querySelectorAll('.sd-lang, #fleetBtn, #startOver, #saveExit')){
     if(node.hidden) continue;
     const r = node.getBoundingClientRect();
     if(r.width > 2 && r.height > 2) limit = Math.min(limit, r.left);
@@ -2077,7 +2082,7 @@ function placeToast(){
     el.style.top = Math.max(8, band.top + (band.height - el.offsetHeight) / 2) + 'px';
     el.style.maxWidth = room + 'px';
   }else below();
-  const hits = box => [...document.querySelectorAll('.sd-logo, .sd-lang, #fleetBtn, #saveExit')].some(node => {
+  const hits = box => [...document.querySelectorAll('.sd-logo, .sd-lang, #fleetBtn, #startOver, #saveExit')].some(node => {
     if(node.hidden) return false;
     const r = node.getBoundingClientRect();
     if(r.width < 2 || r.height < 2) return false;
@@ -2258,6 +2263,7 @@ VW.welcome = () => `
       <p class="ct-sub">${t('w_sub')}</p>
       <div class="ct-intro-actions"><div class="ct-intro-choice">
         ${teal(S.contact.first ? t('w_resume') : t('w_start'), 'next')}
+        ${S.contact.first ? `<button type="button" class="ct-back ct-intro-reset" data-action="startover">${esc(t('startOver'))}</button>` : ''}
         <p class="ct-intro-note">${t('w_note')}</p>
       </div></div>
     </div>
@@ -5084,6 +5090,11 @@ function pvClose(){
    RENDER AND NAVIGATION
    ===================================================================== */
 const BG_SCREENS = /^(collab|e\d+_sector)$/;
+function showStartOver(){
+  if(S.pos === 'thanks') return false;
+  if(S.pos === 'welcome') return !!(S.contact.first || S.contact.last || S.contact.email || S.org.name || (S.paths && S.paths.length));
+  return true;
+}
 function cur(){ const L = screens(); let k = L.findIndex(s=>s.id===S.pos); if(k<0){ k = 0; S.pos = L[0].id; } return {L, k, s:L[k]}; }
 function render(dir){
   const {s} = cur(), stage = $('stage'), wiz = $('wizard');
@@ -5099,6 +5110,7 @@ function render(dir){
   document.documentElement.lang = S.lang;
   document.querySelectorAll('[data-action="uilang"]').forEach(b=>{ const on=b.dataset.v===S.lang; b.classList.toggle('is-on',on); b.setAttribute('aria-pressed',on); });
   $('saveExit').textContent = t('saveExit'); $('saveExit').hidden = s.id==='thanks';
+  $('startOver').textContent = t('startOver'); $('startOver').hidden = !showStartOver();
   const mareOn = /^e(\d+)_/.test(s.id) && S.exps[+s.id.match(/^e(\d+)/)[1]]?.sector === 'mare';
   const fleetBtn = $('fleetBtn'); fleetBtn.hidden = !mareOn; fleetBtn.textContent = t('bt_myboats');
   if(FLEET.open && !mareOn) FLEET.open = false;
@@ -5536,6 +5548,7 @@ const ACT = {
   remove: el => { S.exps[expIndex()].photos.splice(+el.dataset.v,1); rerender(); },
   sugg: el => { set(el.dataset.p, el.dataset.v); hl=-1; rerender(); },
   saveexit: () => { save(); modal({icon:'save', title:t('m_title'), sub:t('m_sub'), ok:t('m_ok'), cancel:false}); },
+  startover: () => modal({icon:'trash', title:t('startOverAsk'), sub:t('startOverSub'), ok:t('startOverOk'), onOk:() => ACT.restart()}),
   modalok: () => { const f=MODAL_OK; MODAL_OK=null; closeModal(); if(f) f(); },
   closemodal: () => { MODAL_OK=null; closeModal(); },
   restart: () => { const lang=S.lang; if(!PREVIEW_DOVE) localStorage.removeItem(KEY); S = {...defaults(), lang}; render('b'); },
