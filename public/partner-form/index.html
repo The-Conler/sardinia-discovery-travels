@@ -5261,6 +5261,13 @@ function showSugg(inp){
   const exact = (COMUNI_SARDEGNA||[]).some(c => c.n.toLowerCase() === q.toLowerCase());
   const html = list.map((c,k)=>`<button type="button" role="option" class="${k===hl?'is-hl':''}" data-action="sugg" data-p="${inp.dataset.bind}" data-v="${esc(c.n)}"><span class="ct-sugg-pin">${ic('pin',18,1.6)}</span><span><b>${esc(c.n)}</b></span></button>`).join('');
   const open = !!html && !exact; box.innerHTML = html; box.classList.toggle('is-open', open); inp.setAttribute('aria-expanded', open);
+  if(open){
+    const wiz = inp.closest('.ct-wizard');
+    if(wiz){
+      const extra = box.getBoundingClientRect().bottom - wiz.getBoundingClientRect().bottom + 12;
+      if(extra > 0) wiz.scrollTop += extra;
+    }
+  }
 }
 
 /* =====================================================================
