@@ -84,6 +84,8 @@ img{display:block}
 .bt-dove .bt-map-frame{width:auto;height:100%;max-height:100%;aspect-ratio:640/900;margin:0}
 .bt-dove .ct-note{margin:0;padding:12px 14px;width:100%;max-width:42ch}
 @media (max-width:860px){
+  html:has(.ct-wizard.is-fleet){overflow:auto}
+  .ct-wizard.is-fleet{height:auto;max-height:none;overflow:visible;justify-content:flex-start}
   .ct-wizard:not(.is-intro):not(.is-fleet):has(.ct-stage--exp-btmap){display:block;overflow-x:hidden;overflow-y:auto}
   .ct-stage--exp-btmap{display:block;height:auto}
   .bt-dove{display:grid;grid-template-columns:1fr;grid-template-rows:auto auto auto;grid-template-areas:"copy" "map" "side";row-gap:16px;height:auto}
