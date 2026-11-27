@@ -566,7 +566,7 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
 .ct-thanks{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-height:calc(100svh - 448px)}
 .ct-thanks .ct-sub{margin:24px 0 48px;max-width:44ch}
 .ct-thanks-icon{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:rgba(47,127,136,.22);color:var(--ct-cream);margin-bottom:32px}
-.ct-thanks-actions{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.ct-thanks-actions{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin:8px 0 32px}
 .ct-next{list-style:none;margin:0 0 48px;padding:0;display:flex;flex-direction:column;gap:16px;max-width:560px}
 .ct-next li{display:grid;grid-template-columns:40px minmax(0,1fr);gap:16px;align-items:center;font-size:var(--t-card);color:var(--ct-cream);line-height:1.4}
 .ct-next b{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--ct-fill);font-weight:500;font-size:15px;color:var(--ct-muted)}
@@ -844,7 +844,9 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
 
 /* ---------- Review (Riepilogo): one-screen bento ---------- */
 .rv{display:flex;flex-direction:column;gap:16px}
+.rv-leadbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .rv-lead{margin:0;font-size:clamp(18px,1.4vw,22px);font-weight:500;line-height:1.3;letter-spacing:-.01em;color:var(--ct-cream);outline:none}
+.rv-pdf{height:40px;padding:0 18px;font-size:14px;flex:none}
 .rv-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .rv-span2{grid-column:span 2}
 .rv-tile{display:flex;flex-direction:column;gap:12px;min-width:0;padding:20px 22px;border-radius:20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
@@ -1446,12 +1448,12 @@ const CONFIG = {
       types:['noleggio','escursione_guidata'],
       q:[] },
     { code:'benessere', letter:'J', img:'img/cat-culture.jpg', icon:'sun',
-      spec:['pilates','yoga','meditazione','barefooting','retreat','pet_therapy','ben_altro'],
+      spec:['yoga','pilates','barefooting','meditazione','mindfulness','respirazione','massaggi','aromaterapia','fangoterapia','percorsi_termali','ben_spa','retreat','ben_altro'],
       specGroups:[
-        {h:'bg_mindbody', o:['pilates','yoga','meditazione']},
-        {h:'bg_bare', o:['barefooting']},
-        {h:'bg_retreat_h', o:['retreat']},
-        {h:'bg_pet', o:['pet_therapy']},
+        {h:'bg_move', o:['yoga','pilates','barefooting']},
+        {h:'bg_mind', o:['meditazione','mindfulness','respirazione']},
+        {h:'bg_treat', o:['massaggi','aromaterapia','fangoterapia','percorsi_termali','ben_spa']},
+        {h:'bg_retreat', o:['retreat']},
         {h:'bg_altro', o:['ben_altro']}
       ],
       types:[], q:[] },
@@ -1633,6 +1635,7 @@ en:{
   r_eval:'I understand that submitting this application does not mean automatic approval or activation of any collaboration.',
   r_incomplete:'Some sections are not complete yet:', r_go:'Complete',
   ty_title:'Thank you', ty_code:'Application code', ty_home:'Back to the homepage', ty_new:'Start a new application', ty_dev:'Developer: data that would be sent',
+  pdf_btn:'Download PDF', pdf_head:'Partner application', pdf_date:'Date', pdf_draft:'Draft', pdf_fail:'The PDF could not be created. Please try again.',
   ty_p1:'Your application has been received successfully.',
   ty_p2:'The Sardinia Discovery Travels team will review the information you provided and will contact you if further details are needed or if there are the conditions to start a collaboration.',
   ty_p3:'Submitting the application does not mean automatic acceptance into our partner network.',
@@ -1660,7 +1663,7 @@ en:{
   o_archeologia:'Archaeological site', o_storia:'History', o_musei:'Museums', o_tradizioni_popolari:'Folk traditions', o_patrimonio:'Cultural heritage', o_architettura:'Architecture', o_cultura_locale:'Local culture',
   sd_archeologia:'Giants\' tombs, nuraghi, mines, Roman remains, baths, menhirs, dolmens.', sd_musei:'Artistic, historical, archaeological, naturalistic, cultural.', sd_architettura:'Churches, cathedrals, historic palaces, squares, botanical gardens.', sd_patrimonio:'Canto a tenore, domus de janas, UNESCO, Nino di Gallura\'s house, Villa Asquer.',
   o_visita_guidata:'Guided visit', o_percorso_culturale:'Cultural route', o_incontro_culturale:'Cultural encounter',
-  o_trekking:'Trekking', o_ciaspolate:'Snowshoeing', o_vie_ferrate:'Via ferrata', o_arrampicata:'Climbing', o_acquatrek:'Aquatrekking', o_escursionismo:'Hiking', o_naturalistiche:'Nature experiences', o_turismo_rurale:'Rural tourism', o_sport_outdoor:'Outdoor sports', o_montagna:'Mountain activities', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Buggy', o_4x4_altro:'Other', o_cavallo_exp:'Horse riding experience', o_asino_exp:'Donkey experience', o_alpaca_exp:'Alpaca experience', o_cavalli:'Horses', o_asinelli:'Donkeys', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkelling', o_scuba:'Scuba diving', o_rafting:'Rafting', o_citybike:'CityBike', o_ebike:'E-bike', o_mtb:'Mountain bike', o_barefooting:'Barefooting', o_retreat:'Retreat', o_mindfulness:'Mindfulness', o_respirazione:'Breathing techniques', o_massaggi:'Massages', o_aromaterapia:'Aromatherapy', o_fangoterapia:'Mud therapy', o_noleggio:'Rental', o_escursione_guidata:'Guided excursion', o_pet_therapy:'Pet therapy', o_ben_altro:'Other', o_pilates:'Pilates', o_yoga:'Yoga', o_meditazione:'Meditation', o_percorsi_termali:'Thermal circuits', o_ben_spa:'SPA', o_spa_massage:'Massages', o_spa_aroma:'Aromatherapy', o_spa_mud:'Mud therapy', o_natura_altro:'Other',
+  o_trekking:'Trekking', o_ciaspolate:'Snowshoeing', o_vie_ferrate:'Via ferrata', o_arrampicata:'Climbing', o_acquatrek:'Aquatrekking', o_escursionismo:'Hiking', o_naturalistiche:'Nature experiences', o_turismo_rurale:'Rural tourism', o_sport_outdoor:'Outdoor sports', o_montagna:'Mountain activities', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Buggy', o_4x4_altro:'Other', o_cavallo_exp:'Horse riding experience', o_asino_exp:'Donkey experience', o_alpaca_exp:'Alpaca experience', o_cavalli:'Horses', o_asinelli:'Donkeys', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkelling', o_scuba:'Scuba diving', o_rafting:'Rafting', o_citybike:'CityBike', o_ebike:'E-bike', o_mtb:'Mountain bike', o_barefooting:'Barefooting', o_retreat:'Retreat / Wellness retreats', o_mindfulness:'Mindfulness', o_respirazione:'Breathing techniques', o_massaggi:'Massages', o_aromaterapia:'Aromatherapy', o_fangoterapia:'Mud therapy', o_noleggio:'Rental', o_escursione_guidata:'Guided excursion', o_pet_therapy:'Pet therapy', o_ben_spa:'SPA', o_ben_altro:'Other', o_pilates:'Pilates', o_yoga:'Yoga', o_meditazione:'Meditation', o_percorsi_termali:'Thermal circuits', o_ben_spa:'SPA', o_spa_massage:'Massages', o_spa_aroma:'Aromatherapy', o_spa_mud:'Mud therapy', o_natura_altro:'Other',
   o_escursione_guidata:'Guided excursion', o_attivita_sportiva:'Sports activity', o_esperienza_naturalistica:'Nature experience', o_tour_privato:'Private tour', o_esperienza_gruppo:'Group experience',
   o_barca_motore:'Motor boat', o_barca_vela:'Sailing boat', o_catamarano:'Catamaran', o_snorkeling:'Snorkelling', o_attivita_acquatiche:'Water activities', o_escursioni_costiere:'Coastal excursions',
   o_escursione_privata:'Private excursion', o_escursione_condivisa:'Shared excursion', o_mezza_giornata:'Half day', o_giornata_intera:'Full day', o_esperienza_personalizzata:'Tailor-made experience',
@@ -1859,6 +1862,7 @@ it:{
   r_eval:'Ho compreso che l’invio della candidatura non comporta approvazione né attivazione automatica di alcuna collaborazione.',
   r_incomplete:'Alcune sezioni non sono ancora complete:', r_go:'Completa',
   ty_title:'Grazie', ty_code:'Codice candidatura', ty_home:'Torna alla homepage', ty_new:'Inizia una nuova candidatura', ty_dev:'Sviluppo: dati che verrebbero inviati',
+  pdf_btn:'Scarica PDF', pdf_head:'Candidatura partner', pdf_date:'Data', pdf_draft:'Bozza', pdf_fail:'Non è stato possibile creare il PDF. Riprova.',
   ty_p1:'La tua candidatura è stata ricevuta correttamente.',
   ty_p2:'Il team di Sardinia Discovery Travels prenderà in esame le informazioni fornite e ti contatterà qualora siano necessari ulteriori dettagli o vi siano le condizioni per avviare una collaborazione.',
   ty_p3:'L’invio della candidatura non comporta l’accettazione automatica nella nostra rete di partner.',
@@ -1885,7 +1889,7 @@ it:{
   o_archeologia:'Sito archeologico', o_storia:'Storia', o_musei:'Musei', o_tradizioni_popolari:'Tradizioni popolari', o_patrimonio:'Patrimonio culturale', o_architettura:'Architettura', o_cultura_locale:'Cultura locale',
   sd_archeologia:'Tombe dei giganti, nuraghe, miniere, resti romani, terme, menhir, dolmen.', sd_musei:'Artistici, storici, archeologici, naturalistici, culturali.', sd_architettura:'Chiese, cattedrali, palazzi storici, piazze, orti botanici.', sd_patrimonio:'Canto a tenore, domus de janas, UNESCO, casa di Nino di Gallura, Villa Asquer.',
   o_visita_guidata:'Visita guidata', o_percorso_culturale:'Percorso culturale', o_incontro_culturale:'Incontro culturale',
-  o_trekking:'Trekking', o_ciaspolate:'Ciaspolate', o_vie_ferrate:'Vie ferrate', o_arrampicata:'Arrampicata', o_acquatrek:'Acquatrek', o_escursionismo:'Escursionismo', o_naturalistiche:'Esperienze naturalistiche', o_turismo_rurale:'Turismo rurale', o_sport_outdoor:'Sport outdoor', o_montagna:'Attività in montagna', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Buggy', o_4x4_altro:'Altro', o_cavallo_exp:'Esperienza a cavallo', o_asino_exp:'Esperienza con l’asino', o_alpaca_exp:'Esperienza con alpaca', o_cavalli:'Cavalli', o_asinelli:'Asinelli', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkeling', o_scuba:'Scuba diving', o_rafting:'Rafting', o_citybike:'CityBike', o_ebike:'E-bike', o_mtb:'Mountain bike', o_barefooting:'Barefooting', o_retreat:'Retreat', o_mindfulness:'Mindfulness', o_respirazione:'Tecniche di respirazione', o_massaggi:'Massaggi', o_aromaterapia:'Aromaterapia', o_fangoterapia:'Fangoterapia', o_noleggio:'Noleggio', o_escursione_guidata:'Escursione guidata', o_pet_therapy:'Pet therapy', o_ben_altro:'Altro', o_pilates:'Pilates', o_yoga:'Yoga', o_meditazione:'Meditazione', o_percorsi_termali:'Percorsi termali', o_ben_spa:'SPA', o_spa_massage:'Massaggi', o_spa_aroma:'Aromaterapia', o_spa_mud:'Fangoterapia', o_natura_altro:'Altro',
+  o_trekking:'Trekking', o_ciaspolate:'Ciaspolate', o_vie_ferrate:'Vie ferrate', o_arrampicata:'Arrampicata', o_acquatrek:'Acquatrek', o_escursionismo:'Escursionismo', o_naturalistiche:'Esperienze naturalistiche', o_turismo_rurale:'Turismo rurale', o_sport_outdoor:'Sport outdoor', o_montagna:'Attività in montagna', o_jeep:'Jeep', o_quad:'Quad', o_buggy:'Buggy', o_4x4_altro:'Altro', o_cavallo_exp:'Esperienza a cavallo', o_asino_exp:'Esperienza con l’asino', o_alpaca_exp:'Esperienza con alpaca', o_cavalli:'Cavalli', o_asinelli:'Asinelli', o_kayak:'Kayak', o_sup:'SUP', o_snorkeling:'Snorkeling', o_scuba:'Scuba diving', o_rafting:'Rafting', o_citybike:'CityBike', o_ebike:'E-bike', o_mtb:'Mountain bike', o_barefooting:'Barefooting', o_retreat:'Retreat / Ritiri benessere', o_mindfulness:'Mindfulness', o_respirazione:'Tecniche di respirazione', o_massaggi:'Massaggi', o_aromaterapia:'Aromaterapia', o_fangoterapia:'Fangoterapia', o_noleggio:'Noleggio', o_escursione_guidata:'Escursione guidata', o_pet_therapy:'Pet therapy', o_ben_spa:'SPA', o_ben_altro:'Altro', o_pilates:'Pilates', o_yoga:'Yoga', o_meditazione:'Meditazione', o_percorsi_termali:'Percorsi termali', o_ben_spa:'SPA', o_spa_massage:'Massaggi', o_spa_aroma:'Aromaterapia', o_spa_mud:'Fangoterapia', o_natura_altro:'Altro',
   o_escursione_guidata:'Escursione guidata', o_attivita_sportiva:'Attività sportiva', o_esperienza_naturalistica:'Esperienza naturalistica', o_tour_privato:'Tour privato', o_esperienza_gruppo:'Esperienza di gruppo',
   o_barca_motore:'Barca a motore', o_barca_vela:'Barca a vela', o_catamarano:'Catamarano', o_snorkeling:'Snorkeling', o_attivita_acquatiche:'Attività acquatiche', o_escursioni_costiere:'Escursioni costiere',
   o_escursione_privata:'Escursione privata', o_escursione_condivisa:'Escursione condivisa', o_mezza_giornata:'Mezza giornata', o_giornata_intera:'Giornata intera', o_esperienza_personalizzata:'Esperienza personalizzata',
@@ -2449,6 +2453,7 @@ const CULTURA_OMIT_INCLUDES = ['inc_materials','inc_tasting','inc_meal','inc_dri
 const COOKING_OMIT_INCLUDES = ['inc_materials','inc_tickets','inc_insurance'];
 const BEN_OMIT_INCLUDES = ['inc_materials','inc_tickets'];
 const includesFor = e => CONFIG.includes.filter(c => {
+  if(c === 'inc_materials') return false;
   if(e?.sector === 'artigianato' && ARTISAN_OMIT_INCLUDES.includes(c)) return false;
   if(e?.sector === 'cultura' && CULTURA_OMIT_INCLUDES.includes(c)) return false;
   if(e?.sector === 'cooking_class' && COOKING_OMIT_INCLUDES.includes(c)) return false;
@@ -4567,6 +4572,7 @@ function screens(){
         else { for(const q of (SECTOR[e.sector].q || [])) delete e.sq[q.k]; }
       }
       if(e.sector === 'enogastronomia' || e.sector === 'cooking_class' || e.sector === 'benessere'){ e.prevExp = false; e.limits = ''; e.safety = ''; e.difficulty = ''; }
+      if(isWater(e) && specList(e)[0] !== 'rafting') e.sq = {};
       if(e.sector === 'cooking_class') e.bands = (e.bands||[]).filter(b => b !== 'band_full');
       if(e.sector === 'guide'){ if(!e.langLevel || typeof e.langLevel !== 'object' || Array.isArray(e.langLevel)) e.langLevel = {}; for(const k of Object.keys(e.langLevel)) if(!(e.langs||[]).includes(k)) delete e.langLevel[k]; }
       if(specList(e)[0] !== '4x4_altro') e.vehicle = '';
@@ -4607,6 +4613,8 @@ function screens(){
       if(k==='type' && !hasType(e)) return;
       if(k==='type' && isHike(e)) return;
       if(k==='reqs' && isWater(e) && specList(e)[0] !== 'rafting') return;
+      if(k==='sq' && (e.sector === 'sport' || (isWater(e) && specList(e)[0] !== 'rafting'))) return;
+      if(k==='incl' && isSportRental(e)) return;
       if(k==='scuba' && !isScuba(e)) return;
       if(k==='btfleet'){
         add(`e${i}_btfleet`, 'prop', () => mareFleetScreen(i), () => mareFleetOk(S.exps[i]));
@@ -4805,7 +4813,7 @@ VW.review = () => {
       ${rvTop('mail', t('r_ops'), rvEdit('conv_ops'))}${rvDl(opsRows())}
     </section>` : hasA ? expTiles() : '';
   return `<div class="rv" id="rv">
-  <h1 class="rv-lead" tabindex="-1">${t('r_sub')}</h1>${warn}
+  <div class="rv-leadbar"><h1 class="rv-lead" tabindex="-1">${t('r_sub')}</h1><button type="button" class="ct-back rv-pdf" data-action="pdf">${esc(t('pdf_btn'))}</button></div>${warn}
   <div class="rv-row">
     <section class="rv-tile" aria-label="${esc(t('r_ref'))}">${rvTop('user', t('r_ref'), rvEdit('ref_name'))}
       <h2 class="rv-name">${esc(`${c.first} ${c.last}`.trim()||'-')}</h2>
@@ -4826,11 +4834,12 @@ VW.thanks = () => { const sub=S.submitted||{}; return `
     <span class="ct-thanks-icon">${ic('check',32,2)}</span>
     <h1 class="ct-display" tabindex="-1">${t('ty_title')}</h1>
     <p class="ct-code" aria-label="${esc(t('ty_code'))}"><small>${t('ty_code')}</small><span id="appCode">${esc(sub.code||'')}</span></p>
-    <div class="ct-confirm"><p>${t('ty_p1')}</p><p>${t('ty_p2')}</p><p>${t('ty_p3')}</p></div>
     <div class="ct-thanks-actions">
+      <button type="button" class="ct-back" data-action="pdf">${esc(t('pdf_btn'))}</button>
       <a class="button-02 button-02--teal ct-btn" href="../"><span class="inner">${t('ty_home')}</span><span class="circle" aria-hidden="true"><span>${ic('arrowRight',18,1.8)}</span></span></a>
       <button type="button" class="ct-back" data-action="restart">${t('ty_new')}</button>
     </div>
+    <div class="ct-confirm"><p>${t('ty_p1')}</p><p>${t('ty_p2')}</p><p>${t('ty_p3')}</p></div>
     <details class="ct-dev"><summary>${t('ty_dev')}</summary><pre>${esc(JSON.stringify(sub.payload, (k,v)=>k==='src'&&typeof v==='string'&&v.length>80?v.slice(0,60):v, 2))}</pre></details>
   </div>`; };
 
@@ -5491,6 +5500,7 @@ function afterPick(p, prev){
 const rerender = () => { save(); render(); };
 const ACT = {
   next, back,
+  pdf: () => { downloadApplicationPdf(); },
   uilang: el => { S.lang = el.dataset.v; rerender(); },
   pick: el => { const p=el.dataset.p, prev=get(p); const off=/\.spec$/.test(p) && prev===el.dataset.v; set(p, off ? '' : el.dataset.v); afterPick(p, prev); rerender(); },
   maps: el => {
@@ -5576,6 +5586,337 @@ const ACT = {
     S.help.push({type:H.mode==='free'?'assistenza_gratuita':'consulenza_pagamento', topics:[...H.topics], message:H.msg.trim(), email:H.email.trim(), screen:S.pos, at:new Date().toISOString()});
     save(); H.sent = true; renderPanel(); }
 };
+/* Application PDF. Drawn on a canvas in the form colours, then saved as A4 pages. Nothing is uploaded. */
+let pdfBusy = false;
+function pdfShow(v){
+  if(v == null || v === '') return '';
+  if(typeof v === 'boolean') return v ? t('yn_yes') : t('yn_no');
+  if(typeof v === 'number') return String(v);
+  if(typeof v === 'string'){
+    const s = v.trim();
+    if(!s || s.startsWith('data:')) return '';
+    if(s === 'yes') return t('yn_yes');
+    if(s === 'no') return t('yn_no');
+    return I18N[S.lang]['o_'+s] || I18N.en['o_'+s] || s;
+  }
+  return '';
+}
+function pdfList(v, months){
+  if(!Array.isArray(v) || !v.length) return '';
+  if(months) return v.map(n => MONTHS[S.lang][n] || '').filter(Boolean).join(', ');
+  return v.map(pdfShow).filter(Boolean).join(', ');
+}
+function pdfNice(k){ return I18N[S.lang]['q_'+k] || I18N.en['q_'+k] || I18N[S.lang]['o_'+k] || I18N.en['o_'+k] || String(k).replace(/_/g,' '); }
+function pdfLeaves(obj, prefix, out){
+  if(!obj || typeof obj !== 'object') return;
+  for(const [k,v] of Object.entries(obj)){
+    if(k === 'id' || k === 'src' || k === 'sample' || v == null || v === '' || v === false || (Array.isArray(v) && !v.length)) continue;
+    const label = prefix ? prefix + ' · ' + pdfNice(k) : pdfNice(k);
+    if(Array.isArray(v)){
+      if(v.every(x => x == null || typeof x !== 'object')){ const s = pdfList(v, false); if(s) out.push([label, s]); }
+      else v.forEach((item, i) => pdfLeaves(item, label + ' ' + (i + 1), out));
+    } else if(typeof v === 'object') pdfLeaves(v, label, out);
+    else { const s = pdfShow(v); if(s) out.push([label, s]); }
+  }
+}
+function pdfPush(rows, label, value){
+  const s = typeof value === 'number' || typeof value === 'boolean' ? pdfShow(value) : String(value ?? '').trim();
+  if(s) rows.push([label, s]);
+}
+function pdfPrice(e){
+  return blocks(e).map(b => {
+    const p = e.price?.[b]; if(!p || p.base === '' || p.base == null) return '';
+    const lab = blocks(e).length > 1 ? (b === 'priv' ? t('pr_priv_short') : t('pr_shared_short')) + ': ' : '';
+    return lab + fmtMoney(p.base) + (e.priceMode ? ' ' + o(e.priceMode).toLowerCase() : '') + (p.incl > 1 ? ', ' + p.incl + ' ' + t('pr_incl').toLowerCase() : '');
+  }).filter(Boolean).join(' · ');
+}
+function pdfExpRows(e){
+  const rows = [];
+  pdfPush(rows, t('es_title'), sectorLabel(e));
+  pdfPush(rows, t('esp_title'), specList(e).map(x => CONFIG.otherSpec.includes(x) && e.specOther ? e.specOther : o(x)).filter(Boolean).join(', '));
+  pdfPush(rows, t('or_vehicle'), e.vehicle);
+  pdfPush(rows, t('et_title'), typeList(e).map(o).filter(Boolean).join(', '));
+  pdfPush(rows, t('exp_name'), e.name);
+  pdfPush(rows, t('exp_desc'), e.desc);
+  pdfPush(rows, t('exp_comune'), e.comune);
+  pdfPush(rows, t('exp_addr'), e.address);
+  pdfPush(rows, t('exp_loc'), e.localita);
+  pdfPush(rows, t('exp_meet'), e.meet);
+  pdfPush(rows, t('exp_end'), e.end);
+  if(e.meetDifferent){ pdfPush(rows, t('meet_addr'), e.meetAddress); pdfPush(rows, t('act_addr'), e.activityAddress); }
+  if(e.durH) pdfPush(rows, t('dur'), e.durH + ' h');
+  pdfPush(rows, t('minP'), e.min); pdfPush(rows, t('maxP'), e.max); pdfPush(rows, t('minAge'), e.minAge);
+  pdfPush(rows, t('exp_langs'), pdfList(e.langs));
+  if(e.langLevel && typeof e.langLevel === 'object') pdfPush(rows, t('gd_level'), Object.entries(e.langLevel).filter(([,v]) => v).map(([k,v]) => `${o(k)} ${t('lv_'+v)}`).join(', '));
+  if(e.student) pdfPush(rows, t('gd_student'), e.student);
+  if(e.native) pdfPush(rows, t('gd_native'), e.native);
+  pdfPush(rows, t('access'), pdfList(e.access));
+  pdfPush(rows, t('mode_l'), e.mode ? o(e.mode) : '');
+  pdfPush(rows, t('pr_title'), pdfPrice(e));
+  pdfPush(rows, t('sp_unit'), e.priceUnit ? o(e.priceUnit) : '');
+  pdfPush(rows, t('sp_hand'), e.handover ? o(e.handover) : '');
+  pdfPush(rows, t('in_title'), includesFor(e).map(c => {
+    const mode = inclMode(e, c); if(!mode) return '';
+    return o(c) + ': ' + (mode === 'inc' ? t('inc') : t('sup') + ' ' + fmtMoney(inclPrice(e, c)));
+  }).filter(Boolean).join('; '));
+  if(typeof e.equipProvided === 'boolean' && e.sector !== 'artigianato') pdfPush(rows, t('eq_provided'), pdfShow(e.equipProvided));
+  pdfPush(rows, t('eq_bring_note'), e.bringNote);
+  pdfPush(rows, t('eq_title'), pdfList(e.bring));
+  if(e.difficulty) pdfPush(rows, t('difficulty'), o(e.difficulty));
+  if(e.prevExp) pdfPush(rows, t('prev_exp'), t('yn_yes'));
+  pdfPush(rows, t('limits'), e.limits);
+  pdfPush(rows, t('safety'), e.safety);
+  for(const [k,v] of Object.entries(e.sq || {})){
+    if(v == null || v === '' || (Array.isArray(v) && !v.length)) continue;
+    pdfPush(rows, pdfNice(k), Array.isArray(v) ? pdfList(v) : pdfShow(v));
+  }
+  if(e.scuba){ pdfPush(rows, t('sc_depth'), e.scuba.depth); pdfPush(rows, t('sc_pressure'), e.scuba.pressure); pdfPush(rows, t('sc_bed'), e.scuba.seabed); }
+  if(e.hike) pdfLeaves(e.hike, t('rq_title'), rows);
+  if(e.offroad) pdfLeaves(e.offroad, t('or_title'), rows);
+  if(e.mare) pdfLeaves(e.mare, o('mare'), rows);
+  pdfPush(rows, t('period'), e.period ? o(e.period) : '');
+  pdfPush(rows, t('months'), pdfList(e.months, true));
+  pdfPush(rows, t('weekdays'), pdfList(e.days));
+  pdfPush(rows, t('bands'), pdfList(e.bands));
+  pdfPush(rows, t('slots'), pdfList(e.slots));
+  pdfPush(rows, t('notice'), e.notice ? o(e.notice) : '');
+  pdfPush(rows, t('billing'), e.billing ? o(e.billing) : '');
+  if(e.exclusive) pdfPush(rows, t('exclusive'), t('yn_yes'));
+  if(e.termsAccepted) pdfPush(rows, t('term_accept'), t('yn_yes'));
+  return rows;
+}
+function pdfModel(){
+  const sections = [];
+  const add = (title, rows, photos) => {
+    const clean = (rows || []).filter(([,v]) => String(v ?? '').trim());
+    if(clean.length || (photos && photos.length)) sections.push({title, rows:clean, photos:photos || []});
+  };
+  const c = S.contact, g = S.org;
+  add(t('r_ref'), [
+    [t('first'), [c.first, c.last].filter(Boolean).join(' ')],
+    [t('r_role'), c.role ? o(c.role) : ''],
+    [t('email'), c.email],
+    [t('phone'), [c.prefix, c.phone].filter(Boolean).join(' ')],
+    [t('r_lang'), c.lang ? o(c.lang) : ''],
+    [t('ra_title'), pdfShow(!!c.auth)]
+  ]);
+  add(t('r_org'), [
+    [t('r_form'), g.form ? o(g.form) : ''],
+    [t('soc_form'), g.socForm ? o(g.socForm) : ''],
+    [t('profession'), g.profession],
+    [t('albo'), g.albo],
+    [t('abil'), g.abil],
+    [t('assoc_type'), g.assocType ? o(g.assocType) : ''],
+    [t('runts'), g.runts],
+    [t('legal_rep'), g.legalRep],
+    [t('coop_type'), g.coopType ? o(g.coopType) : ''],
+    [t('office'), g.office],
+    [t('op_ref'), g.opRef],
+    [t('other_form'), g.otherForm],
+    [t('other_notes'), g.otherNotes],
+    [t('org_name'), g.name],
+    [t('org_brand'), g.brand],
+    [t('vat'), g.vat],
+    [t('cf'), g.cf],
+    [t('addr'), [g.addr, [g.cap, g.comune].filter(Boolean).join(' '), g.prov, g.region, g.country].filter(Boolean).join(', ')],
+    [t('same_op'), pdfShow(!!g.sameOp)],
+    [t('op_addr'), g.sameOp ? '' : [g.opAddr, g.opComune].filter(Boolean).join(', ')],
+    [t('org_email'), g.email],
+    [t('org_phone'), g.phone],
+    [t('website'), g.website]
+  ]);
+  add(t('r_collab'), [[t('r_collab'), andList((S.paths || []).slice().sort().map(p => t('path_'+p)))]]);
+  (S.exps || []).forEach((e, i) => add(`${t('exp_n',{n:i+1})}${e.name ? ' · ' + e.name : ''}`, pdfExpRows(e), e.photos || []));
+  if((S.paths || []).includes('B')){
+    const cv = S.conv || {};
+    add(t('r_conv'), [
+      [t('ct_title'), cv.type ? o(cv.type) : ''],
+      [t('stars'), cv.stars ? o(cv.stars) : ''],
+      [t('units'), cv.units], [t('beds'), cv.beds], [t('cin'), cv.cin],
+      [t('services'), pdfList(cv.services)],
+      [t('cuisine'), pdfList(cv.cuisine)],
+      [t('seats_in'), cv.seatsIn], [t('max_guests'), cv.maxGuests],
+      [t('area_served'), cv.area], [t('other_desc'), cv.otherDesc],
+      [t('opening'), cv.opening ? o(cv.opening) : ''],
+      [t('ci_title'), pdfList(cv.interests)],
+      [t('r_channels'), pdfList(cv.channels)],
+      [t('r_response'), cv.response ? o(cv.response) : ''],
+      [t('r_book'), cv.sameBooking ? [S.contact.first, S.contact.last].filter(Boolean).join(' ') : [cv.bookName, cv.bookEmail].filter(Boolean).join(', ')],
+      [t('notes'), cv.notes]
+    ]);
+  }
+  add(t('sec_review'), [
+    [t('r_privacy'), pdfShow(!!S.consents.privacy)],
+    [t('r_eval'), pdfShow(!!S.consents.evaluation)]
+  ]);
+  return sections;
+}
+function pdfWrap(ctx, text, max){
+  const lines = [];
+  String(text).split('\n').forEach(para => {
+    let cur = '';
+    const push = s => { if(s) lines.push(s); };
+    for(const word of para.split(/\s+/).filter(Boolean)){
+      if(ctx.measureText(word).width > max){
+        push(cur); cur = '';
+        let chunk = '';
+        for(const ch of word){
+          if(ctx.measureText(chunk + ch).width > max){ push(chunk); chunk = ch; }
+          else chunk += ch;
+        }
+        cur = chunk;
+        continue;
+      }
+      const next = cur ? cur + ' ' + word : word;
+      if(ctx.measureText(next).width > max){ push(cur); cur = word; }
+      else cur = next;
+    }
+    push(cur);
+  });
+  return lines.length ? lines : [''];
+}
+function pdfBytes(dataUrl){
+  const bin = atob(dataUrl.split(',')[1]);
+  const bytes = new Uint8Array(bin.length);
+  for(let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+function pdfFile(pages){
+  const enc = s => new TextEncoder().encode(s);
+  const chunks = [];
+  let pos = 0;
+  const push = b => { chunks.push(b); pos += b.length; };
+  const offsets = [];
+  const obj = (num, parts) => {
+    offsets[num] = pos;
+    push(enc(num + ' 0 obj\n'));
+    for(const p of parts) push(typeof p === 'string' ? enc(p) : p);
+    push(enc('\nendobj\n'));
+  };
+  push(enc('%PDF-1.4\n'));
+  const n = pages.length;
+  obj(1, ['<< /Type /Catalog /Pages 2 0 R >>']);
+  obj(2, [`<< /Type /Pages /Kids [${pages.map((_,i) => (3 + i * 3) + ' 0 R').join(' ')}] /Count ${n} >>`]);
+  pages.forEach((im, i) => {
+    const content = `q\n595.28 0 0 841.89 0 0 cm\n/Im${i} Do\nQ`;
+    obj(3 + i * 3, [`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im${i} ${5 + i * 3} 0 R >> >> /Contents ${4 + i * 3} 0 R >>`]);
+    obj(4 + i * 3, [`<< /Length ${enc(content).length} >>\nstream\n`, enc(content), '\nendstream']);
+    obj(5 + i * 3, [`<< /Type /XObject /Subtype /Image /Width ${im.w} /Height ${im.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${im.bytes.length} >>\nstream\n`, im.bytes, '\nendstream']);
+  });
+  const size = 3 + n * 3;
+  let xref = 'xref\n0 ' + size + '\n0000000000 65535 f \n';
+  for(let i = 1; i < size; i++) xref += String(offsets[i]).padStart(10, '0') + ' 00000 n \n';
+  const start = pos;
+  push(enc(xref + 'trailer\n<< /Size ' + size + ' /Root 1 0 R >>\nstartxref\n' + start + '\n%%EOF'));
+  const out = new Uint8Array(pos);
+  let at = 0;
+  for(const c of chunks){ out.set(c, at); at += c.length; }
+  return new Blob([out], {type:'application/pdf'});
+}
+async function downloadApplicationPdf(){
+  if(pdfBusy) return;
+  pdfBusy = true;
+  try{
+    if(document.fonts && document.fonts.load){
+      await document.fonts.load('400 18px Montserrat');
+      await document.fonts.load('600 15px Montserrat');
+      await document.fonts.load('800 42px Montserrat');
+    }
+    const logo = await new Promise(res => { const img = new Image(); img.onload = () => res(img); img.onerror = () => res(null); img.src = 'img/sardinia-logo.png'; });
+    const sections = pdfModel();
+    for(const section of sections){
+      section.images = [];
+      for(const photo of (section.photos || []).slice(0, 8)){
+        const img = await new Promise(res => { const el = new Image(); el.onload = () => res(el); el.onerror = () => res(null); el.src = photo.src; });
+        if(img) section.images.push(img);
+      }
+    }
+    const W = 1240, H = 1754, PAD = 72, maxW = W - PAD * 2;
+    const code = (S.submitted && S.submitted.code) || t('pdf_draft');
+    const when = new Date(S.submitted?.payload?.submitted_at || Date.now());
+    const date = when.toLocaleDateString(S.lang === 'it' ? 'it-IT' : 'en-GB', {day:'2-digit', month:'long', year:'numeric'});
+    const canvases = [];
+    const fresh = () => {
+      const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      const ctx = cv.getContext('2d');
+      ctx.fillStyle = '#1f1d1c'; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#2f7f88'; ctx.fillRect(0, 0, W, 10);
+      if(logo){ const lh = 78, lw = logo.width * (lh / logo.height); ctx.drawImage(logo, PAD, 32, lw, lh); }
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#f8f4ee'; ctx.font = '800 22px Montserrat, sans-serif'; ctx.fillText('SARDINIA DISCOVERY', W - PAD, 62);
+      ctx.fillStyle = '#b9b1a7'; ctx.font = '500 14px Montserrat, sans-serif'; ctx.fillText(code, W - PAD, 88);
+      ctx.textAlign = 'left';
+      ctx.strokeStyle = 'rgba(248,244,238,.14)'; ctx.beginPath(); ctx.moveTo(PAD, 128); ctx.lineTo(W - PAD, 128); ctx.stroke();
+      canvases.push(cv);
+      return {cv, ctx, y:168};
+    };
+    let page = fresh();
+    let first = true;
+    const room = need => { if(page.y + need > H - 64) page = fresh(); };
+    const drawLines = (ctx, lines, size, color, gap) => {
+      ctx.font = size; ctx.fillStyle = color;
+      for(const line of lines){ room(gap); page.ctx.font = size; page.ctx.fillStyle = color; page.ctx.fillText(line, PAD, page.y); page.y += gap; }
+    };
+    if(first){
+      page.ctx.fillStyle = '#f8f4ee'; page.ctx.font = '800 42px Montserrat, sans-serif';
+      page.ctx.fillText(t('pdf_head'), PAD, page.y); page.y += 36;
+      page.ctx.fillStyle = '#2f7f88'; page.ctx.font = '600 18px Montserrat, sans-serif';
+      page.ctx.fillText(t('ty_code') + '  ' + code, PAD, page.y); page.y += 28;
+      page.ctx.fillStyle = '#b9b1a7'; page.ctx.font = '400 16px Montserrat, sans-serif';
+      page.ctx.fillText(t('pdf_date') + '  ' + date, PAD, page.y); page.y += 40;
+      first = false;
+    }
+    for(const section of sections){
+      room(56);
+      page.ctx.fillStyle = '#2f7f88'; page.ctx.font = '600 13px Montserrat, sans-serif';
+      page.ctx.fillText(section.title.toUpperCase(), PAD, page.y); page.y += 12;
+      page.ctx.strokeStyle = 'rgba(47,127,136,.45)'; page.ctx.beginPath(); page.ctx.moveTo(PAD, page.y); page.ctx.lineTo(PAD + 120, page.y); page.ctx.stroke();
+      page.y += 26;
+      for(const [k,v] of section.rows){
+        room(48);
+        page.ctx.font = '500 13px Montserrat, sans-serif'; page.ctx.fillStyle = '#b9b1a7';
+        drawLines(page.ctx, pdfWrap(page.ctx, k, maxW), '500 13px Montserrat, sans-serif', '#b9b1a7', 18);
+        page.ctx.font = '400 18px Montserrat, sans-serif';
+        drawLines(page.ctx, pdfWrap(page.ctx, v, maxW), '400 18px Montserrat, sans-serif', '#f8f4ee', 26);
+        page.y += 12;
+      }
+      if(section.images && section.images.length){
+        room(40);
+        page.ctx.font = '500 13px Montserrat, sans-serif'; page.ctx.fillStyle = '#b9b1a7';
+        page.ctx.fillText(t('ph_title'), PAD, page.y); page.y += 16;
+        const size = 150, gap = 14, cols = Math.max(1, Math.floor((maxW + gap) / (size + gap)));
+        section.images.forEach((img, n) => {
+          const col = n % cols;
+          if(col === 0) room(size + 28);
+          const x = PAD + col * (size + gap), y = page.y;
+          page.ctx.save(); page.ctx.beginPath(); page.ctx.rect(x, y, size, size); page.ctx.clip();
+          const scale = Math.max(size / img.width, size / img.height);
+          const dw = img.width * scale, dh = img.height * scale;
+          page.ctx.drawImage(img, x + (size - dw) / 2, y + (size - dh) / 2, dw, dh);
+          page.ctx.restore();
+          if(n === 0){ page.ctx.fillStyle = '#2f7f88'; page.ctx.fillRect(x, y, size, 22); page.ctx.fillStyle = '#f8f4ee'; page.ctx.font = '600 12px Montserrat, sans-serif'; page.ctx.fillText(t('p_cover'), x + 8, y + 15); }
+          if(col === cols - 1 || n === section.images.length - 1) page.y += size + 18;
+        });
+      }
+    }
+    const total = canvases.length;
+    const jpegs = canvases.map((cv, i) => {
+      const ctx = cv.getContext('2d');
+      ctx.fillStyle = '#b9b1a7'; ctx.font = '400 14px Montserrat, sans-serif'; ctx.textAlign = 'right';
+      ctx.fillText((i + 1) + ' / ' + total, W - PAD, H - 36);
+      return {bytes:pdfBytes(cv.toDataURL('image/jpeg', 0.82)), w:W, h:H};
+    });
+    const blob = pdfFile(jpegs);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = ((S.submitted && S.submitted.code) || 'candidatura') + '.pdf';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }catch(err){
+    toast(t('pdf_fail'));
+  }finally{ pdfBusy = false; }
+}
+
 document.addEventListener('click', e => { const el = e.target.closest('[data-action]'); if(el && !el.disabled && ACT[el.dataset.action]){ if(el.tagName==='A') e.preventDefault(); ACT[el.dataset.action](el, e); } });
 $('modal').addEventListener('click', e => { if(e.target.id==='modal') ACT.closemodal(); });
 $('pvModal').addEventListener('click', e => { if(e.target.id==='pvModal') pvClose(); });
