@@ -1489,6 +1489,8 @@ const CONFIG = {
 const SECTOR = Object.fromEntries(CONFIG.sectors.map(s=>[s.code,s]));
 const STRUCT = Object.fromEntries(CONFIG.structures.map(([k,i,g])=>[k,{icon:i,group:g}]));
 const SAMPLE_PHOTOS = ['img/cat-boat.jpg','img/cat-hiking.jpg','img/cat-cooking.jpg','img/cat-culture.jpg'];
+const FOOD_SAMPLE_PHOTOS = ['img/demo-food-pasta.jpg','img/demo-food-cheese.jpg','img/demo-food-bread.jpg','img/demo-food-wine.jpg'];
+const samplePool = e => (e && (e.sector === 'enogastronomia' || e.sector === 'cooking_class')) ? FOOD_SAMPLE_PHOTOS : SAMPLE_PHOTOS;
 const TOWNS = ['Tempio Pausania','Olbia','Arzachena','Santa Teresa Gallura','La Maddalena','Palau','Calangianus','Aggius','Luras','Castelsardo','Sassari','Stintino','Alghero','Bosa','Oristano','Cabras','Iglesias','Carloforte','Cagliari','Villasimius','Pula','Barumini','Nuoro','Orgosolo','Mamoiada','Fonni','Oliena','Dorgali','Orosei','San Teodoro','Tortolì','Baunei','Golfo Aranci','Budoni','Siniscola','Lanusei','Sorgono','Desulo','Aritzo','Sant\'Antioco'];
 
 /* =====================================================================
@@ -5536,8 +5538,9 @@ const ACT = {
       if(!screens().some(s=>s.id===S.pos)) S.pos = S.exps.length ? 'exp_more' : 'review';
       rerender(); }}); },
   browse: () => $('fileIn').click(),
-  sample: () => { const i=expIndex(); if(i<0) return; const ph=S.exps[i].photos; let need=Math.max(3-ph.length,1);
-    while(need-- > 0 && ph.length < MAX_PHOTOS){ const src = SAMPLE_PHOTOS[(ph.length+i) % SAMPLE_PHOTOS.length]; ph.push({src, name:src.split('/').pop(), sample:true}); }
+  sample: () => { const i=expIndex(); if(i<0) return; const e=S.exps[i]; const ph=e.photos; const pool=samplePool(e);
+    let need = (pool === FOOD_SAMPLE_PHOTOS && !ph.length) ? pool.length : Math.max(3-ph.length,1);
+    while(need-- > 0 && ph.length < MAX_PHOTOS){ const src = pool[(ph.length+i) % pool.length]; ph.push({src, name:src.split('/').pop(), sample:true}); }
     rerender(); },
   cover: el => { const ph=S.exps[expIndex()].photos; ph.unshift(ph.splice(+el.dataset.v,1)[0]); rerender(); },
   remove: el => { S.exps[expIndex()].photos.splice(+el.dataset.v,1); rerender(); },
