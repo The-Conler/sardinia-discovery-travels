@@ -364,6 +364,7 @@ html:has(.ct-wizard.is-fleet){overflow:hidden}
 .ct-field input.is-bad{border-color:rgba(242,169,154,.7)}
 .ct-error{margin:0;font-size:var(--t-hint);color:#f2a99a}
 .ct-term{display:flex;flex-direction:column;gap:8px}
+a.ct-term{color:inherit;text-decoration:none;cursor:pointer}
 .ct-term h3{margin:0;font-size:var(--t-q);font-weight:500;color:var(--ct-cream)}
 .ct-term-ph{margin:0;padding:16px 20px;border-radius:var(--ct-radius);border:1.5px dashed rgba(248,244,238,.28);color:var(--ct-muted);font-style:italic;line-height:1.45}
 .ct-photo-spec{margin:16px 0 0;font-size:var(--t-hint);line-height:1.45;color:var(--ct-muted)}
@@ -4424,7 +4425,7 @@ const EV = {
       <div class="ct-steppers">${stepper(P(i,`price.${b}.incl`), t('pr_incl'), t('pr_inclD'), 1, 200)}</div>
       </div>`).join('')}`); },
   cond: i => { const e=E(i); if(e.billing==='bill_receipt') e.billing=''; return split(head(t('cd_title'), t('cd_sub'), ecount(i)), `
-    <div class="ct-terms">${['term_pay','term_cancel','term_other'].map(k=>`<section class="ct-term"><h3>${t(k)}</h3><p class="ct-term-ph">${t('term_ph')}</p></section>`).join('')}</div>
+    <div class="ct-terms">${[['term_pay','pagamento'],['term_cancel','cancellazione'],['term_other','altre-condizioni']].map(([k,hash])=>`<a class="ct-term" href="../termini-e-condizioni/#${hash}"><h3>${t(k)}</h3><p class="ct-term-ph">${t('term_ph')}</p></a>`).join('')}</div>
     ${check(P(i,'termsAccepted'), t('term_accept'))}
     ${toggle(P(i,'exclusive'), t('exclusive'), t('exclusiveD'), 'tip_excl')}
     ${group(t('billing'), pills(P(i,'billing'), CONFIG.billing))}`); },
