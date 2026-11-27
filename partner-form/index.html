@@ -1593,7 +1593,7 @@ en:{
   esp_title:'What is your speciality?', esp_sub:'Select one.', esp_another:'Offer another specialty too? At the end of this form you can add a new request.', spec_other:'Describe it briefly',
   et_title:'What type of service is it?', et_sub:'You can select more than one.', et_one:'Select one.', et_combined:'By selecting more than one type you will be offering a combined experience.',
   spa_title:'Which treatments do you offer?', spa_q:'Treatments',
-  g1_title:'Give it a short title', g1_sub:'Keep it simple and concrete.', exp_name:'Short title', exp_namePh:'For example a ceramics workshop in Aggius', exp_desc:'Description', exp_descPh:'What guests do, see and learn, and who they meet.', desc_min:'At least {n} characters', desc_ok:'Long enough',
+  g1_title:'Give it a short title', g1_sub:'Keep it simple and concrete.', exp_name:'Short title', exp_namePh:'For example a ceramics workshop in Aggius', exp_desc:'Description', exp_descPh:'What guests do, see and learn, and who they meet.',
   g2_title:'Where does it take place?', g2_sub:'So we can plan the logistics.', exp_comune:'Municipality', exp_addr:'Full address', exp_addr_hint:'Street, number, postcode, province', exp_loc:'Place or area', exp_meet:'Meeting point', exp_end:'End point', exp_endHint:'Leave empty if it is the same as the meeting point.', meet_diff:'The meeting point is different from where the activity takes place', meet_addr:'Meeting point address', act_addr:'Activity address',
   g3_title:'Duration and group size', g3_sub:'Approximate values are fine.', dur:'Duration', parts:'Participants and age', durD:'Hours', hours:'Hours', minutes:'Minutes', minP:'Minimum participants', minPD:'Smallest group you accept (always at least 2)', maxP:'Maximum participants', maxPD:'Largest group you can host', minAge:'Minimum age (years)', minAgeD:'Years. 0 means no limit',
   g4_title:'Languages and accessibility', g4_title_rent:'Languages', g4_sub:'Who can enjoy it.', exp_langs:'Languages you run it in', access:'Accessibility', accessD:'Select what applies.',
@@ -1819,7 +1819,7 @@ it:{
   esp_title:'Qual è la tua specializzazione?', esp_sub:'Seleziona un solo tasto.', esp_another:'Offri anche un’altra specialità? Alla fine di questo modulo potrai aggiungere una nuova richiesta.', spec_other:'Descrivila brevemente',
   et_title:'Che tipo di servizio è?', et_sub:'Seleziona più di un tasto.', et_one:'Seleziona un solo tasto.', et_combined:'Selezionando più tipologie proporrai un’esperienza combinata.',
   spa_title:'Quali trattamenti offri?', spa_q:'Trattamenti',
-  g1_title:'Dai un breve titolo', g1_sub:'Semplice e concreto.', exp_name:'Breve titolo', exp_namePh:'Per esempio Laboratorio di ceramica ad Aggius', exp_desc:'Descrizione', exp_descPh:'Cosa fanno, vedono e imparano gli ospiti, e chi incontrano.', desc_min:'Almeno {n} caratteri', desc_ok:'Lunghezza sufficiente',
+  g1_title:'Dai un breve titolo', g1_sub:'Semplice e concreto.', exp_name:'Breve titolo', exp_namePh:'Per esempio Laboratorio di ceramica ad Aggius', exp_desc:'Descrizione', exp_descPh:'Cosa fanno, vedono e imparano gli ospiti, e chi incontrano.',
   g2_title:'Dove si svolge?', g2_sub:'Ci serve per organizzare la logistica.', exp_comune:'Comune', exp_addr:'Indirizzo completo', exp_addr_hint:'Via, numero, CAP, provincia', exp_loc:'Località', exp_meet:'Punto di incontro', exp_end:'Luogo di conclusione', exp_endHint:'Lascia vuoto se coincide con il punto di incontro.', meet_diff:'Il punto di incontro è diverso dal luogo dell’attività', meet_addr:'Indirizzo del punto di incontro', act_addr:'Indirizzo del luogo dell’attività',
   g3_title:'Durata e partecipanti', g3_sub:'Vanno bene valori indicativi.', dur:'Durata', parts:'Partecipanti ed età', durD:'Ore', hours:'Ore', minutes:'Minuti', minP:'Partecipanti minimi', minPD:'Il gruppo più piccolo che accetti (sempre almeno 2)', maxP:'Partecipanti massimi', maxPD:'Il gruppo più grande che puoi ospitare', minAge:'Età minima (anni)', minAgeD:'Anni. 0 significa nessun limite',
   g4_title:'Lingue e accessibilità', g4_title_rent:'Lingue', g4_sub:'Chi può partecipare.', exp_langs:'Lingue in cui la proponi', access:'Accessibilità', accessD:'Seleziona ciò che vale.',
@@ -2054,7 +2054,6 @@ const capOk = s => /^\d{5}$/.test(String(s||'').trim());
 const filled = (s, n=2) => String(s||'').trim().length >= n;
 const pos = n => Number(n) > 0;
 const andList = xs => xs.length < 2 ? xs.join('') : `${xs.slice(0,-1).join(', ')} ${t('and')} ${xs[xs.length-1]}`;
-const DESC_MIN = 40, DESC_MAX = 1200;
 function toast(msg){ const el=$('toast'); el.textContent=msg; el.classList.add('is-on'); placeToast(); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove('is-on'),3400); }
 /* Keep the welcome pill in the header gap when it fits, otherwise just under the header line. */
 function placeToast(){
@@ -4351,8 +4350,8 @@ const EV = {
   g1: i => { const e=E(i); return split(head(t('g1_title'), t('g1_sub'), ecount(i)), `
     ${inp(P(i,'name'), t('exp_name'), {ph:t('exp_namePh'), max:80})}
     <label class="ct-field"><span class="ct-field-label"><span>${t('exp_desc')}</span></span>
-      <textarea id="${fid(P(i,'desc'))}" data-bind="${P(i,'desc')}" rows="7" maxlength="${DESC_MAX}" placeholder="${esc(t('exp_descPh'))}">${esc(e.desc)}</textarea>
-      <span class="ct-field-hint" id="cnt-desc" data-for="${P(i,'desc')}"></span></label>
+      <textarea id="${fid(P(i,'desc'))}" data-bind="${P(i,'desc')}" rows="7" placeholder="${esc(t('exp_descPh'))}">${esc(e.desc)}</textarea>
+      </label>
     ${e.sector === 'altro' ? note(t('altro_agency'), 'info') : ''}`); },
   g2: i => split(head(t('g2_title'), t('g2_sub'), ecount(i)), placeFields(i)),
   g3: i => { const e=E(i); if(e.min < 2) e.min = 2; return split(head(t('g3_title'), t('g3_sub'), ecount(i)), `
@@ -4450,7 +4449,7 @@ const EOK = {
   spec: e => !hasSpec(e) || (specList(e).length > 0 && (!specList(e).some(x => CONFIG.otherSpec.includes(x)) || filled(e.specOther,3)) && (specList(e)[0] !== '4x4_altro' || filled(e.vehicle, 2))),
   spa: e => !isSpa(e) || (Array.isArray(e.spaTreatments) && e.spaTreatments.length > 0 && e.spaTreatments.every(x => SPA_TREATS.includes(x))),
   type: e => isHike(e) || !hasType(e) || (typeList(e).length > 0 && typeList(e).every(x => allowedTypes(e).includes(x))),
-  g1: e => filled(e.name,3) && e.desc.trim().length >= DESC_MIN,
+  g1: e => filled(e.name,3),
   g2: e => placeOk(e),
   g3: e => e.durH > 0 && e.min >= 2 && e.max >= e.min,
   g4: e => e.sector === 'guide' ? guideLangOk(e) : (e.langs.length > 0 && (!isSportRental(e) || !!e.handover)),
@@ -5138,11 +5137,7 @@ function updateNav(){
   dockHelp();
   setTeal(nb, s.id==='review' ? t('submit') : s.id==='exp_more' ? t('finish') : (S.ret ? t('backToReview') : t('next')));
 }
-function updateCounters(){
-  const cd = $('cnt-desc'); if(!cd) return; const v = get(cd.dataset.for)||'';
-  const ok = v.trim().length >= DESC_MIN; cd.className = 'ct-field-hint' + (ok?' is-ok':'');
-  cd.innerHTML = `<span>${ok?t('desc_ok'):t('desc_min',{n:DESC_MIN})}</span><span><b>${v.length}</b> / ${DESC_MAX}</span>`;
-}
+function updateCounters(){}
 function go(id, dir){ S.pos = id; if(id==='review') S.ret = false; save(); render(dir); }
 function next(){
   const {L, k, s} = cur();
