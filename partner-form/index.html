@@ -1398,7 +1398,7 @@ const CONFIG = {
       q:[ {k:'takehome', t:'toggle'}, {k:'can_buy', t:'toggle', def:false} ] },
     { code:'enogastronomia', letter:'B', img:'img/cat-wine.jpg', icon:'wine',
       spec:['vino','formaggi','salumi_carni','olio','panificazione','cereali_farine','pastificio','pasticceria','miele','mirto','altri_alimentari'],
-      types:['degustazione','visita_produttore','laboratorio','pranzo_cena'],
+      types:['degustazione','esperienza_culinaria','prodotti_tipici'],
       q:[ {k:'tasting', t:'multi', o:['tp_vino','tp_formaggi','tp_salumi','tp_olio','tp_pane','tp_dolci','tp_miele']},
           {k:'diets', t:'multi', o:['diet_veg','diet_vegan','diet_gf','diet_lf']},
           {k:'allergens', t:'toggle'},
@@ -1619,7 +1619,7 @@ en:{
   sq_title:'A few questions on {s}', sq_sub:'Specific to your sector.',
   av_title:'When is it available?', av_sub:'Indicative availability, no booking calendar.', period:'Period', months:'Months', weekdays:'Days of the week', week_all:'The whole week',
   sl_title:'Times and booking notice', sl_sub:'When it usually runs and how much notice you need.', bands:'Time of day', slots:'Start times', slot_add:'Add', slot_remove:'Remove {x}', notice:'Minimum notice', manual:'Manual confirmation', manualD:'You confirm each booking request before it is final.',
-  pr_title:'Price for the agency', pr_sub:'Indicative. Prices are discussed during the evaluation.', pr_vat:'The price is to be understood as net and inclusive of VAT.', pr_mode:'How do you price it?', pr_agency:'Cost for the agency: state how much you wish to receive to deliver the service. It is not necessarily the price that will be offered to the traveller.',
+  pr_title:'Price for the agency', pr_sub:'Indicative. Prices are discussed during the evaluation.', pr_vat:'The price is to be understood as net and inclusive of VAT.', pr_mode:'How do you price it?', eno_fixed:'The price for the agency is fixed.', pr_agency:'Cost for the agency: state how much you wish to receive to deliver the service. It is not necessarily the price that will be offered to the traveller.',
   pr_priv_short:'Private', pr_shared_short:'Shared', pr_art_persona:'Price per person', pr_art_min:'Minimum 2 participants', pr_priv:'Private experience', pr_shared:'Shared experience', pr_single:'Price', pr_base:'Base price', pr_incl:'People included', pr_inclD:'Covered by the base price', pr_extra:'Supplement per extra person', pr_min:'Minimum price', pr_minD:'The reduced price reserved for the agency.',
   cd_title:'Terms and conditions', cd_sub:'Sardinia Discovery Travels’ terms. You accept them; you do not set them.', term_pay:'Payment', term_cancel:'Cancellation', term_other:'Other conditions', term_ph:'Agency terms text to be inserted', term_accept:'I accept the terms and conditions of Sardinia Discovery Travels', exclusive:'Open to discussing commercial exclusivity', exclusiveD:'Only if it makes sense for both sides. Not binding.', billing:'Invoicing preference',
   ph_title:'Add some photos', ph_sub:'At least 1, ideally 3 or more. The first one is the cover.',
@@ -1662,7 +1662,7 @@ en:{
   o_laboratorio_pratico:'Hands-on workshop', o_dimostrazione:'Demonstration', o_visita_bottega:'Workshop visit', o_esperienza_privata:'Private experience', o_percorso_piu:'Route with several activities',
   td_laboratorio_pratico:'An experience in which the visitor takes an active part in making a craft product.', td_dimostrazione:'An experience in which the visitor watches an artisan while a product is being made.', td_visita_bottega:'An experience in which the visitor discovers the craft products on display and can buy them.',
   o_vino:'Wine', o_formaggi:'Cheese', o_salumi_carni:'Cured meats and meats', o_olio:'Olive oil', o_panificazione:'Bread making', o_cereali_farine:'Grains and flours', o_pastificio:'Pasta maker', o_pasticceria:'Pastry', o_miele:'Honey', o_mirto:'Myrtle liqueur (mirto)', o_altri_alimentari:'Other food products',
-  o_degustazione:'Tasting', o_visita_produttore:'Producer visit', o_laboratorio:'Workshop', o_cooking_class:'Cooking class', o_pranzo_cena:'Experiential lunch or dinner', o_esperienza_combinata:'Combined experience',
+  o_degustazione:'Tasting', o_esperienza_culinaria:'Culinary experience', o_prodotti_tipici:'Typical products', o_visita_produttore:'Producer visit', o_laboratorio:'Workshop', o_cooking_class:'Cooking class', o_pranzo_cena:'Experiential lunch or dinner', o_esperienza_combinata:'Combined experience',
   o_archeologia:'Archaeological site', o_storia:'History', o_musei:'Museums', o_tradizioni_popolari:'Folk traditions', o_patrimonio:'Cultural heritage', o_architettura:'Architecture', o_cultura_locale:'Local culture',
   sd_archeologia:'Giants\' tombs, nuraghi, mines, Roman remains, baths, menhirs, dolmens.', sd_musei:'Artistic, historical, archaeological, naturalistic, cultural.', sd_architettura:'Churches, cathedrals, historic palaces, squares, botanical gardens.', sd_patrimonio:'Canto a tenore, domus de janas, UNESCO, Nino di Gallura\'s house, Villa Asquer.',
   o_visita_guidata:'Guided visit', o_percorso_culturale:'Cultural route', o_incontro_culturale:'Cultural encounter',
@@ -1846,7 +1846,7 @@ it:{
   sq_title:'Qualche domanda su {s}', sq_sub:'Specifiche del tuo settore.',
   av_title:'Quando è disponibile?', av_sub:'Disponibilità indicativa, nessun calendario di prenotazione.', period:'Periodo', months:'Mesi', weekdays:'Giorni della settimana', week_all:'Tutta la settimana',
   sl_title:'Orari e preavviso', sl_sub:'Quando si svolge di solito e quanto preavviso ti serve.', bands:'Fascia oraria', slots:'Orari di partenza', slot_add:'Aggiungi', slot_remove:'Rimuovi {x}', notice:'Preavviso minimo', manual:'Conferma manuale', manualD:'Confermi ogni richiesta prima che la prenotazione sia definitiva.',
-  pr_title:'Prezzo per l’agenzia', pr_sub:'Indicativo. I prezzi si discutono in fase di valutazione.', pr_vat:'Il prezzo deve essere inteso al netto e comprensivo di IVA.', pr_mode:'Come la prezzi?', pr_agency:'Costo per l’agenzia: Indica quanto desideri ricevere per erogare il servizio. Non è necessariamente il prezzo che verrà proposto al viaggiatore.',
+  pr_title:'Prezzo per l’agenzia', pr_sub:'Indicativo. I prezzi si discutono in fase di valutazione.', pr_vat:'Il prezzo deve essere inteso al netto e comprensivo di IVA.', pr_mode:'Come la prezzi?', eno_fixed:'Il prezzo per l’agenzia è fisso.', pr_agency:'Costo per l’agenzia: Indica quanto desideri ricevere per erogare il servizio. Non è necessariamente il prezzo che verrà proposto al viaggiatore.',
   pr_priv_short:'Privata', pr_shared_short:'Condivisa', pr_art_persona:'Prezzo a persona', pr_art_min:'Minimo 2 partecipanti', pr_priv:'Esperienza privata', pr_shared:'Esperienza condivisa', pr_single:'Prezzo', pr_base:'Prezzo base', pr_incl:'Persone incluse', pr_inclD:'Coperte dal prezzo base', pr_extra:'Supplemento per persona extra', pr_min:'Prezzo minimo', pr_minD:'Il prezzo ridotto riservato all’agenzia.',
   cd_title:'Termini e condizioni', cd_sub:'Condizioni di Sardinia Discovery Travels. Le sottoscrivi, non le stabilisci.', term_pay:'Pagamento', term_cancel:'Cancellazione', term_other:'Altre condizioni', term_ph:'Testo dei termini dell’agenzia da inserire', term_accept:'Accetto i termini e le condizioni di Sardinia Discovery Travels', exclusive:'Disponibile a valutare un’esclusiva commerciale', exclusiveD:'Solo se ha senso per entrambi. Non vincolante.', billing:'Preferenza di fatturazione',
   ph_title:'Aggiungi qualche foto', ph_sub:'Almeno 1, idealmente 3 o più. La prima è la copertina.',
@@ -1888,7 +1888,7 @@ it:{
   o_laboratorio_pratico:'Laboratorio pratico', o_dimostrazione:'Dimostrazione', o_visita_bottega:'Visita in bottega', o_esperienza_privata:'Esperienza privata', o_percorso_piu:'Percorso con più attività',
   td_laboratorio_pratico:'Esperienza in cui il visitatore partecipa attivamente alla creazione di un prodotto artigianale.', td_dimostrazione:'Esperienza in cui il visitatore osserva un artigiano durante la lavorazione di un prodotto.', td_visita_bottega:'Esperienza in cui il visitatore scopre e può acquistare i prodotti artigianali esposti.',
   o_vino:'Vino', o_formaggi:'Formaggi', o_salumi_carni:'Salumi e carni', o_olio:'Olio', o_panificazione:'Panificazione', o_cereali_farine:'Cereali e farine', o_pastificio:'Pastificio', o_pasticceria:'Pasticceria', o_miele:'Miele', o_mirto:'Mirto', o_altri_alimentari:'Altri prodotti alimentari',
-  o_degustazione:'Degustazione', o_visita_produttore:'Visita al produttore', o_laboratorio:'Laboratorio', o_cooking_class:'Cooking class', o_pranzo_cena:'Pranzo o cena esperienziale', o_esperienza_combinata:'Esperienza combinata',
+  o_degustazione:'Degustazione', o_esperienza_culinaria:'Esperienza culinaria', o_prodotti_tipici:'Prodotti tipici', o_visita_produttore:'Visita al produttore', o_laboratorio:'Laboratorio', o_cooking_class:'Cooking class', o_pranzo_cena:'Pranzo o cena esperienziale', o_esperienza_combinata:'Esperienza combinata',
   o_archeologia:'Sito archeologico', o_storia:'Storia', o_musei:'Musei', o_tradizioni_popolari:'Tradizioni popolari', o_patrimonio:'Patrimonio culturale', o_architettura:'Architettura', o_cultura_locale:'Cultura locale',
   sd_archeologia:'Tombe dei giganti, nuraghe, miniere, resti romani, terme, menhir, dolmen.', sd_musei:'Artistici, storici, archeologici, naturalistici, culturali.', sd_architettura:'Chiese, cattedrali, palazzi storici, piazze, orti botanici.', sd_patrimonio:'Canto a tenore, domus de janas, UNESCO, casa di Nino di Gallura, Villa Asquer.',
   o_visita_guidata:'Visita guidata', o_percorso_culturale:'Percorso culturale', o_incontro_culturale:'Incontro culturale',
@@ -4346,8 +4346,9 @@ const EV = {
     photoCards(P(i,'sector'), sectorsForPaths().map(s=>({v:s.code, img:s.img, icon:s.icon, label:`${s.letter}. ${o(s.code)}`, hint:t('h_'+s.code)})))),
   type: i => { const e=E(i); const codes = allowedTypes(e);
     const sport = e.sector === 'sport';
-    const choices = e.sector === 'artigianato' ? typeCards(P(i,'type'), codes) : sport ? `<div class="ct-pills" role="radiogroup">${codes.map(c=>{ const on = typeList(e)[0]===c; return `<button type="button" class="ct-pill${on?' is-on':''}" role="radio" aria-checked="${on}" data-action="pick" data-p="${P(i,'type')}" data-v="${c}"><span>${esc(o(c))}</span></button>`; }).join('')}</div>` : pills(P(i,'type'), codes, {multi:true});
-    return split(head(t('et_title'), sport ? t('et_one') : t('et_sub'), ecount(i, o(e.sector))), `<div class="ct-stack" style="gap:16px">${choices}${sport?'':typeNote(e)}</div>`); },
+    const one = sport || e.sector === 'enogastronomia';
+    const choices = e.sector === 'artigianato' ? typeCards(P(i,'type'), codes) : one ? `<div class="ct-pills" role="radiogroup">${codes.map(c=>{ const on = typeList(e)[0]===c; return `<button type="button" class="ct-pill${on?' is-on':''}" role="radio" aria-checked="${on}" data-action="pick" data-p="${P(i,'type')}" data-v="${c}"><span>${esc(o(c))}</span></button>`; }).join('')}</div>` : pills(P(i,'type'), codes, {multi:true});
+    return split(head(t('et_title'), one ? t('et_one') : t('et_sub'), ecount(i, o(e.sector))), `<div class="ct-stack" style="gap:16px">${choices}${one?'':typeNote(e)}</div>`); },
   spec: i => { const e=E(i), s=SECTOR[e.sector]; const specs = specList(e);
     const choices = s.specGroups
       ? `<div class="ct-spec-groups">${s.specGroups.map(g=>`<fieldset class="ct-group"><legend class="ct-spec-head">${esc(t(g.h))}</legend>${pills(P(i,'spec'), g.o)}</fieldset>`).join('')}</div>`
@@ -4356,7 +4357,7 @@ const EV = {
     <div class="ct-stack" style="gap:16px">${choices}
     ${e.sector === 'benessere' && specList(e)[0] === 'ben_altro' ? note(t('bn_agency'), 'info') : ''}
     ${specs.length ? `<p class="ct-spec-note">${esc(t('esp_another'))}</p>` : ''}</div>
-    ${specs.some(x => CONFIG.otherSpec.includes(x)) ? inp(P(i,'specOther'), t('spec_other')) : ''}
+    ${e.sector !== 'enogastronomia' && specs.some(x => CONFIG.otherSpec.includes(x)) ? inp(P(i,'specOther'), t('spec_other')) : ''}
     ${specList(e)[0] === '4x4_altro' ? inp(P(i,'vehicle'), t('or_vehicle')) : ''}`); },
   spa: i => split(head(t('spa_title'), '', ecount(i)),
     group(t('spa_q'), pills(P(i,'spaTreatments'), SPA_TREATS, {multi:true}), {multi:true})),
@@ -4367,9 +4368,20 @@ const EV = {
       </label>
     ${e.sector === 'altro' ? note(t('altro_agency'), 'info') : ''}`); },
   g2: i => split(head(t('g2_title'), t('g2_sub'), ecount(i)), placeFields(i)),
-  g3: i => { const e=E(i); if(e.min < 2) e.min = 2; return split(head(t('g3_title'), t('g3_sub'), ecount(i)), `
-    ${group(t('dur'), `<div class="ct-steppers">${stepper(P(i,'durH'), t('hours'), t('durD'), 1, 12)}</div>`)}
-    ${group(t('parts'), `<div class="ct-steppers">${stepper(P(i,'min'), t('minP'), t('minPD'), 2, e.max)}${stepper(P(i,'max'), t('maxP'), t('maxPD'), Math.max(2, e.min), 200)}${stepper(P(i,'minAge'), t('minAge'), t('minAgeD'), 0, 18)}</div>`)}`); },
+  g3: i => { const e=E(i); if(e.min < 2) e.min = 2;
+    const hours = '<div class="ct-steppers">' + stepper(P(i,'durH'), t('hours'), t('durD'), 1, 12) + '</div>';
+    const parts = '<div class="ct-steppers">' + stepper(P(i,'min'), t('minP'), t('minPD'), 2, e.max) + stepper(P(i,'max'), t('maxP'), t('maxPD'), Math.max(2, e.min), 200) + stepper(P(i,'minAge'), t('minAge'), t('minAgeD'), 0, 18) + '</div>';
+    const dur = group(t('dur'), hours) + group(t('parts'), parts);
+    if(e.sector !== 'cooking_class') return split(head(t('g3_title'), t('g3_sub'), ecount(i)), dur);
+    const bl = blocks(e);
+    const prices = bl.map(b => {
+      const title = bl.length > 1 ? '<h3 class="ct-block-title">' + t(b==='priv'?'pr_priv':'pr_shared') + '</h3>' : '';
+      return '<div class="ct-block">' + title + money(P(i,'price.'+b+'.base'), t('pr_base')) + '<div class="ct-steppers">' + stepper(P(i,'price.'+b+'.incl'), t('pr_incl'), t('pr_inclD'), 1, 200) + '</div></div>';
+    }).join('');
+    return split(head(t('g3_title'), t('g3_sub'), ecount(i)), dur
+      + group(t('md_title'), opts(P(i,'mode'), CONFIG.modes, {sub:c=>t('md_'+c+'D')}))
+      + group(t('pr_mode'), pills(P(i,'priceMode'), personaGruppo))
+      + prices); },
   g4: i => { const e=E(i);
     if(isSportRental(e)) return split(head(t('g4_title_rent'), t('g4_sub'), ecount(i)), `
     ${group(t('exp_langs'), pills(P(i,'langs'), CONFIG.expLangs, {multi:true}), {multi:true})}
@@ -4409,6 +4421,7 @@ const EV = {
     ${group(t('slots'), slotPicker(i, e), {req:false, tip:'tip_slots'})}
     ${group(t('notice'), pills(P(i,'notice'), CONFIG.notice), {tip:'tip_notice'})}`); },
   price: i => { const e=E(i); const bl=blocks(e); const vat = note(t('pr_vat'), 'info');
+    if(e.sector === 'enogastronomia') return split(head(t('pr_title'), t('pr_sub'), ecount(i)), note(t('eno_fixed'), 'info'));
     if(e.sector === 'artigianato'){
       e.priceMode = 'pm_persona';
       for(const b of ['priv','shared']){ e.price[b].extra = ''; e.price[b].incl = 1; }
@@ -4459,12 +4472,12 @@ function qOk(e, q){
 }
 const EOK = {
   sector: e => !!e.sector,
-  spec: e => !hasSpec(e) || (specList(e).length > 0 && (!specList(e).some(x => CONFIG.otherSpec.includes(x)) || filled(e.specOther,3)) && (specList(e)[0] !== '4x4_altro' || filled(e.vehicle, 2))),
+  spec: e => !hasSpec(e) || (specList(e).length > 0 && (e.sector === 'enogastronomia' || !specList(e).some(x => CONFIG.otherSpec.includes(x)) || filled(e.specOther,3)) && (specList(e)[0] !== '4x4_altro' || filled(e.vehicle, 2))),
   spa: e => !isSpa(e) || (Array.isArray(e.spaTreatments) && e.spaTreatments.length > 0 && e.spaTreatments.every(x => SPA_TREATS.includes(x))),
   type: e => isHike(e) || !hasType(e) || (typeList(e).length > 0 && typeList(e).every(x => allowedTypes(e).includes(x))),
   g1: e => filled(e.name,3),
   g2: e => placeOk(e),
-  g3: e => e.durH > 0 && e.min >= 2 && e.max >= e.min,
+  g3: e => e.durH > 0 && e.min >= 2 && e.max >= e.min && (e.sector !== 'cooking_class' || (!!e.mode && !!e.priceMode && blocks(e).every(b => pos(e.price[b].base) && e.price[b].incl >= 1))),
   g4: e => e.sector === 'guide' ? guideLangOk(e) : (e.langs.length > 0 && (!isSportRental(e) || !!e.handover)),
   mode: e => !!e.mode,
   incl: e => e.sector === 'mare' ? mareInclOk(e) : includesFor(e).every(c => inclMode(e,c) !== 'sup' || pos(inclPrice(e,c))),
@@ -4474,7 +4487,7 @@ const EOK = {
   sq: e => sectorQs(e).every(q => qOk(e,q)),
   avail: e => !!e.period && e.months.length > 0 && e.days.length > 0,
   slots: e => e.sector === 'mare' ? !!e.notice : (e.bands.length > 0 && !!e.notice),
-  price: e => e.sector === 'artigianato' ? blocks(e).every(b => pos(e.price[b].base)) : (!!e.priceMode && (!isSportRental(e) || !!e.priceUnit) && blocks(e).every(b => pos(e.price[b].base) && e.price[b].incl >= 1)),
+  price: e => e.sector === 'enogastronomia' ? true : e.sector === 'artigianato' ? blocks(e).every(b => pos(e.price[b].base)) : (!!e.priceMode && (!isSportRental(e) || !!e.priceUnit) && blocks(e).every(b => pos(e.price[b].base) && e.price[b].incl >= 1)),
   cond: e => !!e.termsAccepted && !!e.billing && e.billing !== 'bill_receipt',
   photos: e => e.photos.length >= MIN_PHOTOS
 };
@@ -4591,7 +4604,7 @@ function screens(){
       if(e.sector === 'cooking_class') e.bands = (e.bands||[]).filter(b => b !== 'band_full');
       if(e.sector === 'guide'){ if(!e.langLevel || typeof e.langLevel !== 'object' || Array.isArray(e.langLevel)) e.langLevel = {}; for(const k of Object.keys(e.langLevel)) if(!(e.langs||[]).includes(k)) delete e.langLevel[k]; }
       if(specList(e)[0] !== '4x4_altro') e.vehicle = '';
-      if(e.sector === 'enogastronomia'){ e.sq = e.sq || {}; const hide = TASTE_OF[specList(e)[0]]; if(hide && Array.isArray(e.sq.tasting)) e.sq.tasting = e.sq.tasting.filter(x => x !== hide); if(lunchOnly(e)){ delete e.sq.tasting; delete e.sq.certs; } if(!hasLunch(e)){ delete e.sq.menu_kind; delete e.sq.menu_offer; } }
+      if(e.sector === 'enogastronomia'){ e.sq = e.sq || {}; const hide = TASTE_OF[specList(e)[0]]; if(hide && Array.isArray(e.sq.tasting)) e.sq.tasting = e.sq.tasting.filter(x => x !== hide); if(lunchOnly(e)){ delete e.sq.tasting; delete e.sq.certs; } if(!hasLunch(e)){ delete e.sq.menu_kind; delete e.sq.menu_offer; } e.priceMode = ''; e.specOther = ''; for(const b of ['priv','shared']){ if(e.price?.[b]) e.price[b].base = ''; } }
       if(e.sector !== 'mare'){ e.localita = ''; e.meet = ''; e.end = ''; if(!e.meetDifferent){ e.meetAddress = ''; e.activityAddress = ''; } }
       normalizeIncl(e);
       if(e.billing === 'bill_receipt') e.billing = '';
@@ -4614,7 +4627,7 @@ function screens(){
         : e.sector === 'altro'
         ? ['sector','g1','cond']
         : e.sector === 'cooking_class'
-        ? ['sector','g1','g2','g3','mode','price','g4','incl','avail','slots','cond','photos']
+        ? ['sector','g1','g2','g3','g4','incl','avail','slots','cond','photos']
         : e.sector === 'benessere'
         ? ['sector','spec','g1','g2','g3','g4','mode','price','incl','equip','reqs','avail','slots','cond','photos']
         : ['sector','spec','type','g1','g2','g3','g4','mode','price','incl','equip','reqs','sq','avail','slots','cond','photos'];
@@ -4702,6 +4715,7 @@ function screenLabel(id){
 }
 const fmtMoney = v => v==='' || v==null || !Number.isFinite(Number(v)) ? '' : `€ ${formatItAmount(v)}`;
 function priceLine(e){
+  if(e.sector === 'enogastronomia') return t('eno_fixed');
   if(e.sector === 'artigianato') return blocks(e).map(b=>`${t(b==='priv'?'pr_priv_short':'pr_shared_short')}: ${fmtMoney(e.price[b].base)} ${t('pr_art_persona').toLowerCase()}`).join('<br>');
   if(!e.priceMode) return '';
   return blocks(e).map(b=>{ const p=e.price[b]; const lab = blocks(e).length>1 ? t(b==='priv'?'pr_priv':'pr_shared')+': ' : '';
@@ -5659,6 +5673,7 @@ function pdfPush(rows, label, value){
   if(s) rows.push([label, s]);
 }
 function pdfPrice(e){
+  if(e.sector === 'enogastronomia') return t('eno_fixed');
   return blocks(e).map(b => {
     const p = e.price?.[b]; if(!p || p.base === '' || p.base == null) return '';
     const lab = blocks(e).length > 1 ? (b === 'priv' ? t('pr_priv_short') : t('pr_shared_short')) + ': ' : '';
@@ -6100,7 +6115,8 @@ if(DEV_FILL) (function(){
         if(e.sector === 'mare'){ e.localita = L('Centro','Town centre'); e.meet = L('Piazza principale, punto di incontro di prova','Main square, test meeting point'); }
         else { if(!filled(e.address,3)) e.address = L('Via Roma 12','12 Via Roma'); e.localita = ''; e.meet = ''; e.end = ''; }
         break;
-      case 'g3': e.durH = e.sector==='mare' ? 4 : 2; e.durM = 0; e.min = 2; e.max = 8; e.minAge = 6; break;
+      case 'g3': e.durH = e.sector==='mare' ? 4 : 2; e.durM = 0; e.min = 2; e.max = 8; e.minAge = 6;
+        if(e.sector === 'cooking_class'){ if(!e.mode) e.mode = CONFIG.modes[0][0]; if(!e.priceMode) e.priceMode = 'pm_persona'; if(!pos(e.price.priv.base)) e.price.priv.base = 40; if(!e.price.priv.incl) e.price.priv.incl = 1; } break;
       case 'g4': if(!e.langs.length) e.langs = ['it','en']; if(!e.access.length) e.access = ['acc_families']; break;
       case 'mode': if(!e.mode) e.mode = CONFIG.modes[0][0]; break;
       case 'incl': if(e.sector === 'mare'){ const mm = ensureMare(e); Object.keys(mm.incl).forEach(k => { if(!mm.incl[k].mode) mm.incl[k].mode = 'inc'; }); break; }
